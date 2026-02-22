@@ -13,6 +13,7 @@ import {
   ChevronRight, Flame, BookMarked
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
+import { AnnouncementsBanner } from '@/components/announcements-banner'
 import {
   requestNotificationPermission,
   schedulePrayerNotification,
@@ -347,6 +348,11 @@ export default function HomePage() {
             <p className="text-[11px] text-gray-400">Points</p>
           </div>
         </div>
+      </div>
+
+      {/* Announcements */}
+      <div className="px-4 pt-3">
+        <AnnouncementsBanner />
       </div>
 
       {/* Daily Verse */}

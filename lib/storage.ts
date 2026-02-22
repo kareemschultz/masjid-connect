@@ -42,4 +42,12 @@ export const KEYS = {
   LAST_READ: 'last_read',
   QURAN_FONT_SIZE: 'quran_font_size',
   INSTALL_PROMPT_DISMISSED: 'install_prompt_dismissed',
+  FASTING_LOG: 'fasting_log',
+  FEEDBACK_LOG: 'feedback_log',
+  APP_RATING: 'app_rating',
+  ANNOUNCEMENTS: 'announcements',
+  DISMISSED_ANNOUNCEMENTS: 'dismissed_announcements',
+  IS_ADMIN: 'is_admin',
+  KHATAM_PROGRESS: 'khatam_progress',
+  QURAN_GOAL: 'quran_goal',
 } as const

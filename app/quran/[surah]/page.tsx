@@ -8,8 +8,9 @@ import { SURAHS } from '@/lib/quran-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
   BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain,
-  ChevronUp, Type, Minus, Plus
+  ChevronUp, Type, Minus, Plus, Share2
 } from 'lucide-react'
+import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
 
 interface Ayah {
@@ -266,6 +267,16 @@ export default function SurahReaderPage() {
                     aria-label={`Bookmark ayah ${ayah.numberInSurah}`}
                   >
                     <Bookmark className={`h-3.5 w-3.5 ${isBookmarked(ayah.numberInSurah) ? 'fill-amber-400' : ''}`} />
+                  </button>
+                  <button
+                    onClick={() => shareOrCopy({
+                      title: `${surah?.englishName} ${ayah.numberInSurah}`,
+                      text: `${ayah.text}\n\n"${ayah.translation}"\n\n- ${surah?.englishName} (${surah?.englishNameTranslation}), Ayah ${ayah.numberInSurah}\n\nvia MasjidConnect GY`
+                    })}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors active:text-emerald-400"
+                    aria-label={`Share ayah ${ayah.numberInSurah}`}
+                  >
+                    <Share2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>

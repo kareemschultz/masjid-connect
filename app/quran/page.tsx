@@ -1,22 +1,34 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BookOpen, Search, MapPin, Star, ChevronRight, Bookmark } from 'lucide-react'
+import { BookOpen, Search, MapPin, Star, ChevronRight, Bookmark, Target } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SURAHS } from '@/lib/quran-data'
-import { getItem, KEYS } from '@/lib/storage'
+import { getItem, setItem, KEYS } from '@/lib/storage'
 import Link from 'next/link'
 
 export default function QuranPage() {
   const [search, setSearch] = useState('')
   const [lastRead, setLastRead] = useState<{ surah: number; name: string } | null>(null)
   const [bookmarks, setBookmarks] = useState<{ surah: number; ayah: number }[]>([])
+  const [completedSurahs, setCompletedSurahs] = useState<number[]>([])
 
   useEffect(() => {
     setLastRead(getItem(KEYS.LAST_READ, null))
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
+    setCompletedSurahs(getItem(KEYS.KHATAM_PROGRESS, []))
   }, [])
+
+  const toggleKhatam = (num: number) => {
+    const updated = completedSurahs.includes(num)
+      ? completedSurahs.filter(n => n !== num)
+      : [...completedSurahs, num]
+    setCompletedSurahs(updated)
+    setItem(KEYS.KHATAM_PROGRESS, updated)
+  }
+
+  const khatamPercent = Math.round((completedSurahs.length / 114) * 100)
 
   const bookmarkedSurahs = [...new Set(bookmarks.map((b) => b.surah))]
 
@@ -56,6 +68,27 @@ export default function QuranPage() {
           </Link>
         </div>
       )}
+
+      {/* Khatam Progress */}
+      <div className="px-4 pt-4">
+        <div className="flex items-center gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
+            <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1f2937" strokeWidth="3" />
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray={`${khatamPercent}, 100`} strokeLinecap="round" />
+            </svg>
+            <span className="absolute text-sm font-bold text-emerald-400">{khatamPercent}%</span>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Target className="h-3.5 w-3.5 text-emerald-400" />
+              <h3 className="text-sm font-bold text-[#f9fafb]">Khatam Progress</h3>
+            </div>
+            <p className="mt-0.5 text-xs text-gray-400">{completedSurahs.length} of 114 surahs completed</p>
+            <p className="mt-1 text-[10px] text-gray-500">Long-press any surah to mark as complete</p>
+          </div>
+        </div>
+      </div>
 
       {/* Bookmarked surahs */}
       {bookmarkedSurahs.length > 0 && (
@@ -102,17 +135,19 @@ export default function QuranPage() {
         <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
           {filtered.map((surah, i) => {
             const hasBookmark = bookmarkedSurahs.includes(surah.number)
+            const isCompleted = completedSurahs.includes(surah.number)
             return (
               <Link
                 key={surah.number}
                 href={`/quran/${surah.number}`}
+                onContextMenu={(e) => { e.preventDefault(); toggleKhatam(surah.number) }}
                 className={`flex items-center gap-4 px-4 py-3.5 transition-colors active:bg-white/5 ${
                   i < filtered.length - 1 ? 'border-b border-gray-800/50' : ''
                 }`}
               >
                 {/* Number badge */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15">
-                  <span className="text-xs font-bold text-purple-400">{surah.number}</span>
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isCompleted ? 'bg-emerald-500/20' : 'bg-purple-500/15'}`}>
+                  <span className={`text-xs font-bold ${isCompleted ? 'text-emerald-400' : 'text-purple-400'}`}>{surah.number}</span>
                 </div>
 
                 {/* Info */}

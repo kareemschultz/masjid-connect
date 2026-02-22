@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Circle, RotateCcw } from 'lucide-react'
+import { Circle, RotateCcw, Share2 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { shareOrCopy } from '@/lib/share'
 
 const TARGETS = [33, 99, 100, 500, 1000]
 
@@ -132,14 +133,26 @@ export default function TasbihPage() {
           ))}
         </div>
 
-        {/* Reset */}
-        <button
-          onClick={reset}
-          className="mt-6 flex items-center gap-2 rounded-xl bg-gray-800 px-6 py-3 text-sm font-medium text-gray-300 transition-colors active:bg-gray-700"
-        >
-          <RotateCcw className="h-4 w-4" />
-          Reset
-        </button>
+        {/* Actions */}
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={reset}
+            className="flex items-center gap-2 rounded-xl bg-gray-800 px-5 py-3 text-sm font-medium text-gray-300 transition-colors active:bg-gray-700"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Reset
+          </button>
+          <button
+            onClick={() => shareOrCopy({
+              title: 'Tasbih Session',
+              text: `Completed ${count}x ${phrase.transliteration} (${phrase.meaning}) today.\n\nvia MasjidConnect GY`
+            })}
+            className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-5 py-3 text-sm font-medium text-emerald-400 transition-colors active:bg-emerald-500/20"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+        </div>
       </div>
 
       <BottomNav />

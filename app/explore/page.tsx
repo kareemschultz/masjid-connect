@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain, Sparkles } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain, Sparkles, Library } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import Link from 'next/link'
@@ -77,6 +77,14 @@ const EXPLORE_ITEMS = [
     href: '/explore/names',
     color: 'bg-amber-500/20',
     iconColor: 'text-amber-400',
+  },
+  {
+    icon: Library,
+    label: 'Resources',
+    description: 'Islamic Learning',
+    href: '/explore/resources',
+    color: 'bg-sky-500/20',
+    iconColor: 'text-sky-400',
   },
   {
     icon: Users,
