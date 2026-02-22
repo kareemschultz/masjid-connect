@@ -36,6 +36,7 @@ export default function SettingsPage() {
   const [modalOpen, setModalOpen] = useState<string | null>(null)
   const [resetConfirm, setResetConfirm] = useState(false)
   const [adminTaps, setAdminTaps] = useState(0)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
@@ -43,6 +44,7 @@ export default function SettingsPage() {
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
     setNotifs(getItem(KEYS.NOTIFICATIONS_ENABLED, false))
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
+    setIsAdmin(getItem(KEYS.IS_ADMIN, false))
   }, [])
 
   const updateMethod = (val: string) => { setMethod(val); setItem(KEYS.CALCULATION_METHOD, val) }
@@ -77,8 +79,9 @@ export default function SettingsPage() {
     const next = adminTaps + 1
     setAdminTaps(next)
     if (next >= 7) {
-      const isAdmin = getItem(KEYS.IS_ADMIN, false)
-      setItem(KEYS.IS_ADMIN, !isAdmin)
+      const newAdmin = !isAdmin
+      setItem(KEYS.IS_ADMIN, newAdmin)
+      setIsAdmin(newAdmin)
       setAdminTaps(0)
     }
   }
@@ -141,7 +144,7 @@ export default function SettingsPage() {
           <Link href="/feedback"><SettingRow icon={MessageSquarePlus} iconColor="bg-rose-600" label="Send Feedback" onClick={() => {}} /></Link>
           <Link href="/changelog"><SettingRow icon={FileText} iconColor="bg-blue-600" label="Changelog" onClick={() => {}} /></Link>
           <Link href="/about"><SettingRow icon={Info} iconColor="bg-gray-600" label="About" onClick={() => {}} /></Link>
-          {getItem(KEYS.IS_ADMIN, false) && (
+          {isAdmin && (
             <Link href="/admin"><SettingRow icon={Shield} iconColor="bg-red-600" label="Admin Panel" onClick={() => {}} /></Link>
           )}
           <SettingRow icon={RotateCcw} iconColor="bg-red-600" label="Reset All Data" isLast onClick={() => setResetConfirm(true)} />

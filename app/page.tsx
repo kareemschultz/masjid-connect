@@ -48,13 +48,37 @@ const CHECKLIST_ITEMS = [
 
 // Daily verses -- cycles based on day-of-year
 const DAILY_VERSES = [
-  { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', translation: 'Indeed, with hardship comes ease.', reference: 'Surah Ash-Sharh 94:6' },
-  { arabic: 'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ', translation: 'And whoever relies upon Allah - then He is sufficient for him.', reference: 'Surah At-Talaq 65:3' },
-  { arabic: 'فَاذْكُرُونِي أَذْكُرْكُمْ', translation: 'So remember Me; I will remember you.', reference: 'Surah Al-Baqarah 2:152' },
-  { arabic: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', translation: 'And your Lord is going to give you, and you will be satisfied.', reference: 'Surah Ad-Duha 93:5' },
-  { arabic: 'رَبِّ اشْرَحْ لِي صَدْرِي', translation: 'My Lord, expand for me my breast [with assurance].', reference: 'Surah Ta-Ha 20:25' },
-  { arabic: 'وَاصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', translation: 'And be patient, for indeed, Allah does not allow to be lost the reward of those who do good.', reference: 'Surah Hud 11:115' },
-  { arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', translation: 'Indeed, Allah is with the patient.', reference: 'Surah Al-Baqarah 2:153' },
+  { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', translation: 'Indeed, with hardship comes ease.', reference: 'Ash-Sharh 94:6', surah: 94 },
+  { arabic: 'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ', translation: 'And whoever relies upon Allah - then He is sufficient for him.', reference: 'At-Talaq 65:3', surah: 65 },
+  { arabic: 'فَاذْكُرُونِي أَذْكُرْكُمْ', translation: 'So remember Me; I will remember you.', reference: 'Al-Baqarah 2:152', surah: 2 },
+  { arabic: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', translation: 'And your Lord is going to give you, and you will be satisfied.', reference: 'Ad-Duha 93:5', surah: 93 },
+  { arabic: 'رَبِّ اشْرَحْ لِي صَدْرِي', translation: 'My Lord, expand for me my breast [with assurance].', reference: 'Ta-Ha 20:25', surah: 20 },
+  { arabic: 'وَاصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', translation: 'And be patient, for indeed, Allah does not allow to be lost the reward of those who do good.', reference: 'Hud 11:115', surah: 11 },
+  { arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', translation: 'Indeed, Allah is with the patient.', reference: 'Al-Baqarah 2:153', surah: 2 },
+  { arabic: 'وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَّا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ', translation: 'And your god is one God. There is no deity except Him, the Most Gracious, the Most Merciful.', reference: 'Al-Baqarah 2:163', surah: 2 },
+  { arabic: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', translation: 'Allah does not burden a soul beyond that it can bear.', reference: 'Al-Baqarah 2:286', surah: 2 },
+  { arabic: 'وَقُل رَّبِّ زِدْنِي عِلْمًا', translation: 'And say, "My Lord, increase me in knowledge."', reference: 'Ta-Ha 20:114', surah: 20 },
+  { arabic: 'وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ', translation: 'And We are closer to him than his jugular vein.', reference: 'Qaf 50:16', surah: 50 },
+  { arabic: 'إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ', translation: 'Indeed, Allah will not change the condition of a people until they change what is in themselves.', reference: 'Ar-Ra\'d 13:11', surah: 13 },
+  { arabic: 'فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ', translation: 'So which of the favors of your Lord would you deny?', reference: 'Ar-Rahman 55:13', surah: 55 },
+  { arabic: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', translation: 'Verily, in the remembrance of Allah do hearts find rest.', reference: 'Ar-Ra\'d 13:28', surah: 13 },
+  { arabic: 'ادْعُونِي أَسْتَجِبْ لَكُمْ', translation: 'Call upon Me; I will respond to you.', reference: 'Ghafir 40:60', surah: 40 },
+  { arabic: 'وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ', translation: 'And my success is only by Allah.', reference: 'Hud 11:88', surah: 11 },
+  { arabic: 'إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ', translation: 'Indeed we belong to Allah, and indeed to Him we will return.', reference: 'Al-Baqarah 2:156', surah: 2 },
+  { arabic: 'وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ', translation: 'And do not despair of the mercy of Allah.', reference: 'Yusuf 12:87', surah: 12 },
+  { arabic: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً', translation: 'Our Lord, give us in this world that which is good and in the Hereafter that which is good.', reference: 'Al-Baqarah 2:201', surah: 2 },
+  { arabic: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', translation: 'For indeed, with hardship will be ease.', reference: 'Ash-Sharh 94:5', surah: 94 },
+  { arabic: 'كُلُّ نَفْسٍ ذَائِقَةُ الْمَوْتِ', translation: 'Every soul will taste death.', reference: 'Al-Imran 3:185', surah: 3 },
+  { arabic: 'وَاللَّهُ خَيْرُ الرَّازِقِينَ', translation: 'And Allah is the best of providers.', reference: 'Al-Jumu\'ah 62:11', surah: 62 },
+  { arabic: 'رَبِّ لَا تَذَرْنِي فَرْدًا وَأَنتَ خَيْرُ الْوَارِثِينَ', translation: 'My Lord, do not leave me alone, and You are the best of inheritors.', reference: 'Al-Anbya 21:89', surah: 21 },
+  { arabic: 'قُلْ هُوَ اللَّهُ أَحَدٌ', translation: 'Say: He is Allah, the One.', reference: 'Al-Ikhlas 112:1', surah: 112 },
+  { arabic: 'وَمَا أَرْسَلْنَاكَ إِلَّا رَحْمَةً لِّلْعَالَمِينَ', translation: 'And We have not sent you except as a mercy to the worlds.', reference: 'Al-Anbya 21:107', surah: 21 },
+  { arabic: 'يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ', translation: 'O you who believe, seek help through patience and prayer.', reference: 'Al-Baqarah 2:153', surah: 2 },
+  { arabic: 'وَلِلَّهِ الْمَشْرِقُ وَالْمَغْرِبُ ۚ فَأَيْنَمَا تُوَلُّوا فَثَمَّ وَجْهُ اللَّهِ', translation: 'To Allah belongs the East and the West. Wherever you turn, there is the Face of Allah.', reference: 'Al-Baqarah 2:115', surah: 2 },
+  { arabic: 'وَلَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ', translation: 'And do not despair of the mercy of Allah.', reference: 'Az-Zumar 39:53', surah: 39 },
+  { arabic: 'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا', translation: 'Our Lord, let not our hearts deviate after You have guided us.', reference: 'Al-Imran 3:8', surah: 3 },
+  { arabic: 'اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ', translation: 'Read in the name of your Lord who created.', reference: 'Al-Alaq 96:1', surah: 96 },
+  { arabic: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ', translation: 'And He is with you wherever you are.', reference: 'Al-Hadid 57:4', surah: 57 },
 ]
 
 function getTimeGreeting(): string {
@@ -371,7 +395,12 @@ export default function HomePage() {
           <p className="text-sm leading-relaxed text-gray-300">
             {dailyVerse.translation}
           </p>
-          <p className="mt-2 text-[11px] text-amber-400/60">{dailyVerse.reference}</p>
+          <div className="mt-3 flex items-center justify-between">
+            <p className="text-[11px] text-amber-400/60">{dailyVerse.reference}</p>
+            <Link href={`/quran/${dailyVerse.surah}`} className="flex items-center gap-1 text-[11px] font-medium text-amber-400 active:text-amber-300">
+              Read Full Surah <ChevronRight className="h-3 w-3" />
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -109,7 +109,7 @@ export default function TimetablePage() {
           <h2 className="text-sm font-bold text-[#f9fafb]">{monthLabel}</h2>
           <div className="flex items-center gap-1">
             <button onClick={shareTimetable} className="rounded-lg p-2 active:bg-gray-800" aria-label="Share timetable">
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : navigator.share ? <Share2 className="h-4 w-4 text-gray-400" /> : <Copy className="h-4 w-4 text-gray-400" />}
+              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Share2 className="h-4 w-4 text-gray-400" />}
             </button>
             <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="rounded-lg p-2 active:bg-gray-800" aria-label="Next month">
               <ChevronRight className="h-5 w-5 text-gray-400" />
