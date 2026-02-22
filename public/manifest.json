@@ -1,0 +1,22 @@
+{
+  "name": "MasjidConnect GY",
+  "short_name": "MasjidConnect",
+  "description": "Linking Faith and Community - Islamic companion app for Georgetown, Guyana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0b14",
+  "theme_color": "#0a0b14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/images/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
