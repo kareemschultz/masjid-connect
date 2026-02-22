@@ -55,6 +55,30 @@ export default function HomePage() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [username, setUsername] = useState('')
 
+  // Schedule push notifications for all prayer times
+  const scheduleNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
+    try {
+      const notificationsEnabled = getItem(KEYS.NOTIFICATIONS_ENABLED, false)
+      if (!notificationsEnabled) return
+
+      const granted = await requestNotificationPermission()
+      if (!granted) return
+
+      cancelAllNotifications()
+      prayerData.forEach((prayer) => {
+        schedulePrayerNotification({ prayerName: prayer.name, prayerTime: prayer.date })
+      })
+
+      const maghrib = prayerData.find((p) => p.name === 'Maghrib')
+      if (maghrib) scheduleIftaarNotification(maghrib.date)
+
+      const fajr = prayerData.find((p) => p.name === 'Fajr')
+      if (fajr) scheduleSuhoorNotification(fajr.date)
+    } catch {
+      // Notifications not supported
+    }
+  }, [])
+
   const loadPrayerTimes = useCallback(async () => {
     try {
       const adhan = await import('adhan')
@@ -62,8 +86,7 @@ export default function HomePage() {
       const madhabKey = getItem(KEYS.MADHAB, 'Shafi')
       const coords = new adhan.Coordinates(6.8013, -58.1551)
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const methodMap: Record<string, () => any> = {
+      const methodMap: Record<string, () => ReturnType<typeof adhan.CalculationMethod.Egyptian>> = {
         MuslimWorldLeague: () => adhan.CalculationMethod.MuslimWorldLeague(),
         Egyptian: () => adhan.CalculationMethod.Egyptian(),
         Karachi: () => adhan.CalculationMethod.Karachi(),
@@ -96,13 +119,12 @@ export default function HomePage() {
         date: prayerMap[name],
       }))
       setPrayers(prayerData)
-      scheduleAllNotifications(prayerData)
+      scheduleNotifications(prayerData)
 
       const now = new Date()
       const next = prayerData.find((p) => p.date > now) || prayerData[0]
       setNextPrayerName(next.name)
-    } catch (err) {
-      console.log('[v0] Prayer times error:', err)
+    } catch {
       const now = new Date()
       const hours = [5, 12, 15, 18, 19]
       const fallback = PRAYER_NAMES.map((name, i) => {
@@ -113,29 +135,7 @@ export default function HomePage() {
       setPrayers(fallback)
       setNextPrayerName(fallback.find(p => p.date > now)?.name || fallback[0].name)
     }
-  }, [scheduleAllNotifications])
-
-  // Schedule push notifications for all prayer times
-  const scheduleAllNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
-    const notificationsEnabled = getItem(KEYS.NOTIFICATIONS_ENABLED, false)
-    if (!notificationsEnabled) return
-
-    const granted = await requestNotificationPermission()
-    if (!granted) return
-
-    cancelAllNotifications()
-    prayerData.forEach((prayer) => {
-      schedulePrayerNotification({ prayerName: prayer.name, prayerTime: prayer.date })
-    })
-
-    // Schedule iftaar notification (Maghrib time)
-    const maghrib = prayerData.find((p) => p.name === 'Maghrib')
-    if (maghrib) scheduleIftaarNotification(maghrib.date)
-
-    // Schedule suhoor notification (before Fajr)
-    const fajr = prayerData.find((p) => p.name === 'Fajr')
-    if (fajr) scheduleSuhoorNotification(fajr.date)
-  }, [])
+  }, [scheduleNotifications])
 
   useEffect(() => {
     // Register service worker
