@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import Link from 'next/link'
@@ -21,6 +21,14 @@ const EXPLORE_ITEMS = [
     href: '/explore/duas',
     color: 'bg-purple-500/20',
     iconColor: 'text-purple-400',
+  },
+  {
+    icon: Brain,
+    label: 'Hifz Mode',
+    description: 'Memorize Quran',
+    href: '/quran/hifz',
+    color: 'bg-indigo-500/20',
+    iconColor: 'text-indigo-400',
   },
   {
     icon: Circle,

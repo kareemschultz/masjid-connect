@@ -9,8 +9,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   BookOpen, Circle, Compass, Calculator, Calendar, Star,
-  Settings, User, CheckCircle2, Timer, Sparkles
+  Settings, User, CheckCircle2, Timer, Sparkles, Brain
 } from 'lucide-react'
+import { OnboardingWizard } from '@/components/onboarding-wizard'
 
 interface PrayerTimeData {
   name: string
@@ -20,11 +21,11 @@ interface PrayerTimeData {
 
 const QUICK_ACTIONS = [
   { icon: BookOpen, label: 'Quran', href: '/quran', color: 'bg-purple-500/20', iconColor: 'text-purple-400' },
+  { icon: Brain, label: 'Hifz', href: '/quran/hifz', color: 'bg-indigo-500/20', iconColor: 'text-indigo-400' },
   { icon: Circle, label: 'Tasbih', href: '/explore/tasbih', color: 'bg-emerald-500/20', iconColor: 'text-emerald-400' },
   { icon: Star, label: 'Adhkar', href: '/explore/adhkar', color: 'bg-amber-500/20', iconColor: 'text-amber-400' },
   { icon: Compass, label: 'Qibla', href: '/explore/qibla', color: 'bg-blue-500/20', iconColor: 'text-blue-400' },
   { icon: Calculator, label: 'Zakat', href: '/explore/zakat', color: 'bg-teal-500/20', iconColor: 'text-teal-400' },
-  { icon: Calendar, label: 'Events', href: '/explore/events', color: 'bg-rose-500/20', iconColor: 'text-rose-400' },
 ]
 
 const CHECKLIST_ITEMS = [
@@ -44,6 +45,8 @@ export default function HomePage() {
   const [checklist, setChecklist] = useState<Record<string, boolean>>({})
   const [streak, setStreak] = useState(0)
   const [points, setPoints] = useState(0)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [username, setUsername] = useState('')
 
   const loadPrayerTimes = useCallback(async () => {
     try {
@@ -84,6 +87,9 @@ export default function HomePage() {
     setChecklist(getItem(KEYS.CHECKLIST, {}))
     setStreak(getItem(KEYS.STREAK, 0))
     setPoints(getItem(KEYS.POINTS, 0))
+    setUsername(getItem(KEYS.USERNAME, ''))
+    const onboardingDone = getItem(KEYS.ONBOARDING_COMPLETE, false)
+    if (!onboardingDone) setShowOnboarding(true)
     loadPrayerTimes()
   }, [loadPrayerTimes])
 
@@ -112,6 +118,18 @@ export default function HomePage() {
 
   const completedCount = Object.values(checklist).filter(Boolean).length
 
+  if (showOnboarding) {
+    return (
+      <OnboardingWizard
+        onComplete={() => {
+          setShowOnboarding(false)
+          setUsername(getItem(KEYS.USERNAME, ''))
+          loadPrayerTimes()
+        }}
+      />
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero Section */}
@@ -131,7 +149,9 @@ export default function HomePage() {
                 className="rounded-xl"
               />
               <div>
-                <h1 className="text-lg font-bold text-white">MasjidConnect GY</h1>
+                <h1 className="text-lg font-bold text-white">
+                  {username ? `Salaam, ${username}` : 'MasjidConnect GY'}
+                </h1>
                 <p className="text-[11px] text-emerald-300/70">{hijriDate}</p>
               </div>
             </div>

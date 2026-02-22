@@ -35,4 +35,10 @@ export const KEYS = {
   STREAK: 'streak',
   PROFILE: 'profile',
   CHECKLIST: 'checklist',
+  ONBOARDING_COMPLETE: 'onboarding_complete',
+  BUDDY_LIST: 'buddy_list',
+  BUDDY_CHALLENGES: 'buddy_challenges',
+  HIFZ_PROGRESS: 'hifz_progress',
+  USERNAME: 'username',
+  NOTIFICATIONS_ENABLED: 'notifications_enabled',
 } as const

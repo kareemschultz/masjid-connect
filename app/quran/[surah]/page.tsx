@@ -7,8 +7,9 @@ import { BottomNav } from '@/components/bottom-nav'
 import { SURAHS } from '@/lib/quran-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
-  BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2
+  BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain
 } from 'lucide-react'
+import Link from 'next/link'
 
 interface Ayah {
   number: number
@@ -149,6 +150,13 @@ export default function SurahReaderPage() {
         <span className="text-xs text-gray-400">
           {surah.numberOfAyahs} Ayahs | {surah.revelationType}
         </span>
+        <Link
+          href="/quran/hifz"
+          className="flex items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
+        >
+          <Brain className="h-3 w-3" />
+          Hifz Mode
+        </Link>
       </div>
 
       {loading ? (
