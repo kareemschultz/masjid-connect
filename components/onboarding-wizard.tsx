@@ -74,13 +74,13 @@ const FEATURES = [
 const RAMADAN_OPTIONS = [
   {
     value: '2026-02-18',
-    label: 'Saudi / Global Sighting',
-    note: 'Tue 18 Feb — follows Saudi moon sighting announcement',
+    label: 'Saudi / International Sighting',
+    note: 'Follows Saudi Arabia\u2019s official moon sighting announcement',
   },
   {
     value: '2026-02-19',
-    label: 'CIOG / Local Sighting',
-    note: 'Wed 19 Feb — Central Islamic Organisation of Guyana',
+    label: 'CIOG / Central Sighting Committee',
+    note: 'Follows the Guyanese moon sighting (CIOG & Central Moon Sighting Committee)',
   },
 ]
 
@@ -379,9 +379,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <p className="mb-5 text-center text-sm text-gray-400">Choose the method used in your community</p>
 
             {/* Method */}
-            <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Calculation Method
             </label>
+            <p className="mb-2 text-[11px] text-gray-500">These affect only Fajr and Isha times. For most of Guyana, Egyptian General Authority or Muslim World League work well.</p>
             <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900">
               {CALCULATION_METHODS.map((m) => (
                 <button
@@ -399,21 +400,25 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             </div>
 
             {/* Madhab */}
-            <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
-              Madhab (Asr Calculation)
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              Asr Prayer Time
             </label>
+            <p className="mb-3 text-[11px] text-gray-500">Different communities pray Asr at slightly different times. Choose what your local masjid follows.</p>
             <div className="flex gap-3">
               {MADHABS.map((m) => (
                 <button
                   key={m.key}
                   onClick={() => setMadhab(m.key)}
-                  className={`flex-1 rounded-xl border-2 px-4 py-3 text-sm font-semibold transition-all ${
+                  className={`flex-1 rounded-xl border-2 px-4 py-3 text-left transition-all ${
                     madhab === m.key
                       ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
                       : 'border-gray-800 bg-gray-900 text-gray-400 active:bg-gray-800'
                   }`}
                 >
-                  {m.label}
+                  <span className="block text-sm font-semibold">{m.label}</span>
+                  <span className="block mt-0.5 text-[10px] text-gray-500">
+                    {m.key === 'Hanafi' ? 'Later Asr' : 'Standard Asr (earlier)'}
+                  </span>
                 </button>
               ))}
             </div>
@@ -467,7 +472,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               ))}
             </div>
 
-            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3">
+            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 space-y-2">
+              <p className="text-[11px] leading-relaxed text-gray-500">
+                Both CIOG and the Central Moon Sighting Committee typically announce the same date for Guyana.
+              </p>
               <p className="text-[11px] leading-relaxed text-gray-500">
                 This setting affects Iftaar times, Ramadan day count, and fasting tracker. You can change it anytime under Settings.
               </p>

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Settings, Clock, BookOpen, Bell, Moon, Globe,
   Info, FileText, RotateCcw, Volume2, MessageSquarePlus,
-  Sun, Sunset, CloudSun, MoonStar, Shield
+  Sun, Sunset, CloudSun, MoonStar, Shield, LogOut, User
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -27,6 +27,17 @@ const PRAYER_NOTIF_CONFIG = [
   { key: 'Iftaar', label: 'Iftaar Alert', icon: Sunset, color: 'bg-emerald-600' },
 ]
 
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true" className="shrink-0">
+      <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 33.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.7-.4-4z"/>
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5.1l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.7 16.4 44 24 44z"/>
+      <path fill="#1976D2" d="M43.6 20H24v8h11.3c-.8 2.6-2.4 4.7-4.6 6.2l6.2 5.2c3.6-3.4 5.8-8.3 5.8-13.4 0-1.3-.1-2.7-.4-4z"/>
+    </svg>
+  )
+}
+
 export default function SettingsPage() {
   const [method, setMethod] = useState('Egyptian')
   const [madhab, setMadhab] = useState('Shafi')
@@ -37,6 +48,8 @@ export default function SettingsPage() {
   const [resetConfirm, setResetConfirm] = useState(false)
   const [adminTaps, setAdminTaps] = useState(0)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [session, setSession] = useState<{ user?: { name?: string; email?: string; image?: string } } | null>(null)
+  const [signingIn, setSigningIn] = useState(false)
 
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
@@ -45,6 +58,11 @@ export default function SettingsPage() {
     setNotifs(getItem(KEYS.NOTIFICATIONS_ENABLED, false))
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
     setIsAdmin(getItem(KEYS.IS_ADMIN, false))
+    // Check auth session
+    fetch('/api/auth/get-session', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.user) setSession(data) })
+      .catch(() => {})
   }, [])
 
   const updateMethod = (val: string) => { setMethod(val); setItem(KEYS.CALCULATION_METHOD, val) }
@@ -86,6 +104,24 @@ export default function SettingsPage() {
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    setSigningIn(true)
+    try {
+      const { signIn } = await import('@/lib/auth-client')
+      await signIn.social({ provider: 'google', callbackURL: '/settings' })
+    } catch {
+      setSigningIn(false)
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      const { signOut } = await import('@/lib/auth-client')
+      await signOut()
+      setSession(null)
+    } catch {}
+  }
+
   const resetAllData = () => { localStorage.clear(); window.location.reload() }
 
   const methodLabel = CALCULATION_METHODS.find(m => m.key === method)?.label || method
@@ -97,6 +133,45 @@ export default function SettingsPage() {
       <PageHero icon={Settings} title="Settings" subtitle="Customize Your Experience" gradient="from-gray-800 to-gray-900" showBack />
 
       <div className="space-y-5 px-4 pt-5">
+        {/* Account */}
+        <SettingGroup label="Account" accentColor="bg-blue-500">
+          {session?.user ? (
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                {session.user.image ? (
+                  <img src={session.user.image} alt="" className="h-12 w-12 rounded-full" />
+                ) : (
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20">
+                    <User className="h-5 w-5 text-emerald-400" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-[#f9fafb] truncate">{session.user.name || 'User'}</p>
+                  <p className="text-xs text-gray-400 truncate">{session.user.email}</p>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="flex h-9 items-center gap-1.5 rounded-xl bg-gray-800 px-3 text-xs font-medium text-gray-300 active:bg-gray-700"
+                >
+                  <LogOut className="h-3.5 w-3.5" /> Sign Out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4">
+              <p className="mb-3 text-xs text-gray-400">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={signingIn}
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-700 bg-gray-800 py-3 text-sm font-semibold text-gray-200 transition-all active:bg-gray-700 disabled:opacity-50"
+              >
+                <GoogleIcon />
+                {signingIn ? 'Signing in...' : 'Sign in with Google'}
+              </button>
+            </div>
+          )}
+        </SettingGroup>
+
         {/* Prayer Settings */}
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
           <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Calculation Method" value={methodLabel.split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />

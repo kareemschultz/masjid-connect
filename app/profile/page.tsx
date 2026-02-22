@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   User, Flame, Star, BookOpen, CheckSquare, Trophy,
-  Target, TrendingUp, Edit3, Save
+  Target, TrendingUp, Edit3, Save, LogOut
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -18,6 +18,17 @@ function dateKey(d: Date): string {
   return d.toISOString().split('T')[0]
 }
 
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true" className="shrink-0">
+      <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 33.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.7-.4-4z"/>
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5.1l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.7 16.4 44 24 44z"/>
+      <path fill="#1976D2" d="M43.6 20H24v8h11.3c-.8 2.6-2.4 4.7-4.6 6.2l6.2 5.2c3.6-3.4 5.8-8.3 5.8-13.4 0-1.3-.1-2.7-.4-4z"/>
+    </svg>
+  )
+}
+
 export default function ProfilePage() {
   const [username, setUsername] = useState('')
   const [editing, setEditing] = useState(false)
@@ -26,6 +37,8 @@ export default function ProfilePage() {
   const [streak, setStreak] = useState(0)
   const [prayerLog, setPrayerLog] = useState<PrayerLog>({})
   const [bookmarks, setBookmarks] = useState<{ surah: number; ayah: number }[]>([])
+  const [session, setSession] = useState<{ user?: { name?: string; email?: string; image?: string } } | null>(null)
+  const [signingIn, setSigningIn] = useState(false)
 
   useEffect(() => {
     const name = getItem(KEYS.USERNAME, '')
@@ -35,6 +48,10 @@ export default function ProfilePage() {
     setStreak(getItem(KEYS.STREAK, 0))
     setPrayerLog(getItem(KEYS.PRAYER_LOG, {}))
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
+    fetch('/api/auth/get-session', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.user) setSession(data) })
+      .catch(() => {})
   }, [])
 
   const saveName = () => {
@@ -94,6 +111,52 @@ export default function ProfilePage() {
       />
 
       <div className="space-y-5 px-4 pt-5">
+        {/* Google Sign-In */}
+        {!session?.user && (
+          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <p className="mb-3 text-xs text-gray-400">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
+            <button
+              onClick={async () => {
+                setSigningIn(true)
+                try {
+                  const { signIn } = await import('@/lib/auth-client')
+                  await signIn.social({ provider: 'google', callbackURL: '/profile' })
+                } catch { setSigningIn(false) }
+              }}
+              disabled={signingIn}
+              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-700 bg-gray-800 py-3 text-sm font-semibold text-gray-200 transition-all active:bg-gray-700 disabled:opacity-50"
+            >
+              <GoogleIcon />
+              {signingIn ? 'Signing in...' : 'Sign in with Google'}
+            </button>
+          </div>
+        )}
+        {session?.user && (
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            {session.user.image ? (
+              <img src={session.user.image} alt="" className="h-10 w-10 rounded-full" />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20">
+                <User className="h-4 w-4 text-emerald-400" />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-[#f9fafb] truncate">{session.user.name}</p>
+              <p className="text-[11px] text-gray-400 truncate">{session.user.email}</p>
+            </div>
+            <button
+              onClick={async () => {
+                const { signOut } = await import('@/lib/auth-client')
+                await signOut()
+                setSession(null)
+              }}
+              className="flex h-8 items-center gap-1 rounded-lg bg-gray-800 px-2.5 text-[11px] font-medium text-gray-400 active:bg-gray-700"
+            >
+              <LogOut className="h-3 w-3" /> Sign Out
+            </button>
+          </div>
+        )}
+
         {/* Profile card */}
         <div className="flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-6">
           <div className="relative">

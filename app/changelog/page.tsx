@@ -6,11 +6,55 @@ import { BottomNav } from '@/components/bottom-nav'
 
 const changelog = [
   {
+    version: 'v1.9.0',
+    date: 'February 2026',
+    label: 'Community & Learning',
+    color: 'purple',
+    tag: 'current',
+    sections: [
+      {
+        heading: 'Madrasa',
+        items: [
+          'Restored full Noorani Qaida with 12 interactive lessons and 29 Arabic letters with makhraj',
+          'Arabic letter forms viewer (initial, medial, final) with pronunciation guides',
+          'Tajweed rules: Noon Sakinah, Raa, Laam, and Waqf lessons',
+          'Progress tracking across all Qaida lessons',
+        ],
+      },
+      {
+        heading: 'Community Features',
+        items: [
+          'Community Dua Board — submit prayer requests, react with Ameen',
+          'Quran Khatam Collective — claim a Juz, complete the Quran together',
+          'Halal Business Directory — searchable directory for Guyana',
+          'Community Feed — share reminders, questions, and announcements',
+        ],
+      },
+      {
+        heading: 'Tracker Expansion',
+        items: [
+          'Year-round fasting types: Shawwal, Monday & Thursday, Ayyam al-Bayd, Voluntary',
+          'Each fasting type with its own calendar and progress tracking',
+        ],
+      },
+      {
+        heading: 'UX Improvements',
+        items: [
+          'Simplified Prayer Settings in onboarding for new Muslims',
+          'Clearer moon sighting labels (CIOG / Central Sighting Committee)',
+          'Google Sign-In accessible from Settings and Profile pages',
+          'New feedback categories: Request New Masjid, Report Masjid Error',
+          'Animated star field on Explore and Quran page heroes',
+          'Back button on Map page',
+        ],
+      },
+    ],
+  },
+  {
     version: 'v1.7.0',
     date: 'February 2026',
     label: 'v2 Migration',
     color: 'emerald',
-    tag: 'current',
     sections: [
       {
         heading: 'Architecture Upgrade',

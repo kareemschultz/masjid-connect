@@ -18,6 +18,7 @@ export default function MapPage() {
         title="Map View"
         subtitle="Masjids near you"
         gradient="from-emerald-900 to-teal-900"
+        showBack
       />
       <div className="px-4 pt-4 max-w-2xl mx-auto">
         <MapView submissions={submissions} />

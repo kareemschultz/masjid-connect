@@ -100,6 +100,7 @@ export default function QuranPage() {
         title="Quran"
         subtitle="114 surahs · 6,236 ayahs"
         gradient="from-violet-900 to-purple-900"
+        stars
       />
 
       {/* ── Mode Cards ─────────────────────────────── */}

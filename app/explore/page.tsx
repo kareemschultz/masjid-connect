@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -20,6 +20,7 @@ const EXPLORE_ITEMS = [
   { icon: Users, label: 'Buddy', description: 'Faith Partners', href: '/explore/buddy', color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
   { icon: UtensilsCrossed, label: 'Iftaar', description: 'Tonight\'s Menu', href: '/iftaar', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
   { icon: Headphones, label: 'Lectures', description: 'Anwar al-Awlaki', href: '/explore/lectures', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
+  { icon: Users2, label: 'Community', description: 'Connect with Muslims', href: '/explore/community', color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400' },
 ]
 
 export default function ExplorePage() {
@@ -27,7 +28,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-24">
-      <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" />
+      <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" stars />
 
       <div className="px-4 pt-5 -mt-2">
         <div className="grid grid-cols-2 gap-3 animate-stagger">
