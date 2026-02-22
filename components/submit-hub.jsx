@@ -9,28 +9,28 @@ const TYPES = [
     icon: '🍽️',
     label: 'Iftaar Report',
     desc: "Share what your masjid is serving tonight",
-    color: 'border-emerald-200 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20',
+    color: 'border-emerald-800/40 hover:bg-emerald-900/20',
   },
   {
     id: 'event',
     icon: '🗓️',
     label: 'Community Event',
     desc: "Submit a lecture, program, or upcoming event",
-    color: 'border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20',
+    color: 'border-blue-200 hover:bg-blue-50',
   },
   {
     id: 'masjid',
     icon: '🕌',
     label: 'Submit / Correct a Masjid',
     desc: "Add a new masjid or update an existing one's info",
-    color: 'border-amber-200 dark:border-amber-800 hover:bg-amber-50 dark:hover:bg-amber-900/20',
+    color: 'border-amber-200 hover:bg-amber-900/20',
   },
   {
     id: 'feedback',
     icon: '💬',
     label: 'Feedback / Bug',
     desc: "Feature ideas, bug reports, or general feedback",
-    color: 'border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-900/20',
+    color: 'border-purple-200 hover:bg-purple-50',
   },
 ]
 
@@ -50,22 +50,22 @@ export default function SubmitHub({ onClose, onIftaar, onEvent }) {
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl w-full max-w-md shadow-2xl animate-slide-up"
+        className="bg-gray-900 rounded-t-3xl sm:rounded-2xl w-full max-w-md shadow-2xl animate-slide-up"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div>
-            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg font-amiri">
+            <h3 className="font-bold text-gray-100 text-lg font-amiri">
               What would you like to submit?
             </h3>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-400 mt-0.5">
               Choose a category below
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-800 transition-colors"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -82,8 +82,8 @@ export default function SubmitHub({ onClose, onIftaar, onEvent }) {
             >
               <span className="text-3xl shrink-0">{t.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">{t.label}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-snug">{t.desc}</p>
+                <p className="font-semibold text-sm text-gray-100">{t.label}</p>
+                <p className="text-xs text-gray-500 mt-0.5 leading-snug">{t.desc}</p>
               </div>
             </button>
           ))}

@@ -49,7 +49,7 @@ export function SelectModal({ open, onClose, title, options, selected, onSelect 
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-colors ${
                 selected === opt.key
                   ? 'bg-emerald-500/10 text-emerald-400'
-                  : 'text-foreground active:bg-white/5'
+                  : 'text-foreground active:bg-gray-900/5'
               }`}
             >
               <span className="flex-1 text-sm font-medium">{opt.label}</span>

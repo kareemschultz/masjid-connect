@@ -57,13 +57,13 @@ function ArchiveView() {
   return (
     <div className="space-y-4">
       {/* Archive mode tabs */}
-      <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
+      <div className="flex gap-1 bg-gray-800 rounded-xl p-1">
         <button
           onClick={() => setArchiveMode('by-masjid')}
           className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             archiveMode === 'by-masjid'
-              ? 'bg-white dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400'
+              ? 'bg-gray-700 text-emerald-300 shadow-sm'
+              : 'text-gray-500'
           }`}
         >
           🕌 By Masjid
@@ -72,8 +72,8 @@ function ArchiveView() {
           onClick={() => setArchiveMode('by-date')}
           className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             archiveMode === 'by-date'
-              ? 'bg-white dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400'
+              ? 'bg-gray-700 text-emerald-300 shadow-sm'
+              : 'text-gray-500'
           }`}
         >
           📅 By Date
@@ -90,7 +90,7 @@ function ArchiveView() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Filter masjids…"
-              className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-8 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-9 pr-8 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
             {searchQuery && (
               <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -105,24 +105,24 @@ function ArchiveView() {
             const history = masjidHistory[m.id] || []
 
             return (
-              <div key={m.id} className="bg-white dark:bg-gray-800 rounded-2xl border border-emerald-50 dark:border-gray-700 overflow-hidden">
+              <div key={m.id} className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
                 <button
                   onClick={() => toggleMasjid(m.id)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-emerald-900/10 transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-lg shrink-0">🕌</span>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100 truncate">{m.name}</p>
+                      <p className="text-sm font-bold text-emerald-100 truncate">{m.name}</p>
                       <p className="text-[10px] text-gray-400 truncate">{m.address}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
                     {!m.verified && (
-                      <span className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-1.5 py-0.5 rounded-full">unverified</span>
+                      <span className="text-[10px] text-amber-600 bg-amber-900/20 px-1.5 py-0.5 rounded-full">unverified</span>
                     )}
                     {isExpanded && history.length > 0 && (
-                      <span className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded-full">
+                      <span className="text-[10px] text-emerald-600 bg-emerald-900/20 px-1.5 py-0.5 rounded-full">
                         {history.length} report{history.length !== 1 ? 's' : ''}
                       </span>
                     )}
@@ -135,10 +135,10 @@ function ArchiveView() {
                 </button>
 
                 {isExpanded && !isLoading && (
-                  <div className="border-t border-emerald-50 dark:border-gray-700 px-4 pb-3">
+                  <div className="border-t border-gray-700 px-4 pb-3">
                     {history.length === 0 ? (
                       <div className="py-4 text-center">
-                        <p className="text-gray-400 dark:text-gray-500 text-xs">No reports submitted yet for this masjid.</p>
+                        <p className="text-gray-400 text-xs">No reports submitted yet for this masjid.</p>
                       </div>
                     ) : (
                       <div className="mt-3 space-y-2">
@@ -148,13 +148,13 @@ function ArchiveView() {
                             return acc
                           }, {})
                         ).sort(([a], [b]) => b.localeCompare(a)).map(([date, entries]) => (
-                          <div key={date} className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-                            <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 mb-1.5">
+                          <div key={date} className="bg-gray-700/50 rounded-xl p-3">
+                            <p className="text-[10px] font-semibold text-emerald-400 mb-1.5">
                               📅 {date}
                             </p>
                             {entries.map(s => (
                               <div key={s.id} className="mb-2 last:mb-0">
-                                <p className="text-xs text-gray-800 dark:text-gray-200 mb-1">🍽️ {s.menu}</p>
+                                <p className="text-xs text-gray-200 mb-1">🍽️ {s.menu}</p>
                                 <div className="flex items-center gap-3 text-[10px] text-gray-400">
                                   <span>by <strong>{s.submittedBy}</strong></span>
                                   {s.servings && (
@@ -174,7 +174,7 @@ function ArchiveView() {
                                   )}
                                 </div>
                                 {s.notes && (
-                                  <p className="mt-1 text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded px-2 py-1">{s.notes}</p>
+                                  <p className="mt-1 text-[10px] text-amber-400 bg-amber-900/20 rounded px-2 py-1">{s.notes}</p>
                                 )}
                               </div>
                             ))}
@@ -193,14 +193,14 @@ function ArchiveView() {
       {/* ── By Date: search form + results ── */}
       {archiveMode === 'by-date' && (
         <div className="space-y-3">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-emerald-50 dark:border-gray-700">
-            <h3 className="text-sm font-semibold text-emerald-900 dark:text-emerald-100 mb-3">Filter by Date</h3>
+          <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+            <h3 className="text-sm font-semibold text-emerald-100 mb-3">Filter by Date</h3>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
                 <select
                   value={selectedMasjid}
                   onChange={e => setSelectedMasjid(e.target.value)}
-                  className="w-full appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full appearance-none bg-gray-700 border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-200 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 >
                   <option value="">All Masjids</option>
                   {masjids.map(m => (
@@ -215,7 +215,7 @@ function ArchiveView() {
                 min="2026-02-18"
                 max={guyanaDate()}
                 onChange={e => setSelectedDate(e.target.value)}
-                className="flex-1 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="flex-1 bg-gray-700 border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
               />
               <button
                 onClick={searchByDate}
@@ -229,24 +229,24 @@ function ArchiveView() {
           </div>
 
           {dateResults.length === 0 && !searching ? (
-            <div className="text-center py-10 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-emerald-200 dark:border-emerald-800">
+            <div className="text-center py-10 bg-gray-800 rounded-2xl border border-dashed border-emerald-800/40">
               <div className="text-4xl mb-2">📅</div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Pick a date and tap Search to view past reports.</p>
+              <p className="text-gray-500 text-sm">Pick a date and tap Search to view past reports.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {dateResults.map(s => {
                 const masjid = masjids.find(m => m.id === s.masjidId)
                 return (
-                  <div key={s.id} className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-emerald-50 dark:border-gray-700">
+                  <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h4 className="font-bold text-emerald-900 dark:text-emerald-100 text-sm">🕌 {masjid?.name || s.masjidId}</h4>
+                        <h4 className="font-bold text-emerald-100 text-sm">🕌 {masjid?.name || s.masjidId}</h4>
                         <p className="text-[10px] text-gray-400">{s.date} · by {s.submittedBy}</p>
                       </div>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-3 py-2 mb-2">
-                      <p className="text-sm text-gray-800 dark:text-gray-200">🍽️ {s.menu}</p>
+                    <div className="bg-gray-700/50 rounded-xl px-3 py-2 mb-2">
+                      <p className="text-sm text-gray-200">🍽️ {s.menu}</p>
                     </div>
                     <div className="flex items-center gap-3 text-[10px] text-gray-400">
                       {s.servings && <span className="flex items-center gap-1"><Users className="w-3 h-3" />{s.servings} servings</span>}
@@ -254,7 +254,7 @@ function ArchiveView() {
                       {(s.likes || 0) > 0 && <span className="flex items-center gap-1 text-red-500"><Heart className="w-3 h-3" />{s.likes} likes</span>}
                     </div>
                     {s.notes && (
-                      <p className="mt-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-1.5">{s.notes}</p>
+                      <p className="mt-2 text-xs text-amber-400 bg-amber-900/20 rounded-lg px-3 py-1.5">{s.notes}</p>
                     )}
                   </div>
                 )
@@ -273,12 +273,12 @@ function SilentMasjids({ submissions, onSubmit }) {
   const silent = masjids.filter(m => !reportedIds.has(m.id))
   if (silent.length === 0) return null
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-700/50 transition-colors"
       >
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+        <span className="text-xs font-semibold text-gray-500">
           {silent.length} masjid{silent.length !== 1 ? 's' : ''} — no update submitted yet
         </span>
         {open
@@ -286,18 +286,18 @@ function SilentMasjids({ submissions, onSubmit }) {
           : <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />}
       </button>
       {open && (
-        <div className="border-t border-gray-100 dark:border-gray-700 divide-y divide-gray-50 dark:divide-gray-700/50">
+        <div className="border-t border-gray-700 divide-y divide-gray-50">
           {silent.map(m => (
             <div key={m.id} className="flex items-center gap-3 px-4 py-2.5">
               <span className="text-base shrink-0">🕌</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{m.name}</p>
+                <p className="text-xs font-medium text-gray-300 truncate">{m.name}</p>
                 <p className="text-[10px] text-gray-400 truncate">{m.address}</p>
               </div>
               {onSubmit && (
                 <button
                   onClick={() => onSubmit(m.id)}
-                  className="shrink-0 text-[10px] text-emerald-600 dark:text-emerald-400 hover:underline"
+                  className="shrink-0 text-[10px] text-emerald-600 hover:underline"
                 >
                   + Report
                 </button>
