@@ -50,35 +50,59 @@ export default function HomePage() {
 
   const loadPrayerTimes = useCallback(async () => {
     try {
-      const adhan = await import('adhan')
+      const { Coordinates, CalculationMethod, Madhab, PrayerTimes: AdhanPrayerTimes } = await import('adhan')
       const methodKey = getItem(KEYS.CALCULATION_METHOD, 'Egyptian')
       const madhabKey = getItem(KEYS.MADHAB, 'Shafi')
-      const coords = new adhan.Coordinates(6.8013, -58.1551)
-      const method = (adhan.CalculationMethod as Record<string, () => adhan.CalculationParameters>)[methodKey]?.() 
-        || adhan.CalculationMethod.Egyptian()
-      method.madhab = madhabKey === 'Hanafi' ? adhan.Madhab.Hanafi : adhan.Madhab.Shafi
-      const pt = new adhan.PrayerTimes(coords, new Date(), method)
+      const coords = new Coordinates(6.8013, -58.1551)
+
+      const methodMap: Record<string, () => ReturnType<typeof CalculationMethod.Egyptian>> = {
+        MuslimWorldLeague: () => CalculationMethod.MuslimWorldLeague(),
+        Egyptian: () => CalculationMethod.Egyptian(),
+        Karachi: () => CalculationMethod.Karachi(),
+        NorthAmerica: () => CalculationMethod.NorthAmerica(),
+        MoonsightingCommittee: () => CalculationMethod.MoonsightingCommittee(),
+        UmmAlQura: () => CalculationMethod.UmmAlQura(),
+        Dubai: () => CalculationMethod.Dubai(),
+        Qatar: () => CalculationMethod.Qatar(),
+        Kuwait: () => CalculationMethod.Kuwait(),
+        Singapore: () => CalculationMethod.Singapore(),
+        Tehran: () => CalculationMethod.Tehran(),
+        Turkey: () => CalculationMethod.Turkey(),
+      }
+
+      const params = (methodMap[methodKey] || methodMap.Egyptian)()
+      params.madhab = madhabKey === 'Hanafi' ? Madhab.Hanafi : Madhab.Shafi
+      const pt = new AdhanPrayerTimes(coords, new Date(), params)
+
+      const prayerMap: Record<string, Date> = {
+        Fajr: pt.fajr,
+        Dhuhr: pt.dhuhr,
+        Asr: pt.asr,
+        Maghrib: pt.maghrib,
+        Isha: pt.isha,
+      }
 
       const prayerData: PrayerTimeData[] = PRAYER_NAMES.map((name) => ({
         name,
-        time: formatTime(pt[name.toLowerCase() as keyof typeof pt] as Date),
-        date: pt[name.toLowerCase() as keyof typeof pt] as Date,
+        time: formatTime(prayerMap[name]),
+        date: prayerMap[name],
       }))
       setPrayers(prayerData)
 
       const now = new Date()
       const next = prayerData.find((p) => p.date > now) || prayerData[0]
       setNextPrayerName(next.name)
-    } catch {
-      // Fallback prayer times
+    } catch (err) {
+      console.log('[v0] Prayer times error:', err)
       const now = new Date()
+      const hours = [5, 12, 15, 18, 19]
       const fallback = PRAYER_NAMES.map((name, i) => {
         const d = new Date(now)
-        d.setHours(5 + i * 3, 0, 0, 0)
+        d.setHours(hours[i], i === 0 ? 15 : 0, 0, 0)
         return { name, time: formatTime(d), date: d }
       })
       setPrayers(fallback)
-      setNextPrayerName(fallback[0].name)
+      setNextPrayerName(fallback.find(p => p.date > now)?.name || fallback[0].name)
     }
   }, [])
 

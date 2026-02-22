@@ -31,7 +31,7 @@ export function PrayerStrip({ prayers }: PrayerStripProps) {
   }, [prayers])
 
   return (
-    <div className="flex gap-2 overflow-x-auto px-4 pb-2 scrollbar-none">
+    <div className="flex gap-2 overflow-x-auto px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {prayers.map((prayer) => {
         const isNext = prayer.name === nextPrayer
         const Icon = PRAYER_ICONS[prayer.name] || Sun

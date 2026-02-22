@@ -1,5 +1,3 @@
-'use client'
-
 export function getItem<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback
   try {

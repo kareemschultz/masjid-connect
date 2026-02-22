@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+import { Geist } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const geistSans = Geist({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'MasjidConnect GY',
@@ -28,16 +27,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-background">
+    <html lang="en" className="bg-[#0a0b14]">
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${geistSans.className} antialiased bg-[#0a0b14] text-[#f9fafb]`}>
         {children}
-        <Analytics />
       </body>
     </html>
   )
