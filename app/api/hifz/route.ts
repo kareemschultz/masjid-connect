@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { hifzProgress } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 
-// GET /api/hifz?userId=<uuid>&surah=<number>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     const surah = req.nextUrl.searchParams.get('surah')
 
@@ -22,9 +22,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/hifz — upsert hifz progress
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { userId, surahNumber, ayahNumber, status, accuracy } = body
 

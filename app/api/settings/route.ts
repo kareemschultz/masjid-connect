@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
-// GET /api/settings?userId=<uuid>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
 
@@ -34,9 +34,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// PATCH /api/settings — update settings
 export async function PATCH(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { userId, ...settings } = body
 

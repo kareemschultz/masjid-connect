@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { bookmarks } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 
-// GET /api/bookmarks?userId=<uuid>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
 
@@ -17,9 +17,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/bookmarks — toggle bookmark
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { userId, surahNumber, ayahNumber, note } = body
 
@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Check if exists - toggle
     const existing = await db.select().from(bookmarks).where(
       and(
         eq(bookmarks.userId, userId),

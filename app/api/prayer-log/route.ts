@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { prayerLogs } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 
-// GET /api/prayer-log?userId=<uuid>&date=<YYYY-MM-DD>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     const date = req.nextUrl.searchParams.get('date')
 
@@ -22,9 +22,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/prayer-log — upsert prayer status
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { userId, prayerName, date, status } = body
 

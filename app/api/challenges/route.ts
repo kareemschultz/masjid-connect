@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { challenges, challengeParticipants, users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
-// GET /api/challenges?userId=<uuid>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
 
-    // Get challenges user participates in
     const participations = await db.select({
       challengeId: challengeParticipants.challengeId,
       progress: challengeParticipants.progress,
@@ -33,9 +32,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/challenges — create challenge
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { creatorId, title, description, type, targetValue, startDate, endDate } = body
 
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
       .values({ creatorId, title, description, type, targetValue, startDate, endDate })
       .returning()
 
-    // Auto-add creator as participant
     await db.insert(challengeParticipants).values({
       challengeId: challenge.id,
       userId: creatorId,

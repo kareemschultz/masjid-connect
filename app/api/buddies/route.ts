@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { buddies, users } from '@/lib/db/schema'
-import { eq, or, and } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 
-// GET /api/buddies?userId=<uuid>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const userId = req.nextUrl.searchParams.get('userId')
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
 
@@ -32,9 +32,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/buddies — send buddy request
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { userId, buddyUserId } = body
 
@@ -58,9 +58,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH /api/buddies — accept/reject
 export async function PATCH(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { id, status } = body
 

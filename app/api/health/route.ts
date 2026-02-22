@@ -11,11 +11,11 @@ export async function GET() {
     version: process.env.npm_package_version || '0.1.0',
   }
 
-  // Optionally check DB connection
   if (process.env.DATABASE_URL) {
     try {
-      const { db } = await import('@/lib/db')
+      const { getDb } = await import('@/lib/db')
       const { users } = await import('@/lib/db/schema')
+      const db = getDb()
       await db.select({ id: users.id }).from(users).limit(1)
       Object.assign(healthcheck, { database: 'connected' })
     } catch {

@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import bcrypt from 'bcryptjs'
 
-// GET /api/users?id=<uuid>
 export async function GET(req: NextRequest) {
   try {
+    const db = getDb()
     const id = req.nextUrl.searchParams.get('id')
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
 
     const user = await db.select().from(users).where(eq(users.id, id)).limit(1)
     if (!user.length) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-    // Never return password hash
     const { passwordHash: _, ...safeUser } = user[0]
     return NextResponse.json(safeUser)
   } catch (err) {
@@ -22,9 +21,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/users — register
 export async function POST(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { username, email, password } = body
 
@@ -48,15 +47,14 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH /api/users — update profile/settings
 export async function PATCH(req: NextRequest) {
   try {
+    const db = getDb()
     const body = await req.json()
     const { id, ...updates } = body
 
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
 
-    // Prevent updating password hash directly
     delete updates.passwordHash
     updates.updatedAt = new Date()
 

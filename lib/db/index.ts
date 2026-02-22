@@ -2,17 +2,24 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from './schema'
 
-const connectionString = process.env.DATABASE_URL
+// Lazy singleton — only connects when getDb() is first called,
+// so the app boots even when DATABASE_URL is not set (e.g. v0 preview).
+let _db: ReturnType<typeof drizzle<typeof schema>> | null = null
 
-// Singleton pattern for connection pooling
-const globalForDb = globalThis as unknown as {
-  conn: ReturnType<typeof postgres> | undefined
+export function getDb() {
+  if (_db) return _db
+
+  const url = process.env.DATABASE_URL
+  if (!url) {
+    throw new Error(
+      'DATABASE_URL is not set. Database features are unavailable in this environment.'
+    )
+  }
+
+  const conn = postgres(url, { max: 10 })
+  _db = drizzle(conn, { schema })
+  return _db
 }
 
-const conn = globalForDb.conn ?? postgres(connectionString!, { max: 10 })
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForDb.conn = conn
-}
-
-export const db = drizzle(conn, { schema })
+// Re-export schema for convenience
+export { schema }

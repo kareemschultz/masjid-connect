@@ -12,6 +12,13 @@ import {
   Settings, User, CheckCircle2, Timer, Sparkles, Brain
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
+import {
+  requestNotificationPermission,
+  schedulePrayerNotification,
+  scheduleIftaarNotification,
+  scheduleSuhoorNotification,
+  cancelAllNotifications,
+} from '@/lib/notifications'
 
 interface PrayerTimeData {
   name: string
@@ -89,6 +96,7 @@ export default function HomePage() {
         date: prayerMap[name],
       }))
       setPrayers(prayerData)
+      scheduleAllNotifications(prayerData)
 
       const now = new Date()
       const next = prayerData.find((p) => p.date > now) || prayerData[0]
@@ -105,9 +113,36 @@ export default function HomePage() {
       setPrayers(fallback)
       setNextPrayerName(fallback.find(p => p.date > now)?.name || fallback[0].name)
     }
+  }, [scheduleAllNotifications])
+
+  // Schedule push notifications for all prayer times
+  const scheduleAllNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
+    const notificationsEnabled = getItem(KEYS.NOTIFICATIONS_ENABLED, false)
+    if (!notificationsEnabled) return
+
+    const granted = await requestNotificationPermission()
+    if (!granted) return
+
+    cancelAllNotifications()
+    prayerData.forEach((prayer) => {
+      schedulePrayerNotification({ prayerName: prayer.name, prayerTime: prayer.date })
+    })
+
+    // Schedule iftaar notification (Maghrib time)
+    const maghrib = prayerData.find((p) => p.name === 'Maghrib')
+    if (maghrib) scheduleIftaarNotification(maghrib.date)
+
+    // Schedule suhoor notification (before Fajr)
+    const fajr = prayerData.find((p) => p.name === 'Fajr')
+    if (fajr) scheduleSuhoorNotification(fajr.date)
   }, [])
 
   useEffect(() => {
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {})
+    }
+
     setHijriDate(getHijriDate())
     setChecklist(getItem(KEYS.CHECKLIST, {}))
     setStreak(getItem(KEYS.STREAK, 0))
