@@ -1,8 +1,10 @@
+// Rename this file to drizzle.config.ts at project root when deploying with Docker.
+
 import { defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
-  schema: './docker/db/schema.ts',
-  out: './docker/migrations',
+  schema: './lib/db/schema.ts',
+  out: './drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {
     url: process.env.DATABASE_URL!,

@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Circle, Brain, Sparkles } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import Link from 'next/link'
@@ -71,6 +71,14 @@ const EXPLORE_ITEMS = [
     iconColor: 'text-indigo-400',
   },
   {
+    icon: Sparkles,
+    label: '99 Names',
+    description: 'Asma Al-Husna',
+    href: '/explore/names',
+    color: 'bg-amber-500/20',
+    iconColor: 'text-amber-400',
+  },
+  {
     icon: Users,
     label: 'Buddy',
     description: 'Faith Partners',
@@ -96,7 +104,7 @@ export default function ExplorePage() {
             <Link
               key={item.label}
               href={item.href}
-              className="flex flex-col items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-6 transition-all active:scale-95"
+              className="flex flex-col items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-6 transition-all duration-200 active:scale-95 hover:border-gray-700 hover:bg-gray-800/80"
             >
               <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${item.color}`}>
                 <item.icon className={`h-6 w-6 ${item.iconColor}`} />

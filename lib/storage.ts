@@ -39,4 +39,7 @@ export const KEYS = {
   HIFZ_PROGRESS: 'hifz_progress',
   USERNAME: 'username',
   NOTIFICATIONS_ENABLED: 'notifications_enabled',
+  LAST_READ: 'last_read',
+  QURAN_FONT_SIZE: 'quran_font_size',
+  INSTALL_PROMPT_DISMISSED: 'install_prompt_dismissed',
 } as const

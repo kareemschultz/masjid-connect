@@ -9,7 +9,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   BookOpen, Circle, Compass, Calculator, Star,
-  Settings, User, CheckCircle2, Timer, Sparkles, Brain
+  Settings, User, CheckCircle2, Timer, Sparkles, Brain,
+  ChevronRight, Flame, BookMarked
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
 import {
@@ -44,6 +45,33 @@ const CHECKLIST_ITEMS = [
   { key: 'sunnah', label: 'Sunnah Prayers' },
 ]
 
+// Daily verses -- cycles based on day-of-year
+const DAILY_VERSES = [
+  { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', translation: 'Indeed, with hardship comes ease.', reference: 'Surah Ash-Sharh 94:6' },
+  { arabic: 'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ', translation: 'And whoever relies upon Allah - then He is sufficient for him.', reference: 'Surah At-Talaq 65:3' },
+  { arabic: 'فَاذْكُرُونِي أَذْكُرْكُمْ', translation: 'So remember Me; I will remember you.', reference: 'Surah Al-Baqarah 2:152' },
+  { arabic: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', translation: 'And your Lord is going to give you, and you will be satisfied.', reference: 'Surah Ad-Duha 93:5' },
+  { arabic: 'رَبِّ اشْرَحْ لِي صَدْرِي', translation: 'My Lord, expand for me my breast [with assurance].', reference: 'Surah Ta-Ha 20:25' },
+  { arabic: 'وَاصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', translation: 'And be patient, for indeed, Allah does not allow to be lost the reward of those who do good.', reference: 'Surah Hud 11:115' },
+  { arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', translation: 'Indeed, Allah is with the patient.', reference: 'Surah Al-Baqarah 2:153' },
+]
+
+function getTimeGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 3 && hour < 12) return 'Good Morning'
+  if (hour >= 12 && hour < 16) return 'Good Afternoon'
+  if (hour >= 16 && hour < 20) return 'Good Evening'
+  return 'Good Night'
+}
+
+function getDailyVerse() {
+  const now = new Date()
+  const start = new Date(now.getFullYear(), 0, 0)
+  const diff = now.getTime() - start.getTime()
+  const dayOfYear = Math.floor(diff / 86400000)
+  return DAILY_VERSES[dayOfYear % DAILY_VERSES.length]
+}
+
 export default function HomePage() {
   const [prayers, setPrayers] = useState<PrayerTimeData[]>([])
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 })
@@ -54,24 +82,22 @@ export default function HomePage() {
   const [points, setPoints] = useState(0)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [username, setUsername] = useState('')
+  const [lastRead, setLastRead] = useState<{ surah: number; name: string } | null>(null)
 
-  // Schedule push notifications for all prayer times
+  const dailyVerse = getDailyVerse()
+
   const scheduleNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
     try {
       const notificationsEnabled = getItem(KEYS.NOTIFICATIONS_ENABLED, false)
       if (!notificationsEnabled) return
-
       const granted = await requestNotificationPermission()
       if (!granted) return
-
       cancelAllNotifications()
       prayerData.forEach((prayer) => {
         schedulePrayerNotification({ prayerName: prayer.name, prayerTime: prayer.date })
       })
-
       const maghrib = prayerData.find((p) => p.name === 'Maghrib')
       if (maghrib) scheduleIftaarNotification(maghrib.date)
-
       const fajr = prayerData.find((p) => p.name === 'Fajr')
       if (fajr) scheduleSuhoorNotification(fajr.date)
     } catch {
@@ -106,17 +132,11 @@ export default function HomePage() {
       const pt = new adhan.PrayerTimes(coords, new Date(), params)
 
       const prayerMap: Record<string, Date> = {
-        Fajr: pt.fajr,
-        Dhuhr: pt.dhuhr,
-        Asr: pt.asr,
-        Maghrib: pt.maghrib,
-        Isha: pt.isha,
+        Fajr: pt.fajr, Dhuhr: pt.dhuhr, Asr: pt.asr, Maghrib: pt.maghrib, Isha: pt.isha,
       }
 
       const prayerData: PrayerTimeData[] = PRAYER_NAMES.map((name) => ({
-        name,
-        time: formatTime(prayerMap[name]),
-        date: prayerMap[name],
+        name, time: formatTime(prayerMap[name]), date: prayerMap[name],
       }))
       setPrayers(prayerData)
       scheduleNotifications(prayerData)
@@ -138,16 +158,15 @@ export default function HomePage() {
   }, [scheduleNotifications])
 
   useEffect(() => {
-    // Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(() => {})
     }
-
     setHijriDate(getHijriDate())
     setChecklist(getItem(KEYS.CHECKLIST, {}))
     setStreak(getItem(KEYS.STREAK, 0))
     setPoints(getItem(KEYS.POINTS, 0))
     setUsername(getItem(KEYS.USERNAME, ''))
+    setLastRead(getItem(KEYS.LAST_READ, null))
     const onboardingDone = getItem(KEYS.ONBOARDING_COMPLETE, false)
     if (!onboardingDone) setShowOnboarding(true)
     loadPrayerTimes()
@@ -177,6 +196,16 @@ export default function HomePage() {
 
   const completedCount = Object.values(checklist).filter(Boolean).length
 
+  // Circular countdown progress
+  const nextPrayer = prayers.find((p) => p.date > new Date())
+  const prevPrayerIdx = prayers.findIndex((p) => p === nextPrayer) - 1
+  const prevPrayerDate = prevPrayerIdx >= 0 ? prayers[prevPrayerIdx].date : (() => {
+    const d = new Date(); d.setHours(0, 0, 0, 0); return d
+  })()
+  const totalDuration = nextPrayer ? nextPrayer.date.getTime() - prevPrayerDate.getTime() : 1
+  const remaining = nextPrayer ? nextPrayer.date.getTime() - Date.now() : 0
+  const countdownProgress = totalDuration > 0 ? Math.max(0, Math.min(100, ((totalDuration - remaining) / totalDuration) * 100)) : 0
+
   if (showOnboarding) {
     return (
       <OnboardingWizard
@@ -196,8 +225,8 @@ export default function HomePage() {
         <div className="islamic-pattern absolute inset-0 opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0b14] to-transparent" />
 
-        <div className="relative px-5 pt-12 pb-8">
-          <div className="mb-6 flex items-center justify-between">
+        <div className="relative px-5 pt-12 pb-6">
+          <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Image
                 src="/images/logo.jpg"
@@ -207,10 +236,10 @@ export default function HomePage() {
                 className="rounded-xl"
               />
               <div>
+                <p className="text-[11px] font-medium text-emerald-300/70">{getTimeGreeting()}</p>
                 <h1 className="text-lg font-bold text-white">
-                  {username ? `Salaam, ${username}` : 'MasjidConnect GY'}
+                  {username ? username : 'MasjidConnect GY'}
                 </h1>
-                <p className="text-[11px] text-emerald-300/70">{hijriDate}</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -231,27 +260,63 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Countdown Card */}
-          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-md">
-            <div className="mb-1 flex items-center gap-2">
-              <Timer className="h-4 w-4 text-emerald-400" />
+          {/* Hijri date pill */}
+          <div className="mb-5 flex items-center gap-2">
+            <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300/80">
+              {hijriDate || 'Loading...'}
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/60">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+            </span>
+          </div>
+
+          {/* Circular Countdown Card */}
+          <div className="flex items-center gap-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-md">
+            {/* Circular progress ring */}
+            <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
+              <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="rgba(16,185,129,0.15)"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="3"
+                  strokeDasharray={`${countdownProgress}, 100`}
+                  strokeLinecap="round"
+                  className="transition-all duration-1000"
+                />
+              </svg>
+              <Timer className="absolute h-5 w-5 text-emerald-400" />
+            </div>
+
+            <div className="flex-1">
               <span className="text-xs font-medium uppercase tracking-wider text-emerald-300/80">
                 Next: {nextPrayerName}
               </span>
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold tabular-nums text-white">
-                {String(countdown.hours).padStart(2, '0')}
-              </span>
-              <span className="text-lg text-emerald-400">h</span>
-              <span className="text-4xl font-bold tabular-nums text-white">
-                {String(countdown.minutes).padStart(2, '0')}
-              </span>
-              <span className="text-lg text-emerald-400">m</span>
-              <span className="text-4xl font-bold tabular-nums text-white">
-                {String(countdown.seconds).padStart(2, '0')}
-              </span>
-              <span className="text-lg text-emerald-400">s</span>
+              <div className="mt-1 flex items-baseline gap-1">
+                <span className="text-3xl font-bold tabular-nums text-white">
+                  {String(countdown.hours).padStart(2, '0')}
+                </span>
+                <span className="text-sm text-emerald-400/70">h</span>
+                <span className="text-3xl font-bold tabular-nums text-white">
+                  {String(countdown.minutes).padStart(2, '0')}
+                </span>
+                <span className="text-sm text-emerald-400/70">m</span>
+                <span className="text-3xl font-bold tabular-nums text-white">
+                  {String(countdown.seconds).padStart(2, '0')}
+                </span>
+                <span className="text-sm text-emerald-400/70">s</span>
+              </div>
+              {nextPrayer && (
+                <p className="mt-1 text-[11px] text-emerald-300/50">
+                  {nextPrayer.time}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -266,7 +331,7 @@ export default function HomePage() {
       <div className="flex gap-3 px-4 pt-5">
         <div className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20">
-            <Sparkles className="h-5 w-5 text-amber-400" />
+            <Flame className="h-5 w-5 text-amber-400" />
           </div>
           <div>
             <p className="text-lg font-bold text-white">{streak}</p>
@@ -275,7 +340,7 @@ export default function HomePage() {
         </div>
         <div className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
-            <Star className="h-5 w-5 text-emerald-400" />
+            <Sparkles className="h-5 w-5 text-emerald-400" />
           </div>
           <div>
             <p className="text-lg font-bold text-white">{points}</p>
@@ -283,6 +348,45 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Daily Verse */}
+      <div className="px-4 pt-5">
+        <div className="relative overflow-hidden rounded-2xl border border-amber-500/15 bg-gradient-to-br from-amber-500/5 to-amber-900/10 p-5">
+          <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-amber-500/5 blur-2xl" />
+          <div className="mb-3 flex items-center gap-2">
+            <BookMarked className="h-4 w-4 text-amber-400" />
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-amber-400/80">
+              Verse of the Day
+            </span>
+          </div>
+          <p className="mb-2 text-right font-arabic text-xl leading-[2] text-white/90" dir="rtl">
+            {dailyVerse.arabic}
+          </p>
+          <p className="text-sm leading-relaxed text-gray-300">
+            {dailyVerse.translation}
+          </p>
+          <p className="mt-2 text-[11px] text-amber-400/60">{dailyVerse.reference}</p>
+        </div>
+      </div>
+
+      {/* Continue Reading */}
+      {lastRead && (
+        <div className="px-4 pt-5">
+          <Link
+            href={`/quran/${lastRead.surah}`}
+            className="flex items-center gap-4 rounded-2xl border border-purple-500/15 bg-purple-500/5 p-4 transition-all active:scale-[0.98]"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/20">
+              <BookOpen className="h-5 w-5 text-purple-400" />
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-medium text-purple-300/70">Continue Reading</p>
+              <p className="text-sm font-semibold text-white">{lastRead.name}</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-purple-400/50" />
+          </Link>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="px-4 pt-6">
@@ -348,10 +452,16 @@ export default function HomePage() {
               >
                 {item.label}
               </span>
+              {checklist[item.key] && (
+                <span className="ml-auto text-[10px] font-medium text-emerald-500/60">+10 pts</span>
+              )}
             </button>
           ))}
         </div>
       </div>
+
+      {/* Spacer at bottom */}
+      <div className="h-4" />
 
       <BottomNav />
     </div>

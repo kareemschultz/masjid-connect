@@ -27,14 +27,17 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-1 transition-colors ${
+              className={`relative flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-200 ${
                 isActive
                   ? 'text-emerald-400'
-                  : 'text-gray-500 active:text-gray-400'
+                  : 'text-gray-500 active:scale-90 active:text-gray-400'
               }`}
             >
-              <tab.icon className={`h-5 w-5 ${isActive ? 'fill-emerald-400/20' : ''}`} />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              {isActive && (
+                <span className="absolute -top-1.5 h-0.5 w-4 rounded-full bg-emerald-400" />
+              )}
+              <tab.icon className={`h-5 w-5 transition-transform duration-200 ${isActive ? 'fill-emerald-400/20 scale-110' : ''}`} />
+              <span className={`text-[10px] font-medium transition-all duration-200 ${isActive ? 'font-semibold' : ''}`}>{tab.label}</span>
             </Link>
           )
         })}
