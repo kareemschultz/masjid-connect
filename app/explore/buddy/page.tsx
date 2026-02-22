@@ -210,12 +210,12 @@ export default function BuddyPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-24">
       <PageHero
         icon={Users}
         title="Faith Buddies"
         subtitle="Grow Together in Faith"
-        gradient="from-sky-900 to-blue-900"
+        gradient="from-sky-950 to-blue-900"
         showBack
       />
 
@@ -223,7 +223,7 @@ export default function BuddyPage() {
       <div className="px-4 pt-4">
         <Link
           href="/explore/buddy/how-it-works"
-          className="flex items-center gap-3 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-3.5 transition-all active:scale-[0.98]"
+          className="glass flex items-center gap-3 rounded-2xl border-blue-500/15 p-3.5 card-premium"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15">
             <Info className="h-5 w-5 text-blue-400" />
@@ -242,10 +242,10 @@ export default function BuddyPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition-all ${
+            className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-2.5 text-xs font-bold transition-all duration-300 ${
               tab === t.key
-                ? 'bg-blue-500/15 text-blue-400 shadow-sm shadow-blue-500/10'
-                : 'bg-gray-800/50 text-gray-500 active:bg-gray-700/50'
+                ? 'bg-blue-500/12 text-blue-400 shadow-sm shadow-blue-500/10'
+                : 'glass text-gray-500 active:bg-white/[0.03]'
             }`}
           >
             <t.icon className="h-3.5 w-3.5" />
