@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
-import { getItem, setItem, KEYS } from '@/lib/storage'
-import { Shield, Plus, Trash2, AlertTriangle, Info, CalendarDays } from 'lucide-react'
+import { Shield, Plus, Trash2, AlertTriangle, Info, CalendarDays, Loader } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface Announcement {
@@ -12,51 +11,105 @@ interface Announcement {
   title: string
   body: string
   type: 'info' | 'urgent' | 'event'
-  expiresAt: string
-  createdAt: string
+  expires_at: string
+  created_at: string
+  author_name?: string
 }
 
 export default function AdminPage() {
   const router = useRouter()
   const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [showForm, setShowForm] = useState(false)
+  
+  // Form state
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [type, setType] = useState<'info' | 'urgent' | 'event'>('info')
   const [expiresIn, setExpiresIn] = useState('7')
+  const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
-    const admin = getItem(KEYS.IS_ADMIN, false)
-    if (!admin) { router.replace('/'); return }
-    setIsAdmin(true)
-    setAnnouncements(getItem(KEYS.ANNOUNCEMENTS, []))
+  const checkRole = useCallback(async () => {
+    try {
+      const res = await fetch('/api/user/role')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.role === 'admin' || data.role === 'masjid_admin') {
+          setIsAdmin(true)
+          loadAnnouncements()
+        } else {
+          router.replace('/')
+        }
+      } else {
+        router.replace('/')
+      }
+    } catch {
+      router.replace('/')
+    } finally {
+      setLoading(false)
+    }
   }, [router])
 
-  if (!isAdmin) return null
-
-  const addAnnouncement = () => {
-    if (!title.trim() || !body.trim()) return
-    const expires = new Date()
-    expires.setDate(expires.getDate() + parseInt(expiresIn))
-    const newA: Announcement = {
-      id: Date.now().toString(),
-      title: title.trim(),
-      body: body.trim(),
-      type,
-      expiresAt: expires.toISOString(),
-      createdAt: new Date().toISOString(),
+  const loadAnnouncements = async () => {
+    try {
+      const res = await fetch('/api/announcements')
+      if (res.ok) {
+        const data = await res.json()
+        setAnnouncements(data)
+      }
+    } catch (e) {
+      console.error(e)
     }
-    const updated = [newA, ...announcements]
-    setAnnouncements(updated)
-    setItem(KEYS.ANNOUNCEMENTS, updated)
-    setTitle(''); setBody(''); setShowForm(false)
   }
 
-  const deleteAnnouncement = (id: string) => {
-    const updated = announcements.filter(a => a.id !== id)
-    setAnnouncements(updated)
-    setItem(KEYS.ANNOUNCEMENTS, updated)
+  useEffect(() => {
+    checkRole()
+  }, [checkRole])
+
+  const addAnnouncement = async () => {
+    if (!title.trim() || !body.trim()) return
+    setSubmitting(true)
+    
+    const expires = new Date()
+    expires.setDate(expires.getDate() + parseInt(expiresIn))
+    
+    try {
+      const res = await fetch('/api/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          body: body.trim(),
+          type,
+          expires_at: expires.toISOString()
+        })
+      })
+      
+      if (res.ok) {
+        await loadAnnouncements()
+        setTitle(''); setBody(''); setShowForm(false)
+      } else {
+        alert('Failed to create announcement')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Error creating announcement')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const deleteAnnouncement = async (id: string) => {
+    if (!confirm('Delete this announcement?')) return
+    try {
+      const res = await fetch(`/api/announcements/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setAnnouncements(prev => prev.filter(a => a.id !== id))
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const typeConfig = {
@@ -64,6 +117,9 @@ export default function AdminPage() {
     urgent: { color: 'border-red-500/30 bg-red-500/10', badge: 'bg-red-500', icon: AlertTriangle, label: 'Urgent' },
     event: { color: 'border-emerald-500/30 bg-emerald-500/10', badge: 'bg-emerald-500', icon: CalendarDays, label: 'Event' },
   }
+
+  if (loading) return <div className="min-h-screen bg-[#0a0b14] flex items-center justify-center text-white"><Loader className="animate-spin" /></div>
+  if (!isAdmin) return null
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-24">
@@ -89,7 +145,9 @@ export default function AdminPage() {
                 <option value="1">1 day</option><option value="3">3 days</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option>
               </select>
             </div>
-            <button onClick={addAnnouncement} disabled={!title.trim() || !body.trim()} className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white disabled:opacity-40 active:scale-[0.98] transition-transform">Publish</button>
+            <button onClick={addAnnouncement} disabled={submitting || !title.trim() || !body.trim()} className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white disabled:opacity-40 active:scale-[0.98] transition-transform">
+              {submitting ? 'Publishing...' : 'Publish'}
+            </button>
           </div>
         )}
 
@@ -98,8 +156,9 @@ export default function AdminPage() {
             <div className="rounded-2xl border border-gray-800 bg-gray-900 py-12 text-center text-sm text-gray-500">No announcements yet</div>
           )}
           {announcements.map(a => {
-            const cfg = typeConfig[a.type]
-            const expired = new Date(a.expiresAt) < new Date()
+            const cfg = typeConfig[a.type] || typeConfig.info
+            const expiresDate = a.expires_at ? new Date(a.expires_at) : new Date()
+            const expired = expiresDate < new Date()
             return (
               <div key={a.id} className={`rounded-2xl border p-4 ${expired ? 'opacity-40 border-gray-800 bg-gray-900' : cfg.color}`}>
                 <div className="flex items-start justify-between gap-2">
@@ -111,7 +170,10 @@ export default function AdminPage() {
                 </div>
                 <h3 className="mt-2 text-sm font-bold text-[#f9fafb]">{a.title}</h3>
                 <p className="mt-1 text-xs text-gray-400">{a.body}</p>
-                <p className="mt-2 text-[10px] text-gray-600">Expires: {new Date(a.expiresAt).toLocaleDateString()}</p>
+                <div className="mt-2 flex justify-between text-[10px] text-gray-600">
+                  <span>Expires: {expiresDate.toLocaleDateString()}</span>
+                  {a.author_name && <span>By {a.author_name}</span>}
+                </div>
               </div>
             )
           })}

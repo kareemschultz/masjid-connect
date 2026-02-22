@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { MapPin, Navigation, Phone, Clock, Filter } from 'lucide-react'
+import Link from 'next/link'
+import { MapPin, Navigation, Phone, Clock, Filter, Map } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { MASJIDS } from '@/lib/masjid-data'
@@ -21,6 +22,17 @@ export default function MasjidsPage() {
         subtitle="Georgetown, Guyana"
         gradient="from-teal-900 to-green-900"
       />
+
+      {/* View Map button */}
+      <div className="px-4 pt-4">
+        <Link
+          href="/map"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-500/15 py-2.5 text-xs font-medium text-teal-400 transition-colors active:bg-teal-500/25 border border-teal-800/30"
+        >
+          <Map className="h-3.5 w-3.5" />
+          View Map
+        </Link>
+      </div>
 
       {/* Filter chips */}
       <div className="flex gap-2 px-4 pt-4">

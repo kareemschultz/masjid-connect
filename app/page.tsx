@@ -10,7 +10,8 @@ import Link from 'next/link'
 import {
   BookOpen, Circle, Compass, Calculator, Star,
   Settings, User, CheckCircle2, Timer, Sparkles, Brain,
-  ChevronRight, Flame, BookMarked, Moon, UtensilsCrossed
+  ChevronRight, Flame, BookMarked, Moon, UtensilsCrossed,
+  Clock, HandHeart
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
 import { AnnouncementsBanner } from '@/components/announcements-banner'
@@ -21,6 +22,7 @@ import {
   scheduleSuhoorNotification,
   cancelAllNotifications,
 } from '@/lib/notifications'
+import { getRamadanStatus } from '@/lib/ramadan-mode'
 
 interface PrayerTimeData { name: string; time: string; date: Date }
 
@@ -87,10 +89,7 @@ function getDailyVerse() {
   return DAILY_VERSES[dayOfYear % DAILY_VERSES.length]
 }
 
-// Ramadan detection -- approximation based on Hijri date string
-function isRamadan(hijriStr: string): boolean {
-  return hijriStr.toLowerCase().includes('ramadan') || hijriStr.toLowerCase().includes('ramadhan')
-}
+// Ramadan detection removed — now using getRamadanStatus() from lib/ramadan-mode
 
 export default function HomePage() {
   const [prayers, setPrayers] = useState<PrayerTimeData[]>([])
@@ -107,7 +106,8 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false)
 
   const dailyVerse = getDailyVerse()
-  const ramadan = isRamadan(hijriDate)
+  const ramadanStatus = getRamadanStatus()
+  const ramadan = ramadanStatus.isRamadan
 
   const scheduleNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
     try {
@@ -178,8 +178,27 @@ export default function HomePage() {
     setPoints(getItem(KEYS.POINTS, 0))
     setUsername(getItem(KEYS.USERNAME, ''))
     setLastRead(getItem(KEYS.LAST_READ, null))
+
     const onboardingDone = getItem(KEYS.ONBOARDING_COMPLETE, false)
-    if (!onboardingDone) setShowOnboarding(true)
+    if (onboardingDone) {
+      setShowOnboarding(false)
+    } else {
+      // Check if user is already signed in (returning user with empty localStorage)
+      fetch('/api/user/profile')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((profile) => {
+          if (profile?.name || profile?.email) {
+            setItem(KEYS.ONBOARDING_COMPLETE, true)
+            setShowOnboarding(false)
+          } else {
+            setShowOnboarding(true)
+          }
+        })
+        .catch(() => {
+          setShowOnboarding(true)
+        })
+    }
+
     loadPrayerTimes()
     setMounted(true)
   }, [loadPrayerTimes])
@@ -414,22 +433,41 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ========== RAMADAN BANNER ========== */}
+      {/* ========== RAMADAN MODE ========== */}
       {ramadan && (
         <div className="px-4 pt-5">
-          <Link href="/ramadan" className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-5 card-premium">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-5">
             <div className="absolute -right-4 -top-4 animate-crescent opacity-20">
               <Moon className="h-20 w-20 text-amber-300" />
             </div>
             <div className="relative">
-              <span className="rounded-full bg-amber-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-300">Ramadan Mubarak</span>
-              <h3 className="mt-2 text-lg font-bold text-white">Your Ramadan Hub</h3>
-              <p className="mt-1 text-xs text-white/50">Track fasts, suhoor times, iftaar countdown, and daily goals</p>
-              <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-amber-400">
-                Open Hub <ChevronRight className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-amber-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-300">Ramadan Mubarak</span>
+                {ramadanStatus.ramadanDay && (
+                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold text-white/70">
+                    Day {ramadanStatus.ramadanDay}
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-2 text-lg font-bold text-white">Ramadan Mode</h3>
+              <p className="mt-1 text-xs text-white/50">Quick access to your Ramadan essentials</p>
+
+              <div className="mt-4 grid grid-cols-5 gap-2">
+                {[
+                  { href: '/', icon: Clock, label: 'Prayer' },
+                  { href: '/iftaar', icon: UtensilsCrossed, label: 'Iftaar' },
+                  { href: '/tracker/fasting', icon: Moon, label: 'Fasting' },
+                  { href: '/explore/duas', icon: HandHeart, label: 'Duas' },
+                  { href: '/ramadan', icon: Star, label: 'Hub' },
+                ].map((item) => (
+                  <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1.5 rounded-xl bg-white/5 py-2.5 active:bg-white/10">
+                    <item.icon className="h-4 w-4 text-amber-300" />
+                    <span className="text-[9px] font-medium text-white/70">{item.label}</span>
+                  </Link>
+                ))}
               </div>
             </div>
-          </Link>
+          </div>
         </div>
       )}
 

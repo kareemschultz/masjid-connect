@@ -1,273 +1,607 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
-  BookOpen, MapPin, Clock, Users, ChevronRight, ChevronLeft, Sparkles
+  BookOpen, MapPin, Clock, Users, ChevronRight, ChevronLeft,
+  Sparkles, Moon, Bell, Smartphone, Share2, Heart, Star,
+  UtensilsCrossed, Headphones, Check
 } from 'lucide-react'
 import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
 
-const STEPS = [
-  { key: 'welcome', title: 'Welcome', subtitle: 'Assalamu Alaikum' },
-  { key: 'name', title: 'Your Name', subtitle: 'How should we greet you?' },
-  { key: 'prayer', title: 'Prayer Settings', subtitle: 'Configure your calculations' },
-  { key: 'features', title: 'Discover', subtitle: 'What you can do' },
-  { key: 'ready', title: 'All Set', subtitle: 'Bismillah, let us begin' },
-]
-
-const FEATURES = [
-  { icon: Clock, label: 'Prayer Times', desc: 'Accurate times for Georgetown, Guyana with countdown & adhan notifications', color: 'bg-emerald-500/20', iconColor: 'text-emerald-400' },
-  { icon: BookOpen, label: 'Quran Reader', desc: 'Full Quran with Arabic, translation, audio, and Hifz memorization mode', color: 'bg-purple-500/20', iconColor: 'text-purple-400' },
-  { icon: MapPin, label: 'Masjid Finder', desc: 'Directory of Georgetown masjids with directions & prayer schedules', color: 'bg-teal-500/20', iconColor: 'text-teal-400' },
-  { icon: Users, label: 'Faith Buddies', desc: 'Connect with friends, share streaks, and grow together in faith', color: 'bg-blue-500/20', iconColor: 'text-blue-400' },
-]
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface OnboardingWizardProps {
   onComplete: () => void
 }
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const TOTAL_STEPS = 6
+
+const FEATURES = [
+  {
+    icon: Clock,
+    label: 'Prayer Times',
+    desc: 'Accurate adhan times for Georgetown with live countdown, adhan notifications, and Qibla direction.',
+    color: 'bg-emerald-500/15',
+    iconColor: 'text-emerald-400',
+    border: 'border-emerald-500/20',
+  },
+  {
+    icon: UtensilsCrossed,
+    label: 'Iftaar Reports',
+    desc: 'Real-time community Iftaar sightings from masjids across Georgetown — submitted by your neighbours.',
+    color: 'bg-orange-500/15',
+    iconColor: 'text-orange-400',
+    border: 'border-orange-500/20',
+  },
+  {
+    icon: BookOpen,
+    label: 'Quran Reader',
+    desc: 'Full Quran in Arabic + English with audio recitation by 12 reciters, bookmarks, and Hifz mode.',
+    color: 'bg-purple-500/15',
+    iconColor: 'text-purple-400',
+    border: 'border-purple-500/20',
+  },
+  {
+    icon: Users,
+    label: 'Faith Buddies',
+    desc: 'Connect with friends, compete on leaderboards, track streaks, and grow together in deen.',
+    color: 'bg-blue-500/15',
+    iconColor: 'text-blue-400',
+    border: 'border-blue-500/20',
+  },
+  {
+    icon: Headphones,
+    label: 'Islamic Lectures',
+    desc: 'Full audio lecture series by Anwar al-Awlaki — Life of the Prophet, Hereafter, Lives of Prophets.',
+    color: 'bg-teal-500/15',
+    iconColor: 'text-teal-400',
+    border: 'border-teal-500/20',
+  },
+  {
+    icon: Star,
+    label: 'Tracker & Adhkar',
+    desc: 'Log your daily prayers, fasting, and good deeds. Build habits with your personal Islamic tracker.',
+    color: 'bg-amber-500/15',
+    iconColor: 'text-amber-400',
+    border: 'border-amber-500/20',
+  },
+]
+
+const RAMADAN_OPTIONS = [
+  {
+    value: '2026-02-18',
+    label: 'Saudi / Global Sighting',
+    note: 'Tue 18 Feb — follows Saudi moon sighting announcement',
+  },
+  {
+    value: '2026-02-19',
+    label: 'CIOG / Local Sighting',
+    note: 'Wed 19 Feb — Central Islamic Organisation of Guyana',
+  },
+]
+
+// Detect Ramadan proximity using Hijri calendar
+function isNearRamadan(): boolean {
+  try {
+    const fmt = new Intl.DateTimeFormat('en-TN-u-ca-islamic-umalqura', { month: 'numeric' })
+    const hijriMonth = parseInt(fmt.format(new Date()))
+    return hijriMonth === 8 || hijriMonth === 9 || hijriMonth === 10
+  } catch {
+    return true // default to showing it
+  }
+}
+
+function isPushSupported(): boolean {
+  return typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator
+}
+
+function isIOS(): boolean {
+  return typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
+}
+
+function isStandalone(): boolean {
+  return typeof window !== 'undefined' &&
+    (window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone === true)
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true" className="shrink-0">
+      <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 33.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.7-.4-4z"/>
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C33.7 6.1 29.1 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5.1l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.7 16.4 44 24 44z"/>
+      <path fill="#1976D2" d="M43.6 20H24v8h11.3c-.8 2.6-2.4 4.7-4.6 6.2l6.2 5.2c3.6-3.4 5.8-8.3 5.8-13.4 0-1.3-.1-2.7-.4-4z"/>
+    </svg>
+  )
+}
+
+// ─── Step Dots ────────────────────────────────────────────────────────────────
+
+function StepDots({ step, total }: { step: number; total: number }) {
+  return (
+    <div className="flex items-center justify-center gap-1.5">
+      {Array.from({ length: total }).map((_, i) => (
+        <span
+          key={i}
+          className={`h-1.5 rounded-full transition-all duration-300 ${
+            i < step
+              ? 'w-1.5 bg-emerald-600'
+              : i === step
+              ? 'w-5 bg-emerald-400'
+              : 'w-1.5 bg-gray-700'
+          }`}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
   const [method, setMethod] = useState('Egyptian')
   const [madhab, setMadhab] = useState('Shafi')
+  const [ramadanStart, setRamadanStart] = useState('2026-02-19')
+  const [notifGranted, setNotifGranted] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [pwaInstalled, setPwaInstalled] = useState(false)
+  const [signingIn, setSigningIn] = useState(false)
+  const showRamadanStep = isNearRamadan()
 
-  const next = () => {
-    if (step < STEPS.length - 1) {
-      setStep(step + 1)
+  // PWA install prompt capture
+  useEffect(() => {
+    const handler = (e: Event) => { e.preventDefault(); setDeferredPrompt(e) }
+    window.addEventListener('beforeinstallprompt', handler)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const requestNotifications = async () => {
+    if (!isPushSupported()) return
+    const perm = await Notification.requestPermission()
+    setNotifGranted(perm === 'granted')
+  }
+
+  const triggerInstall = async () => {
+    if (!deferredPrompt) return
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    if (outcome === 'accepted') setPwaInstalled(true)
+    setDeferredPrompt(null)
+  }
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'MasjidConnect GY',
+        text: 'Check out this free Islamic app built for the Guyanese Muslim community!',
+        url: 'https://masjidconnectgy.com',
+      }).catch(() => {})
     } else {
-      finish()
+      await navigator.clipboard.writeText('https://masjidconnectgy.com').catch(() => {})
     }
   }
 
-  const prev = () => {
-    if (step > 0) setStep(step - 1)
+  const handleGoogleSignIn = async () => {
+    setSigningIn(true)
+    try {
+      // Use Better Auth Google sign-in
+      const { signIn } = await import('@/lib/auth-client')
+      await signIn.social({ provider: 'google', callbackURL: '/' })
+    } catch {
+      setSigningIn(false)
+    }
   }
 
   const finish = () => {
     if (name.trim()) setItem(KEYS.USERNAME, name.trim())
     setItem(KEYS.CALCULATION_METHOD, method)
     setItem(KEYS.MADHAB, madhab)
+    if (showRamadanStep) setItem('ramadan_start', ramadanStart)
     setItem(KEYS.ONBOARDING_COMPLETE, true)
     onComplete()
   }
 
-  const progress = ((step + 1) / STEPS.length) * 100
+  // Effective step count (exclude Ramadan step if not needed)
+  const steps = [
+    'welcome',
+    'features',
+    'name',
+    'prayer',
+    ...(showRamadanStep ? ['ramadan'] : []),
+    'done',
+  ]
+  const totalSteps = steps.length
+  const currentStepKey = steps[step]
+
+  const next = () => {
+    if (step < totalSteps - 1) setStep(step + 1)
+    else finish()
+  }
+  const prev = () => { if (step > 0) setStep(step - 1) }
+  const progress = ((step + 1) / totalSteps) * 100
 
   return (
-    <div className="fixed inset-0 z-[200] flex flex-col bg-background">
+    <div className="fixed inset-0 z-[200] flex flex-col bg-[#0a0b14]">
       {/* Progress bar */}
-      <div className="h-1 w-full bg-gray-800">
+      <div className="h-0.5 w-full bg-gray-800">
         <div
           className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* Step indicator */}
-      <div className="flex items-center justify-center gap-1.5 pt-6">
-        {STEPS.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === step ? 'w-6 bg-emerald-400' : i < step ? 'w-1.5 bg-emerald-600' : 'w-1.5 bg-gray-700'
-            }`}
-          />
-        ))}
+      {/* Step dots */}
+      <div className="flex items-center justify-between px-6 pt-4">
+        <StepDots step={step} total={totalSteps} />
+        <span className="text-xs text-gray-600">{step + 1}/{totalSteps}</span>
       </div>
 
-      {/* Content */}
+      {/* Content area */}
       <div className="flex flex-1 flex-col overflow-y-auto">
-        {/* Step 0: Welcome */}
-        {step === 0 && (
-          <div className="flex flex-1 flex-col items-center justify-center px-8">
-            <div className="relative mb-8">
-              <div className="absolute -inset-4 rounded-full bg-emerald-500/10 blur-2xl" />
+
+        {/* ── Step 0: Welcome ──────────────────────────────── */}
+        {currentStepKey === 'welcome' && (
+          <div className="flex flex-1 flex-col items-center justify-center px-8 py-6">
+            {/* Logo */}
+            <div className="relative mb-6">
+              <div className="absolute -inset-6 rounded-full bg-emerald-500/10 blur-3xl" />
               <Image
                 src="/images/logo.jpg"
                 alt="MasjidConnect GY"
-                width={120}
-                height={120}
-                className="relative rounded-3xl shadow-2xl shadow-emerald-500/10"
+                width={100}
+                height={100}
+                className="relative rounded-3xl shadow-2xl shadow-emerald-500/20 ring-1 ring-emerald-500/20"
               />
             </div>
-            <h1 className="text-center text-3xl font-bold text-foreground">
-              Assalamu Alaikum
-            </h1>
-            <p className="mt-2 text-center text-lg text-emerald-400">
-              Welcome to MasjidConnect GY
-            </p>
-            <p className="mt-4 max-w-xs text-center text-sm leading-relaxed text-gray-400">
-              Your daily Islamic companion, built by your community. Independent. No ads. No data collection. Just faith.
-            </p>
+
+            <div className="mb-1 text-center">
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">بِسْمِ اللَّهِ</p>
+            </div>
+            <h1 className="mb-1 text-center text-3xl font-bold text-white">Assalamu Alaikum</h1>
+            <p className="mb-1 text-center text-base font-medium text-emerald-400">Welcome to MasjidConnect GY</p>
+
+            {/* Community Card */}
+            <div className="mt-5 w-full rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4">
+              <div className="mb-2 flex items-center gap-2">
+                <Heart className="h-4 w-4 text-emerald-400" />
+                <span className="text-xs font-bold uppercase tracking-wide text-emerald-400">Community-Built</span>
+              </div>
+              <p className="text-sm leading-relaxed text-gray-300">
+                This app was built by and for the Guyanese Muslim community — completely free, no ads, no tracking, no subscriptions. Just a tool for the ummah.
+              </p>
+            </div>
+
+            {/* Community stats hint */}
+            <div className="mt-3 w-full rounded-2xl border border-gray-800 bg-gray-900/60 px-5 py-3">
+              <div className="flex items-center justify-between text-xs text-gray-400">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-teal-400" />
+                  <span>Georgetown, Guyana</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-blue-400" />
+                  <span>100% free, always</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Share */}
+            <button
+              onClick={handleShare}
+              className="mt-4 flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-5 py-2.5 text-xs font-medium text-gray-300 transition-all active:bg-gray-800"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              Share with a fellow Muslim
+            </button>
           </div>
         )}
 
-        {/* Step 1: Name */}
-        {step === 1 && (
-          <div className="flex flex-1 flex-col items-center justify-center px-8">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/15">
-              <Sparkles className="h-8 w-8 text-amber-400" />
+        {/* ── Step 1: Features / How It Works ─────────────── */}
+        {currentStepKey === 'features' && (
+          <div className="flex flex-1 flex-col px-5 py-6">
+            <div className="mb-1 text-center">
+              <p className="text-xs font-bold uppercase tracking-widest text-teal-400">Everything in one place</p>
             </div>
-            <h2 className="text-2xl font-bold text-foreground">
-              What should we call you?
-            </h2>
-            <p className="mt-2 mb-8 text-center text-sm text-gray-400">
-              This helps personalize your experience
+            <h2 className="mb-1 text-center text-2xl font-bold text-white">How It Works</h2>
+            <p className="mb-5 text-center text-sm text-gray-400">
+              Six powerful tools to strengthen your daily practice
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              {FEATURES.map((f, i) => (
+                <div
+                  key={i}
+                  className={`flex flex-col gap-2 rounded-2xl border ${f.border} ${f.color} p-3.5`}
+                >
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-black/20`}>
+                    <f.icon className={`h-4.5 w-4.5 ${f.iconColor}`} />
+                  </div>
+                  <p className={`text-xs font-bold ${f.iconColor}`}>{f.label}</p>
+                  <p className="text-[10px] leading-relaxed text-gray-400">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Community call-to-action */}
+            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 text-center">
+              <p className="text-xs text-gray-400">
+                🌙 <span className="font-semibold text-gray-300">Community-powered</span> — Iftaar Reports are submitted live by fellow Muslims. You can contribute too.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 2: Your Name ────────────────────────────── */}
+        {currentStepKey === 'name' && (
+          <div className="flex flex-1 flex-col items-center justify-center px-8">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-500/20">
+              <Sparkles className="h-7 w-7 text-amber-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-white">What should we call you?</h2>
+            <p className="mt-2 mb-6 text-center text-sm text-gray-400">
+              This personalises your experience across the app
             </p>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              className="w-full max-w-xs rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 text-center text-lg text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
+              onKeyDown={(e) => e.key === 'Enter' && next()}
+              placeholder="Your name or kunya"
+              className="w-full max-w-xs rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 text-center text-lg text-white placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
               autoFocus
             />
-            <button
-              onClick={next}
-              className="mt-4 text-sm text-gray-500 active:text-gray-400"
-            >
+            <button onClick={next} className="mt-5 text-sm text-gray-500 underline underline-offset-4 active:text-gray-400">
               Skip for now
             </button>
-          </div>
-        )}
 
-        {/* Step 2: Prayer Settings */}
-        {step === 2 && (
-          <div className="flex flex-1 flex-col px-6 pt-8">
-            <div className="mb-6 flex items-center justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15">
-                <Clock className="h-7 w-7 text-emerald-400" />
-              </div>
-            </div>
-            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">
-              Prayer Calculation
-            </h2>
-            <p className="mb-6 text-center text-sm text-gray-400">
-              Choose the method used in your community
+            {/* Data note */}
+            <p className="mt-4 max-w-xs text-center text-[11px] text-gray-600">
+              Your name is stored only on this device. No personal data is ever sent to a server without your consent.
             </p>
-
-            <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-gray-400">
-                  Calculation Method
-                </label>
-                <div className="max-h-44 space-y-1.5 overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900 p-2">
-                  {CALCULATION_METHODS.map((m) => (
-                    <button
-                      key={m.key}
-                      onClick={() => setMethod(m.key)}
-                      className={`w-full rounded-xl px-4 py-3 text-left text-sm transition-all ${
-                        method === m.key
-                          ? 'bg-emerald-500/10 font-medium text-emerald-400'
-                          : 'text-gray-300 active:bg-white/5'
-                      }`}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-gray-400">
-                  Madhab (Asr Calculation)
-                </label>
-                <div className="flex gap-3">
-                  {MADHABS.map((m) => (
-                    <button
-                      key={m.key}
-                      onClick={() => setMadhab(m.key)}
-                      className={`flex-1 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
-                        madhab === m.key
-                          ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                          : 'border-gray-800 bg-gray-900 text-gray-400'
-                      }`}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Step 3: Feature Discovery */}
-        {step === 3 && (
-          <div className="flex flex-1 flex-col px-6 pt-8">
-            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">
-              Everything You Need
-            </h2>
-            <p className="mb-8 text-center text-sm text-gray-400">
-              Your complete Islamic companion
+        {/* ── Step 3: Prayer Settings ──────────────────────── */}
+        {currentStepKey === 'prayer' && (
+          <div className="flex flex-1 flex-col px-5 pt-6">
+            <div className="mb-4 flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 ring-1 ring-emerald-500/20">
+                <Clock className="h-6 w-6 text-emerald-400" />
+              </div>
+            </div>
+            <h2 className="mb-1 text-center text-2xl font-bold text-white">Prayer Settings</h2>
+            <p className="mb-5 text-center text-sm text-gray-400">Choose the method used in your community</p>
+
+            {/* Method */}
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              Calculation Method
+            </label>
+            <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900">
+              {CALCULATION_METHODS.map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => setMethod(m.key)}
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-all first:rounded-t-2xl last:rounded-b-2xl not-last:border-b not-last:border-gray-800/50 ${
+                    method === m.key ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300 active:bg-white/5'
+                  }`}
+                >
+                  {method === m.key && <Check className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
+                  {method !== m.key && <span className="h-3.5 w-3.5 shrink-0" />}
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Madhab */}
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              Madhab (Asr Calculation)
+            </label>
+            <div className="flex gap-3">
+              {MADHABS.map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => setMadhab(m.key)}
+                  className={`flex-1 rounded-xl border-2 px-4 py-3 text-sm font-semibold transition-all ${
+                    madhab === m.key
+                      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                      : 'border-gray-800 bg-gray-900 text-gray-400 active:bg-gray-800'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-3 text-center text-[11px] text-gray-600">
+              You can change these anytime in Settings
+            </p>
+          </div>
+        )}
+
+        {/* ── Step: Ramadan ────────────────────────────────── */}
+        {currentStepKey === 'ramadan' && (
+          <div className="flex flex-1 flex-col px-5 pt-6">
+            <div className="mb-4 flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/15 ring-1 ring-orange-500/20">
+                <Moon className="h-6 w-6 text-orange-400" />
+              </div>
+            </div>
+            <h2 className="mb-1 text-center text-2xl font-bold text-white">Ramadan Mubarak 🌙</h2>
+            <p className="mb-5 text-center text-sm text-gray-400">
+              Which moon sighting do you follow for Ramadan?
             </p>
 
             <div className="space-y-3">
-              {FEATURES.map((f, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-4"
-                  style={{ animationDelay: `${i * 0.1}s` }}
+              {RAMADAN_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setRamadanStart(opt.value)}
+                  className={`w-full flex items-start gap-3 rounded-2xl border-2 px-4 py-4 text-left transition-all ${
+                    ramadanStart === opt.value
+                      ? 'border-orange-500/40 bg-orange-500/10'
+                      : 'border-gray-800 bg-gray-900 active:bg-gray-800'
+                  }`}
                 >
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${f.color}`}>
-                    <f.icon className={`h-5 w-5 ${f.iconColor}`} />
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                      ramadanStart === opt.value ? 'border-orange-400' : 'border-gray-600'
+                    }`}
+                  >
+                    {ramadanStart === opt.value && (
+                      <span className="h-2.5 w-2.5 rounded-full bg-orange-400" />
+                    )}
+                  </span>
+                  <div>
+                    <p className={`text-sm font-semibold ${ramadanStart === opt.value ? 'text-orange-300' : 'text-gray-200'}`}>
+                      {opt.label}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-gray-500">{opt.note}</p>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-foreground">{f.label}</h3>
-                    <p className="mt-0.5 text-xs leading-relaxed text-gray-400">{f.desc}</p>
-                  </div>
-                </div>
+                </button>
               ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3">
+              <p className="text-[11px] leading-relaxed text-gray-500">
+                This setting affects Iftaar times, Ramadan day count, and fasting tracker. You can change it anytime under Settings.
+              </p>
             </div>
           </div>
         )}
 
-        {/* Step 4: Ready */}
-        {step === 4 && (
-          <div className="flex flex-1 flex-col items-center justify-center px-8">
-            <div className="relative mb-8">
-              <div className="absolute -inset-6 rounded-full bg-emerald-500/10 blur-3xl" />
-              <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600">
-                <Sparkles className="h-12 w-12 text-white" />
+        {/* ── Step: Done ───────────────────────────────────── */}
+        {currentStepKey === 'done' && (
+          <div className="flex flex-1 flex-col px-6 pt-6">
+            {/* Notification & Install */}
+            <div className="space-y-3 mb-5">
+              {/* Push Notifications */}
+              {isPushSupported() && (
+                <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15">
+                      <Bell className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white">Adhan Notifications</p>
+                      <p className="mt-0.5 text-xs text-gray-400">Get notified at each prayer time</p>
+                    </div>
+                    <button
+                      onClick={requestNotifications}
+                      className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                        notifGranted
+                          ? 'bg-emerald-500/15 text-emerald-400'
+                          : 'bg-amber-500 text-white active:bg-amber-600'
+                      }`}
+                    >
+                      {notifGranted ? '✓ Enabled' : 'Enable'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* PWA Install */}
+              {!isStandalone() && (deferredPrompt || isIOS()) && (
+                <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15">
+                      <Smartphone className="h-5 w-5 text-teal-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white">Install App</p>
+                      <p className="mt-0.5 text-xs text-gray-400">
+                        {isIOS()
+                          ? 'Tap the Share button → "Add to Home Screen"'
+                          : 'Works offline, feels native'}
+                      </p>
+                    </div>
+                    {!isIOS() && (
+                      <button
+                        onClick={triggerInstall}
+                        disabled={pwaInstalled}
+                        className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                          pwaInstalled
+                            ? 'bg-emerald-500/15 text-emerald-400'
+                            : 'bg-teal-500 text-white active:bg-teal-600'
+                        }`}
+                      >
+                        {pwaInstalled ? '✓ Installed' : 'Install'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Google Sign In */}
+              <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15">
+                    <GoogleIcon />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white">Sync Across Devices</p>
+                    <p className="mt-0.5 text-xs text-gray-400">Sign in to save your tracker & streaks</p>
+                  </div>
+                  <button
+                    onClick={handleGoogleSignIn}
+                    disabled={signingIn}
+                    className="shrink-0 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2 text-xs font-semibold text-gray-300 transition-all active:bg-gray-700 disabled:opacity-50"
+                  >
+                    {signingIn ? '...' : 'Sign In'}
+                  </button>
+                </div>
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-foreground">
-              {"You're All Set!"}
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-400">
-              {name ? `Welcome, ${name}. ` : ''}May your journey with MasjidConnect GY be blessed. Bismillah.
-            </p>
 
-            <button
-              onClick={finish}
-              className="mt-10 flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-10 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
-            >
-              Get Started
-              <ChevronRight className="h-5 w-5" />
-            </button>
+            {/* Completion CTA */}
+            <div className="flex flex-col items-center pb-4">
+              <div className="relative mb-4">
+                <div className="absolute -inset-4 rounded-full bg-emerald-500/10 blur-2xl" />
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h2 className="text-xl font-bold text-white">
+                {name ? `Bismillah, ${name}!` : "Bismillah — Let's Begin!"}
+              </h2>
+              <p className="mt-2 max-w-xs text-center text-sm text-gray-400">
+                May your journey with MasjidConnect GY be full of barakah. This app is yours — built with love for the community.
+              </p>
+
+              <button
+                onClick={finish}
+                className="mt-6 flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
+              >
+                Open MasjidConnect GY
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Bottom navigation */}
-      {step < 4 && (
+      {/* Bottom nav */}
+      {currentStepKey !== 'done' && (
         <div className="flex items-center justify-between px-6 pb-10 pt-4">
           <button
             onClick={prev}
             disabled={step === 0}
-            className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-              step === 0 ? 'opacity-0' : 'bg-gray-800 text-gray-300 active:bg-gray-700'
+            className={`flex h-11 w-11 items-center justify-center rounded-xl transition-all ${
+              step === 0 ? 'opacity-0 pointer-events-none' : 'bg-gray-800 text-gray-300 active:bg-gray-700'
             }`}
-            aria-label="Previous"
+            aria-label="Back"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
 
           <button
             onClick={next}
-            className="flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-3.5 text-sm font-semibold text-white transition-all active:scale-95 active:bg-emerald-600"
+            className="flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition-all active:scale-95 active:bg-emerald-600"
           >
             {step === 0 ? 'Get Started' : 'Continue'}
             <ChevronRight className="h-4 w-4" />

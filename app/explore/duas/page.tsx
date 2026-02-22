@@ -5,9 +5,13 @@ import { BookOpen } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
-const CATEGORIES = ['Waking Up', 'Food', 'Travel', 'Protection', 'Forgiveness'] as const
+const CATEGORIES = ['Iftaar', 'Waking Up', 'Food', 'Travel', 'Protection', 'Forgiveness'] as const
 
 const DUAS: Record<string, { arabic: string; transliteration: string; meaning: string }[]> = {
+  Iftaar: [
+    { arabic: 'اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ', transliteration: 'Allahumma laka sumtu wa \'ala rizqika aftartu', meaning: 'O Allah! For You I fasted and upon Your provision I break my fast.' },
+    { arabic: 'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ', transliteration: 'Dhahaba al-zama\' wa\'btallat al-\'urooq wa thabata al-ajru in sha Allah', meaning: 'The thirst is gone, the veins are moistened, and the reward is certain, if Allah wills.' },
+  ],
   'Waking Up': [
     { arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ', transliteration: 'Alhamdu lillahil-ladhi ahyana ba\'da ma amatana wa ilayhin-nushur', meaning: 'All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection' },
   ],

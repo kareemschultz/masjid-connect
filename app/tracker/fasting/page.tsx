@@ -5,7 +5,7 @@ import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { UtensilsCrossed, ChevronLeft, ChevronRight, Flame, Check, X, Target, Share2 } from 'lucide-react'
-import { shareContent } from '@/lib/share'
+import { shareOrCopy } from '@/lib/share'
 
 type FastStatus = 'fasted' | 'missed' | 'intended' | null
 
@@ -76,7 +76,7 @@ export default function FastingTrackerPage() {
 
   const handleShare = () => {
     const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-    shareContent(`Fasting Tracker - ${monthName}`, `Alhamdulillah! I fasted ${stats.fasted} days in ${monthName} with a ${streak}-day streak. Track your fasts on MasjidConnect GY!`)
+    shareOrCopy({title: `Fasting Tracker - ${monthName}`, text: `Alhamdulillah! I fasted ${stats.fasted} days in ${monthName} with a ${streak}-day streak. Track your fasts on MasjidConnect GY!`})
   }
 
   return (

@@ -8,7 +8,7 @@ import { SURAHS } from '@/lib/quran-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
   BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain,
-  ChevronUp, Type, Minus, Plus, Share2
+  ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic
 } from 'lucide-react'
 import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
@@ -22,6 +22,23 @@ interface Ayah {
 
 const FONT_SIZES = [20, 24, 28, 32, 36]
 
+const REPEAT_CYCLE = [1, 2, 3, 5, 0] // 0 = infinite loop
+
+const RECITERS = [
+  { id: 'ar.alafasy', name: 'Mishary Alafasy' },
+  { id: 'ar.abdurrahmaansudais', name: 'Sudais' },
+  { id: 'ar.husary', name: 'Husary' },
+  { id: 'ar.minshawi', name: 'Minshawi' },
+  { id: 'ar.abdullahbasfar', name: 'Abdullah Basfar' },
+  { id: 'ar.ahmedajamy', name: 'Ahmed Al-Ajamy' },
+  { id: 'ar.hanirifai', name: 'Hani Rifai' },
+  { id: 'ar.muhammadayyoub', name: 'Muhammad Ayyoub' },
+  { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel' },
+  { id: 'ar.shaatree', name: 'Abu Bakr Ash-Shaatree' },
+  { id: 'ar.mahermuaiqly', name: 'Maher Al-Muaiqly' },
+  { id: 'ar.saoodshuraym', name: 'Saud Al-Shuraym' },
+]
+
 export default function SurahReaderPage() {
   const params = useParams()
   const surahNum = Number(params.surah)
@@ -31,17 +48,22 @@ export default function SurahReaderPage() {
   const [loading, setLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [currentAyah, setCurrentAyah] = useState(-1)
-  const [loopMode, setLoopMode] = useState(false)
+  const [repeatCount, setRepeatCount] = useState(1) // 1=play once, 2/3/5=repeat N times, 0=infinite
+  const [continuousPlay, setContinuousPlay] = useState(true)
   const [bookmarks, setBookmarks] = useState<{ surah: number; ayah: number }[]>([])
   const [speed, setSpeed] = useState(1)
   const [fontSize, setFontSize] = useState(28)
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [reciter, setReciter] = useState('ar.alafasy')
+  const [showReciterSheet, setShowReciterSheet] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const repeatPlayCountRef = useRef(0)
 
   useEffect(() => {
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
     setFontSize(getItem(KEYS.QURAN_FONT_SIZE, 28))
+    setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
   }, [])
 
   // Save last read position
@@ -89,11 +111,12 @@ export default function SurahReaderPage() {
     fetchAyahs()
   }, [surahNum])
 
-  const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number) => {
+  const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
     if (audioRef.current) {
       audioRef.current.pause()
     }
-    const reciter = getItem(KEYS.RECITER, 'ar.alafasy')
+    if (resetRepeat) repeatPlayCountRef.current = 0
+
     const audio = new Audio(
       `https://cdn.islamic.network/quran/audio/128/${reciter}/${ayahGlobalNumber}.mp3`
     )
@@ -107,17 +130,26 @@ export default function SurahReaderPage() {
     })
 
     audio.onended = () => {
-      if (loopMode) {
-        playAyah(ayahGlobalNumber, ayahIndex)
-      } else if (ayahIndex < ayahs.length - 1) {
+      repeatPlayCountRef.current++
+
+      // Check if we should repeat this ayah
+      const shouldRepeat =
+        repeatCount === 0 || // infinite loop
+        repeatPlayCountRef.current < repeatCount
+
+      if (shouldRepeat) {
+        // Repeat same ayah
+        playAyah(ayahGlobalNumber, ayahIndex, false)
+      } else if (continuousPlay && ayahIndex < ayahs.length - 1) {
+        // Advance to next ayah
         const nextAyah = ayahs[ayahIndex + 1]
-        playAyah(nextAyah.number, ayahIndex + 1)
+        playAyah(nextAyah.number, ayahIndex + 1, true)
       } else {
         setPlaying(false)
         setCurrentAyah(-1)
       }
     }
-  }, [ayahs, loopMode, speed])
+  }, [ayahs, repeatCount, continuousPlay, speed, reciter])
 
   const togglePlay = () => {
     if (playing && audioRef.current) {
@@ -147,6 +179,23 @@ export default function SurahReaderPage() {
 
   const isBookmarked = (ayahNum: number) =>
     bookmarks.some((b) => b.surah === surahNum && b.ayah === ayahNum)
+
+  const cycleRepeat = () => {
+    const idx = REPEAT_CYCLE.indexOf(repeatCount)
+    setRepeatCount(REPEAT_CYCLE[(idx + 1) % REPEAT_CYCLE.length])
+  }
+
+  const selectReciter = (id: string) => {
+    setReciter(id)
+    setItem(KEYS.RECITER, id)
+    setShowReciterSheet(false)
+  }
+
+  const getRepeatLabel = () => {
+    if (repeatCount === 0) return '\u221E' // infinity symbol
+    if (repeatCount === 1) return '1x'
+    return `${repeatCount}x`
+  }
 
   const cycleSpeed = () => {
     const speeds = [0.75, 1, 1.25, 1.5]
@@ -329,44 +378,23 @@ export default function SurahReaderPage() {
       )}
 
       {/* Playback controls */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-40 border-t border-gray-800 bg-gray-950/95 px-4 py-3 backdrop-blur-lg">
-        <div className="mx-auto flex max-w-lg items-center justify-between">
+      <div className="fixed bottom-[72px] left-0 right-0 z-40 border-t border-gray-800 bg-gray-950/95 px-2 py-2 backdrop-blur-lg">
+        {/* Reciter button row */}
+        <div className="mx-auto flex max-w-lg items-center justify-between px-2 pb-1.5">
           <button
-            onClick={cycleSpeed}
-            className="flex h-9 items-center rounded-lg bg-gray-800 px-3 text-xs font-semibold text-gray-300"
+            onClick={() => setShowReciterSheet(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-gray-800 px-2.5 py-1 text-[10px] font-medium text-gray-300 active:bg-gray-700"
           >
-            {speed}x
+            <Mic className="h-3 w-3 text-purple-400" />
+            {RECITERS.find((r) => r.id === reciter)?.name || 'Alafasy'}
           </button>
-
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setLoopMode(!loopMode)}
-              className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                loopMode ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500'
-              }`}
-              aria-label="Loop"
+              onClick={cycleSpeed}
+              className="flex h-7 items-center rounded-lg bg-gray-800 px-2 text-[10px] font-semibold text-gray-300"
             >
-              <Repeat className="h-5 w-5" />
+              {speed}x
             </button>
-
-            <button
-              onClick={togglePlay}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
-              aria-label={playing ? 'Pause' : 'Play'}
-            >
-              {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-            </button>
-
-            <button
-              onClick={skipNext}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-gray-500"
-              aria-label="Next ayah"
-            >
-              <SkipForward className="h-5 w-5" />
-            </button>
-          </div>
-
-          <div className="w-12 text-center">
             {currentAyah >= 0 && (
               <span className="text-[10px] text-gray-500">
                 {currentAyah + 1}/{ayahs.length}
@@ -374,7 +402,87 @@ export default function SurahReaderPage() {
             )}
           </div>
         </div>
+
+        {/* Main controls */}
+        <div className="mx-auto flex max-w-lg items-center justify-between px-2">
+          <button
+            onClick={cycleRepeat}
+            className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
+              repeatCount !== 1 ? 'bg-purple-500/20 text-purple-400' : 'text-gray-500'
+            }`}
+            aria-label={`Repeat ${getRepeatLabel()}`}
+          >
+            <Repeat className="h-4.5 w-4.5" />
+            <span className="absolute -bottom-0.5 text-[8px] font-bold">{getRepeatLabel()}</span>
+          </button>
+
+          <button
+            onClick={() => setContinuousPlay(!continuousPlay)}
+            className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+              continuousPlay ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500'
+            }`}
+            aria-label={continuousPlay ? 'Continuous play on' : 'Continuous play off'}
+          >
+            <ListMusic className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={togglePlay}
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+            aria-label={playing ? 'Pause' : 'Play'}
+          >
+            {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+          </button>
+
+          <button
+            onClick={skipNext}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-gray-500"
+            aria-label="Next ayah"
+          >
+            <SkipForward className="h-5 w-5" />
+          </button>
+
+          <div className="w-10" />
+        </div>
       </div>
+
+      {/* Reciter selector bottom sheet */}
+      {showReciterSheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowReciterSheet(false)} />
+          <div className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-8 pt-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white">Choose Reciter</h3>
+              <button
+                onClick={() => setShowReciterSheet(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="max-h-[50vh] space-y-1 overflow-y-auto">
+              {RECITERS.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => selectReciter(r.id)}
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
+                    reciter === r.id
+                      ? 'bg-emerald-500/15 text-emerald-400'
+                      : 'text-gray-300 active:bg-gray-800'
+                  }`}
+                >
+                  <Mic className={`h-4 w-4 shrink-0 ${reciter === r.id ? 'text-emerald-400' : 'text-gray-600'}`} />
+                  <span className="text-sm font-medium">{r.name}</span>
+                  {reciter === r.id && (
+                    <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Active</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>
