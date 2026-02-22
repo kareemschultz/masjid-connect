@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Circle, RotateCcw } from 'lucide-react'
+import { Circle, RotateCcw, Share2 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { shareOrCopy } from '@/lib/share'
 
 const TARGETS = [33, 99, 100, 500, 1000]
 
@@ -25,13 +26,28 @@ export default function TasbihPage() {
     setCount(getItem(KEYS.TASBIH_COUNT, 0))
   }, [])
 
+  const [pulse, setPulse] = useState(false)
+  const [milestoneReached, setMilestoneReached] = useState(false)
+
   const handleTap = () => {
     const newCount = count + 1
     setCount(newCount)
     setItem(KEYS.TASBIH_COUNT, newCount)
+
+    // Haptic feedback
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      navigator.vibrate(30)
+      if (newCount % target === 0) {
+        navigator.vibrate([50, 30, 50, 30, 100]) // celebration pattern
+        setMilestoneReached(true)
+        setTimeout(() => setMilestoneReached(false), 2000)
+      } else {
+        navigator.vibrate(15)
+      }
     }
+
+    // Visual pulse
+    setPulse(true)
+    setTimeout(() => setPulse(false), 150)
   }
 
   const reset = () => {
@@ -88,11 +104,18 @@ export default function TasbihPage() {
           </svg>
           <button
             onClick={handleTap}
-            className="flex h-40 w-40 items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800 text-5xl font-bold text-foreground transition-transform active:scale-95"
+            className={`flex h-40 w-40 items-center justify-center rounded-full bg-gray-900 border-2 text-5xl font-bold text-foreground transition-all active:scale-95 ${
+              pulse ? 'scale-105 border-emerald-500' : 'border-gray-800'
+            } ${milestoneReached ? 'ring-4 ring-emerald-500/40' : ''}`}
             aria-label="Count"
           >
             {count}
           </button>
+          {milestoneReached && (
+            <div className="absolute -bottom-2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white animate-bounce">
+              Target reached!
+            </div>
+          )}
         </div>
 
         {/* Target selector */}
@@ -110,14 +133,26 @@ export default function TasbihPage() {
           ))}
         </div>
 
-        {/* Reset */}
-        <button
-          onClick={reset}
-          className="mt-6 flex items-center gap-2 rounded-xl bg-gray-800 px-6 py-3 text-sm font-medium text-gray-300 transition-colors active:bg-gray-700"
-        >
-          <RotateCcw className="h-4 w-4" />
-          Reset
-        </button>
+        {/* Actions */}
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={reset}
+            className="flex items-center gap-2 rounded-xl bg-gray-800 px-5 py-3 text-sm font-medium text-gray-300 transition-colors active:bg-gray-700"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Reset
+          </button>
+          <button
+            onClick={() => shareOrCopy({
+              title: 'Tasbih Session',
+              text: `Completed ${count}x ${phrase.transliteration} (${phrase.meaning}) today.\n\nvia MasjidConnect GY`
+            })}
+            className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-5 py-3 text-sm font-medium text-emerald-400 transition-colors active:bg-emerald-500/20"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+        </div>
       </div>
 
       <BottomNav />

@@ -1,0 +1,123 @@
+// Rename this file to schema.ts when deploying with Docker + PostgreSQL.
+
+import {
+  pgTable, uuid, varchar, text, boolean, integer, timestamp, date, jsonb, uniqueIndex,
+} from 'drizzle-orm/pg-core'
+
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  username: varchar('username', { length: 100 }).notNull(),
+  email: varchar('email', { length: 255 }),
+  passwordHash: text('password_hash'),
+  avatarUrl: text('avatar_url'),
+  calculationMethod: varchar('calculation_method', { length: 50 }).default('Egyptian'),
+  madhab: varchar('madhab', { length: 20 }).default('Shafi'),
+  reciter: varchar('reciter', { length: 50 }).default('ar.alafasy'),
+  notificationsEnabled: boolean('notifications_enabled').default(true),
+  notifyFajr: boolean('notify_fajr').default(true),
+  notifyDhuhr: boolean('notify_dhuhr').default(true),
+  notifyAsr: boolean('notify_asr').default(true),
+  notifyMaghrib: boolean('notify_maghrib').default(true),
+  notifyIsha: boolean('notify_isha').default(true),
+  notifyIftaar: boolean('notify_iftaar').default(true),
+  notifyRamadan: boolean('notify_ramadan').default(true),
+  points: integer('points').default(0),
+  streak: integer('streak').default(0),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+export const prayerLogs = pgTable('prayer_logs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  prayerName: varchar('prayer_name', { length: 20 }).notNull(),
+  date: date('date').notNull(),
+  status: varchar('status', { length: 10 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('prayer_log_unique').on(table.userId, table.prayerName, table.date),
+])
+
+export const bookmarks = pgTable('bookmarks', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  surahNumber: integer('surah_number').notNull(),
+  ayahNumber: integer('ayah_number').notNull(),
+  note: text('note'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('bookmark_unique').on(table.userId, table.surahNumber, table.ayahNumber),
+])
+
+export const hifzProgress = pgTable('hifz_progress', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  surahNumber: integer('surah_number').notNull(),
+  ayahNumber: integer('ayah_number').notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('learning'),
+  accuracy: integer('accuracy'),
+  lastReviewedAt: timestamp('last_reviewed_at'),
+  reviewCount: integer('review_count').default(0),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('hifz_unique').on(table.userId, table.surahNumber, table.ayahNumber),
+])
+
+export const buddies = pgTable('buddies', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  buddyUserId: uuid('buddy_user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('buddy_unique').on(table.userId, table.buddyUserId),
+])
+
+export const challenges = pgTable('challenges', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  creatorId: uuid('creator_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+  description: text('description'),
+  type: varchar('type', { length: 30 }).notNull(),
+  targetValue: integer('target_value').notNull(),
+  startDate: date('start_date').notNull(),
+  endDate: date('end_date').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const challengeParticipants = pgTable('challenge_participants', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  challengeId: uuid('challenge_id').references(() => challenges.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  progress: integer('progress').default(0),
+  joinedAt: timestamp('joined_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('challenge_participant_unique').on(table.challengeId, table.userId),
+])
+
+export const checklistEntries = pgTable('checklist_entries', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  date: date('date').notNull(),
+  items: jsonb('items').notNull().default({}),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('checklist_date_unique').on(table.userId, table.date),
+])
+
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  endpoint: text('endpoint').notNull(),
+  p256dh: text('p256dh').notNull(),
+  auth: text('auth').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export type User = typeof users.$inferSelect
+export type NewUser = typeof users.$inferInsert
+export type PrayerLog = typeof prayerLogs.$inferSelect
+export type Bookmark = typeof bookmarks.$inferSelect
+export type HifzEntry = typeof hifzProgress.$inferSelect
+export type Challenge = typeof challenges.$inferSelect
+export type PushSubscription = typeof pushSubscriptions.$inferSelect

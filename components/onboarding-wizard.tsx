@@ -99,7 +99,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               Welcome to MasjidConnect GY
             </p>
             <p className="mt-4 max-w-xs text-center text-sm leading-relaxed text-gray-400">
-              Your complete Islamic companion app for the Muslim community of Georgetown, Guyana. Linking faith and community.
+              Your daily Islamic companion, built by your community. Independent. No ads. No data collection. Just faith.
             </p>
           </div>
         )}

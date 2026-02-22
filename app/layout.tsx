@@ -1,16 +1,35 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { PwaInstallPrompt } from '@/components/pwa-install-prompt'
 import './globals.css'
 
-const geistSans = Geist({ subsets: ['latin'] })
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
-  title: 'MasjidConnect GY',
-  description: 'Linking Faith and Community - Islamic companion app for Georgetown, Guyana',
+  title: 'MasjidConnect GY - Islamic Companion App',
+  description: 'Linking Faith and Community. Prayer times, Quran reader, Hifz tracker, Tasbih, Qibla finder, and more for the Muslim community of Georgetown, Guyana.',
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'MasjidConnect',
+  },
   icons: {
     icon: '/images/logo.jpg',
     apple: '/images/logo.jpg',
+  },
+  openGraph: {
+    title: 'MasjidConnect GY',
+    description: 'Your complete Islamic companion app for Georgetown, Guyana.',
+    type: 'website',
   },
 }
 
@@ -18,7 +37,11 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#0a0b14',
+  userScalable: false,
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0a0b14' },
+    { media: '(prefers-color-scheme: light)', color: '#10b981' },
+  ],
 }
 
 export default function RootLayout({
@@ -27,15 +50,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-[#0a0b14]">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className={`${geistSans.className} antialiased bg-[#0a0b14] text-[#f9fafb]`}>
+      <body className="font-sans antialiased bg-[#0a0b14] text-[#f9fafb]">
         {children}
+        <PwaInstallPrompt />
       </body>
     </html>
   )

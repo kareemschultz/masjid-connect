@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { CheckSquare, Flame, TrendingUp, Calendar } from 'lucide-react'
+import { CheckSquare, Flame, TrendingUp, Calendar, UtensilsCrossed, Table2, ChevronRight, Share2 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
 import { PRAYER_NAMES, type PrayerName } from '@/lib/prayer-times'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { shareOrCopy } from '@/lib/share'
+import Link from 'next/link'
 
 type PrayerLog = Record<string, Record<PrayerName, boolean>>
 
@@ -148,6 +150,41 @@ export default function TrackerPage() {
               <p className="text-[11px] text-gray-400">This Month</p>
             </div>
           </div>
+        </div>
+
+        {/* Share */}
+        <button
+          onClick={() => shareOrCopy({
+            title: 'Prayer Streak',
+            text: `I prayed ${todayCount}/5 prayers today on MasjidConnect GY! Current streak: ${streak} days.\n\nvia MasjidConnect GY`
+          })}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 py-3 text-sm font-medium text-emerald-400 transition-all active:scale-[0.98]"
+        >
+          <Share2 className="h-4 w-4" /> Share Today&apos;s Progress
+        </button>
+
+        {/* Quick Links */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link href="/tracker/fasting" className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/20">
+              <UtensilsCrossed className="h-4 w-4 text-orange-400" />
+            </div>
+            <div className="flex-1">
+              <div className="text-xs font-semibold text-[#f9fafb]">Fasting</div>
+              <div className="text-[10px] text-gray-500">Track fasts</div>
+            </div>
+            <ChevronRight className="h-3.5 w-3.5 text-gray-600" />
+          </Link>
+          <Link href="/timetable" className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/20">
+              <Table2 className="h-4 w-4 text-cyan-400" />
+            </div>
+            <div className="flex-1">
+              <div className="text-xs font-semibold text-[#f9fafb]">Timetable</div>
+              <div className="text-[10px] text-gray-500">Monthly view</div>
+            </div>
+            <ChevronRight className="h-3.5 w-3.5 text-gray-600" />
+          </Link>
         </div>
 
         {/* Today's Prayers */}

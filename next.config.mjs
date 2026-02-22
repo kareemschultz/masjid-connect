@@ -10,4 +10,9 @@ const nextConfig = {
   serverExternalPackages: ['pg', 'web-push', 'node-cron', 'adhan'],
 }
 
+// Enable standalone output only for Docker builds
+if (process.env.DOCKER_BUILD === '1') {
+  nextConfig.output = 'standalone'
+}
+
 export default nextConfig
