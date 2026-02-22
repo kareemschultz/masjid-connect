@@ -90,7 +90,7 @@ export default function TasbihPage() {
 
         {/* Circular counter */}
         <div className="relative mt-10 flex h-52 w-52 items-center justify-center">
-          <svg className="absolute h-full w-full -rotate-90" viewBox="0 0 100 100">
+          <svg className="pointer-events-none absolute h-full w-full -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="45" fill="none" stroke="#1f2937" strokeWidth="4" />
             <circle
               cx="50" cy="50" r="45"

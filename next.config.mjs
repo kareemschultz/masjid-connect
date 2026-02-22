@@ -21,7 +21,6 @@ const nextConfig = {
       { source: '/fasting',   destination: '/tracker/fasting',   permanent: true },
       { source: '/names',     destination: '/explore/names',     permanent: true },
       { source: '/buddy/how-it-works', destination: '/explore/buddy/how-it-works', permanent: true },
-      { source: '/tracker',   destination: '/tracker',         permanent: false },
     ]
   },
 }
