@@ -56,4 +56,5 @@ export const KEYS = {
   IS_ADMIN: 'is_admin',
   KHATAM_PROGRESS: 'khatam_progress',
   QURAN_GOAL: 'quran_goal',
+  CHECKINS: 'masjid_checkins',
 } as const

@@ -107,9 +107,12 @@
   background-repeat: repeat;
 }
 
-/* Safe area for bottom nav */
+/* Safe area utilities */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* ——— Premium Animations ——— */

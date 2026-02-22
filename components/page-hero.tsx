@@ -76,7 +76,7 @@ export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, acti
       {/* Star field */}
       {stars && <StarField />}
 
-      <div className="relative px-5 pt-14 pb-10">
+      <div className="relative px-5 pb-10" style={{ paddingTop: 'max(3.5rem, calc(env(safe-area-inset-top) + 1rem))' }}>
         <div className="flex items-start justify-between">
           {showBack && (
             <button

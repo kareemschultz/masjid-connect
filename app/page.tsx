@@ -201,6 +201,26 @@ export default function HomePage() {
 
     loadPrayerTimes()
     setMounted(true)
+
+    // Hydrate checklist from server (API is source of truth when available)
+    fetch('/api/tracking')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((rows) => {
+        if (!Array.isArray(rows) || rows.length === 0) return
+        const today = new Date().toISOString().split('T')[0]
+        const todayRow = rows.find((r: any) => r.date === today)
+        if (!todayRow) return
+        const serverChecklist: Record<string, boolean> = {}
+        for (const item of CHECKLIST_ITEMS) {
+          if (todayRow[item.key] === true) serverChecklist[item.key] = true
+        }
+        // Merge: server wins where it's true
+        const local = getItem(KEYS.CHECKLIST, {}) as Record<string, boolean>
+        const merged = { ...local, ...serverChecklist }
+        setChecklist(merged)
+        setItem(KEYS.CHECKLIST, merged)
+      })
+      .catch(() => {})
   }, [loadPrayerTimes])
 
   // Countdown timers
@@ -224,14 +244,24 @@ export default function HomePage() {
   }, [prayers])
 
   const toggleCheck = (key: string) => {
-    const updated = { ...checklist, [key]: !checklist[key] }
+    const newVal = !checklist[key]
+    const updated = { ...checklist, [key]: newVal }
     setChecklist(updated)
     setItem(KEYS.CHECKLIST, updated)
-    if (!checklist[key]) {
+    if (newVal) {
       const newPoints = points + 10
       setPoints(newPoints)
       setItem(KEYS.POINTS, newPoints)
     }
+    // Fire-and-forget sync to API
+    fetch('/api/tracking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date: new Date().toISOString().split('T')[0],
+        [key]: newVal,
+      }),
+    }).catch(() => {})
   }
 
   const completedCount = Object.values(checklist).filter(Boolean).length
@@ -274,7 +304,7 @@ export default function HomePage() {
           </div>
         )}
 
-        <div className="relative px-5 pt-12 pb-8">
+        <div className="relative px-5 pb-8" style={{ paddingTop: 'max(3rem, calc(env(safe-area-inset-top) + 0.75rem))' }}>
           {/* Top Bar */}
           <div className="mb-6 flex items-center justify-between animate-fade-down" style={{ animationDelay: '0.05s', animationFillMode: 'backwards' }}>
             <div className="flex items-center gap-3">

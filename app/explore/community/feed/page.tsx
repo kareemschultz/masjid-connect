@@ -7,7 +7,7 @@ import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem } from '@/lib/storage'
 
 interface FeedPost {
-  id: string
+  id: string | number
   name: string
   message: string
   type: 'Reminder' | 'Question' | 'Announcement' | 'General'
@@ -25,38 +25,10 @@ const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
 }
 
 const SAMPLE_POSTS: FeedPost[] = [
-  {
-    id: 'sample-1',
-    name: 'Brother Ibrahim',
-    message: "Don't forget to read Surah Al-Kahf every Friday. The Prophet (SAW) said it brings light between two Fridays.",
-    type: 'Reminder',
-    likes: 24,
-    createdAt: Date.now() - 3600000 * 1,
-  },
-  {
-    id: 'sample-2',
-    name: 'CIOG Admin',
-    message: 'Taraweeh prayers at CIOG Masjid starting 8:00 PM during Ramadan. All welcome!',
-    type: 'Announcement',
-    likes: 41,
-    createdAt: Date.now() - 3600000 * 4,
-  },
-  {
-    id: 'sample-3',
-    name: 'Sister Fatimah',
-    message: "Does anyone know if there's a sisters-only Quran circle in Georgetown?",
-    type: 'Question',
-    likes: 12,
-    createdAt: Date.now() - 3600000 * 7,
-  },
-  {
-    id: 'sample-4',
-    name: 'Ahmad K.',
-    message: 'Alhamdulillah for this community app! Great to see Muslims in GY connecting.',
-    type: 'General',
-    likes: 35,
-    createdAt: Date.now() - 3600000 * 10,
-  },
+  { id: 'sample-1', name: 'Brother Ibrahim', message: "Don't forget to read Surah Al-Kahf every Friday. The Prophet (SAW) said it brings light between two Fridays.", type: 'Reminder', likes: 24, createdAt: Date.now() - 3600000 * 1 },
+  { id: 'sample-2', name: 'CIOG Admin', message: 'Taraweeh prayers at CIOG Masjid starting 8:00 PM during Ramadan. All welcome!', type: 'Announcement', likes: 41, createdAt: Date.now() - 3600000 * 4 },
+  { id: 'sample-3', name: 'Sister Fatimah', message: "Does anyone know if there's a sisters-only Quran circle in Georgetown?", type: 'Question', likes: 12, createdAt: Date.now() - 3600000 * 7 },
+  { id: 'sample-4', name: 'Ahmad K.', message: 'Alhamdulillah for this community app! Great to see Muslims in GY connecting.', type: 'General', likes: 35, createdAt: Date.now() - 3600000 * 10 },
 ]
 
 function timeAgo(ts: number): string {
@@ -70,6 +42,17 @@ function timeAgo(ts: number): string {
   return `${days}d ago`
 }
 
+function normalizeRow(row: any): FeedPost {
+  return {
+    id: row.id,
+    name: row.name || 'Anonymous',
+    message: row.message || '',
+    type: row.type || 'General',
+    likes: row.like_count ?? row.likes ?? 0,
+    createdAt: row.created_at ? new Date(row.created_at).getTime() : (row.createdAt || Date.now()),
+  }
+}
+
 export default function CommunityFeedPage() {
   const [posts, setPosts] = useState<FeedPost[]>([])
   const [likes, setLikes] = useState<Record<string, boolean>>({})
@@ -78,8 +61,20 @@ export default function CommunityFeedPage() {
   const [postType, setPostType] = useState<FeedPost['type']>('General')
 
   useEffect(() => {
-    const stored = getItem<FeedPost[]>('community_feed', [])
-    setPosts(stored.length > 0 ? stored : SAMPLE_POSTS)
+    fetch('/api/community/feed')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((rows) => {
+        if (Array.isArray(rows) && rows.length > 0) {
+          setPosts(rows.map(normalizeRow))
+        } else {
+          const stored = getItem<FeedPost[]>('community_feed', [])
+          setPosts(stored.length > 0 ? stored : SAMPLE_POSTS)
+        }
+      })
+      .catch(() => {
+        const stored = getItem<FeedPost[]>('community_feed', [])
+        setPosts(stored.length > 0 ? stored : SAMPLE_POSTS)
+      })
     setLikes(getItem<Record<string, boolean>>('feed_likes', {}))
   }, [])
 
@@ -98,130 +93,86 @@ export default function CommunityFeedPage() {
     setItem('community_feed', updated)
     setMessage('')
     setName('')
+
+    fetch('/api/community/feed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name.trim() || 'Anonymous', message: message.trim(), type: postType }),
+    }).catch(() => {})
   }
 
-  const toggleLike = (id: string) => {
-    const alreadyLiked = likes[id]
-    const newLikes = { ...likes, [id]: !alreadyLiked }
+  const toggleLike = (id: string | number) => {
+    const key = String(id)
+    const alreadyLiked = likes[key]
+    const newLikes = { ...likes, [key]: !alreadyLiked }
     setLikes(newLikes)
     setItem('feed_likes', newLikes)
 
     setPosts((prev) => {
       const updated = prev.map((p) =>
-        p.id === id
-          ? { ...p, likes: p.likes + (alreadyLiked ? -1 : 1) }
-          : p
+        String(p.id) === key ? { ...p, likes: p.likes + (alreadyLiked ? -1 : 1) } : p
       )
       setItem('community_feed', updated)
       return updated
     })
+
+    if (!alreadyLiked) {
+      fetch('/api/community/feed/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ post_id: id }),
+      }).catch(() => {})
+    }
   }
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-24">
-      <PageHero
-        icon={MessageCircle}
-        title="Community Feed"
-        subtitle="Muslims in GY"
-        gradient="from-blue-900 to-indigo-900"
-        showBack
-      />
+      <PageHero icon={MessageCircle} title="Community Feed" subtitle="Muslims in GY" gradient="from-blue-900 to-indigo-900" showBack />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">
-        {/* Post Creation Form */}
         <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">
-          <input
-            type="text"
-            placeholder="Your name (optional)"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50"
-          />
+          <input type="text" placeholder="Your name (optional)" value={name} onChange={(e) => setName(e.target.value)} className="w-full rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50" />
           <div className="relative">
-            <textarea
-              placeholder="Share something with the community..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value.slice(0, 300))}
-              rows={3}
-              className="w-full resize-none rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50"
-            />
-            <span className="absolute bottom-2 right-3 text-[10px] text-gray-600">
-              {message.length}/300
-            </span>
+            <textarea placeholder="Share something with the community..." value={message} onChange={(e) => setMessage(e.target.value.slice(0, 300))} rows={3} className="w-full resize-none rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50" />
+            <span className="absolute bottom-2 right-3 text-[10px] text-gray-600">{message.length}/300</span>
           </div>
 
-          {/* Type Selector */}
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {POST_TYPES.map((t) => {
               const colors = TYPE_COLORS[t]
               return (
-                <button
-                  key={t}
-                  onClick={() => setPostType(t)}
-                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
-                    postType === t
-                      ? `${colors.bg} ${colors.text}`
-                      : 'bg-gray-800/50 text-gray-500'
-                  }`}
-                >
+                <button key={t} onClick={() => setPostType(t)} className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${postType === t ? `${colors.bg} ${colors.text}` : 'bg-gray-800/50 text-gray-500'}`}>
                   {t}
                 </button>
               )
             })}
           </div>
 
-          <button
-            onClick={submitPost}
-            disabled={!message.trim()}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-40"
-          >
+          <button onClick={submitPost} disabled={!message.trim()} className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-40">
             <Send className="h-4 w-4" />
             Post
           </button>
         </div>
 
-        {/* Posts List */}
         <div className="space-y-3 animate-stagger">
           {posts.map((post) => {
             const colors = TYPE_COLORS[post.type] || TYPE_COLORS.General
             const initial = post.name === 'Anonymous' ? '?' : post.name[0].toUpperCase()
 
             return (
-              <div
-                key={post.id}
-                className="rounded-2xl border border-gray-800 bg-gray-900 p-4"
-              >
+              <div key={post.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
                 <div className="flex gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-sm font-bold text-blue-400">
-                    {initial}
-                  </div>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-sm font-bold text-blue-400">{initial}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${colors.bg} ${colors.text}`}>
-                        {post.type}
-                      </span>
-                      <span className="text-sm font-semibold text-white">
-                        {post.name}
-                      </span>
-                      <span className="text-[10px] text-gray-600">
-                        {timeAgo(post.createdAt)}
-                      </span>
+                      <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${colors.bg} ${colors.text}`}>{post.type}</span>
+                      <span className="text-sm font-semibold text-white">{post.name}</span>
+                      <span className="text-[10px] text-gray-600">{timeAgo(post.createdAt)}</span>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-300">
-                      {post.message}
-                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-300">{post.message}</p>
                     <div className="mt-3">
-                      <button
-                        onClick={() => toggleLike(post.id)}
-                        className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all active:scale-95 ${
-                          likes[post.id]
-                            ? 'bg-red-500/15 text-red-400'
-                            : 'bg-gray-800 text-gray-400'
-                        }`}
-                      >
-                        <Heart
-                          className={`h-4 w-4 ${likes[post.id] ? 'fill-red-400' : ''}`}
-                        />
+                      <button onClick={() => toggleLike(post.id)} className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all active:scale-95 ${likes[String(post.id)] ? 'bg-red-500/15 text-red-400' : 'bg-gray-800 text-gray-400'}`}>
+                        <Heart className={`h-4 w-4 ${likes[String(post.id)] ? 'fill-red-400' : ''}`} />
                         <span className="text-xs">{post.likes}</span>
                       </button>
                     </div>

@@ -20,7 +20,7 @@ export function BottomNav() {
       {/* Gradient fade above nav */}
       <div className="pointer-events-none h-6 bg-gradient-to-t from-[#0a0b14] to-transparent" />
 
-      <div className="border-t border-white/[0.04] bg-[#0a0b14]/95 backdrop-blur-xl">
+      <div className="border-t border-white/[0.04] bg-[#0a0b14]/95 backdrop-blur-xl" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1.5">
           {tabs.map((tab) => {
             const isActive = tab.href === '/'

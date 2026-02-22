@@ -1,0 +1,24 @@
+import { NextRequest } from 'next/server'
+import { getPool } from '@/lib/db'
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { request_id } = body
+    if (!request_id) {
+      return Response.json({ error: 'request_id required' }, { status: 400 })
+    }
+    const pool = getPool()
+    const result = await pool.query(
+      'UPDATE community_dua_requests SET ameen_count = ameen_count + 1 WHERE id = $1 RETURNING *',
+      [request_id]
+    )
+    if (result.rows.length === 0) {
+      return Response.json({ error: 'Not found' }, { status: 404 })
+    }
+    return Response.json(result.rows[0])
+  } catch (err) {
+    console.error('POST /api/community/dua-board/react error:', err)
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
