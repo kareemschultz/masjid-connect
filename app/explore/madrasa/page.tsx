@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { GraduationCap, BookOpen, Star, Moon, Heart, Users, Lock } from 'lucide-react'
+import { GraduationCap, BookOpen, Star, Moon, Heart, Users, Lock, ChevronRight } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -90,8 +90,8 @@ export default function MadrasaPage() {
           </div>
         </Link>
 
-        {/* ── Learn to Pray — coming soon ─────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-2xl border border-purple-500/30 bg-purple-500/5 p-5 opacity-80">
+        {/* ── Learn to Pray ────────────────────────────────────────────── */}
+        <Link href="/explore/madrasa/salah" className="relative block overflow-hidden rounded-2xl border border-purple-500/30 bg-purple-500/5 p-5 active:bg-purple-500/10 transition-colors">
           <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl" />
 
           <div className="relative flex items-start gap-4">
@@ -100,19 +100,19 @@ export default function MadrasaPage() {
             </div>
 
             <div className="flex-1">
-              <h3 className="text-base font-bold text-[#f9fafb]">Learn to Pray</h3>
-              <p className="mt-1 text-xs text-gray-400">
-                Step-by-step Salah guide with audio
+              <div className="flex items-center gap-2 mb-0.5">
+                <h3 className="text-base font-bold text-[#f9fafb]">Learn to Pray</h3>
+                <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-400">NEW</span>
+              </div>
+              <p className="text-xs text-gray-400">
+                Wudu steps + complete Salah guide with Arabic, transliteration & prayer position icons
               </p>
-
-              <div className="mt-3 flex items-center gap-2">
-                <span className="rounded-full bg-purple-500/20 px-2.5 py-0.5 text-[10px] font-semibold text-purple-400">
-                  Coming Soon
-                </span>
+              <div className="mt-2 flex items-center gap-1 text-xs text-purple-400 font-semibold">
+                Start learning <ChevronRight className="h-3.5 w-3.5" />
               </div>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* ── Section label ──────────────────────────────────────────── */}
         <div className="pt-2 pb-1">
