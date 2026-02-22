@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { X, Send, CheckCircle } from 'lucide-react'
+import { X, Send, CheckCircle, ChevronDown } from 'lucide-react'
 import { masjids } from '@/lib/masjids'
 import { toast } from 'sonner'
+import { SelectModal } from '@/components/select-modal'
 
 const INPUT_CLASS = 'w-full rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30'
 
@@ -31,6 +32,7 @@ export default function SubmitForm({ onClose, onSubmit, defaultMasjidId }) {
   const [error, setError] = useState('')
   const [showValidation, setShowValidation] = useState(false)
   const [touched, setTouched] = useState({})
+  const [masjidPickerOpen, setMasjidPickerOpen] = useState(false)
   const firstFocusRef = useRef(null)
 
   useEffect(() => { firstFocusRef.current?.focus() }, [])
@@ -121,25 +123,31 @@ export default function SubmitForm({ onClose, onSubmit, defaultMasjidId }) {
             </div>
           )}
 
-          {/* Masjid select */}
+          {/* Masjid picker */}
           <div>
-            <label htmlFor="submit-masjid" className="block text-sm font-semibold text-gray-200 mb-1">🕌 Which Masjid?</label>
-            <select
-              ref={firstFocusRef}
-              id="submit-masjid"
-              required
-              value={form.masjidId}
-              onChange={setField('masjidId')}
-              aria-invalid={Boolean(showFieldError('masjidId'))}
-              aria-describedby={showFieldError('masjidId') ? 'submit-masjid-error' : undefined}
-              className={fieldClass('masjidId')}
+            <label className="block text-sm font-semibold text-gray-200 mb-1">🕌 Which Masjid?</label>
+            <button
+              type="button"
+              onClick={() => setMasjidPickerOpen(true)}
+              className={`${fieldClass('masjidId')} flex items-center justify-between text-left`}
             >
-              <option value="">Select a masjid...</option>
-              {masjids.map(m => (
-                <option key={m.id} value={m.id}>{m.name}</option>
-              ))}
-            </select>
-            {showFieldError('masjidId') && <p id="submit-masjid-error" className="mt-1 text-xs text-red-600">{errors.masjidId}</p>}
+              <span className={form.masjidId ? 'text-gray-200' : 'text-gray-500'}>
+                {form.masjidId ? masjids.find(m => m.id === form.masjidId)?.name : 'Select a masjid...'}
+              </span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-gray-500" />
+            </button>
+            {showFieldError('masjidId') && <p className="mt-1 text-xs text-red-400">{errors.masjidId}</p>}
+            <SelectModal
+              open={masjidPickerOpen}
+              onClose={() => setMasjidPickerOpen(false)}
+              title="Select a Masjid"
+              options={masjids.map(m => ({ key: m.id, label: m.name }))}
+              selected={form.masjidId}
+              onSelect={(key) => {
+                setForm(f => ({ ...f, masjidId: key }))
+                setTouched(t => ({ ...t, masjidId: true }))
+              }}
+            />
           </div>
 
           {/* Menu */}
