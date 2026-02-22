@@ -8,7 +8,7 @@ import { getItem, setItem, KEYS } from '@/lib/storage'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  BookOpen, Circle, Compass, Calculator, Calendar, Star,
+  BookOpen, Circle, Compass, Calculator, Star,
   Settings, User, CheckCircle2, Timer, Sparkles, Brain
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
@@ -50,29 +50,30 @@ export default function HomePage() {
 
   const loadPrayerTimes = useCallback(async () => {
     try {
-      const { Coordinates, CalculationMethod, Madhab, PrayerTimes: AdhanPrayerTimes } = await import('adhan')
+      const adhan = await import('adhan')
       const methodKey = getItem(KEYS.CALCULATION_METHOD, 'Egyptian')
       const madhabKey = getItem(KEYS.MADHAB, 'Shafi')
-      const coords = new Coordinates(6.8013, -58.1551)
+      const coords = new adhan.Coordinates(6.8013, -58.1551)
 
-      const methodMap: Record<string, () => ReturnType<typeof CalculationMethod.Egyptian>> = {
-        MuslimWorldLeague: () => CalculationMethod.MuslimWorldLeague(),
-        Egyptian: () => CalculationMethod.Egyptian(),
-        Karachi: () => CalculationMethod.Karachi(),
-        NorthAmerica: () => CalculationMethod.NorthAmerica(),
-        MoonsightingCommittee: () => CalculationMethod.MoonsightingCommittee(),
-        UmmAlQura: () => CalculationMethod.UmmAlQura(),
-        Dubai: () => CalculationMethod.Dubai(),
-        Qatar: () => CalculationMethod.Qatar(),
-        Kuwait: () => CalculationMethod.Kuwait(),
-        Singapore: () => CalculationMethod.Singapore(),
-        Tehran: () => CalculationMethod.Tehran(),
-        Turkey: () => CalculationMethod.Turkey(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const methodMap: Record<string, () => any> = {
+        MuslimWorldLeague: () => adhan.CalculationMethod.MuslimWorldLeague(),
+        Egyptian: () => adhan.CalculationMethod.Egyptian(),
+        Karachi: () => adhan.CalculationMethod.Karachi(),
+        NorthAmerica: () => adhan.CalculationMethod.NorthAmerica(),
+        MoonsightingCommittee: () => adhan.CalculationMethod.MoonsightingCommittee(),
+        UmmAlQura: () => adhan.CalculationMethod.UmmAlQura(),
+        Dubai: () => adhan.CalculationMethod.Dubai(),
+        Qatar: () => adhan.CalculationMethod.Qatar(),
+        Kuwait: () => adhan.CalculationMethod.Kuwait(),
+        Singapore: () => adhan.CalculationMethod.Singapore(),
+        Tehran: () => adhan.CalculationMethod.Tehran(),
+        Turkey: () => adhan.CalculationMethod.Turkey(),
       }
 
       const params = (methodMap[methodKey] || methodMap.Egyptian)()
-      params.madhab = madhabKey === 'Hanafi' ? Madhab.Hanafi : Madhab.Shafi
-      const pt = new AdhanPrayerTimes(coords, new Date(), params)
+      params.madhab = madhabKey === 'Hanafi' ? adhan.Madhab.Hanafi : adhan.Madhab.Shafi
+      const pt = new adhan.PrayerTimes(coords, new Date(), params)
 
       const prayerMap: Record<string, Date> = {
         Fajr: pt.fajr,
@@ -132,7 +133,6 @@ export default function HomePage() {
     const updated = { ...checklist, [key]: !checklist[key] }
     setChecklist(updated)
     setItem(KEYS.CHECKLIST, updated)
-
     if (!checklist[key]) {
       const newPoints = points + 10
       setPoints(newPoints)
@@ -155,14 +155,13 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-24">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-950 to-teal-900">
         <div className="islamic-pattern absolute inset-0 opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0b14] to-transparent" />
 
         <div className="relative px-5 pt-12 pb-8">
-          {/* Top bar */}
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Image
@@ -235,7 +234,7 @@ export default function HomePage() {
             <Sparkles className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <p className="text-lg font-bold text-foreground">{streak}</p>
+            <p className="text-lg font-bold text-white">{streak}</p>
             <p className="text-[11px] text-gray-400">Day Streak</p>
           </div>
         </div>
@@ -244,7 +243,7 @@ export default function HomePage() {
             <Star className="h-5 w-5 text-emerald-400" />
           </div>
           <div>
-            <p className="text-lg font-bold text-foreground">{points}</p>
+            <p className="text-lg font-bold text-white">{points}</p>
             <p className="text-[11px] text-gray-400">Points</p>
           </div>
         </div>
@@ -256,7 +255,7 @@ export default function HomePage() {
           <div className="h-4 w-1 rounded-full bg-emerald-500" />
           Quick Actions
         </h2>
-        <div className="grid grid-cols-3 gap-3 animate-stagger">
+        <div className="grid grid-cols-3 gap-3">
           {QUICK_ACTIONS.map((action) => (
             <Link
               key={action.label}
@@ -284,7 +283,6 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* Progress bar */}
         <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-800">
           <div
             className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
@@ -292,7 +290,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="space-y-2 animate-stagger">
+        <div className="space-y-2">
           {CHECKLIST_ITEMS.map((item) => (
             <button
               key={item.key}
@@ -310,7 +308,7 @@ export default function HomePage() {
               />
               <span
                 className={`text-sm font-medium ${
-                  checklist[item.key] ? 'text-emerald-400 line-through' : 'text-foreground'
+                  checklist[item.key] ? 'text-emerald-400 line-through' : 'text-white'
                 }`}
               >
                 {item.label}

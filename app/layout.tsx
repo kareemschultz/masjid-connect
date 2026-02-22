@@ -1,8 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
-const geistSans = Geist({ subsets: ['latin'] })
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: 'MasjidConnect GY',
@@ -27,14 +35,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-[#0a0b14]">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className={`${geistSans.className} antialiased bg-[#0a0b14] text-[#f9fafb]`}>
+      <body className="font-sans antialiased bg-[#0a0b14] text-[#f9fafb]">
         {children}
       </body>
     </html>
