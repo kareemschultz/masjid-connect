@@ -51,6 +51,10 @@ export default function SettingsPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [session, setSession] = useState<{ user?: { name?: string; email?: string; image?: string } } | null>(null)
   const [signingIn, setSigningIn] = useState(false)
+  const [username, setUsername] = useState('')
+  const [usernameInput, setUsernameInput] = useState('')
+  const [usernameSaving, setUsernameSaving] = useState(false)
+  const [usernameMsg, setUsernameMsg] = useState('')
 
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
@@ -63,6 +67,16 @@ export default function SettingsPage() {
     fetch('/api/auth/get-session', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data?.user) setSession(data) })
+      .catch(() => {})
+    // Load username from profile
+    fetch('/api/user/profile', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.username) {
+          setUsername(data.username)
+          setUsernameInput(data.username)
+        }
+      })
       .catch(() => {})
   }, [])
 
@@ -123,6 +137,34 @@ export default function SettingsPage() {
     } catch {}
   }
 
+  const saveUsername = async () => {
+    if (!usernameInput.trim()) return
+    const val = usernameInput.trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]/g, '')
+    setUsernameSaving(true)
+    setUsernameMsg('')
+    try {
+      const res = await fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: val })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setUsername(val)
+        setUsernameInput(val)
+        setUsernameMsg('Username saved!')
+      } else {
+        setUsernameMsg(data.error || 'Failed to save')
+      }
+    } catch {
+      setUsernameMsg('Error saving username')
+    } finally {
+      setUsernameSaving(false)
+      setTimeout(() => setUsernameMsg(''), 3000)
+    }
+  }
+
   const resetAllData = () => { localStorage.clear(); window.location.reload() }
 
   const methodLabel = CALCULATION_METHODS.find(m => m.key === method)?.label || method
@@ -172,6 +214,47 @@ export default function SettingsPage() {
             </div>
           )}
         </SettingGroup>
+
+        {/* Username Handle */}
+        {session?.user && (
+          <SettingGroup label="Your Profile Handle" accentColor="bg-blue-500">
+            <div className="p-4 space-y-3">
+              <p className="text-xs text-gray-400">
+                Set a @username so Faith Buddies can find you without needing your email.
+              </p>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-blue-400">@</span>
+                  <input
+                    type="text"
+                    value={usernameInput}
+                    onChange={(e) => setUsernameInput(e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())}
+                    placeholder="your_username"
+                    maxLength={30}
+                    className="w-full rounded-xl border border-gray-700 bg-gray-800 pl-7 pr-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                  />
+                </div>
+                <button
+                  onClick={saveUsername}
+                  disabled={usernameSaving || !usernameInput.trim() || usernameInput === username}
+                  className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  {usernameSaving ? '...' : 'Save'}
+                </button>
+              </div>
+              {usernameMsg && (
+                <p className={`text-xs ${usernameMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {usernameMsg}
+                </p>
+              )}
+              {username && (
+                <p className="text-[11px] text-gray-500">
+                  Others can find you by searching <span className="text-blue-400 font-medium">@{username}</span> in the buddy search.
+                </p>
+              )}
+            </div>
+          </SettingGroup>
+        )}
 
         {/* Prayer Settings */}
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">

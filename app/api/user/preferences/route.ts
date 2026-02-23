@@ -6,13 +6,14 @@ export async function PATCH(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers })
     if (!session?.user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { ramadanStart, asrMadhab, displayName, community, phoneNumber } = await request.json()
+    const { ramadanStart, asrMadhab, displayName, community, phoneNumber, username } = await request.json()
     const allowed: Record<string, string> = {}
     if (ramadanStart) allowed.ramadanStart = ramadanStart
     if (asrMadhab) allowed.asrMadhab = asrMadhab
     if (displayName !== undefined) allowed.displayName = displayName
     if (community !== undefined) allowed.community = community
     if (phoneNumber !== undefined) allowed.phoneNumber = phoneNumber
+    if (username !== undefined) allowed.username = username
 
     await auth.api.updateUser({ body: allowed, headers: request.headers })
     return Response.json({ success: true, updated: allowed })

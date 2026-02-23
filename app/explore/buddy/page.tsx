@@ -132,7 +132,8 @@ export default function BuddyPage() {
   const [showBuddyDetail, setShowBuddyDetail] = useState<Buddy | null>(null)
   const [copied, setCopied] = useState(false)
   const [nudgeSent, setNudgeSent] = useState<Record<string, boolean>>({})
-  const [newBuddyEmail, setNewBuddyEmail] = useState('')
+  const [addMode, setAddMode] = useState<'email' | 'username' | 'phone'>('email')
+  const [newBuddyInput, setNewBuddyInput] = useState('')
   const [toastMsg, setToastMsg] = useState('')
 
   const fetchBuddies = useCallback(async () => {
@@ -182,19 +183,34 @@ export default function BuddyPage() {
     setTimeout(() => setToastMsg(''), 2500)
   }, [])
 
+  const handleBuddyInputChange = (val: string) => {
+    setNewBuddyInput(val)
+    if (val.startsWith('@')) setAddMode('username')
+    else if (/^\+?[0-9\s]{4,}$/.test(val) && !val.includes('@')) setAddMode('phone')
+  }
+
   const addBuddy = async () => {
-    if (!newBuddyEmail.trim()) return
+    if (!newBuddyInput.trim()) return
+    let body: Record<string, string> = {}
+    const val = newBuddyInput.trim()
+    if (addMode === 'username') {
+      body = { username: val.replace(/^@/, '') }
+    } else if (addMode === 'phone') {
+      body = { phone: val }
+    } else {
+      body = { email: val }
+    }
     try {
-      const res = await fetch('/api/friends/request', {
+      const res = await fetch('/api/friends', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newBuddyEmail.trim() })
+        body: JSON.stringify(body)
       })
-      
       const data = await res.json()
       if (res.ok) {
-        showToast(`Request sent to ${data.addressee?.name || newBuddyEmail}`)
-        setNewBuddyEmail('')
+        showToast(`Request sent to ${data.addressee?.displayName || data.addressee?.name || val}`)
+        setNewBuddyInput('')
+        setAddMode('email')
         setShowAddModal(false)
         fetchBuddies()
       } else {
@@ -560,17 +576,58 @@ export default function BuddyPage() {
                 <Users className="h-7 w-7 text-blue-400" />
               </div>
               <h3 className="text-center text-lg font-bold text-foreground">Add a Faith Buddy</h3>
-              <p className="mt-1 text-center text-sm text-gray-400">Enter their email to send a request</p>
+              <p className="mt-1 text-center text-sm text-gray-400">Find them by email, @username, or phone</p>
+
+              {/* Mode selector */}
+              <div className="mt-4 flex gap-1 rounded-xl bg-gray-800 p-1">
+                {(['email', 'username', 'phone'] as const).map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => { setAddMode(mode); setNewBuddyInput('') }}
+                    className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
+                      addMode === mode
+                        ? 'bg-blue-500 text-white shadow-sm'
+                        : 'text-gray-400 active:bg-gray-700'
+                    }`}
+                  >
+                    {mode === 'email' ? 'Email' : mode === 'username' ? '@Username' : 'Phone'}
+                  </button>
+                ))}
+              </div>
+
               <input
-                type="email"
-                value={newBuddyEmail}
-                onChange={(e) => setNewBuddyEmail(e.target.value)}
-                placeholder="friend@example.com"
-                className="mt-5 w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-3.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                type={addMode === 'email' ? 'email' : addMode === 'phone' ? 'tel' : 'text'}
+                value={newBuddyInput}
+                onChange={(e) => handleBuddyInputChange(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addBuddy()}
+                placeholder={
+                  addMode === 'email' ? 'friend@example.com'
+                  : addMode === 'username' ? '@their_username'
+                  : '+592 XXX XXXX'
+                }
+                className="mt-4 w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-3.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
               />
+
+              {addMode === 'username' && (
+                <p className="mt-2 text-[11px] text-gray-500 text-center">
+                  Ask your buddy to set their @username in Settings
+                </p>
+              )}
+              {addMode === 'phone' && (
+                <p className="mt-2 text-[11px] text-gray-500 text-center">
+                  Include country code, e.g. +592 for Guyana
+                </p>
+              )}
+
               <div className="mt-4 flex gap-3">
-                <button onClick={() => setShowAddModal(false)} className="flex-1 rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">Cancel</button>
-                <button onClick={addBuddy} disabled={!newBuddyEmail.trim()} className="flex-1 rounded-xl bg-blue-500 py-3 text-sm font-medium text-white disabled:opacity-50">Add</button>
+                <button onClick={() => { setShowAddModal(false); setNewBuddyInput(''); setAddMode('email') }}
+                  className="flex-1 rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                  Cancel
+                </button>
+                <button onClick={addBuddy} disabled={!newBuddyInput.trim()}
+                  className="flex-1 rounded-xl bg-blue-500 py-3 text-sm font-medium text-white disabled:opacity-50">
+                  Send Request
+                </button>
               </div>
             </div>
           </div>
