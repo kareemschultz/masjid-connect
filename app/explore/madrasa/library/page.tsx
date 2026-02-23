@@ -47,7 +47,7 @@ const GII_BOOKS: GIIBook[] = [
     pages: 45,
     description:
       'An authoritative exposition on Islamic manners and etiquette (Adab) by the great scholar Shaykh Abdul-Fattah Abu-Ghuddah. Covers the adab of speech, gathering, eating, seeking knowledge, and dealing with others — essential reading for every Muslim.',
-    accessKey: '',  // Public document — no access key required
+    accessKey: 'key-1r4d1wkisdu4hhm72zjt',
     color: 'from-amber-800 to-orange-900',
     icon: '🤝',
     available: true,
