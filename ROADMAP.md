@@ -52,8 +52,8 @@
 
 ## 🟡 IN PROGRESS RIGHT NOW
 
-- [ ] **Sprint 3 build + deploy** — building Docker image (started ~8:30 PM GYT)
-- [ ] **Explore grid reorganisation** — group into sections (Quran & Learning, Prayer & Practice, Community, New Here?, Tools) — agent created code but needs verification
+- [x] **Sprint 3 build + deploy** — ✅ Done
+- [x] **Explore grid reorganisation** — ✅ Done (Sprint 4 agent)
 
 ---
 

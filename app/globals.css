@@ -166,6 +166,26 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+@keyframes float-crescent {
+  0%, 100% { transform: translateY(0px) rotate(-5deg); opacity: 0.15; }
+  50% { transform: translateY(-8px) rotate(5deg); opacity: 0.25; }
+}
+@keyframes arabesque-drift {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.06; }
+  50% { transform: rotate(3deg) scale(1.02); opacity: 0.1; }
+}
+@keyframes gentle-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.08; }
+  50% { transform: scale(1.05); opacity: 0.14; }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+@keyframes gentle-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 .animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 .animate-fade-down { animation: fade-down 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }

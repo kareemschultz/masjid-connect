@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.0 — Feb 23, 2026
+- Lectures: Added Bilal Philips (Foundations of Islamic Studies 10, Al-Qada Wal-Qadar 9)
+- Lectures: Added Yasmin Mogahed (Reclaim Your Heart 3, Spiritual Gems 12)
+- Tracker: Extended ibadah tracking — Quran pages, Sadaqah, Good Deeds, Sleep, Water, Adhkar, Istighfar
+- Explore: Grid reorganised into 5 labelled sections
+- Madrasa: Seerah page (4 eras of the Prophet's ﷺ life) + Adab page (Islamic etiquette)
+- Jumu'ah: New prep page — checklist, Surah Al-Kahf link, khutbah log, Friday duas
+- Themed animations: crescent on Ramadan, arabesque on Duas, pulse on Tasbih, sunrise on New to Islam
+- Ramadan start auto-set from moon sighting preference
+- README.md completely updated with all features
+- Navigation fixed: fully opaque bottom nav, pb-nav class across 52 pages
+
 ## v1.9.0 — February 2026 — Community & Learning
 
 ### Madrasa

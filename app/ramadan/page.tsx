@@ -130,9 +130,14 @@ export default function RamadanPage() {
         <div className="islamic-pattern absolute inset-0 opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0b14]" />
 
-        {/* Floating crescent */}
-        <div className="absolute top-10 right-6 animate-float opacity-30">
-          <Moon className="h-12 w-12 text-amber-300" />
+        {/* Floating crescent + stars */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+          <svg className="absolute right-8 top-16 h-24 w-24 text-emerald-400" style={{animation:'float-crescent 4s ease-in-out infinite', opacity:0.15}} viewBox="0 0 100 100">
+            <path d="M50 10 A40 40 0 1 0 90 60 A30 30 0 1 1 50 10Z" fill="currentColor"/>
+          </svg>
+          {[{x:20,y:30},{x:75,y:20},{x:85,y:60},{x:15,y:70},{x:60,y:15}].map((pos,i)=>(
+            <div key={i} className="absolute h-1.5 w-1.5 rounded-full bg-white" style={{left:`${pos.x}%`,top:`${pos.y}%`,animation:`twinkle ${2+i*0.4}s ease-in-out infinite`,animationDelay:`${i*0.5}s`,opacity:0.3}} />
+          ))}
         </div>
 
         <div className="relative px-5 pt-12 pb-8">

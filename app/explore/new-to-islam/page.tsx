@@ -74,7 +74,14 @@ const items = [
 
 export default function NewToIslamPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="relative min-h-screen bg-[#0a0b14] pb-nav">
+      {/* Sunrise gradient rays */}
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 overflow-hidden" aria-hidden style={{height:'200px',width:'200px'}}>
+        <div className="absolute bottom-0 left-1/2 h-32 w-0.5 -translate-x-1/2 bg-gradient-to-t from-emerald-400/30 to-transparent" style={{animation:'gentle-pulse 3s ease-in-out infinite',transformOrigin:'bottom center',transform:'translateX(-50%) rotate(-15deg)'}} />
+        <div className="absolute bottom-0 left-1/2 h-32 w-0.5 -translate-x-1/2 bg-gradient-to-t from-emerald-400/30 to-transparent" style={{animation:'gentle-pulse 3s ease-in-out infinite',animationDelay:'0.5s'}} />
+        <div className="absolute bottom-0 left-1/2 h-32 w-0.5 -translate-x-1/2 bg-gradient-to-t from-emerald-400/30 to-transparent" style={{animation:'gentle-pulse 3s ease-in-out infinite',animationDelay:'1s',transformOrigin:'bottom center',transform:'translateX(-50%) rotate(15deg)'}} />
+      </div>
+
       <PageHero
         icon={Sparkles}
         title="New to Islam"

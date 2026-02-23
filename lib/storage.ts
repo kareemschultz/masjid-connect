@@ -57,4 +57,11 @@ export const KEYS = {
   KHATAM_PROGRESS: 'khatam_progress',
   QURAN_GOAL: 'quran_goal',
   CHECKINS: 'masjid_checkins',
+  QURAN_LOG: 'quran_log',
+  SADAQAH_LOG: 'sadaqah_log',
+  GOOD_DEEDS_LOG: 'good_deeds_log',
+  SLEEP_LOG: 'sleep_log',
+  WATER_LOG: 'water_log',
+  ADHKAR_LOG: 'adhkar_log',
+  ISTIGHFAR_COUNT: 'istighfar_count',
 } as const

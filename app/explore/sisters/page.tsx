@@ -74,7 +74,16 @@ const items = [
 
 export default function SistersPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="relative min-h-screen bg-[#0a0b14] pb-nav">
+      {/* Soft geometric flower */}
+      <div className="pointer-events-none absolute bottom-20 right-4 h-24 w-24 overflow-hidden" aria-hidden>
+        <svg viewBox="0 0 100 100" className="text-rose-400" fill="currentColor" style={{animation:'gentle-spin 20s linear infinite',opacity:0.08}}>
+          {[0,60,120,180,240,300].map((deg)=>(
+            <ellipse key={deg} cx="50" cy="50" rx="12" ry="30" transform={`rotate(${deg} 50 50)`} />
+          ))}
+        </svg>
+      </div>
+
       <PageHero
         icon={Heart}
         title="Sisters"

@@ -59,7 +59,14 @@ export default function TasbihPage() {
   const phrase = PHRASES[phraseIdx]
 
   return (
-    <div className="min-h-screen bg-background pb-nav">
+    <div className="relative min-h-screen bg-background pb-nav">
+      {/* Pulsing geometric rings */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden style={{top:'40%'}}>
+        <div className="absolute h-40 w-40 rounded-full border border-emerald-500/20" style={{animation:'gentle-pulse 4s ease-in-out infinite'}} />
+        <div className="absolute h-56 w-56 rounded-full border border-emerald-500/15" style={{animation:'gentle-pulse 4s ease-in-out infinite',animationDelay:'0.5s'}} />
+        <div className="absolute h-72 w-72 rounded-full border border-emerald-500/10" style={{animation:'gentle-pulse 4s ease-in-out infinite',animationDelay:'1s'}} />
+      </div>
+
       <PageHero
         icon={Circle}
         title="Tasbih"
@@ -68,7 +75,7 @@ export default function TasbihPage() {
         showBack
       />
 
-      <div className="flex flex-col items-center px-4 pt-8">
+      <div className="relative flex flex-col items-center px-4 pt-8">
         {/* Phrase selector */}
         <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
           {PHRASES.map((p, i) => (

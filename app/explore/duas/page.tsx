@@ -690,7 +690,14 @@ export default function DuasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-28">
+    <div className="relative min-h-screen bg-[#0a0b14] pb-28">
+      {/* Arabesque pattern */}
+      <div className="pointer-events-none absolute top-0 right-0 h-48 w-48 overflow-hidden" aria-hidden>
+        <svg viewBox="0 0 200 200" style={{animation:'arabesque-drift 6s ease-in-out infinite',opacity:0.08}} className="text-purple-300" fill="currentColor">
+          <polygon points="100,10 120,80 190,80 135,125 155,195 100,155 45,195 65,125 10,80 80,80" />
+        </svg>
+      </div>
+
       <PageHero
         icon={BookOpen}
         title="Duas"

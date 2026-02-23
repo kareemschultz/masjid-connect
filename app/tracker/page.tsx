@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { CheckSquare, Flame, TrendingUp, UtensilsCrossed, Table2, ChevronRight, Share2 } from 'lucide-react'
+import {
+  CheckSquare, Flame, TrendingUp, UtensilsCrossed, Table2, ChevronRight, Share2,
+  ChevronDown, ChevronUp, Plus, Minus, Trash2, BookOpen as BookOpenIcon, Heart, Droplets, Moon as MoonIcon,
+} from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
@@ -10,10 +13,19 @@ import { getItem, setItem, KEYS } from '@/lib/storage'
 import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
 
+/* ─── types ─── */
 type PrayerLog = Record<string, Record<PrayerName, boolean>>
+type QuranLog = Record<string, { pages: number }>
+type SadaqahEntry = { amount: number; type: string }
+type SadaqahLog = Record<string, SadaqahEntry[]>
+type GoodDeedsLog = Record<string, string[]>
+type SleepLog = Record<string, number>
+type WaterLog = Record<string, number>
+type AdhkarLog = Record<string, { morning: boolean; evening: boolean }>
+type IstighfarLog = Record<string, number>
 
+/* ─── helpers ─── */
 function dateKey(d: Date): string {
-  // Use Guyana time (UTC-4)
   const gyt = new Date(d.getTime() - 4 * 60 * 60 * 1000)
   return gyt.toISOString().split('T')[0]
 }
@@ -32,34 +44,72 @@ function getWeekDates(): Date[] {
 
 const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-// Persist prayer log to DB (fire-and-forget, no blocking UI)
+const SADAQAH_TYPES = ['Sadaqah', 'Zakat', 'Sadaqah Jariyah', 'Feed Someone', 'Other']
+
+const PRESET_DEEDS = [
+  'Visited sick',
+  'Fed someone',
+  'Helped a neighbor',
+  'Called parents',
+  'Smiled at a Muslim',
+  'Removed harm from path',
+]
+
 async function syncToServer(date: string, prayers: Record<PrayerName, boolean>) {
   try {
     await fetch('/api/tracking', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        date,
-        prayer_data: prayers,
-      }),
+      body: JSON.stringify({ date, prayer_data: prayers }),
     })
   } catch {
     // Silently fail — local data is the source of truth for offline use
   }
 }
 
+/* ─── month pages helper ─── */
+function monthPages(log: QuranLog): number {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const prefix = `${year}-${month}`
+  let total = 0
+  for (const [k, v] of Object.entries(log)) {
+    if (k.startsWith(prefix)) total += v.pages
+  }
+  return total
+}
+
 export default function TrackerPage() {
+  /* ── prayer tracker state ── */
   const [log, setLog] = useState<PrayerLog>({})
   const [synced, setSynced] = useState(false)
   const today = dateKey(new Date())
   const weekDates = useMemo(() => getWeekDates(), [])
 
-  // On mount: load from localStorage first (instant), then fetch server data to merge
+  /* ── ibadah tracker states ── */
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
+  const [quranLog, setQuranLog] = useState<QuranLog>({})
+  const [sadaqahLog, setSadaqahLog] = useState<SadaqahLog>({})
+  const [sadaqahAmount, setSadaqahAmount] = useState('')
+  const [sadaqahType, setSadaqahType] = useState('Sadaqah')
+  const [goodDeedsLog, setGoodDeedsLog] = useState<GoodDeedsLog>({})
+  const [customDeed, setCustomDeed] = useState('')
+  const [sleepLog, setSleepLog] = useState<SleepLog>({})
+  const [waterLog, setWaterLog] = useState<WaterLog>({})
+  const [istighfarLog, setIstighfarLog] = useState<IstighfarLog>({})
+  const [adhkarLog, setAdhkarLog] = useState<AdhkarLog>({})
+
+  /* ── toggle section helper ── */
+  const toggleSection = useCallback((key: string) => {
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
+  }, [])
+
+  /* ── load prayer log ── */
   useEffect(() => {
     const localLog = getItem<PrayerLog>(KEYS.PRAYER_LOG, {})
     setLog(localLog)
 
-    // Hydrate from server (merges server records into local — server wins for past days)
     fetch('/api/tracking')
       .then(res => res.ok ? res.json() : [])
       .then((rows: any[]) => {
@@ -67,8 +117,7 @@ export default function TrackerPage() {
         const merged = { ...localLog }
         for (const row of rows) {
           const dateStr = String(row.date).slice(0, 10)
-          // Parse prayer_data JSON if needed
-          let prayerData: Record<PrayerName, boolean> = {}
+          let prayerData: Record<PrayerName, boolean> = {} as Record<PrayerName, boolean>
           if (row.prayer_data) {
             try {
               prayerData = typeof row.prayer_data === 'string'
@@ -76,7 +125,6 @@ export default function TrackerPage() {
                 : row.prayer_data
             } catch { /* skip */ }
           }
-          // Server data takes precedence for past days; merge today carefully
           if (dateStr !== today) {
             merged[dateStr] = prayerData
           } else if (!merged[dateStr]) {
@@ -86,10 +134,22 @@ export default function TrackerPage() {
         setLog(merged)
         setItem(KEYS.PRAYER_LOG, merged)
       })
-      .catch(() => { /* offline — local data is fine */ })
+      .catch(() => { /* offline */ })
       .finally(() => setSynced(true))
   }, [today])
 
+  /* ── load ibadah logs ── */
+  useEffect(() => {
+    setQuranLog(getItem<QuranLog>(KEYS.QURAN_LOG, {}))
+    setSadaqahLog(getItem<SadaqahLog>(KEYS.SADAQAH_LOG, {}))
+    setGoodDeedsLog(getItem<GoodDeedsLog>(KEYS.GOOD_DEEDS_LOG, {}))
+    setSleepLog(getItem<SleepLog>(KEYS.SLEEP_LOG, {}))
+    setWaterLog(getItem<WaterLog>(KEYS.WATER_LOG, {}))
+    setIstighfarLog(getItem<IstighfarLog>(KEYS.ISTIGHFAR_COUNT, {}))
+    setAdhkarLog(getItem<AdhkarLog>(KEYS.ADHKAR_LOG, {}))
+  }, [])
+
+  /* ── prayer toggle ── */
   const togglePrayer = useCallback((prayer: PrayerName) => {
     setLog(prev => {
       const dayLog = prev[today] || ({} as Record<PrayerName, boolean>)
@@ -99,7 +159,6 @@ export default function TrackerPage() {
       }
       setItem(KEYS.PRAYER_LOG, updated)
 
-      // Update streak in localStorage
       let streak = 0
       const d = new Date()
       while (streak < 30) {
@@ -113,14 +172,123 @@ export default function TrackerPage() {
         }
       }
       setItem(KEYS.STREAK, streak)
-
-      // Sync to server in background
       syncToServer(today, updated[today])
-
       return updated
     })
   }, [today])
 
+  /* ── Quran helpers ── */
+  const quranToday = quranLog[today]?.pages ?? 0
+  const adjustQuran = useCallback((delta: number) => {
+    setQuranLog(prev => {
+      const current = prev[today]?.pages ?? 0
+      const next = Math.max(0, current + delta)
+      const updated = { ...prev, [today]: { pages: next } }
+      setItem(KEYS.QURAN_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Sadaqah helpers ── */
+  const sadaqahToday = sadaqahLog[today] ?? []
+  const sadaqahTodayTotal = sadaqahToday.reduce((s, e) => s + e.amount, 0)
+  const addSadaqah = useCallback(() => {
+    const amt = parseFloat(sadaqahAmount)
+    if (!amt || amt <= 0) return
+    setSadaqahLog(prev => {
+      const existing = prev[today] ?? []
+      const updated = { ...prev, [today]: [...existing, { amount: amt, type: sadaqahType }] }
+      setItem(KEYS.SADAQAH_LOG, updated)
+      return updated
+    })
+    setSadaqahAmount('')
+  }, [sadaqahAmount, sadaqahType, today])
+  const removeSadaqah = useCallback((idx: number) => {
+    setSadaqahLog(prev => {
+      const existing = [...(prev[today] ?? [])]
+      existing.splice(idx, 1)
+      const updated = { ...prev, [today]: existing }
+      setItem(KEYS.SADAQAH_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Good Deeds helpers ── */
+  const deedsToday = goodDeedsLog[today] ?? []
+  const toggleDeed = useCallback((deed: string) => {
+    setGoodDeedsLog(prev => {
+      const existing = prev[today] ?? []
+      const has = existing.includes(deed)
+      const updated = {
+        ...prev,
+        [today]: has ? existing.filter(d => d !== deed) : [...existing, deed],
+      }
+      setItem(KEYS.GOOD_DEEDS_LOG, updated)
+      return updated
+    })
+  }, [today])
+  const addCustomDeed = useCallback(() => {
+    const trimmed = customDeed.trim()
+    if (!trimmed) return
+    setGoodDeedsLog(prev => {
+      const existing = prev[today] ?? []
+      if (existing.includes(trimmed)) return prev
+      const updated = { ...prev, [today]: [...existing, trimmed] }
+      setItem(KEYS.GOOD_DEEDS_LOG, updated)
+      return updated
+    })
+    setCustomDeed('')
+  }, [customDeed, today])
+
+  /* ── Sleep & Water helpers ── */
+  const sleepToday = sleepLog[today] ?? 0
+  const waterToday = waterLog[today] ?? 0
+  const adjustSleep = useCallback((delta: number) => {
+    setSleepLog(prev => {
+      const next = Math.min(12, Math.max(0, (prev[today] ?? 0) + delta))
+      const updated = { ...prev, [today]: next }
+      setItem(KEYS.SLEEP_LOG, updated)
+      return updated
+    })
+  }, [today])
+  const adjustWater = useCallback((delta: number) => {
+    setWaterLog(prev => {
+      const next = Math.min(20, Math.max(0, (prev[today] ?? 0) + delta))
+      const updated = { ...prev, [today]: next }
+      setItem(KEYS.WATER_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Istighfar helpers ── */
+  const istighfarToday = istighfarLog[today] ?? 0
+  const incrementIstighfar = useCallback(() => {
+    setIstighfarLog(prev => {
+      const updated = { ...prev, [today]: (prev[today] ?? 0) + 1 }
+      setItem(KEYS.ISTIGHFAR_COUNT, updated)
+      return updated
+    })
+  }, [today])
+  const resetIstighfar = useCallback(() => {
+    setIstighfarLog(prev => {
+      const updated = { ...prev, [today]: 0 }
+      setItem(KEYS.ISTIGHFAR_COUNT, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Adhkar helpers ── */
+  const adhkarToday = adhkarLog[today] ?? { morning: false, evening: false }
+  const toggleAdhkar = useCallback((period: 'morning' | 'evening') => {
+    setAdhkarLog(prev => {
+      const current = prev[today] ?? { morning: false, evening: false }
+      const updated = { ...prev, [today]: { ...current, [period]: !current[period] } }
+      setItem(KEYS.ADHKAR_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── derived prayer stats ── */
   const todayLog = log[today] || ({} as Record<PrayerName, boolean>)
   const todayCount = PRAYER_NAMES.filter((p) => todayLog[p]).length
 
@@ -168,8 +336,24 @@ export default function TrackerPage() {
     Isha: { bg: 'bg-indigo-500/20' },
   }
 
+  /* ── section header renderer ── */
+  const SectionHeader = ({ id, emoji, title, summary }: { id: string; emoji: string; title: string; summary: string }) => (
+    <button
+      onClick={() => toggleSection(id)}
+      className="flex w-full items-center justify-between p-4"
+    >
+      <span className="flex items-center gap-2 text-sm font-semibold text-gray-200">
+        <span>{emoji}</span> {title}
+      </span>
+      <span className="flex items-center gap-2">
+        <span className="text-[11px] text-gray-400">{summary}</span>
+        {openSections[id] ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
+      </span>
+    </button>
+  )
+
   return (
-    <div className="min-h-screen bg-background pb-nav">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
         icon={CheckSquare}
         title="Prayer Tracker"
@@ -342,6 +526,359 @@ export default function TrackerPage() {
               <p className="mt-1 text-xs text-gray-400">Consistency is key to building a strong prayer habit.</p>
             </div>
           </div>
+        </SettingGroup>
+
+        {/* ═══════════════════════════════════════════════════════════
+            IBADAH TRACKER SECTIONS
+           ═══════════════════════════════════════════════════════════ */}
+
+        {/* SECTION 1: Quran Today */}
+        <SettingGroup label="Quran Today" accentColor="bg-sky-500">
+          <SectionHeader
+            id="quran"
+            emoji="📖"
+            title="Quran Today"
+            summary={`Total this month: ${monthPages(quranLog)} pages`}
+          />
+          {openSections.quran && (
+            <div className="border-t border-gray-800 p-4">
+              <div className="flex items-center justify-center gap-6">
+                <button
+                  onClick={() => adjustQuran(-1)}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <div className="flex flex-col items-center">
+                  <span className="text-3xl font-bold text-sky-400">{quranToday}</span>
+                  <span className="text-[11px] text-gray-500">pages today</span>
+                </div>
+                <button
+                  onClick={() => adjustQuran(1)}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 2: Sadaqah */}
+        <SettingGroup label="Sadaqah" accentColor="bg-emerald-500">
+          <SectionHeader
+            id="sadaqah"
+            emoji="💧"
+            title="Sadaqah"
+            summary={sadaqahTodayTotal > 0 ? `GYD ${sadaqahTodayTotal.toLocaleString()} today` : 'None today'}
+          />
+          {openSections.sadaqah && (
+            <div className="border-t border-gray-800 p-4 space-y-4">
+              {/* Amount input */}
+              <div>
+                <label className="mb-1.5 block text-[11px] font-medium text-gray-400">Amount (GYD)</label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={sadaqahAmount}
+                  onChange={e => setSadaqahAmount(e.target.value)}
+                  placeholder="0"
+                  className="w-full rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30"
+                />
+              </div>
+
+              {/* Type pills */}
+              <div className="flex flex-wrap gap-2">
+                {SADAQAH_TYPES.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setSadaqahType(t)}
+                    className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all ${
+                      sadaqahType === t
+                        ? 'border border-emerald-500/50 bg-emerald-500/20 text-emerald-400'
+                        : 'border border-gray-700 bg-gray-800 text-gray-400'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+
+              {/* Add button */}
+              <button
+                onClick={addSadaqah}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500/20 py-2.5 text-sm font-medium text-emerald-400 transition-all active:scale-[0.98]"
+              >
+                <Plus className="h-4 w-4" /> Add
+              </button>
+
+              {/* Today's entries */}
+              {sadaqahToday.length > 0 && (
+                <div className="space-y-2">
+                  {sadaqahToday.map((entry, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5">
+                      <div>
+                        <span className="text-sm font-medium text-gray-200">GYD {entry.amount.toLocaleString()}</span>
+                        <span className="ml-2 text-[11px] text-gray-500">{entry.type}</span>
+                      </div>
+                      <button onClick={() => removeSadaqah(idx)} className="text-red-400/70 transition-all hover:text-red-400">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 3: Good Deeds */}
+        <SettingGroup label="Good Deeds" accentColor="bg-pink-500">
+          <SectionHeader
+            id="deeds"
+            emoji="🤲"
+            title="Good Deeds"
+            summary={`${deedsToday.length} today`}
+          />
+          {openSections.deeds && (
+            <div className="border-t border-gray-800 p-4 space-y-4">
+              {/* Preset deed chips */}
+              <div className="flex flex-wrap gap-2">
+                {PRESET_DEEDS.map(deed => {
+                  const active = deedsToday.includes(deed)
+                  return (
+                    <button
+                      key={deed}
+                      onClick={() => toggleDeed(deed)}
+                      className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all ${
+                        active
+                          ? 'border border-emerald-500/50 bg-emerald-500/15 text-emerald-400'
+                          : 'border border-gray-700 bg-gray-800 text-gray-400'
+                      }`}
+                    >
+                      {deed}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Custom deed input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customDeed}
+                  onChange={e => setCustomDeed(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addCustomDeed()}
+                  placeholder="Add a custom deed..."
+                  className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30"
+                />
+                <button
+                  onClick={addCustomDeed}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-500/20 text-pink-400 transition-all active:scale-90"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Active custom deeds (non-preset) */}
+              {deedsToday.filter(d => !PRESET_DEEDS.includes(d)).length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {deedsToday.filter(d => !PRESET_DEEDS.includes(d)).map(deed => (
+                    <button
+                      key={deed}
+                      onClick={() => toggleDeed(deed)}
+                      className="rounded-full border border-emerald-500/50 bg-emerald-500/15 px-3 py-1.5 text-[11px] font-medium text-emerald-400 transition-all"
+                    >
+                      {deed} &times;
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 4: Sleep & Water */}
+        <SettingGroup label="Sleep & Water" accentColor="bg-violet-500">
+          <SectionHeader
+            id="sleepwater"
+            emoji="😴"
+            title="Sleep & Water"
+            summary={`${sleepToday}h / ${waterToday} glasses`}
+          />
+          {openSections.sleepwater && (
+            <div className="border-t border-gray-800 p-4">
+              <div className="grid grid-cols-2 gap-4">
+                {/* Sleep stepper */}
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 p-4">
+                  <MoonIcon className="h-5 w-5 text-violet-400" />
+                  <span className="text-[11px] font-medium text-gray-400">Sleep</span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => adjustSleep(-0.5)}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </button>
+                    <span className="min-w-[3rem] text-center text-xl font-bold text-violet-400">{sleepToday}h</span>
+                    <button
+                      onClick={() => adjustSleep(0.5)}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Water stepper */}
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 p-4">
+                  <Droplets className="h-5 w-5 text-cyan-400" />
+                  <span className="text-[11px] font-medium text-gray-400">Water</span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => adjustWater(-1)}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </button>
+                    <span className="min-w-[3rem] text-center text-xl font-bold text-cyan-400">{waterToday}</span>
+                    <button
+                      onClick={() => adjustWater(1)}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 5: Istighfar Counter */}
+        <SettingGroup label="Istighfar Counter" accentColor="bg-amber-500">
+          <SectionHeader
+            id="istighfar"
+            emoji="🔢"
+            title="Istighfar Counter"
+            summary={`${istighfarToday} / 100`}
+          />
+          {openSections.istighfar && (
+            <div className="border-t border-gray-800 p-4">
+              <div className="flex flex-col items-center gap-4">
+                {/* Large circular counter button */}
+                <button
+                  onClick={incrementIstighfar}
+                  className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-amber-500/30 bg-amber-500/10 transition-all active:scale-95 active:bg-amber-500/20"
+                >
+                  <div className="flex flex-col items-center">
+                    <span className="text-3xl font-bold text-amber-400">{istighfarToday}</span>
+                    <span className="text-[10px] text-gray-400">tap to count</span>
+                  </div>
+                  {/* Progress ring */}
+                  <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#1f2937"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#f59e0b"
+                      strokeWidth="2"
+                      strokeDasharray={`${Math.min(istighfarToday, 100)}, 100`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+
+                <p className="text-sm text-gray-300">
+                  <span className="font-medium text-amber-400">{istighfarToday}</span> Astaghfirullah today
+                </p>
+                <p className="text-[11px] text-gray-500">Target: 100</p>
+
+                {/* Reset button */}
+                <button
+                  onClick={resetIstighfar}
+                  className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-1.5 text-[11px] font-medium text-gray-400 transition-all active:scale-95"
+                >
+                  Reset today
+                </button>
+              </div>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 6: Adhkar */}
+        <SettingGroup label="Adhkar" accentColor="bg-lime-500">
+          <SectionHeader
+            id="adhkar"
+            emoji="📿"
+            title="Adhkar"
+            summary={
+              adhkarToday.morning && adhkarToday.evening
+                ? 'Both done'
+                : adhkarToday.morning
+                  ? 'Morning done'
+                  : adhkarToday.evening
+                    ? 'Evening done'
+                    : 'Not started'
+            }
+          />
+          {openSections.adhkar && (
+            <div className="border-t border-gray-800 p-4 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                {/* Morning card */}
+                <button
+                  onClick={() => toggleAdhkar('morning')}
+                  className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all active:scale-95 ${
+                    adhkarToday.morning
+                      ? 'border-emerald-500/40 bg-emerald-500/10'
+                      : 'border-gray-700 bg-gray-800/50'
+                  }`}
+                >
+                  <span className="text-2xl">🌅</span>
+                  <span className={`text-sm font-semibold ${adhkarToday.morning ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    Morning
+                  </span>
+                  <span className={`text-[10px] ${adhkarToday.morning ? 'text-emerald-500/70' : 'text-gray-600'}`}>
+                    {adhkarToday.morning ? 'Completed' : 'Tap to mark'}
+                  </span>
+                </button>
+
+                {/* Evening card */}
+                <button
+                  onClick={() => toggleAdhkar('evening')}
+                  className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all active:scale-95 ${
+                    adhkarToday.evening
+                      ? 'border-emerald-500/40 bg-emerald-500/10'
+                      : 'border-gray-700 bg-gray-800/50'
+                  }`}
+                >
+                  <span className="text-2xl">🌙</span>
+                  <span className={`text-sm font-semibold ${adhkarToday.evening ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    Evening
+                  </span>
+                  <span className={`text-[10px] ${adhkarToday.evening ? 'text-emerald-500/70' : 'text-gray-600'}`}>
+                    {adhkarToday.evening ? 'Completed' : 'Tap to mark'}
+                  </span>
+                </button>
+              </div>
+
+              <Link
+                href="/explore/adhkar"
+                className="flex items-center justify-center gap-2 rounded-xl border border-lime-500/20 bg-lime-500/10 py-2.5 text-sm font-medium text-lime-400 transition-all active:scale-[0.98]"
+              >
+                <BookOpenIcon className="h-4 w-4" /> Open Adhkar Collection
+              </Link>
+
+              <p className="text-center text-[11px] text-gray-500">
+                Completing morning &amp; evening adhkar is Sunnah
+              </p>
+            </div>
+          )}
         </SettingGroup>
       </div>
 
