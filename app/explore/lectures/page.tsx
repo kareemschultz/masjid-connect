@@ -193,6 +193,41 @@ const SCHOLARS: Scholar[] = [
     ],
   },
   {
+    id: 'hamza-yusuf',
+    name: 'Hamza Yusuf',
+    bio: 'American Muslim scholar and co-founder of Zaytuna College, USA. One of the most influential Islamic scholars in the West, renowned for his lectures on spirituality, classical Arabic, and Islamic sciences.',
+    avatar: '🎓',
+    color: 'from-teal-900/60 to-cyan-900/60',
+    series: [
+      {
+        id: 'hy-purification',
+        title: 'Purification of the Heart',
+        subtitle: 'Matharat al-Qulub — 41 sessions',
+        archiveId: 'Sheikh_Hamza_Yusuf_Hanson_-_Purification_Of_The_Heart_CD_Audio_MP3',
+        category: 'Tazkiyah' as Category,
+        accent: 'teal',
+        color: 'from-teal-900 to-cyan-900',
+        lectures: Array.from({ length: 41 }, (_, i) => ({
+          title: `Session ${String(i + 1).padStart(2, '0')}`,
+          file: `Sheikh_Hamza_Yusuf_-_Purification_Of_The_Heart_-_${String(i + 1).padStart(2, '0')}.mp3`,
+        })),
+      },
+      {
+        id: 'hy-vision',
+        title: 'The Vision of Islam',
+        subtitle: 'Islam, Iman & Ihsan — 24 sessions',
+        archiveId: 'TheVisionOfIslamByHamzaYusuf',
+        category: 'Standalone' as Category,
+        accent: 'emerald',
+        color: 'from-emerald-900 to-teal-900',
+        lectures: Array.from({ length: 24 }, (_, i) => ({
+          title: `Part ${i + 1}`,
+          file: `Vision of Islam - Part - ${i + 1}.mp3`,
+        })),
+      },
+    ],
+  },
+  {
     id: 'jabbar',
     name: 'Muhammad Abdul Jabbar',
     bio: 'Prominent Islamic lecturer known for his powerful and direct style covering topics of faith, death, and the hereafter.',
