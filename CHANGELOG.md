@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.4.0 — Feb 23, 2026
+- New: Sunnah & Nawafil prayer tracker (Witr, Fajr Sunnah, all confirmed sunnahs, Tahajjud, Duha, Ishraq, Awwabeen, Tarawih)
+- New: lib/prayer-types.ts — full Islamic prayer taxonomy with rakat, timing, hadith rewards
+- Buddy: Nawafil challenges — Witr Streak, Tahajjud Week, Duha Month, Nawafil Sprint, Fajr Sunnah Commitment
+- New: "All Islamic Prayers" education page in Madrasa
+- Madrasa: Nawafil tab added to Learn to Pray page
+- Madrasa: All "Coming Soon" features now live (99 Names linked, Stories of Prophets linked)
+- Tracker: Daily sunnah score indicator + points breakdown
+- Points: Nawafil prayer logging now awards points (Tahajjud = 100 pts, Witr = 50 pts, etc.)
+
 ## v2.3.0 — Feb 23, 2026
 - Fix: Prayer timer 00:00:00 — stale closure resolved, timer now uses ref
 - Fix: Post-Isha timer now shows time until next Fajr (not 00:00:00)

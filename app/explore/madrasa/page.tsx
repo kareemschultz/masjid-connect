@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { GraduationCap, BookOpen, Star, Moon, Heart, Users, Lock, ChevronRight, Calendar, Keyboard } from 'lucide-react'
+import { GraduationCap, BookOpen, Star, Moon, Heart, Users, ChevronRight, Calendar, Keyboard, HandHeart } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -54,6 +54,18 @@ const ACTIVE_MODULES = [
     badge: 'NEW',
     badgeColor: 'bg-cyan-500/20 text-cyan-400',
   },
+  {
+    icon: HandHeart,
+    title: 'All Islamic Prayers',
+    description: 'Fard, Wajib, Sunnah & Nawafil — complete reference',
+    color: 'bg-indigo-500/20',
+    borderColor: 'border-indigo-500/30',
+    bgColor: 'bg-indigo-500/5',
+    iconColor: 'text-indigo-400',
+    href: '/explore/madrasa/prayers',
+    badge: 'NEW',
+    badgeColor: 'bg-indigo-500/20 text-indigo-400',
+  },
 ]
 
 const LINKED_MODULES = [
@@ -75,16 +87,14 @@ const LINKED_MODULES = [
     iconColor: 'text-purple-400',
     href: '/explore/new-to-islam/beliefs',
   },
-]
-
-const FUTURE_MODULES = [
   {
     icon: Moon,
     title: '99 Names of Allah',
-    description: 'Al-Asma ul-Husna - The Beautiful Names',
-    lessons: 10,
+    description: 'Al-Asma ul-Husna — The Beautiful Names',
+    lessons: 99,
     color: 'bg-blue-500/20',
     iconColor: 'text-blue-400',
+    href: '/explore/names',
   },
 ]
 
@@ -181,37 +191,6 @@ export default function MadrasaPage() {
           </Link>
         ))}
 
-        {/* ── Section label ──────────────────────────────────────────── */}
-        <div className="pt-2 pb-1">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500">Coming Soon</h2>
-        </div>
-
-        {/* ── Future modules (locked) ────────────────────────────────── */}
-        {FUTURE_MODULES.map((mod, i) => (
-          <div
-            key={i}
-            className="relative flex items-center gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-4 opacity-60"
-          >
-            <div className="absolute inset-0 z-10 flex items-center justify-end rounded-2xl pr-4">
-              <Lock className="h-4 w-4 text-gray-600" />
-            </div>
-            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${mod.color}`}>
-              <mod.icon className={`h-5 w-5 ${mod.iconColor}`} />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-semibold text-[#f9fafb]">{mod.title}</h3>
-                <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[9px] font-semibold text-gray-500">Coming Soon</span>
-              </div>
-              <p className="mt-0.5 text-xs text-gray-400">{mod.description}</p>
-              <p className="mt-1 text-[10px] text-gray-500">{mod.lessons} lessons</p>
-            </div>
-          </div>
-        ))}
-
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5 text-center">
-          <p className="text-xs text-gray-400">More learning modules coming soon, InshaAllah</p>
-        </div>
       </div>
 
       <BottomNav />

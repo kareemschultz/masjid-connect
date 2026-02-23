@@ -4,17 +4,19 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import {
   CheckSquare, Flame, TrendingUp, UtensilsCrossed, Table2, ChevronRight, Share2,
   ChevronDown, ChevronUp, Plus, Minus, Trash2, BookOpen as BookOpenIcon, Heart, Droplets, Moon as MoonIcon,
-  BarChart2,
+  BarChart2, Star,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
 import { PRAYER_NAMES, type PrayerName } from '@/lib/prayer-times'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { SUNNAH_PRAYERS, NAWAFIL_PRAYERS, PRAYER_POINTS, TOTAL_SUNNAH_COUNT } from '@/lib/prayer-types'
 
-type KhatamProgress = boolean[]
 import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
+
+type KhatamProgress = boolean[]
 
 /* ─── types ─── */
 type PrayerLog = Record<string, Record<PrayerName, boolean>>
@@ -25,6 +27,8 @@ type GoodDeedsLog = Record<string, string[]>
 type SleepLog = Record<string, number>
 type WaterLog = Record<string, number>
 type AdhkarLog = Record<string, { morning: boolean; evening: boolean }>
+type SunnahLog = Record<string, Record<string, boolean>>
+type NawafilLog = Record<string, Record<string, number>>
 type IstighfarLog = Record<string, number>
 
 /* ─── helpers ─── */
@@ -104,6 +108,9 @@ export default function TrackerPage() {
   const [adhkarLog, setAdhkarLog] = useState<AdhkarLog>({})
   const [khatamProgress, setKhatamProgress] = useState<KhatamProgress>(Array(30).fill(false))
   const [showKhatamReset, setShowKhatamReset] = useState(false)
+  const [sunnahLog, setSunnahLog] = useState<SunnahLog>({})
+  const [nawafilLog, setNawafilLog] = useState<NawafilLog>({})
+  const [rewardToast, setRewardToast] = useState<string | null>(null)
 
   /* ── toggle section helper ── */
   const toggleSection = useCallback((key: string) => {
@@ -153,6 +160,8 @@ export default function TrackerPage() {
     setIstighfarLog(getItem<IstighfarLog>(KEYS.ISTIGHFAR_COUNT, {}))
     setAdhkarLog(getItem<AdhkarLog>(KEYS.ADHKAR_LOG, {}))
     setKhatamProgress(getItem<KhatamProgress>('khatam_personal_progress', Array(30).fill(false)))
+    setSunnahLog(getItem<SunnahLog>(KEYS.SUNNAH_LOG, {}))
+    setNawafilLog(getItem<NawafilLog>(KEYS.NAWAFIL_LOG, {}))
   }, [])
 
   /* ── prayer toggle ── */
@@ -294,6 +303,44 @@ export default function TrackerPage() {
     })
   }, [today])
 
+  /* ── Sunnah helpers ── */
+  const sunnahToday = sunnahLog[today] ?? {}
+  const sunnahCount = SUNNAH_PRAYERS.filter(p => sunnahToday[p.key]).length
+  const toggleSunnah = useCallback((key: string) => {
+    setSunnahLog(prev => {
+      const dayLog = prev[today] ?? {}
+      const updated = { ...prev, [today]: { ...dayLog, [key]: !dayLog[key] } }
+      setItem(KEYS.SUNNAH_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Nawafil helpers ── */
+  const nawafilToday = nawafilLog[today] ?? {}
+  const addNawafilRakat = useCallback((key: string, amount: number) => {
+    setNawafilLog(prev => {
+      const dayLog = prev[today] ?? {}
+      const current = dayLog[key] ?? 0
+      const next = Math.max(0, current + amount)
+      const updated = { ...prev, [today]: { ...dayLog, [key]: next } }
+      setItem(KEYS.NAWAFIL_LOG, updated)
+      return updated
+    })
+  }, [today])
+
+  /* ── Sunnah + Nawafil points ── */
+  const sunnahPoints = useMemo(() => {
+    let pts = 0
+    for (const p of SUNNAH_PRAYERS) {
+      if (sunnahToday[p.key]) pts += (PRAYER_POINTS[p.key] ?? 0)
+    }
+    for (const p of NAWAFIL_PRAYERS) {
+      if ((nawafilToday[p.key] ?? 0) > 0) pts += (PRAYER_POINTS[p.key] ?? 0)
+    }
+    return pts
+  }, [sunnahToday, nawafilToday])
+
+
   /* ── weekly prayer stats for chart ── */
   const weeklyStats = useMemo(() => {
     return weekDates.map((date) => {
@@ -348,6 +395,7 @@ export default function TrackerPage() {
   /* ── derived prayer stats ── */
   const todayLog = log[today] || ({} as Record<PrayerName, boolean>)
   const todayCount = PRAYER_NAMES.filter((p) => todayLog[p]).length
+  const fardPoints = todayCount * 20 // 20 per fard prayer
 
   const streak = useMemo(() => {
     let count = 0
@@ -417,6 +465,44 @@ export default function TrackerPage() {
         subtitle="Track Your Salah"
         gradient="from-blue-900 to-indigo-900"
       />
+
+      {/* ── Daily Sunnah Score ── */}
+      <div className="mx-4 mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-emerald-400">Daily Sunnah Score</span>
+          <span className="text-xs text-gray-400">{sunnahCount}/{TOTAL_SUNNAH_COUNT}</span>
+        </div>
+        <div className="mt-2 flex items-center gap-1.5">
+          {SUNNAH_PRAYERS.map((p) => (
+            <div
+              key={p.key}
+              className={`h-3 w-3 rounded-full transition-all ${
+                sunnahToday[p.key] ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50' : 'bg-gray-700'
+              }`}
+              title={p.label}
+            />
+          ))}
+        </div>
+        {sunnahCount === TOTAL_SUNNAH_COUNT && (
+          <p className="mt-1.5 text-[10px] text-emerald-400 font-medium">All sunnah prayers complete today!</p>
+        )}
+      </div>
+
+      {/* ── Points Breakdown ── */}
+      <div className="mx-4 mt-3 flex gap-2">
+        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+          <p className="text-sm font-bold text-blue-400">{fardPoints}</p>
+          <p className="text-[9px] text-gray-500">Fard pts</p>
+        </div>
+        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+          <p className="text-sm font-bold text-emerald-400">{sunnahPoints}</p>
+          <p className="text-[9px] text-gray-500">Sunnah + Nawafil pts</p>
+        </div>
+        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+          <p className="text-sm font-bold text-amber-400">{fardPoints + sunnahPoints}</p>
+          <p className="text-[9px] text-gray-500">Total today</p>
+        </div>
+      </div>
 
       <div className="space-y-5 px-4 pt-5">
         {/* ── Prayer Statistics ── */}
@@ -571,6 +657,139 @@ export default function TrackerPage() {
             </div>
           </div>
         </SettingGroup>
+
+        {/* ── Sunnah & Nawafil Prayers ── */}
+        <SettingGroup label="🕌 Sunnah & Nawafil Prayers" accentColor="bg-indigo-500">
+          <SectionHeader
+            id="sunnah"
+            emoji="🕌"
+            title="Sunnah & Nawafil"
+            summary={`${sunnahCount + Object.values(nawafilToday).filter(v => v > 0).length}/${TOTAL_SUNNAH_COUNT + NAWAFIL_PRAYERS.length} today`}
+          />
+          {(openSections.sunnah !== false) && (
+            <div className="border-t border-gray-800 p-4 space-y-5">
+              {/* Sub-section 1: Sunnah Mu'akkadah & Wajib */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-3">Sunnah Mu&apos;akkadah &amp; Wajib</h4>
+                <div className="space-y-2">
+                  {SUNNAH_PRAYERS.map((prayer) => {
+                    const done = sunnahToday[prayer.key] ?? false
+                    const isWitr = prayer.category === 'wajib'
+                    const isFajrSunnah = prayer.importance === 'highest'
+                    return (
+                      <button
+                        key={prayer.key}
+                        onClick={() => {
+                          toggleSunnah(prayer.key)
+                          if (!done) {
+                            setRewardToast(prayer.reward)
+                            setTimeout(() => setRewardToast(null), 2500)
+                          }
+                        }}
+                        className={`w-full text-left rounded-xl border p-3 transition-all active:scale-[0.98] ${
+                          done
+                            ? 'border-emerald-500/30 bg-emerald-500/10'
+                            : isWitr
+                              ? 'border-amber-500/30 bg-amber-500/5'
+                              : 'border-gray-800 bg-gray-800/40'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all ${
+                            done ? 'bg-emerald-500 text-white' : isWitr ? 'bg-amber-500/20 text-amber-400' : 'bg-gray-700 text-gray-400'
+                          }`}>
+                            {done ? <CheckSquare className="h-4 w-4" /> : <div className="h-3 w-3 rounded-full border-2 border-current" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="font-arabic text-sm text-gray-300">{prayer.arabic}</span>
+                              {isFajrSunnah && <Star className="h-3 w-3 text-amber-400" />}
+                              {isWitr && <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-400">WAJIB</span>}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className={`text-xs font-medium ${done ? 'text-emerald-400' : 'text-gray-300'}`}>{prayer.label}</span>
+                              <span className="text-[10px] text-gray-500">{prayer.rakat} rak&apos;at</span>
+                            </div>
+                            <span className="text-[10px] text-gray-500">{prayer.timing}</span>
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Sub-section 2: Nawafil */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Nawafil (Optional)</h4>
+                <div className="space-y-3">
+                  {NAWAFIL_PRAYERS.map((prayer) => {
+                    const loggedRakat = nawafilToday[prayer.key] ?? 0
+                    return (
+                      <div
+                        key={prayer.key}
+                        className={`rounded-xl border p-3 ${
+                          loggedRakat > 0 ? 'border-indigo-500/30 bg-indigo-500/5' : 'border-gray-800 bg-gray-800/40'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">{prayer.icon}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="font-arabic text-sm text-gray-300">{prayer.arabic}</span>
+                              {prayer.ramadanOnly && (
+                                <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[9px] font-bold text-purple-400">Ramadan</span>
+                              )}
+                            </div>
+                            <span className="text-xs font-medium text-gray-300">{prayer.label}</span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-[10px] text-gray-500">{prayer.rakat} rak&apos;at</span>
+                              <span className="text-[10px] text-gray-600">·</span>
+                              <span className="text-[10px] text-gray-500">{prayer.timing}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Rakat stepper */}
+                        <div className="mt-2 flex items-center gap-2">
+                          {[2, 4, 6].map(amount => (
+                            <button
+                              key={amount}
+                              onClick={() => addNawafilRakat(prayer.key, amount)}
+                              className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-indigo-400 transition-all active:scale-90 active:bg-indigo-500/20"
+                            >
+                              +{amount}
+                            </button>
+                          ))}
+                          {loggedRakat > 0 && (
+                            <button
+                              onClick={() => addNawafilRakat(prayer.key, -loggedRakat)}
+                              className="rounded-lg border border-gray-700 bg-gray-800 px-2 py-1.5 text-[11px] text-red-400 transition-all active:scale-90"
+                            >
+                              Reset
+                            </button>
+                          )}
+                          {loggedRakat > 0 && (
+                            <span className="ml-auto text-xs font-semibold text-indigo-400">{loggedRakat} rak&apos;at logged</span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* Reward toast */}
+        {rewardToast && (
+          <div className="fixed bottom-24 left-4 right-4 z-50 animate-fade-in">
+            <div className="rounded-2xl border border-emerald-500/30 bg-gray-900/95 p-4 shadow-2xl backdrop-blur-md">
+              <p className="text-xs text-emerald-300 leading-relaxed">{rewardToast}</p>
+            </div>
+          </div>
+        )}
 
         {/* Weekly View */}
         <SettingGroup label="This Week" accentColor="bg-purple-500">

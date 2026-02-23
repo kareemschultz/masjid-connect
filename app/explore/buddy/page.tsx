@@ -5,7 +5,7 @@ import {
   Users, Trophy, Bell, Plus, X, Heart, Flame, Star,
   MessageCircle, Target, Send, Copy, Check, Share2,
   Swords, BookOpen, Moon, HandHeart, ChevronRight,
-  Sparkles, Info, Crown, Medal, Award, Zap, ShieldCheck
+  Sparkles, Info, Crown, Medal, Award, Zap, ShieldCheck, Sun
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -49,7 +49,7 @@ interface Challenge {
   deadline: string
   participants: string[]
   reward: number
-  category: 'prayer' | 'quran' | 'fasting' | 'dhikr' | 'charity'
+  category: 'prayer' | 'quran' | 'fasting' | 'dhikr' | 'charity' | 'nawafil' | 'witr'
 }
 
 function getTier(points: number): 'bronze' | 'silver' | 'gold' {
@@ -83,6 +83,7 @@ const DEMO_CHALLENGES: Challenge[] = [
 
 const CHALLENGE_ICONS: Record<string, typeof BookOpen> = {
   prayer: HandHeart, quran: BookOpen, fasting: Moon, dhikr: Sparkles, charity: Heart,
+  nawafil: Moon, witr: Star,
 }
 
 const CHALLENGE_COLORS: Record<string, string> = {
@@ -91,6 +92,8 @@ const CHALLENGE_COLORS: Record<string, string> = {
   fasting: 'from-amber-500 to-orange-600',
   dhikr: 'from-blue-500 to-cyan-600',
   charity: 'from-pink-500 to-rose-600',
+  nawafil: 'from-indigo-500 to-violet-600',
+  witr: 'from-amber-400 to-orange-500',
 }
 
 const NUDGE_MESSAGES = [
@@ -99,6 +102,10 @@ const NUDGE_MESSAGES = [
   { text: 'SubhanAllah, keep going! Your streak inspires me.', icon: Flame, color: 'text-amber-400' },
   { text: 'The Prophet (PBUH) said: "The best of you are those who remind others of Allah."', icon: Star, color: 'text-blue-400' },
   { text: 'Reminder: Do your morning adhkar today. I already did mine!', icon: Sparkles, color: 'text-cyan-400' },
+  { text: 'Time for Tahajjud! The last third of the night is here. Join me in night prayer.', icon: Moon, color: 'text-indigo-400' },
+  { text: 'Did you pray Witr last night? Let us hold each other accountable!', icon: Star, color: 'text-amber-400' },
+  { text: 'The Prophet ﷺ never abandoned the 2 Fajr Sunnah — not even on a journey. Have you prayed yours?', icon: Flame, color: 'text-orange-400' },
+  { text: 'Duha prayer is coming up soon! The Prophet ﷺ said it equals Hajj and Umrah rewards (with Fajr in congregation).', icon: Sun, color: 'text-yellow-400' },
 ]
 
 const NEW_CHALLENGE_TEMPLATES = [
@@ -107,6 +114,11 @@ const NEW_CHALLENGE_TEMPLATES = [
   { title: 'Fasting Challenge', description: 'Fast voluntary days together (Mon/Thu)', category: 'fasting' as const, target: 8, unit: 'fasts', reward: 200 },
   { title: 'Daily Dhikr', description: 'Complete daily dhikr for a month', category: 'dhikr' as const, target: 30, unit: 'days', reward: 120 },
   { title: 'Charity Drive', description: 'Give sadaqah every Friday together', category: 'charity' as const, target: 4, unit: 'donations', reward: 250 },
+  { title: 'Witr Streak', description: 'Pray Witr every night for 30 days — never miss the wajib prayer!', category: 'witr' as const, target: 30, unit: 'nights', reward: 300 },
+  { title: 'Tahajjud Week', description: 'Wake up for Tahajjud for 7 consecutive nights. The night prayer brings you closest to Allah.', category: 'nawafil' as const, target: 7, unit: 'nights', reward: 400 },
+  { title: 'Duha Prayer Month', description: 'Pray Duha (the forenoon prayer) every day for 30 days.', category: 'nawafil' as const, target: 30, unit: 'days', reward: 350 },
+  { title: 'Nawafil Sprint', description: 'Log at least one nawafil prayer daily for 14 days. Any optional prayer counts!', category: 'nawafil' as const, target: 14, unit: 'days', reward: 250 },
+  { title: 'Fajr Sunnah Commitment', description: "Pray the 2 Fajr Sunnah rak'ahs every single day for 30 days — better than the world and all it contains!", category: 'prayer' as const, target: 30, unit: 'days', reward: 200 },
 ]
 
 export default function BuddyPage() {

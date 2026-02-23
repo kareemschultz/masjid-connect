@@ -547,18 +547,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
               {/* PWA Install */}
               {!isStandalone() && (deferredPrompt || isIOS()) && (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
-                  <div className="flex items-start gap-3">
+                <div className="rounded-2xl border border-teal-500/20 bg-teal-500/5 px-5 py-4">
+                  <div className="flex items-center gap-3 mb-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15">
                       <Smartphone className="h-5 w-5 text-teal-400" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-white">Install App</p>
-                      <p className="mt-0.5 text-xs text-gray-400">
-                        {isIOS()
-                          ? 'Tap the Share button → "Add to Home Screen"'
-                          : 'Works offline, feels native'}
-                      </p>
+                      <p className="mt-0.5 text-xs text-teal-400/70">Add to your Home Screen for the best experience</p>
                     </div>
                     {!isIOS() && (
                       <button
@@ -574,28 +570,27 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       </button>
                     )}
                   </div>
+                  {isIOS() && (
+                    <div className="space-y-2.5">
+                      {[
+                        { n: '1', text: 'Tap the Share button', sub: '📤 at the bottom of your Safari screen' },
+                        { n: '2', text: 'Scroll and tap "Add to Home Screen"', sub: 'Look for the icon with a plus sign' },
+                        { n: '3', text: 'Tap "Add" in the top right', sub: 'The app will appear on your Home Screen' },
+                      ].map(s => (
+                        <div key={s.n} className="flex items-start gap-2.5">
+                          <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-white text-[10px] font-bold mt-0.5">{s.n}</span>
+                          <div>
+                            <p className="text-xs font-semibold text-white">{s.text}</p>
+                            <p className="text-[10px] text-teal-400/60">{s.sub}</p>
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[10px] text-gray-600 pt-1">⚠️ Must be opened in <strong className="text-gray-500">Safari</strong> — Chrome on iPhone cannot install apps.</p>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Google Sign In */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15">
-                    <GoogleIcon />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white">Sync Across Devices</p>
-                    <p className="mt-0.5 text-xs text-gray-400">Sign in to save your tracker & streaks</p>
-                  </div>
-                  <button
-                    onClick={handleGoogleSignIn}
-                    disabled={signingIn}
-                    className="shrink-0 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2 text-xs font-semibold text-gray-300 transition-all active:bg-gray-700 disabled:opacity-50"
-                  >
-                    {signingIn ? '...' : 'Sign In'}
-                  </button>
-                </div>
-              </div>
             </div>
 
             {/* Completion CTA */}

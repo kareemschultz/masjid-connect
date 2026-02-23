@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
-import { ChevronDown, ChevronRight, CheckCircle2, BookOpen } from 'lucide-react'
+import { ChevronDown, ChevronRight, CheckCircle2, BookOpen, Star } from 'lucide-react'
+import { SUNNAH_PRAYERS, NAWAFIL_PRAYERS } from '@/lib/prayer-types'
 
 // ─── SVG Prayer Position Icons ──────────────────────────────────────────────
 
@@ -315,7 +316,7 @@ function SalahStep({ step, viewed, onView }: {
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function LearnToPrayPage() {
-  const [tab, setTab] = useState<'wudu' | 'salah'>('wudu')
+  const [tab, setTab] = useState<'wudu' | 'salah' | 'nawafil'>('wudu')
   const [viewedWudu, setViewedWudu] = useState<Set<number>>(new Set())
   const [viewedSalah, setViewedSalah] = useState<Set<number>>(new Set())
 
@@ -351,19 +352,29 @@ export default function LearnToPrayPage() {
           >
             🕌 Salah
           </button>
+          <button
+            onClick={() => setTab('nawafil')}
+            className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-all ${
+              tab === 'nawafil' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 active:bg-gray-800'
+            }`}
+          >
+            🌙 Nawafil
+          </button>
         </div>
         {/* Progress */}
-        <div className="mt-2 flex items-center gap-2">
-          <div className="flex-1 h-1.5 rounded-full bg-gray-800">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${tab === 'wudu' ? 'bg-blue-500' : 'bg-emerald-500'}`}
-              style={{ width: `${tab === 'wudu' ? (wuduProgress / WUDU_STEPS.length) * 100 : (salahProgress / SALAH_STEPS.length) * 100}%` }}
-            />
+        {tab !== 'nawafil' && (
+          <div className="mt-2 flex items-center gap-2">
+            <div className="flex-1 h-1.5 rounded-full bg-gray-800">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${tab === 'wudu' ? 'bg-blue-500' : 'bg-emerald-500'}`}
+                style={{ width: `${tab === 'wudu' ? (wuduProgress / WUDU_STEPS.length) * 100 : (salahProgress / SALAH_STEPS.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs text-gray-500">
+              {tab === 'wudu' ? `${wuduProgress}/${WUDU_STEPS.length}` : `${salahProgress}/${SALAH_STEPS.length}`} steps viewed
+            </span>
           </div>
-          <span className="text-xs text-gray-500">
-            {tab === 'wudu' ? `${wuduProgress}/${WUDU_STEPS.length}` : `${salahProgress}/${SALAH_STEPS.length}`} steps viewed
-          </span>
-        </div>
+        )}
       </div>
 
       <div className="px-4 py-4 space-y-3">
@@ -437,6 +448,102 @@ export default function LearnToPrayPage() {
                 <p className="text-xs text-gray-400 mt-1">May Allah accept your prayers. The key is practice — start with Fajr (2 rakats).</p>
               </div>
             )}
+          </>
+        )}
+        {tab === 'nawafil' && (
+          <>
+            <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-4">
+              <p className="text-sm font-semibold text-indigo-300">🌙 Sunnah &amp; Nawafil Prayers</p>
+              <p className="mt-1 text-xs text-gray-400">Beyond the 5 daily prayers, the Prophet ﷺ prayed many optional prayers. These bring extra reward and strengthen the connection with Allah.</p>
+            </div>
+
+            {/* Sunnah Mu'akkadah */}
+            <div className="rounded-2xl border border-emerald-500/20 bg-gray-900 overflow-hidden">
+              <div className="p-4 border-b border-gray-800">
+                <h3 className="text-sm font-bold text-emerald-400">Sunnah Mu&apos;akkadah (Confirmed)</h3>
+                <p className="text-[11px] text-gray-500 mt-0.5">Regularly prayed by the Prophet ﷺ — strongly recommended</p>
+              </div>
+              <div className="divide-y divide-gray-800">
+                {SUNNAH_PRAYERS.filter(p => p.category === 'sunnah_muakkadah').map(prayer => (
+                  <div key={prayer.key} className="p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-arabic text-base text-emerald-300">{prayer.arabic}</span>
+                        <p className="text-sm font-semibold text-gray-200 mt-0.5">{prayer.label}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">{prayer.rakat} rak&apos;at</span>
+                        {prayer.importance === 'highest' && (
+                          <div className="flex items-center gap-1 mt-1 justify-end">
+                            <Star className="h-3 w-3 text-amber-400" />
+                            <span className="text-[9px] text-amber-400 font-medium">Never missed</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-gray-500">{prayer.timing}</p>
+                    <p className="text-[11px] text-gray-400 italic leading-relaxed">{prayer.reward}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Witr — Wajib */}
+            {SUNNAH_PRAYERS.filter(p => p.category === 'wajib').map(prayer => (
+              <div key={prayer.key} className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-400">WAJIB</span>
+                  <span className="font-arabic text-base text-amber-300">{prayer.arabic}</span>
+                </div>
+                <p className="text-sm font-bold text-gray-200">{prayer.label} — {prayer.rakat} rak&apos;at</p>
+                <p className="text-[11px] text-gray-500">{prayer.timing}</p>
+                <p className="text-[11px] text-gray-400 italic leading-relaxed">{prayer.reward}</p>
+                <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 px-3 py-2 mt-2">
+                  <p className="text-xs text-amber-300 font-medium">Witr is Wajib in the Hanafi school — treat it like a 6th prayer.</p>
+                  <p className="text-[10px] text-gray-500 mt-1">{prayer.note}</p>
+                </div>
+              </div>
+            ))}
+
+            {/* Nawafil */}
+            <div className="rounded-2xl border border-indigo-500/20 bg-gray-900 overflow-hidden">
+              <div className="p-4 border-b border-gray-800">
+                <h3 className="text-sm font-bold text-indigo-400">Special Nawafil Prayers</h3>
+                <p className="text-[11px] text-gray-500 mt-0.5">Optional prayers with immense reward</p>
+              </div>
+              <div className="divide-y divide-gray-800">
+                {NAWAFIL_PRAYERS.map(prayer => (
+                  <div key={prayer.key} className="p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{prayer.icon}</span>
+                      <div className="flex-1">
+                        <span className="font-arabic text-base text-indigo-300">{prayer.arabic}</span>
+                        <p className="text-sm font-semibold text-gray-200">{prayer.label}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="rounded-full bg-indigo-500/20 px-2 py-0.5 text-[10px] font-bold text-indigo-400">{prayer.rakat} rak&apos;at</span>
+                        {prayer.ramadanOnly && (
+                          <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[9px] font-bold text-purple-400">Ramadan</span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-gray-500">{prayer.timing}</p>
+                    <p className="text-[11px] text-gray-400 italic leading-relaxed">{prayer.reward}</p>
+                    <p className="text-[10px] text-gray-600">Source: {prayer.source}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tahajjud callout */}
+            <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/5 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">🌙</span>
+                <p className="text-sm font-bold text-indigo-300">The Night Prayer (Tahajjud)</p>
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed">&quot;The night prayer is the most virtuous after the obligatory prayers.&quot; — Muslim</p>
+              <p className="text-[11px] text-gray-500 mt-2">Pray in the last third of the night, after sleeping and before Fajr. Even 2 rak&apos;at count.</p>
+            </div>
           </>
         )}
       </div>
