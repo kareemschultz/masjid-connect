@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { BookOpen, Search, Copy, Heart, Check, X, Share2 } from 'lucide-react'
+import Link from 'next/link'
+import { BookOpen, Search, Copy, Heart, Check, X, Share2, HandHeart, ChevronRight } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem } from '@/lib/storage'
@@ -858,6 +859,21 @@ export default function DuasPage() {
       
         heroTheme="duas"
       />
+
+      {/* ── Featured: Post-Salah Adhkar ──────────────── */}
+      <Link href="/explore/duas/after-salah" className="mx-4 mt-3 flex items-center gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 active:scale-[0.98] transition-transform">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/15">
+          <HandHeart className="h-5 w-5 text-emerald-400" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-bold text-white">Post-Salah Adhkar</p>
+            <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-bold text-emerald-400">SUNNAH</span>
+          </div>
+          <p className="text-xs text-gray-400 mt-0.5">Complete guide to dhikr after every prayer</p>
+        </div>
+        <ChevronRight className="h-5 w-5 text-emerald-400/30 shrink-0" />
+      </Link>
 
       {/* ── Toolbar ─────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">

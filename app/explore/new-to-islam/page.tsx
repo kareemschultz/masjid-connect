@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Star, Heart, Columns, BookOpen, MessageCircle, HelpCircle, MapPin, Moon, Sparkles } from 'lucide-react'
+import { Star, Heart, Columns, BookOpen, MessageCircle, HelpCircle, MapPin, Moon, Sparkles, BookMarked } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -45,6 +45,14 @@ const items = [
     href: '/explore/new-to-islam/vocabulary',
     color: 'from-teal-500/20 to-teal-600/10',
     iconColor: 'text-teal-400',
+  },
+  {
+    icon: BookMarked,
+    label: 'Islamic Glossary',
+    description: '80+ Islamic terms with Arabic and definitions',
+    href: '/explore/new-to-islam/glossary',
+    color: 'from-blue-500/20 to-blue-600/10',
+    iconColor: 'text-blue-400',
   },
   {
     icon: HelpCircle,
