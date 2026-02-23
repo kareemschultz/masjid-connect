@@ -8,6 +8,19 @@ const nextConfig = {
     unoptimized: true,
   },
   serverExternalPackages: ['pg', 'web-push', 'node-cron', 'adhan'],
+  async headers() {
+    return [
+      {
+        source: '/explore/madrasa/library/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-src 'self' https://www.scribd.com https://scribd.com; frame-ancestors 'none';",
+          },
+        ],
+      },
+    ]
+  },
   async redirects() {
     return [
       { source: '/adhkar',    destination: '/explore/adhkar',    permanent: true },
