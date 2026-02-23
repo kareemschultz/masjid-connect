@@ -11,7 +11,8 @@ import {
   BookOpen, Circle, Compass, Calculator, Star,
   Settings, User, CheckCircle2, Timer, Sparkles, Brain,
   ChevronRight, Flame, BookMarked, Moon, UtensilsCrossed,
-  Clock, HandHeart
+  Clock, HandHeart, MapPin, CheckSquare, Users, Scale,
+  Headphones, Navigation, GraduationCap
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
 import { AnnouncementsBanner } from '@/components/announcements-banner'
@@ -29,12 +30,18 @@ import { MASJIDS } from '@/lib/masjid-data'
 interface PrayerTimeData { name: string; time: string; date: Date }
 
 const QUICK_ACTIONS = [
+  { icon: Compass, label: 'Explore', href: '/explore', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
   { icon: BookOpen, label: 'Quran', href: '/quran', color: 'from-purple-500/20 to-purple-600/10', iconColor: 'text-purple-400' },
-  { icon: Brain, label: 'Hifz', href: '/quran/hifz', color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400' },
-  { icon: Circle, label: 'Tasbih', href: '/explore/tasbih', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
-  { icon: Star, label: 'Adhkar', href: '/explore/adhkar', color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
-  { icon: Compass, label: 'Qibla', href: '/explore/qibla', color: 'from-blue-500/20 to-blue-600/10', iconColor: 'text-blue-400' },
-  { icon: Calculator, label: 'Zakat', href: '/explore/zakat', color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
+  { icon: CheckSquare, label: 'Tracker', href: '/tracker', color: 'from-orange-500/20 to-orange-600/10', iconColor: 'text-orange-400' },
+  { icon: MapPin, label: 'Masjids', href: '/masjids', color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400' },
+  { icon: Scale, label: 'Fiqh Hub', href: '/explore/fiqh', color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
+  { icon: HandHeart, label: 'Duas', href: '/explore/duas', color: 'from-pink-500/20 to-pink-600/10', iconColor: 'text-pink-400' },
+  { icon: Headphones, label: 'Lectures', href: '/explore/lectures', color: 'from-blue-500/20 to-blue-600/10', iconColor: 'text-blue-400' },
+  { icon: Users, label: 'Community', href: '/explore/community', color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
+  { icon: GraduationCap, label: 'Madrasa', href: '/explore/madrasa', color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400' },
+  { icon: Circle, label: 'Tasbih', href: '/explore/tasbih', color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
+  { icon: Navigation, label: 'Qibla', href: '/explore/qibla', color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400' },
+  { icon: Calculator, label: 'Zakat', href: '/explore/zakat', color: 'from-lime-500/20 to-lime-600/10', iconColor: 'text-lime-400' },
 ]
 
 const CHECKLIST_ITEMS = [
