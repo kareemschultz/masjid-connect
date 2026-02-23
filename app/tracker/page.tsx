@@ -779,17 +779,14 @@ export default function TrackerPage() {
                           </div>
                         </div>
 
-                        {/* Rakat stepper */}
+                        {/* Rakat stepper — tap +2 multiple times */}
                         <div className="mt-2 flex items-center gap-2">
-                          {[2, 4, 6].map(amount => (
-                            <button
-                              key={amount}
-                              onClick={() => addNawafilRakat(prayer.key, amount)}
-                              className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-indigo-400 transition-all active:scale-90 active:bg-indigo-500/20"
-                            >
-                              +{amount}
-                            </button>
-                          ))}
+                          <button
+                            onClick={() => addNawafilRakat(prayer.key, 2)}
+                            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-indigo-400 transition-all active:scale-90 active:bg-indigo-500/20"
+                          >
+                            +2 Rak&apos;at
+                          </button>
                           {loggedRakat > 0 && (
                             <button
                               onClick={() => addNawafilRakat(prayer.key, -loggedRakat)}

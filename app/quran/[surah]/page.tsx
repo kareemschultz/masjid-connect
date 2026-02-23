@@ -91,6 +91,9 @@ export default function SurahReaderPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const repeatPlayCountRef = useRef(0)
   const tafsirCacheRef = useRef<Map<string, string>>(new Map())
+  // Always holds latest reciter so onended closures never go stale
+  const reciterRef = useRef(reciter)
+  useEffect(() => { reciterRef.current = reciter }, [reciter])
 
   useEffect(() => {
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
@@ -211,7 +214,7 @@ export default function SurahReaderPage() {
     if (resetRepeat) repeatPlayCountRef.current = 0
 
     const audio = new Audio(
-      `https://cdn.islamic.network/quran/audio/128/${reciter}/${ayahGlobalNumber}.mp3`
+      `https://cdn.islamic.network/quran/audio/128/${reciterRef.current}/${ayahGlobalNumber}.mp3`
     )
     audio.playbackRate = speed
     audioRef.current = audio
