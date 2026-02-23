@@ -10,6 +10,7 @@ interface TourStep {
   emoji: string
   title: string
   description: string
+  hint?: string
   tooltipSide?: 'above' | 'below' | 'center'
 }
 
@@ -18,49 +19,100 @@ const STEPS: TourStep[] = [
     target: null,
     emoji: '🕌',
     title: 'Welcome to MasjidConnect GY',
-    description: "Let's take 30 seconds to show you around. Tap Next to begin.",
+    description: "Your complete Islamic companion for the Guyanese Muslim community. Let's take a quick tour — tap Next to begin.",
     tooltipSide: 'center',
   },
   {
-    target: '[data-tour="nav-home"]',
-    emoji: '🏠',
-    title: 'Your Home',
-    description: 'See your daily prayer times, Eid countdown, quick actions, and announcements — all at a glance.',
+    target: '[data-tour="prayer-countdown"]',
+    emoji: '⏱️',
+    title: 'Live Prayer Countdown',
+    description: 'Always know exactly how long until the next prayer. The ring shows progress since the last salah. Prayer times auto-calculate for Georgetown using your chosen method.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="hadith-card"]',
+    emoji: '📜',
+    title: 'Hadith of the Day',
+    description: 'A new authentic hadith every day — Arabic, transliteration, and English translation. Drawn from the 40 Nawawi collection. Tap Explore → Hadith to browse all 40.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="verse-card"]',
+    emoji: '🌟',
+    title: 'Verse of the Day',
+    description: 'A daily ayah rotated from 18 carefully selected verses. Tap "Read Surah" to jump straight into the full Quran reader for that surah.',
     tooltipSide: 'above',
   },
   {
     target: '[data-tour="nav-quran"]',
     emoji: '📖',
     title: 'Full Quran Reader',
-    description: 'Read with audio, 4 translations, Ibn Kathir tafsir, tajweed colors, script toggle, and the full 604-page Mushaf.',
+    description: 'All 114 surahs with high-quality audio recitation, 4 English translations (Sahih International, Yusuf Ali, Pickthall, Asad), and Ibn Kathir tafsir per verse.',
+    hint: 'Also: tajweed colour coding, Uthmani & IndoPak script toggle, and the complete 604-page Mushaf.',
     tooltipSide: 'above',
   },
   {
     target: '[data-tour="nav-tracker"]',
     emoji: '✅',
     title: 'Ibadah Tracker',
-    description: 'Log all 5 prayers, Sunnah, Witr, fasting, Quran pages, and missed prayers. Build streaks and earn points.',
+    description: 'Log all 5 daily prayers, Sunnah, Witr, Tahajjud, fasting days, Quran pages, Sadaqah, and missed (Qada) prayers. Build streaks and earn points.',
+    hint: 'Your stats, 7-day chart, and Fajr consistency rate are all tracked.',
     tooltipSide: 'above',
   },
   {
     target: '[data-tour="nav-masjids"]',
     emoji: '📍',
     title: 'Masjid Directory',
-    description: 'Find all 31 Georgetown & Guyana masjids with prayer times, contact info, and directions.',
+    description: 'Find all 31 masjids across Georgetown, East Coast, East Bank, Berbice, Linden, and West Demerara — with prayer times, contact info, Imam details, and directions.',
+    tooltipSide: 'above',
+  },
+  {
+    target: '[data-tour="quick-actions"]',
+    emoji: '⚡',
+    title: 'Quick Actions',
+    description: 'Jump anywhere in the app in one tap — Fiqh Hub, Duas, Lectures, Community, Madrasa, Tasbih counter, Qibla compass, and Zakat calculator.',
     tooltipSide: 'above',
   },
   {
     target: '[data-tour="nav-explore"]',
     emoji: '🧭',
-    title: 'Explore Everything',
-    description: '80+ Duas, full Fiqh Guide, 235+ lectures, Janazah guide, 99 Names, Kids section, Sisters section, and much more.',
+    title: 'Explore — Islamic Tools',
+    description: 'The heart of the app. Over 80 Duas in 21 categories, the full Fiqh Guide (14 chapters, 105+ Hanafi rulings), 99 Names of Allah, Kids section, and Sisters section.',
+    tooltipSide: 'above',
+  },
+  {
+    target: null,
+    emoji: '🎓',
+    title: 'Madrasa — Learn Islam',
+    description: "In Explore → Madrasa you'll find: Noorani Qaida for learning to read Arabic, How to Pray step-by-step, Stories of the Prophets, Seerah of the Prophet ﷺ, Islamic Adab, and the GII Islamic Library.",
+    tooltipSide: 'center',
+  },
+  {
+    target: null,
+    emoji: '🎙️',
+    title: '235+ Islamic Lectures',
+    description: 'In Explore → Lectures: full audio series from Imam Anwar al-Awlaki, Shaykh Hamza Yusuf, Dr. Bilal Philips, Ustadha Yasmin Mogahed, Dr. Omar Suleiman, and more — all free.',
+    tooltipSide: 'center',
+  },
+  {
+    target: null,
+    emoji: '👥',
+    title: 'Community Features',
+    description: 'In Explore → Community: post to the Feed, share and say Ameen on the Dua Board, join the Khatam Collective to complete the Quran together, and add Faith Buddies to keep each other accountable.',
+    tooltipSide: 'center',
+  },
+  {
+    target: '[data-tour="checklist"]',
+    emoji: '☑️',
+    title: 'Daily Ibadah Checklist',
+    description: 'Tick off your daily goals — Fajr prayed, Quran read, Dua made, Charity given, Dhikr done, and Sunnah prayers. Each tick earns points toward your level.',
     tooltipSide: 'above',
   },
   {
     target: null,
     emoji: '🤲',
-    title: "You're All Set!",
-    description: 'بارك الله فيك — May Allah accept your worship and bless your journey on this app. Bismillah!',
+    title: "You're All Set — Bismillah!",
+    description: 'بارك الله فيك — May Allah accept your worship and make this app a source of benefit for you and the Guyanese Muslim community. Ameen.',
     tooltipSide: 'center',
   },
 ]
@@ -88,21 +140,33 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   const isLast = stepIdx === STEPS.length - 1
   const isCenter = step.tooltipSide === 'center' || !step.target
 
-  // Recalculate spotlight whenever step changes
-  useEffect(() => {
+  // Scroll element into view, then calculate spotlight
+  const updateSpot = useCallback((target: string | null) => {
     setVisible(false)
-    const timer = setTimeout(() => {
-      if (step.target) {
-        setSpot(getSpotRect(step.target))
-      } else {
-        setSpot(null)
-      }
-      setVisible(true)
-    }, 120)
-    return () => clearTimeout(timer)
-  }, [stepIdx, step.target])
+    if (!target) {
+      setSpot(null)
+      setTimeout(() => setVisible(true), 120)
+      return
+    }
+    const el = document.querySelector(target)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      // Wait for scroll to settle before measuring
+      setTimeout(() => {
+        setSpot(getSpotRect(target))
+        setVisible(true)
+      }, 450)
+    } else {
+      setSpot(null)
+      setTimeout(() => setVisible(true), 120)
+    }
+  }, [])
 
-  // Recalculate on resize/scroll
+  useEffect(() => {
+    updateSpot(step.target)
+  }, [stepIdx, step.target, updateSpot])
+
+  // Recalculate on resize
   useEffect(() => {
     if (!step.target) return
     const recalc = () => setSpot(getSpotRect(step.target!))
@@ -115,60 +179,46 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
     setStepIdx(i => i + 1)
   }, [isLast, onComplete])
 
-  const handleSkip = useCallback(() => {
-    onComplete()
-  }, [onComplete])
+  const handleSkip = useCallback(() => { onComplete() }, [onComplete])
 
-  // Tooltip vertical position — for BottomNav items, show above the spotlight
-  const tooltipTopStyle = (): React.CSSProperties => {
+  // Tooltip position
+  const tooltipStyle = (): React.CSSProperties => {
     if (isCenter || !spot) {
-      return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '320px' }
+      return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '340px' }
     }
     const viewH = window.innerHeight
     const spaceAbove = spot.top
     const spaceBelow = viewH - (spot.top + spot.height)
 
-    if (step.tooltipSide === 'above' || spaceBelow < 180) {
-      // Position above spotlight
+    if (step.tooltipSide === 'above' || spaceBelow < 220) {
       return {
         bottom: `${viewH - spot.top + 12}px`,
         left: '50%',
         transform: 'translateX(-50%)',
-        maxWidth: '320px',
+        maxWidth: '340px',
       }
     }
-    // Below
     return {
       top: `${spot.top + spot.height + 12}px`,
       left: '50%',
       transform: 'translateX(-50%)',
-      maxWidth: '320px',
+      maxWidth: '340px',
     }
   }
 
-  // Arrow direction
   const showArrowBelow = !isCenter && spot && step.tooltipSide === 'above'
   const showArrowAbove = !isCenter && spot && step.tooltipSide === 'below'
 
   return (
     <div className="fixed inset-0 z-[220]" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.2s ease' }}>
 
-      {/* ── Overlay (4-rectangle spotlight cutout) ── */}
+      {/* ── Overlay ── */}
       {spot ? (
         <>
-          {/* Top */}
-          <div className="fixed left-0 right-0 top-0 bg-black/80"
-            style={{ height: Math.max(0, spot.top) }} />
-          {/* Bottom */}
-          <div className="fixed left-0 right-0 bottom-0 bg-black/80"
-            style={{ top: spot.top + spot.height }} />
-          {/* Left */}
-          <div className="fixed bg-black/80"
-            style={{ top: spot.top, height: spot.height, left: 0, width: Math.max(0, spot.left) }} />
-          {/* Right */}
-          <div className="fixed bg-black/80"
-            style={{ top: spot.top, height: spot.height, left: spot.left + spot.width, right: 0 }} />
-          {/* Spotlight border glow */}
+          <div className="fixed left-0 right-0 top-0 bg-black/80" style={{ height: Math.max(0, spot.top) }} />
+          <div className="fixed left-0 right-0 bottom-0 bg-black/80" style={{ top: spot.top + spot.height }} />
+          <div className="fixed bg-black/80" style={{ top: spot.top, height: spot.height, left: 0, width: Math.max(0, spot.left) }} />
+          <div className="fixed bg-black/80" style={{ top: spot.top, height: spot.height, left: spot.left + spot.width, right: 0 }} />
           <div className="fixed rounded-2xl pointer-events-none"
             style={{
               top: spot.top, left: spot.left,
@@ -178,16 +228,12 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
             }} />
         </>
       ) : (
-        /* Full overlay for center steps */
         <div className="fixed inset-0 bg-black/80" />
       )}
 
       {/* ── Tooltip card ── */}
-      <div
-        className="fixed z-[221] w-[calc(100%-2rem)]"
-        style={tooltipTopStyle()}
-      >
-        {/* Arrow pointing down (tooltip is above element) */}
+      <div className="fixed z-[221] w-[calc(100%-2rem)]" style={tooltipStyle()}>
+
         {showArrowBelow && (
           <div className="flex justify-center pb-1">
             <div className="h-0 w-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-gray-800" />
@@ -197,20 +243,23 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
         <div className="overflow-hidden rounded-3xl border border-gray-700/80 bg-gray-900 shadow-2xl">
           {/* Progress dots */}
           <div className="flex items-center justify-between px-4 pt-4">
-            <div className="flex gap-1.5">
+            <div className="flex gap-1 flex-wrap max-w-[200px]">
               {STEPS.map((_, i) => (
                 <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === stepIdx ? 'w-5 bg-emerald-400' : i < stepIdx ? 'w-1.5 bg-emerald-700' : 'w-1.5 bg-gray-700'
+                  i === stepIdx ? 'w-4 bg-emerald-400' : i < stepIdx ? 'w-1.5 bg-emerald-700' : 'w-1.5 bg-gray-700'
                 }`} />
               ))}
             </div>
-            <button
-              onClick={handleSkip}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 active:text-gray-300"
-              aria-label="Skip tour"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-gray-600">{stepIdx + 1}/{STEPS.length}</span>
+              <button
+                onClick={handleSkip}
+                className="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 active:text-gray-300"
+                aria-label="Skip tour"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Content */}
@@ -222,17 +271,14 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
               <h3 className="text-base font-bold text-white leading-tight">{step.title}</h3>
             </div>
             <p className="text-sm leading-relaxed text-gray-400">{step.description}</p>
-            {step.target === '[data-tour="nav-quran"]' && (
-              <p className="mt-2 text-[11px] text-emerald-500/80">Tap the Quran tab below to explore →</p>
+            {step.hint && (
+              <p className="mt-2 text-[11px] text-emerald-500/80 leading-relaxed">{step.hint}</p>
             )}
           </div>
 
           {/* Actions */}
           <div className="flex items-center justify-between border-t border-gray-800 px-5 py-3">
-            <button
-              onClick={handleSkip}
-              className="text-xs font-medium text-gray-500 active:text-gray-300"
-            >
+            <button onClick={handleSkip} className="text-xs font-medium text-gray-500 active:text-gray-300">
               Skip tour
             </button>
             <button
@@ -248,7 +294,6 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
           </div>
         </div>
 
-        {/* Arrow pointing up (tooltip is below element) */}
         {showArrowAbove && (
           <div className="flex justify-center pt-1">
             <div className="h-0 w-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-800" />

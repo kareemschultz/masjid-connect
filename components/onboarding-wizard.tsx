@@ -254,8 +254,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     'profile',
     'prayer',
     ...(showRamadanStep ? ['ramadan'] : []),
-    'notifications',
     'install',
+    'notifications',
     'done',
   ]
   const totalSteps = steps.length

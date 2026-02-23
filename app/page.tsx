@@ -428,7 +428,7 @@ export default function HomePage() {
           </div>
 
           {/* Next Prayer Countdown */}
-          <div className="glass-emerald rounded-3xl p-5 animate-scale-in" style={{ animationDelay: '0.15s', animationFillMode: 'backwards' }}>
+          <div data-tour="prayer-countdown" className="glass-emerald rounded-3xl p-5 animate-scale-in" style={{ animationDelay: '0.15s', animationFillMode: 'backwards' }}>
             <div className="flex items-center gap-5">
               {/* Progress ring */}
               <div className="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center">
@@ -521,7 +521,7 @@ export default function HomePage() {
       </div>
 
       {/* ========== HADITH OF THE DAY ========== */}
-      <div className="mx-4 mb-4 mt-3 rounded-xl bg-gray-900/70 border border-gray-800 p-4 backdrop-blur-sm">
+      <div data-tour="hadith-card" className="mx-4 mb-4 mt-3 rounded-xl bg-gray-900/70 border border-gray-800 p-4 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-amber-400 text-sm">{'\uD83D\uDCDC'}</span>
           <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-amber-400/80">Hadith of the Day</span>
@@ -563,7 +563,7 @@ export default function HomePage() {
       </div>
 
       {/* ========== VERSE OF THE DAY ========== */}
-      <div className="px-4 pt-5 animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+      <div data-tour="verse-card" className="px-4 pt-5 animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
         <div className="relative overflow-hidden rounded-3xl glass-amber p-5">
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl" />
           <div className="mb-3 flex items-center gap-2">
@@ -658,7 +658,7 @@ export default function HomePage() {
       })()}
 
       {/* ========== QUICK ACTIONS ========== */}
-      <div className="px-4 pt-6">
+      <div data-tour="quick-actions" className="px-4 pt-6">
         <div className="section-label mb-3">
           <div className="h-4 w-1 rounded-full bg-emerald-500" />
           Quick Actions
@@ -676,7 +676,7 @@ export default function HomePage() {
       </div>
 
       {/* ========== DAILY CHECKLIST ========== */}
-      <div className="px-4 pt-6">
+      <div data-tour="checklist" className="px-4 pt-6">
         <div className="mb-3 flex items-center justify-between">
           <div className="section-label">
             <div className="h-4 w-1 rounded-full bg-amber-500" />
