@@ -301,8 +301,8 @@ export const MASJIDS: Masjid[] = [
       Maghrib: '6:05 PM', Isha: '7:30 PM', "Jumu'ah": '12:30 PM',
     },
     imam: 'Moulana Abdullah Khan',
-    notes: 'Well-established masjid in the heart of Kitty. Active Ramadan programmes. Listed on GIT Lecture Tour 2026. Adhan times — Salah begins 10 minutes after.',
-    iftaarInfo: 'Active Iftaar programmes during Ramadan. Taraweeh led by Mufti Sajid Khan and Hafiz Anas. Contact masjid for schedule.',
+    notes: 'Well-established masjid in the heart of Kitty. Active Ramadan programmes. Listed on GIT Lecture Tour 2026. Times shown are Salah/Iqamah times — Adhan is called 10 minutes before each prayer. President: Mufti Sajid Khan.',
+    iftaarInfo: 'Active Iftaar and Taraweeh programmes during Ramadan. Taraweeh led by Mufti Sajid Khan (President) and Hafiz Anas. Tap to see community iftaar reports.',
     verified: true,
   },
   {

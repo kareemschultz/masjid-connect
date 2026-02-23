@@ -42,6 +42,7 @@ function GoogleIcon() {
 export default function SettingsPage() {
   const [method, setMethod] = useState('Egyptian')
   const [madhab, setMadhab] = useState('Shafi')
+  const [moonSighting, setMoonSighting] = useState('ciog')
   const [reciter, setReciter] = useState('ar.alafasy')
   const [notifs, setNotifs] = useState(false)
   const [enabledPrayers, setEnabledPrayers] = useState<string[]>([])
@@ -59,6 +60,7 @@ export default function SettingsPage() {
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
     setMadhab(getItem(KEYS.MADHAB, 'Shafi'))
+    setMoonSighting(getItem<string>('moon_sighting', 'ciog'))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
     setNotifs(getItem(KEYS.NOTIFICATIONS_ENABLED, false))
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
@@ -82,6 +84,13 @@ export default function SettingsPage() {
 
   const updateMethod = (val: string) => { setMethod(val); setItem(KEYS.CALCULATION_METHOD, val) }
   const updateMadhab = (val: string) => { setMadhab(val); setItem(KEYS.MADHAB, val) }
+  const updateMoonSighting = (val: string) => {
+    setMoonSighting(val)
+    setItem('moon_sighting', val)
+    // Update ramadan_start to match the selected sighting
+    const DATES: Record<string, string> = { saudi: '2026-03-01', ciog: '2026-03-01' }
+    setItem('ramadan_start', DATES[val] || '2026-03-01')
+  }
   const updateReciter = (val: string) => { setReciter(val); setItem(KEYS.RECITER, val) }
 
   const toggleNotifs = useCallback(async (val: boolean) => {
@@ -259,7 +268,8 @@ export default function SettingsPage() {
         {/* Prayer Settings */}
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
           <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Calculation Method" value={methodLabel.split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
-          <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Madhab" value={madhabLabel.split('/')[0].trim()} onClick={() => setModalOpen('madhab')} isLast />
+          <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Madhab" value={madhabLabel.split('/')[0].trim()} onClick={() => setModalOpen('madhab')} />
+          <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'CIOG (Guyana)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
         </SettingGroup>
 
         {/* Notifications */}
@@ -321,6 +331,17 @@ export default function SettingsPage() {
       <SelectModal open={modalOpen === 'method'} onClose={() => setModalOpen(null)} title="Calculation Method" options={CALCULATION_METHODS.map(m => ({ key: m.key, label: m.label }))} selected={method} onSelect={updateMethod} />
       <SelectModal open={modalOpen === 'madhab'} onClose={() => setModalOpen(null)} title="Madhab" options={MADHABS.map(m => ({ key: m.key, label: m.label }))} selected={madhab} onSelect={updateMadhab} />
       <SelectModal open={modalOpen === 'reciter'} onClose={() => setModalOpen(null)} title="Default Reciter" options={RECITERS.map(r => ({ key: r.key, label: r.label }))} selected={reciter} onSelect={updateReciter} />
+      <SelectModal
+        open={modalOpen === 'moon'}
+        onClose={() => setModalOpen(null)}
+        title="Ramadan Moon Sighting"
+        options={[
+          { key: 'ciog', label: 'CIOG / Guyana (Central Moon Sighting Committee)' },
+          { key: 'saudi', label: 'Saudi Arabia / International Sighting' },
+        ]}
+        selected={moonSighting}
+        onSelect={val => { updateMoonSighting(val); setModalOpen(null) }}
+      />
 
       {resetConfirm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">

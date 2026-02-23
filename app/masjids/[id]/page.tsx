@@ -5,7 +5,8 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Navigation, Phone, Clock, CheckCircle2, Users,
-  AlertTriangle, ExternalLink, Star, StarOff, Soup, Info
+  AlertTriangle, ExternalLink, Star, StarOff, Soup, Info,
+  Plus, ChevronDown, ChevronUp, ThumbsUp, CalendarDays
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -13,6 +14,21 @@ import { MASJIDS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 
 interface CheckinData { count: number; lastReset: string }
+
+interface IftaarReport {
+  id: string
+  masjidId: string
+  menu: string
+  submittedBy: string
+  servings: number | null
+  notes: string
+  date: string
+  likes: number
+  attending: number
+  submittedAt: string
+  userLiked?: boolean
+  userAttending?: boolean
+}
 
 const FACILITY_ICONS: Record<string, string> = {
   Parking: '🅿️',
@@ -46,7 +62,13 @@ export default function MasjidDetailPage() {
   const [isCheckedIn, setIsCheckedIn] = useState(false)
   const [isHomeMasjid, setIsHomeMasjid] = useState(false)
   const [ramadan, setRamadan] = useState(false)
-  const [showIftaarInfo, setShowIftaarInfo] = useState(false)
+  const [iftaarReports, setIftaarReports] = useState<IftaarReport[]>([])
+  const [showAllReports, setShowAllReports] = useState(false)
+  const [showReportForm, setShowReportForm] = useState(false)
+  const [reportMenu, setReportMenu] = useState('')
+  const [reportName, setReportName] = useState('')
+  const [reportNotes, setReportNotes] = useState('')
+  const [reportSubmitting, setReportSubmitting] = useState(false)
 
   const today = getTodayKey()
 
@@ -62,8 +84,42 @@ export default function MasjidDetailPage() {
     const savedHome = getItem<string>(KEYS.HOME_MASJID, '')
     setIsHomeMasjid(savedHome === masjid.id)
     // Ramadan
-    setRamadan(isRamadanNow())
+    const inRamadan = isRamadanNow()
+    setRamadan(inRamadan)
+    // Iftaar reports (Ramadan only)
+    if (inRamadan && masjid) {
+      fetch(`/api/submissions?masjidId=${encodeURIComponent(masjid.id)}`)
+        .then(r => r.json())
+        .then(data => { if (Array.isArray(data)) setIftaarReports(data) })
+        .catch(() => {})
+    }
   }, [masjid, today])
+
+  const submitIftaarReport = async () => {
+    if (!masjid || !reportMenu.trim() || !reportName.trim()) return
+    setReportSubmitting(true)
+    try {
+      const res = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          masjidId: masjid.id,
+          menu: reportMenu.trim(),
+          submittedBy: reportName.trim(),
+          notes: reportNotes.trim(),
+          date: today,
+        }),
+      })
+      if (res.ok) {
+        const newReport = await res.json()
+        setIftaarReports(prev => [newReport, ...prev])
+        setReportMenu('')
+        setReportNotes('')
+        setShowReportForm(false)
+      }
+    } catch {}
+    setReportSubmitting(false)
+  }
 
   const handleCheckin = () => {
     if (!masjid || isCheckedIn) return
@@ -209,31 +265,117 @@ export default function MasjidDetailPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[10px] text-gray-600">Times are approximate — confirm with masjid directly</p>
+            <p className="mt-3 text-[10px] text-gray-600">Salah/Iqamah times — Adhan is called 10 min before. Confirm with masjid directly.</p>
           </div>
         )}
 
-        {/* ── Ramadan Iftaar ────────────────────────────────────────── */}
+        {/* ── Ramadan Iftaar Community Feed ────────────────────────── */}
         {ramadan && (
-          <div className="rounded-2xl border border-orange-800/30 bg-orange-950/20 p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Soup className="h-4 w-4 text-orange-400" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-orange-400">Iftaar at this Masjid</h3>
+          <div className="rounded-2xl border border-orange-800/30 bg-orange-950/20 p-5 space-y-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Soup className="h-4 w-4 text-orange-400" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-orange-400">Iftaar Reports</h3>
+              </div>
+              <button
+                onClick={() => setShowReportForm(v => !v)}
+                className="flex items-center gap-1 rounded-xl bg-orange-500/15 px-3 py-1.5 text-xs font-semibold text-orange-400 active:bg-orange-500/25"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Report
+              </button>
             </div>
-            {masjid.iftaarInfo ? (
-              <p className="text-sm text-gray-300">{masjid.iftaarInfo}</p>
-            ) : (
-              <p className="text-sm text-gray-400">
-                Iftaar arrangements may be available — contact the masjid directly to confirm.
-              </p>
+
+            {/* Report form */}
+            {showReportForm && (
+              <div className="space-y-2.5 rounded-xl border border-orange-800/30 bg-orange-950/30 p-4">
+                <input
+                  value={reportName}
+                  onChange={e => setReportName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full rounded-xl border border-gray-700 bg-gray-800/60 px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-orange-500/50"
+                />
+                <input
+                  value={reportMenu}
+                  onChange={e => setReportMenu(e.target.value)}
+                  placeholder="What's being served? (e.g. Biryani, Roti)"
+                  className="w-full rounded-xl border border-gray-700 bg-gray-800/60 px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-orange-500/50"
+                />
+                <textarea
+                  value={reportNotes}
+                  onChange={e => setReportNotes(e.target.value)}
+                  placeholder="Any additional info (optional)"
+                  rows={2}
+                  className="w-full resize-none rounded-xl border border-gray-700 bg-gray-800/60 px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-orange-500/50"
+                />
+                <button
+                  onClick={submitIftaarReport}
+                  disabled={!reportMenu.trim() || !reportName.trim() || reportSubmitting}
+                  className="w-full rounded-xl bg-orange-600 py-2.5 text-sm font-semibold text-white disabled:opacity-40 active:bg-orange-700"
+                >
+                  {reportSubmitting ? 'Submitting…' : 'Submit Report'}
+                </button>
+              </div>
             )}
+
+            {/* Today's reports */}
+            {iftaarReports.filter(r => r.date === today).length > 0 ? (
+              <div className="space-y-2.5">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-400/60">Today</p>
+                {iftaarReports.filter(r => r.date === today).map(report => (
+                  <div key={report.id} className="rounded-xl bg-gray-900 border border-gray-800 p-3.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-semibold text-white">{report.menu}</p>
+                      <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                        <ThumbsUp className="h-3 w-3" />
+                        {report.likes}
+                      </div>
+                    </div>
+                    {report.notes && <p className="mt-1 text-xs text-gray-400">{report.notes}</p>}
+                    <p className="mt-1.5 text-[10px] text-gray-600">Reported by {report.submittedBy}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">No iftaar reports yet today. Be the first to share!</p>
+            )}
+
+            {/* Archive */}
+            {iftaarReports.filter(r => r.date !== today).length > 0 && (
+              <div>
+                <button
+                  onClick={() => setShowAllReports(v => !v)}
+                  className="flex items-center gap-1.5 text-xs text-gray-500 active:text-gray-300"
+                >
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  {showAllReports ? 'Hide archive' : `View archive (${iftaarReports.filter(r => r.date !== today).length} past reports)`}
+                  {showAllReports ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                </button>
+                {showAllReports && (
+                  <div className="mt-2.5 space-y-2">
+                    {iftaarReports.filter(r => r.date !== today).map(report => (
+                      <div key={report.id} className="rounded-xl bg-gray-900/50 border border-gray-800/60 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs font-semibold text-gray-300">{report.menu}</p>
+                          <span className="text-[10px] text-gray-600">{report.date}</span>
+                        </div>
+                        {report.notes && <p className="mt-0.5 text-[11px] text-gray-500">{report.notes}</p>}
+                        <p className="mt-1 text-[10px] text-gray-600">by {report.submittedBy}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             {masjid.phone && (
               <a
                 href={`tel:${masjid.phone}`}
-                className="mt-3 flex items-center gap-2 rounded-xl bg-orange-500/15 px-4 py-2.5 text-sm font-semibold text-orange-400 active:bg-orange-500/25"
+                className="flex items-center gap-2 rounded-xl bg-orange-500/10 px-4 py-2.5 text-sm font-medium text-orange-400/80 active:bg-orange-500/20"
               >
                 <Phone className="h-4 w-4" />
-                Call Masjid for Iftaar Info
+                Call Masjid Directly
               </a>
             )}
           </div>

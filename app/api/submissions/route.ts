@@ -34,13 +34,14 @@ export async function GET(request: NextRequest) {
     } catch {}
 
     const pool = getPool()
+    const masjidId = url.searchParams.get('masjidId')
     let query = 'SELECT * FROM iftaar_submissions'
     const params: any[] = []
-    if (date) {
-      query += ' WHERE date = $1'
-      params.push(date)
-    }
-    query += ' ORDER BY date DESC, submitted_at DESC'
+    const clauses: string[] = []
+    if (date) { clauses.push(`date = $${params.length + 1}`); params.push(date) }
+    if (masjidId) { clauses.push(`masjid_id = $${params.length + 1}`); params.push(masjidId) }
+    if (clauses.length) query += ' WHERE ' + clauses.join(' AND ')
+    query += ' ORDER BY date DESC, submitted_at DESC LIMIT 50'
 
     const result = await pool.query(query, params)
 
