@@ -151,7 +151,7 @@ export default function MadrasaPage() {
         </Link>
 
         {/* ── Fiqh Guide ─────────────────────────────────────────────── */}
-        <Link href="/explore/madrasa/fiqh" className="relative block overflow-hidden rounded-2xl border border-violet-500/30 bg-violet-500/5 p-5 active:bg-violet-500/10 transition-colors">
+        <Link href="/explore/fiqh" className="relative block overflow-hidden rounded-2xl border border-violet-500/30 bg-violet-500/5 p-5 active:bg-violet-500/10 transition-colors">
           <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-violet-500/10 blur-3xl" />
           <div className="relative flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-violet-500/20">

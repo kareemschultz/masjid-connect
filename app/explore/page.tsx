@@ -6,6 +6,7 @@ import {
   GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library,
   Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun,
   MapPin, Keyboard, ShieldCheck, ShieldAlert, HelpCircle, Search, X,
+  Scale, Banknote,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -15,6 +16,16 @@ import Link from 'next/link'
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SECTIONS = [
+  {
+    key: 'fiqh',
+    label: '⚖️ Fiqh & Islamic Law',
+    items: [
+      { icon: Scale,       label: 'Fiqh Guide',        description: 'Islamic Law — full reference', href: '/explore/fiqh',                   color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400' },
+      { icon: Heart,       label: "Women's Fiqh",       description: 'Hayd, nifas, ghusl & more',  href: '/explore/fiqh?sisters=true',       color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400' },
+      { icon: Users,       label: 'Nikah & Family',     description: 'Marriage, divorce, rights',  href: '/explore/fiqh?chapter=Nikah',      color: 'from-amber-500/20 to-orange-600/10', iconColor: 'text-amber-400' },
+      { icon: Banknote,    label: 'Muamalaat',          description: 'Trade, riba & contracts',    href: '/explore/fiqh?chapter=Muamalaat',  color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400' },
+    ],
+  },
   {
     key: 'quran',
     label: '📖 Quran & Learning',
@@ -85,6 +96,7 @@ const SECTIONS = [
 
 const FILTERS = [
   { key: 'all',       label: 'All' },
+  { key: 'fiqh',      label: 'Fiqh' },
   { key: 'quran',     label: 'Quran' },
   { key: 'prayer',    label: 'Prayer' },
   { key: 'community', label: 'Community' },
