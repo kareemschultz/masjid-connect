@@ -15,6 +15,7 @@ import { SelectModal } from '@/components/select-modal'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS, RECITERS } from '@/lib/prayer-times'
 import { requestNotificationPermission } from '@/lib/notifications'
+import { isPushSupported, subscribeToPush, unsubscribeFromPush, updatePushPreferences } from '@/lib/push-notifications'
 import Link from 'next/link'
 
 const PRAYER_NOTIF_CONFIG = [
@@ -93,14 +94,31 @@ export default function SettingsPage() {
   }
   const updateReciter = (val: string) => { setReciter(val); setItem(KEYS.RECITER, val) }
 
+  /** Convert array of enabled prayer keys → notification_prefs object for push API */
+  const prefsToObject = (prayers: string[]) =>
+    PRAYER_NOTIF_CONFIG.reduce<Record<string, boolean>>(
+      (obj, p) => ({ ...obj, [p.key]: prayers.includes(p.key) }), {}
+    )
+
   const toggleNotifs = useCallback(async (val: boolean) => {
     if (val) {
       const granted = await requestNotificationPermission()
       if (!granted) return
+      setNotifs(true)
+      setItem(KEYS.NOTIFICATIONS_ENABLED, true)
+      // Subscribe to VAPID push so notifications work when app is closed
+      if (isPushSupported()) {
+        const currentPrayers = getItem<string[]>(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'])
+        const notificationPrefs = prefsToObject(currentPrayers)
+        localStorage.setItem('notification_prefs', JSON.stringify(notificationPrefs))
+        subscribeToPush({ notificationPrefs }).catch(console.error)
+      }
+    } else {
+      setNotifs(false)
+      setItem(KEYS.NOTIFICATIONS_ENABLED, false)
+      if (isPushSupported()) unsubscribeFromPush().catch(console.error)
     }
-    setNotifs(val)
-    setItem(KEYS.NOTIFICATIONS_ENABLED, val)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const togglePrayerNotif = (key: string) => {
     const updated = enabledPrayers.includes(key)
@@ -108,6 +126,10 @@ export default function SettingsPage() {
       : [...enabledPrayers, key]
     setEnabledPrayers(updated)
     setItem(KEYS.NOTIF_PRAYERS, updated)
+    // Sync to VAPID push subscription so server-side pushes respect per-prayer prefs
+    const notificationPrefs = prefsToObject(updated)
+    localStorage.setItem('notification_prefs', JSON.stringify(notificationPrefs))
+    if (isPushSupported()) updatePushPreferences({ notificationPrefs }).catch(console.error)
   }
 
   const disableAllNotifs = () => {
@@ -115,6 +137,8 @@ export default function SettingsPage() {
     setItem(KEYS.NOTIFICATIONS_ENABLED, false)
     setEnabledPrayers([])
     setItem(KEYS.NOTIF_PRAYERS, [])
+    localStorage.setItem('notification_prefs', JSON.stringify({}))
+    if (isPushSupported()) unsubscribeFromPush().catch(console.error)
   }
 
   const handleVersionTap = () => {

@@ -106,7 +106,11 @@ export default function TrackerPage() {
   const [waterLog, setWaterLog] = useState<WaterLog>({})
   const [istighfarLog, setIstighfarLog] = useState<IstighfarLog>({})
   const [adhkarLog, setAdhkarLog] = useState<AdhkarLog>({})
-  const [khatamProgress, setKhatamProgress] = useState<KhatamProgress>(Array(30).fill(false))
+  const [khatamProgress, setKhatamProgress] = useState<KhatamProgress>(() =>
+    typeof window !== 'undefined'
+      ? getItem<KhatamProgress>('khatam_personal_progress', Array(30).fill(false))
+      : Array(30).fill(false)
+  )
   const [showKhatamReset, setShowKhatamReset] = useState(false)
   const [sunnahLog, setSunnahLog] = useState<SunnahLog>({})
   const [nawafilLog, setNawafilLog] = useState<NawafilLog>({})
