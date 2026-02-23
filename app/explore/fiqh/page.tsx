@@ -176,6 +176,13 @@ function FiqhHubContent() {
                           </p>
                         )}
 
+                        {/* Context */}
+                        {topic.context && (
+                          <p className="text-xs text-gray-400 leading-relaxed border-l-2 border-gray-700 pl-3">
+                            {topic.context}
+                          </p>
+                        )}
+
                         {/* Hadith boxes */}
                         {topic.hadith && topic.hadith.length > 0 && (
                           <div className="space-y-2">

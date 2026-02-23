@@ -23,6 +23,7 @@ export interface FiqhTopic {
   madhab?: string
   sistersRelevant?: boolean
   overview?: string
+  context?: string
   points: string[]
   examples?: FiqhExample[]
   hadith?: FiqhHadith[]
@@ -64,7 +65,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Types of Water & Their Rulings',
     rulingType: 'info',
     sistersRelevant: true,
-    overview: 'Water is divided into five categories in the Hanafi school, each with specific rulings for purification.',
+    overview: 'Water is divided into five categories in the Hanafi school, each with specific rulings for purification. Understanding these categories is essential for every Muslim, as the validity of wudu, ghusl, and Salah depends on using the correct type of water.',
+    context: 'Allah made water the primary means of purification in Islam. The scholars classified water to help Muslims determine what is valid for worship and what is not. This is especially relevant in Guyana where rainwater collection, well water, and river water are common — all of which are pure and purifying in their natural state.',
+    hadith: [
+      {
+        arabic: 'إِنَّ الْمَاءَ طَهُورٌ لَا يُنَجِّسُهُ شَيْءٌ',
+        transliteration: 'Innal maa\'a tahoorun la yunajjisuhu shay\'',
+        translation: 'Water is pure — nothing makes it impure (unless it changes in colour, taste, or smell).',
+        source: 'Abu Dawud, Tirmidhi, Nasai',
+      },
+    ],
     points: [
       '1. Pure and purifying (Taahir Mutahhir): rainwater, well water, spring water, river water, sea water, snow and ice-melt. Valid for wudu, ghusl, and removing impurity.',
       '2. Pure and purifying but makruh: water left in the sun in a metal vessel, or water a cat has drunk from. Valid for purification but its use is disliked.',
@@ -82,6 +92,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Naajis': 'Impure water — changed by filth in colour, taste, or smell',
       'Su\'r': 'Leftover water — water remaining after a person or animal drinks',
     },
+    examples: [
+      { scenario: 'Can I use seawater for wudu?', ruling: 'Yes — seawater is Taahir Mutahhir (pure and purifying). The Prophet ﷺ said about the sea: "Its water is purifying and its dead creatures are halal." (Tirmidhi)' },
+      { scenario: 'Rainwater collected in a barrel — is it valid for ghusl?', ruling: 'Yes — rainwater is one of the purest categories. Valid for wudu, ghusl, and removing impurity.' },
+      { scenario: 'A cat drank from the bucket I was about to use for wudu', ruling: 'The water is still pure but its use for wudu is makruh (disliked). Better to use fresh water if available.' },
+      { scenario: 'I added soap to water and it changed colour — can I use it for wudu?', ruling: 'No — if a pure substance changes a property of water (colour, taste, smell), it loses its purifying ability. Use plain water for wudu.' },
+    ],
   },
   {
     id: 'etiquettes-relieving',
@@ -89,7 +105,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Etiquettes of Relieving Oneself (22 Adab)',
     rulingType: 'sunnah',
     sistersRelevant: true,
-    overview: 'The Prophet ﷺ taught 22 specific etiquettes for using the toilet — covering entering, exiting, positioning, and cleanliness.',
+    overview: 'The Prophet ﷺ taught 22 specific etiquettes for using the toilet — covering entering, exiting, positioning, and cleanliness. These etiquettes reflect Islam\'s comprehensive guidance in every aspect of life, from worship to personal hygiene.',
+    context: 'Islam is unique among religions in providing detailed guidance on personal hygiene. These etiquettes maintain physical cleanliness, spiritual mindfulness, and respect for sacred names. The Prophet ﷺ was sent to perfect good character, and that includes even the most private moments.',
+    definitions: {
+      'Istinja': 'Cleansing the private parts after using the toilet — with water, stones, or both',
+      'Adab': 'Etiquette — proper manners taught by the Prophet ﷺ',
+    },
     hadith: [
       {
         arabic: 'أَعُوذُ بِاللَّهِ مِنَ الْخُبُثِ وَالْخَبَائِثِ',
@@ -128,6 +149,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       '21. Do not cleanse with bones, dung, food items, or anything respectable',
       '22. Sprinkle a little water on underclothes after cleansing to remove doubt about later discharge',
     ],
+    examples: [
+      { scenario: 'You are wearing a ring with "Allah" engraved on it and need to use the toilet', ruling: 'Remove it before entering or conceal it in your fist. Items bearing Allah\'s name should not be taken into the toilet.' },
+      { scenario: 'You are outdoors and need to relieve yourself but do not know the Qibla direction', ruling: 'Make your best effort to avoid facing or turning your back to the Qibla. If truly unsure, any direction is acceptable.' },
+      { scenario: 'Only toilet paper is available — no water', ruling: 'Valid — use at least 3 wipes (odd number). Water is preferred but stones/paper are acceptable. Combining both is most thorough.' },
+    ],
     note: 'These are combined from the PDF chapters on etiquettes of relieving oneself and cleansing rulings.',
   },
   {
@@ -136,7 +162,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Cleansing (Istinja) & Types of Filth',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Filth is classified as de jure (hadath — ablutionary) and de facto (najasah — physical). Each has thresholds for excusing in Salah.',
+    overview: 'Filth is classified as de jure (hadath — ablutionary) and de facto (najasah — physical). Each has thresholds for excusing in Salah. Knowing these categories helps a Muslim determine when purification is required and how much impurity is tolerable.',
+    context: 'Islam distinguishes between invisible impurity (hadath) that requires wudu or ghusl, and visible impurity (najasah) that requires physical washing. This dual classification ensures both spiritual and physical purity for worship. The thresholds for excusing small amounts of impurity reflect Islam\'s balance between strictness and ease.',
+    hadith: [
+      {
+        arabic: 'إِذَا بَلَغَ الْمَاءُ قُلَّتَيْنِ لَمْ يَحْمِلِ الْخَبَثَ',
+        transliteration: 'Idha balaghal maa\'u qullatayni lam yahmilil khabath',
+        translation: 'If water reaches two qullahs (approximately 216 litres), it does not carry impurity.',
+        source: 'Abu Dawud, Tirmidhi, Nasai',
+      },
+    ],
     points: [
       'De jure filth (Hadath): Major hadath — from intercourse/ejaculation/hayd/nifas, requires ghusl. Minor hadath — from wudu breakers, requires wudu.',
       'De facto filth (Najasah) — Severe (Ghaleeza): human urine, stool, flowing blood, wine, pig, dog. Excused only up to the size of a dirham (~3g solid, or the depression of the palm for liquid).',
@@ -164,7 +199,23 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Wudu — Fard, Sunnah, Etiquettes & Invalidators',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Wudu has 4 fard (obligatory) acts, 18 sunnah acts, 13 etiquettes, and 6 avoidable acts. Anything omitted from the fard invalidates the wudu entirely.',
+    overview: 'Wudu has 4 fard (obligatory) acts, 18 sunnah acts, 13 etiquettes, and 6 avoidable acts. Anything omitted from the fard invalidates the wudu entirely. Wudu is the key to Salah — without it, no prayer is accepted.',
+    context: 'Wudu is both a physical cleansing and a spiritual preparation for standing before Allah. The Prophet ﷺ said that when a Muslim washes his face in wudu, every sin he committed with his eyes is washed away; when he washes his hands, every sin committed with them is washed away — until he emerges pure from sin. This is why wudu is among the most frequently performed acts of worship.',
+    hadith: [
+      {
+        arabic: 'لَا يَقْبَلُ اللَّهُ صَلَاةَ أَحَدِكُمْ إِذَا أَحْدَثَ حَتَّى يَتَوَضَّأَ',
+        transliteration: 'La yaqbalullahu salata ahadikum idha ahdatha hatta yatawadda\'',
+        translation: 'Allah does not accept the prayer of any one of you if he nullifies his wudu, until he performs wudu again.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Fard': 'Obligatory — omitting invalidates the wudu',
+      'Masah': 'Wiping — passing wet hands over the head (1/4 minimum in Hanafi)',
+      'Madmadah': 'Rinsing the mouth during wudu',
+      'Istinshaq': 'Sniffing water into the nose during wudu',
+      'Tartib': 'Performing wudu acts in the prescribed order',
+    },
     points: [
       '── 4 FARD OF WUDU ──',
       '1. Washing the face once — from the hairline to below the chin, ear to ear (including thin beard)',
@@ -186,6 +237,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       '── 10 THINGS THAT DO NOT BREAK WUDU ──',
       '1. Touching a woman without desire (Hanafi) 2. Touching private parts (Hanafi) 3. Laughter outside Salah 4. Bleeding that does not flow 5. Vomiting less than a mouthful 6. Eating or drinking 7. Sleeping sitting upright 8. Being naked 9. Cutting hair or nails 10. Crying',
     ],
+    examples: [
+      { scenario: 'Your wudu breaks during Salah (you pass wind)', ruling: 'Your Salah is invalidated. Leave the prayer, make wudu, and restart the Salah from the beginning.' },
+      { scenario: 'You perform ghusl (full bath) — do you still need a separate wudu?', ruling: 'No — a valid ghusl includes wudu within it (mouth rinsing, nose sniffing, washing all limbs). You may pray directly after ghusl.' },
+      { scenario: 'You have a small cut on your finger that bled but the blood did not flow beyond the wound', ruling: 'Wudu is NOT broken — blood must flow from the wound site to break wudu in the Hanafi madhab.' },
+      { scenario: 'You fell asleep sitting upright in a chair during a lecture', ruling: 'Wudu is NOT broken — sleeping while sitting upright (body supported by the posture) does not invalidate wudu.' },
+    ],
   },
   {
     id: 'ghusl-detailed',
@@ -193,7 +250,21 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Ghusl — Obligatory Bathing: Types, Method & 18 Occasions',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Ghusl has 3 mandatory acts, 9 traditions, and 3 kinds: mandatory, traditional, and desirable. There are 4 sunnah occasions and 18 desirable occasions for ghusl.',
+    overview: 'Ghusl has 3 mandatory acts, 9 traditions, and 3 kinds: mandatory, traditional, and desirable. There are 4 sunnah occasions and 18 desirable occasions for ghusl. The key principle: every part of the body must be washed — not a spot the size of a hair may remain dry.',
+    context: 'Ghusl represents a complete spiritual renewal. After major impurity (janabah, menstruation, post-natal bleeding), a person cannot pray, recite Quran, or enter the masjid until ghusl is performed. The obligation of ghusl is established by Quran 5:6 — "If you are in a state of janabah, purify yourselves." The wisdom is that major acts of worship require a higher level of purification.',
+    hadith: [
+      {
+        arabic: 'إِذَا جَلَسَ بَيْنَ شُعَبِهَا الْأَرْبَعِ ثُمَّ جَهَدَهَا فَقَدْ وَجَبَ الْغُسْلُ',
+        transliteration: 'Idha jalasa bayna shu\'abihal arba\'i thumma jahadaha faqad wajabal ghusl',
+        translation: 'When a man sits between the four parts of a woman and exerts himself (i.e., has intercourse), ghusl becomes obligatory — even if there is no ejaculation.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Janabah': 'State of major impurity — from intercourse or ejaculation, requiring ghusl',
+      'Ghusl': 'Full-body ritual washing — water must reach every part of the body including mouth and nose',
+      'Mustahabb': 'Desirable/recommended — rewarded if done, no sin if omitted',
+    },
     points: [
       '── 3 MANDATORY ACTS OF GHUSL ──',
       '1. Rinsing the mouth thoroughly (madmadah) — water must reach all parts inside the mouth',
@@ -206,6 +277,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'B. TRADITIONAL (Sunnah — 4 occasions): Friday prayer, Eid al-Fitr, Eid al-Adha, Day of Arafah (for the Hajj pilgrim)',
       'C. DESIRABLE (Mustahabb — 18 occasions): Before entering Ihram, upon entering Makkah, for Tawaf, for standing at Arafah, at Muzdalifah, for the 3 pebble-throwing days at Mina, for the eclipse prayer, for the rain prayer, after bathing a deceased, after recovering from insanity, after recovering from fainting, upon reaching puberty, for Laylatul Qadr, for Laylatul Bara\'ah, for Laylatul Arafah, for the Night of Isra, for the Day of Ashura, on the day of the supplication gathering',
     ],
+    examples: [
+      { scenario: 'You woke up and are unsure whether you had a wet dream — you find no trace of fluid on your clothes', ruling: 'Ghusl is NOT required. It is only obligatory if you find wetness (maniy) or are certain of ejaculation.' },
+      { scenario: 'A couple had intercourse but the husband did not ejaculate', ruling: 'Ghusl is still obligatory for BOTH — the act of penetration alone makes ghusl fard, regardless of ejaculation.' },
+      { scenario: 'You forgot to rinse your mouth during ghusl but washed the rest of the body', ruling: 'Your ghusl is INVALID — rinsing the mouth (madmadah) is one of the 3 mandatory acts. You must redo the ghusl or at minimum rinse your mouth.' },
+      { scenario: 'A woman finished her menstruation at Fajr time — does she pray Fajr?', ruling: 'Yes — she must make ghusl immediately and pray Fajr before its time expires. Delaying is sinful if the time allows.' },
+    ],
     note: 'For women: ensure water reaches the roots of all hair. Unbraiding thick plaits is NOT required per Hanafi if water reaches the roots.',
   },
   {
@@ -214,7 +291,8 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Tayammum — Dry Ablution: Prerequisites, Method & Rulings',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Allah commands in Quran 5:6 — "If you are ill, or on a journey, or one of you comes from relieving himself, or you have touched women and find no water, then do tayammum with clean earth."',
+    overview: 'Allah commands in Quran 5:6 — "If you are ill, or on a journey, or one of you comes from relieving himself, or you have touched women and find no water, then do tayammum with clean earth." Tayammum is one of the unique concessions granted to the Ummah of Muhammad ﷺ.',
+    context: 'Tayammum demonstrates Islam\'s principle of ease in hardship. No previous nation was given the earth as a means of purification — this was a special gift to the Prophet ﷺ and his Ummah. Whether in a desert, on an aeroplane, or in a hospital where water would harm you, tayammum ensures no Muslim ever misses Salah due to inability to access water.',
     hadith: [
       {
         arabic: 'جُعِلَتْ لِيَ الْأَرْضُ مَسْجِدًا وَطَهُورًا',
@@ -263,7 +341,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'The Five Daily Prayer Times',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Each of the five daily prayers has a specific time window. Praying before the time enters or after it exits is invalid.',
+    overview: 'Each of the five daily prayers has a specific time window. Praying before the time enters or after it exits is invalid. Knowing the exact times is a prerequisite for every Muslim — praying outside the window means the Salah does not count as ada (on time).',
+    context: 'The five prayer times are anchored to natural phenomena — dawn, the sun\'s zenith, shadow lengths, sunset, and the disappearance of twilight. This ties worship to the daily rhythm of creation. In Guyana, near the equator, prayer times remain relatively stable year-round, unlike northern countries where Fajr and Isha can vary drastically by season.',
+    hadith: [
+      {
+        arabic: 'أَتَانِي جِبْرِيلُ فَأَمَّنِي عِنْدَ الْبَيْتِ مَرَّتَيْنِ',
+        transliteration: 'Ataani Jibreelu fa ammanee \'indal bayti marratayn',
+        translation: 'Jibril came to me and led me in prayer at the Ka\'bah twice (once at the beginning and once at the end of each prayer time) — thus showing me the window for each prayer.',
+        source: 'Abu Dawud, Tirmidhi',
+      },
+    ],
+    definitions: {
+      'Subh Sadiq': 'True dawn — the horizontal white light that spreads across the horizon, marking the start of Fajr',
+      'Zawal': 'The sun\'s decline from its zenith — marks the start of Dhuhr time',
+      'Makruh Tahreemi': 'Severely disliked — close to haram; delaying Asr until the sun yellows is makruh tahreemi',
+    },
+    examples: [
+      { scenario: 'You missed Asr and it is now Maghrib time', ruling: 'Pray Asr first as Qada (makeup), then pray Maghrib. The order of prayers must be maintained when making up missed prayers.' },
+      { scenario: 'You began Fajr Salah and the sun rose during it', ruling: 'Your Fajr is invalidated. You must repeat it as Qada after the sun has fully risen (approximately 15-20 minutes after sunrise).' },
+      { scenario: 'The Dhuhr adhan was called but you want to delay — how late can you pray?', ruling: 'You can delay until the shadow of an object becomes double its own length plus its shadow at noon. After that, Dhuhr time exits and Asr enters.' },
+    ],
     points: [
       'FAJR: From true dawn (Subh Sadiq — white horizontal light) until just before sunrise. Delaying to when there is good light is preferred.',
       'DHUHR: From the sun\'s decline from the zenith until the shadow of an object becomes double its length (plus its shadow at zenith). In extreme heat, delaying Dhuhr is preferred.',
@@ -280,7 +377,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Prerequisites for Valid Salah (6 Conditions)',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Six conditions must be met before Salah can be valid. Missing any one invalidates the entire prayer.',
+    overview: 'Six conditions must be met before Salah can be valid. Missing any one invalidates the entire prayer. These are called "prerequisites" because they must be in place before the Salah even begins — they are not part of the Salah itself.',
+    context: 'These prerequisites ensure that a person is in a state of readiness — both physically and spiritually — before addressing Allah in prayer. The scholars distinguished prerequisites (conditions before Salah) from essentials (pillars within Salah) because missing a prerequisite means the Salah never started validly, while missing an essential within Salah has different remedies.',
+    hadith: [
+      {
+        arabic: 'لَا يَقْبَلُ اللَّهُ صَلَاةً بِغَيْرِ طُهُورٍ',
+        transliteration: 'La yaqbalullahu salatan bi ghayri tuhoor',
+        translation: 'Allah does not accept any prayer without purification.',
+        source: 'Muslim',
+      },
+    ],
+    definitions: {
+      'Awrah': 'Parts of the body that must be covered — men: navel to knees; women: entire body except face, palms, and feet',
+      'Niyyah': 'Intention — knowing in the heart which Salah you are praying; verbal declaration is sunnah, not required',
+      'Ijtihad': 'Personal effort to determine the Qibla direction when uncertain',
+    },
+    examples: [
+      { scenario: 'Mid-prayer you discover a stain of impurity on your shirt larger than a dirham', ruling: 'If you can remove the garment without exposing awrah, do so and continue. If not, your Salah is invalid — you must repeat it after cleaning.' },
+      { scenario: 'You prayed Dhuhr but later realised you had no wudu', ruling: 'The entire Salah is invalid and must be repeated with proper wudu.' },
+      { scenario: 'You are in a new city and unsure of the Qibla direction', ruling: 'Ask a local Muslim or use a compass/phone app. If genuinely unable to determine it, make your best guess — your Salah is valid based on ijtihad.' },
+    ],
     points: [
       '1. RITUAL PURITY — Valid wudu, or ghusl where required, or tayammum if water is unavailable.',
       '2. PURITY OF BODY, CLOTHES, AND PRAYER PLACE — Free from najasah beyond the excused threshold (dirham size for severe filth, 1/4 for mild filth).',
@@ -300,7 +416,27 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'The 5 Essentials (Arkan) of Salah',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'These are the pillars without which Salah is completely invalid. Omitting any one cannot be compensated by Sujud al-Sahw.',
+    overview: 'These are the pillars without which Salah is completely invalid. Omitting any one cannot be compensated by Sujud al-Sahw. The word "arkan" (pillars) is used because without any single pillar, the entire structure collapses.',
+    context: 'The Hanafi madhab identifies only 5 arkan (essentials), keeping the list strict and minimal. Other madhabs include more acts as arkan. The practical consequence: if you forget an essential entirely (e.g., forget all sujud in a rakat), Sujud al-Sahw cannot fix it — the Salah must be repeated. This is different from wajib acts, where Sujud al-Sahw compensates for accidental omission.',
+    hadith: [
+      {
+        arabic: 'اِرْجِعْ فَصَلِّ فَإِنَّكَ لَمْ تُصَلِّ',
+        transliteration: 'Irji\' fa salli fa innaka lam tusalli',
+        translation: 'Go back and pray, for you have not prayed.',
+        source: 'Bukhari & Muslim (Hadith of the man who prayed badly)',
+      },
+    ],
+    definitions: {
+      'Rukn (pl. Arkan)': 'Pillar/essential — an integral part of Salah; omitting it voids the prayer entirely',
+      'Qiyam': 'Standing position during Salah — fard for able-bodied persons',
+      'Tuma\'neenah': 'Stillness and composure in each posture — at least the duration of one "Subhanallah"',
+      'Qa\'dah Akhirah': 'The final sitting — must be at least long enough to recite the Tashahhud',
+    },
+    examples: [
+      { scenario: 'You forgot to recite Surah al-Fatihah in a rakat', ruling: 'The recitation (Qira\'ah) is a fard. If you skipped it entirely in a fard prayer and did not add a rakat to compensate, the Salah is invalid. Practically: if you realise before ruku, recite it. If after, add an extra rakat and do Sujud al-Sahw.' },
+      { scenario: 'You could not touch your forehead to the ground in sujud due to a bandage', ruling: 'The forehead must touch the ground for sujud to be valid. If a bandage prevents it, place the forehead as close as possible — if you can apply pressure through the bandage, it is accepted.' },
+      { scenario: 'You sat at the end of the 3rd rakat of a 4-rakat Salah (instead of the 4th) and made Tasleem', ruling: 'You missed the Qa\'dah Akhirah in the 4th rakat. If you remember quickly, stand up, complete the 4th rakat, and do Sujud al-Sahw. If a long time has passed, restart the Salah.' },
+    ],
     points: [
       '1. QIYAM (Standing): Standing upright for the fard and wajib Salahs if physically able. If a person can stand even by leaning on a stick, he must stand.',
       '2. QIRA\'AH (Recitation): Reciting the Quran during Salah. Minimum: one verse (Hanafi). The Fatihah and an additional surah in the first two rakat of fard are wajib.',
@@ -316,7 +452,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'The 15 Compulsory (Wajib) Acts of Salah',
     rulingType: 'wajib',
     sistersRelevant: true,
-    overview: 'Wajib acts sit between Fard and Sunnah. Deliberately omitting a wajib invalidates Salah. Accidentally omitting requires Sujud al-Sahw.',
+    overview: 'Wajib acts sit between Fard and Sunnah. Deliberately omitting a wajib invalidates Salah. Accidentally omitting requires Sujud al-Sahw. Knowing what is wajib vs fard vs sunnah prevents unnecessary anxiety about small mistakes.',
+    context: 'The wajib category is unique to the Hanafi madhab — other schools generally classify acts as either fard or sunnah without an intermediate level. The practical benefit: if you accidentally skip a wajib (like forgetting a Surah after Fatihah), you do not need to repeat the entire Salah — Sujud al-Sahw (prostration of forgetfulness) at the end compensates for it. But deliberately omitting a wajib is sinful and requires repeating the Salah.',
+    hadith: [
+      {
+        arabic: 'إِنَّمَا جُعِلَ الْإِمَامُ لِيُؤْتَمَّ بِهِ',
+        transliteration: 'Innama ju\'ilal imamu li yu\'tamma bihi',
+        translation: 'The Imam has been appointed to be followed — so when he says Takbir, say Takbir; when he bows, bow; when he says "Sami\'Allahu liman hamidah," say "Rabbana lakal hamd."',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Sujud al-Sahw': 'Two extra prostrations performed at the end of Salah to compensate for accidentally omitting a wajib',
+      'Tasleem': 'Saying "Assalamu Alaikum wa Rahmatullah" to the right and left — ends the Salah',
+      'Qunoot': 'A special supplication recited standing in the 3rd rakat of Witr after Surah and before Ruku',
+    },
+    examples: [
+      { scenario: 'You forgot to recite a Surah after Fatihah in the first rakat but remembered after going into ruku', ruling: 'Continue the Salah normally. At the end, perform Sujud al-Sahw before Tasleem — this compensates for the accidentally omitted wajib.' },
+      { scenario: 'You accidentally skipped the first sitting (Qa\'dah Ula) in a 4-rakat prayer', ruling: 'If you remember before fully standing: return and sit. If you are already closer to standing: continue and do Sujud al-Sahw at the end.' },
+      { scenario: 'You deliberately skipped Surah Fatihah in one rakat — you knew it was wajib but skipped it anyway', ruling: 'Deliberate omission of a wajib invalidates the Salah (sinful act). You must repeat the entire prayer.' },
+    ],
     points: [
       '1. Reciting Surah al-Fatihah in every rakat',
       '2. Adding a surah or 3 short verses (or 1 long verse) after Fatihah in the first 2 rakat of fard and every rakat of witr, sunnah, and nafl',
@@ -341,7 +496,13 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'The 43 Traditions (Sunnah Acts) of Salah',
     rulingType: 'sunnah',
     sistersRelevant: true,
-    overview: 'The Prophet ﷺ consistently performed these acts. Omitting them is not sinful but loses great reward. They perfect the Salah.',
+    overview: 'The Prophet ﷺ consistently performed these acts. Omitting them is not sinful but loses great reward. They perfect the Salah and bring a person\'s prayer closer to the way the Prophet ﷺ himself prayed.',
+    context: 'The sunnah acts beautify and complete the Salah. While missing a sunnah act does not invalidate the prayer or require Sujud al-Sahw, a Muslim who values the Sunnah strives to incorporate all 43 traditions. The Prophet ﷺ said: "Pray as you have seen me pray" (Bukhari) — these traditions capture exactly how he ﷺ prayed.',
+    definitions: {
+      'Thana': 'Opening supplication: "Subhanakallahunma wa bihamdika wa tabarakasmuka wa ta\'ala jadduka wa la ilaha ghayruk"',
+      'Ta\'awwudh': 'Seeking refuge: "A\'udhu billahi min ash-shaytan ir-rajeem" — said before recitation',
+      'Durood Ibrahim': 'Salutations upon the Prophet ﷺ recited in the final sitting after Tashahhud',
+    },
     points: [
       '1. Raising hands to earlobes at Takbir al-Ihram (women: to shoulders)',
       '2. Fingers spread and facing Qibla during the raising',
@@ -384,7 +545,27 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'What Invalidates Salah (31 Things)',
     rulingType: 'haram',
     sistersRelevant: true,
-    overview: 'The PDF lists 31 acts that invalidate Salah. Some are by consensus, others are Hanafi-specific.',
+    overview: 'The PDF lists 31 acts that invalidate Salah. Some are by consensus of all madhabs, others are Hanafi-specific. Knowing these helps prevent accidental invalidation and removes unnecessary worry about acts that do NOT invalidate Salah.',
+    context: 'The general principle is that Salah requires focus, stillness, and ritual purity. Acts that break concentration excessively, introduce impurity, or contradict the nature of prayer (like speaking, eating, or turning away from Qibla) invalidate it. The Hanafi school is notably strict on laughing aloud — it breaks both the Salah AND the wudu simultaneously.',
+    hadith: [
+      {
+        arabic: 'إِنَّ فِي الصَّلَاةِ لَشُغْلًا',
+        transliteration: 'Inna fis salati la shughla',
+        translation: 'Verily, in prayer there is enough to occupy a person (i.e., Salah demands full attention).',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Amal Katheer': 'Excessive movement — 3 or more consecutive actions not related to Salah; invalidates prayer',
+      'Qahqahah': 'Laughing aloud — in Hanafi fiqh, it breaks both the Salah and the wudu',
+      'Tashbeeh': 'The duration of saying "Subhanallah" three times — used as a time measure for minor exposure of awrah',
+    },
+    examples: [
+      { scenario: 'Your phone rings loudly during Salah', ruling: 'The ringtone itself does not break your Salah. However, if you reach into your pocket, pull out the phone, and press a button — those 3+ actions (amal katheer) invalidate the prayer. Best: silence it with one quick hand movement if possible.' },
+      { scenario: 'You smiled during Salah because a child did something funny', ruling: 'Smiling does NOT invalidate Salah. Only laughing ALOUD (producing audible sound) breaks it.' },
+      { scenario: 'You had an itch and scratched your arm once during Salah', ruling: 'A single scratch does not invalidate Salah. Only 3+ consecutive non-prayer movements (amal katheer) would invalidate it.' },
+      { scenario: 'Someone greeted you with "Assalamu Alaikum" during Salah and you replied verbally', ruling: 'Your Salah is invalidated — speaking in Salah (even replying to a greeting) is one of the 31 invalidators. You should have indicated with a hand gesture instead.' },
+    ],
     points: [
       '1. Speaking intentionally — even one word, even greeting someone',
       '2. Speaking forgetfully if the speech is extensive',
@@ -410,7 +591,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Salah',
     title: 'Congregational Salah — Virtues, Excuses & Imam Requirements',
     rulingType: 'sunnah',
-    overview: 'Congregational Salah is emphasized sunnah (almost wajib) for men. The PDF lists 17 valid excuses for missing it and 8 prerequisites for the Imam.',
+    overview: 'Congregational Salah is emphasised sunnah (almost wajib) for men. The PDF lists 17 valid excuses for missing it and 8 prerequisites for the Imam. Praying in congregation brings 27 times more reward than praying alone.',
+    context: 'The emphasis on congregational prayer reflects Islam\'s communal spirit — it unites Muslims five times daily, removes class barriers (everyone stands shoulder-to-shoulder), and strengthens social bonds. The Prophet ﷺ considered making it fard but feared burdening his Ummah. He ﷺ even considered burning down the houses of those who skip it without excuse — showing how seriously it is taken.',
+    hadith: [
+      {
+        arabic: 'صَلَاةُ الْجَمَاعَةِ تَفْضُلُ صَلَاةَ الْفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً',
+        transliteration: 'Salatul jama\'ati tafdulu salatal faddi bi sab\'in wa \'ishreena darajah',
+        translation: 'The prayer in congregation is twenty-seven degrees superior to the prayer offered alone.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Sunnah Mu\'akkadah': 'Emphasised sunnah — the Prophet ﷺ consistently performed it; leaving it without excuse is sinful',
+      'Muqtadi': 'Follower — the person praying behind the Imam',
+      'Masbuq': 'Late-joiner — a person who missed one or more rakat and joins the congregation',
+    },
+    examples: [
+      { scenario: 'You arrive at the masjid and the congregation is in the last rakat of Isha', ruling: 'Join immediately — even catching one rakat with the Imam counts as praying in congregation. After the Imam\'s Tasleem, stand up and complete your remaining rakats.' },
+      { scenario: 'Heavy rain is falling and the masjid is a 10-minute walk away', ruling: 'Rain is one of the 17 valid excuses for missing congregation. You may pray at home without sin.' },
+      { scenario: 'The Imam made an error in recitation — should you correct him?', ruling: 'Yes — if the error changes the meaning. Say the correct word/verse loudly enough for the Imam to hear. This is permitted and does not break your Salah.' },
+    ],
     points: [
       '── 17 EXCUSES FOR MISSING CONGREGATION ──',
       '1. Rain 2. Mud/slippery ground 3. Extreme cold 4. Extreme heat 5. Darkness 6. Fear of an oppressor 7. Genuine illness 8. Blindness (with no guide) 9. Being crippled/paralyzed 10. Loss of a limb (hands/feet) 11. Very old age 12. Being a caretaker for a sick person 13. Fear for one\'s life or property 14. Fear of missing a travelling companion 15. Needing food when food is served 16. Needing to relieve oneself urgently 17. Strong opposing wind',
@@ -426,7 +626,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Witr Prayer — Ruling, Method & Dua Qunoot',
     rulingType: 'wajib',
     sistersRelevant: true,
-    overview: 'Witr is Wajib in the Hanafi madhab. It is 3 rakat prayed after Isha, and includes the wajib Dua Qunoot in the 3rd rakat.',
+    overview: 'Witr is Wajib in the Hanafi madhab. It is 3 rakat prayed after Isha, and includes the wajib Dua Qunoot in the 3rd rakat. It is the last prayer of the night and should be the final act of worship before sleeping.',
+    context: 'The word "witr" means "odd number" — reflecting that Allah is Witr (One) and loves what is odd. In the Hanafi school, Witr is elevated to wajib (compulsory), making it more than just a recommendation. The Prophet ﷺ never left Witr, whether at home or travelling, which is why Hanafi scholars placed it at this high level. In other schools, it is sunnah mu\'akkadah — strongly recommended.',
+    definitions: {
+      'Witr': 'Odd-numbered prayer — 3 rakat in Hanafi, can be 1 in Shafi\'i',
+      'Dua Qunoot': 'A specific supplication recited while standing in the 3rd rakat of Witr, after recitation and before ruku',
+    },
     hadith: [
       {
         arabic: 'الْوِتْرُ حَقٌّ عَلَى كُلِّ مُسْلِمٍ',
@@ -444,6 +649,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'If Qunoot is forgotten: perform Sujud al-Sahw at the end (before or after Tasleem per different Hanafi narrations).',
       'Witr time: After Isha until before Fajr. Best prayed as the last prayer of the night.',
     ],
+    examples: [
+      { scenario: 'You forgot Dua Qunoot in the 3rd rakat and went into ruku', ruling: 'Do NOT return to standing. Continue the Salah and perform Sujud al-Sahw at the end — Qunoot is wajib, so Sujud al-Sahw compensates for it.' },
+      { scenario: 'You don\'t know Dua Qunoot yet — what should you recite?', ruling: 'Recite "Rabbana aatina fid-dunya hasanatan wa fil-aakhirati hasanatan wa qina \'adhaaban-naar" (Quran 2:201) or any dua — then learn the Qunoot as soon as possible.' },
+      { scenario: 'It is 2 AM and you want to pray Tahajjud — should you pray Witr before or after?', ruling: 'Pray Tahajjud first, then Witr last. The Prophet ﷺ said: "Make Witr the last of your night prayers." (Bukhari, Muslim)' },
+    ],
     note: 'Never call Witr "optional." In Hanafi fiqh it is Wajib — between Fard and Sunnah in obligation level.',
   },
   {
@@ -452,7 +662,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Sunnah & Nafl Prayers — Emphasised and Non-Emphasised',
     rulingType: 'sunnah',
     sistersRelevant: true,
-    overview: 'The Prophet ﷺ regularly prayed additional prayers alongside the fard. Some are "emphasised" (Sunnah Mu\'akkadah) and some are non-emphasised.',
+    overview: 'The Prophet ﷺ regularly prayed additional prayers alongside the fard. Some are "emphasised" (Sunnah Mu\'akkadah) and some are non-emphasised. These voluntary prayers protect the fard — on the Day of Judgement, deficiencies in fard prayers will be supplemented from voluntary prayers.',
+    context: 'The sunnah prayers serve as a spiritual buffer around the fard. The Prophet ﷺ said: "The first thing a servant will be questioned about on the Day of Judgement is Salah. If it is complete, he succeeds. If it is deficient, Allah says: See if My servant has any voluntary prayers to complete what was lacking from his obligatory prayers." (Tirmidhi). This is why scholars strongly encourage never abandoning the emphasised sunnahs.',
+    hadith: [
+      {
+        arabic: 'مَا مِنْ عَبْدٍ مُسْلِمٍ يُصَلِّي لِلَّهِ كُلَّ يَوْمٍ ثِنْتَيْ عَشْرَةَ رَكْعَةً تَطَوُّعًا غَيْرَ فَرِيضَةٍ إِلَّا بَنَى اللَّهُ لَهُ بَيْتًا فِي الْجَنَّةِ',
+        translation: 'No Muslim servant prays twelve voluntary rakat each day, apart from the obligatory prayers, except that Allah builds for him a house in Paradise.',
+        source: 'Muslim',
+      },
+    ],
+    definitions: {
+      'Sunnah Mu\'akkadah': 'Emphasised sunnah — the Prophet ﷺ consistently performed it; habitual abandonment is sinful',
+      'Sunnah Ghayr Mu\'akkadah': 'Non-emphasised sunnah — the Prophet ﷺ sometimes performed it; no sin in leaving it',
+      'Nafl': 'Voluntary prayer — prayed for extra reward without any obligation',
+      'Salat al-Awwabin': 'Prayer of the repentant — 6 rakat after Maghrib',
+    },
+    examples: [
+      { scenario: 'You arrived late for Dhuhr and the Iqamah is being called — should you pray the 4 Sunnah before?', ruling: 'No — join the fard congregation immediately. You may pray the 4 Sunnah after the fard if time permits, or skip them. Missing the congregation for a sunnah prayer is not correct.' },
+      { scenario: 'You consistently skip the 2 rakat Sunnah before Fajr because you wake up late', ruling: 'The 2 rakat before Fajr are the MOST emphasised sunnah. The Prophet ﷺ said they are "better than the world and all that is in it" (Muslim). Make every effort to wake early enough to pray them.' },
+    ],
     points: [
       '── 7 EMPHASIZED SUNNAH (Sunnah Mu\'akkadah) ──',
       '1. 2 rakat before Fajr (the most emphasised — the Prophet ﷺ never left them even while travelling)',
@@ -476,7 +704,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Differences in Women\'s Salah',
     rulingType: 'info',
     sistersRelevant: true,
-    overview: 'The PDF footnotes throughout the Salah chapters note specific differences in how women perform Salah per the Hanafi school.',
+    overview: 'The Hanafi school notes specific differences in how women perform Salah, based on the principle of concealment (sitr). Women\'s postures are more compact to maintain modesty, while men\'s postures are more expansive.',
+    context: 'These differences are not about women\'s prayer being "less" — they are based on the principle that a woman\'s Salah maximises modesty (sitr). The reward is equal. The Prophet ﷺ said there is no difference in the reward of men and women in worship. These physical differences are documented in the practice of the female Companions and the rulings of the early Hanafi scholars.',
+    hadith: [
+      {
+        arabic: 'إِنَّ الْمَرْأَةَ عَوْرَةٌ',
+        translation: 'A woman is awrah (i.e., she should be concealed/covered in public settings).',
+        source: 'Tirmidhi',
+      },
+    ],
+    definitions: {
+      'Sitr': 'Concealment — the principle behind women\'s prayer postures being more compact',
+      'Jalsa': 'Sitting between two prostrations',
+      'Jumu\'ah': 'Friday congregational prayer — obligatory for men, optional for women',
+    },
+    examples: [
+      { scenario: 'A woman leading other women in Salah — where does she stand?', ruling: 'She stands in the MIDDLE of the first row, not in front of it. This differs from a male Imam who stands alone in front.' },
+      { scenario: 'A woman\'s hair becomes visible during Salah for a moment', ruling: 'Hair is part of a woman\'s awrah in Salah. If more than 1/4 of the head is exposed for the duration of 3 tasbihs, the Salah is invalid. If less or briefer, it is excused.' },
+    ],
     points: [
       'TAKBIR: Hands raised to shoulder level (not to earlobes like men)',
       'QIYAM: Hands folded on the chest (men: below navel)',
@@ -502,7 +747,21 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Fasting — Conditions, Kinds & Intention',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'The Ramadan fast is individually obligatory on every adult, sane, healthy Muslim. There are 6 kinds of fasting from obligatory to forbidden.',
+    overview: 'The Ramadan fast is individually obligatory on every adult, sane, healthy Muslim. There are 6 kinds of fasting from obligatory to forbidden. Understanding which category your fast falls into determines the rules for intention, breaking, and compensation.',
+    context: 'Fasting was prescribed by Allah in Quran 2:183 — "O you who believe, fasting is prescribed for you as it was prescribed for those before you, that you may attain taqwa (God-consciousness)." The primary purpose is spiritual, not physical — it trains the soul to resist desires, develop empathy for the hungry, and draw closer to Allah. In Guyana, Ramadan fasts last approximately 12 hours year-round due to proximity to the equator.',
+    hadith: [
+      {
+        arabic: 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ',
+        transliteration: 'Man saama Ramadana imanan wa ihtisaban ghufira lahu ma taqaddama min dhanbihi',
+        translation: 'Whoever fasts Ramadan out of sincere faith and hoping for reward, all his previous sins will be forgiven.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    examples: [
+      { scenario: 'A person with diabetes needs to take insulin during fasting hours', ruling: 'Non-nutritional injections (like insulin) do NOT break the fast. The person may fast and take insulin as needed.' },
+      { scenario: 'You accidentally swallowed water while gargling during wudu', ruling: 'If done during Ramadan while fasting and you exaggerated the gargling, the fast is broken — Qada only. If it was normal gargling and water entered accidentally, the fast is not broken.' },
+      { scenario: 'You forgot to make intention for your Ramadan fast before Fajr', ruling: 'For Ramadan fard fasts, an intention from the night before suffices. If you sincerely intended to fast Ramadan that night, your fast is valid even without a specific verbal intention at Suhoor.' },
+    ],
     points: [
       '── PREREQUISITES FOR FASTING TO BE OBLIGATORY ──',
       '1. Islam 2. Adulthood (puberty) 3. Sanity 4. Physical ability — chronic illness or old age excuses',
@@ -531,7 +790,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'What Does NOT Break the Fast (20 Things)',
     rulingType: 'halal',
     sistersRelevant: true,
-    overview: 'The PDF lists 20 specific acts that do not break the fast — knowing these removes unnecessary anxiety.',
+    overview: 'The PDF lists 20 specific acts that do not break the fast — knowing these removes unnecessary anxiety and waswasah (whispering doubts). Many Muslims worry about things that are perfectly fine during fasting.',
+    context: 'Islam intends ease in worship, not hardship. The Prophet ﷺ said: "Make things easy, do not make them difficult" (Bukhari). Many of these clarifications came from Companions asking the Prophet ﷺ directly. The general principle: if something enters the body unintentionally, or does not enter through a normal pathway of nourishment, or is done forgetfully — the fast remains valid.',
+    hadith: [
+      {
+        arabic: 'مَنْ نَسِيَ وَهُوَ صَائِمٌ فَأَكَلَ أَوْ شَرِبَ فَلْيُتِمَّ صَوْمَهُ فَإِنَّمَا أَطْعَمَهُ اللَّهُ وَسَقَاهُ',
+        transliteration: 'Man nasiya wa huwa saa\'imun fa akala aw shariba falyutimma sawmahu fa innama at\'amahullahu wa saqaahu',
+        translation: 'Whoever forgets he is fasting and eats or drinks, let him complete his fast — it was Allah who fed him and gave him drink.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Waswasah': 'Whispering doubts from Shaytan — often causes unnecessary worry about fasting',
+      'Maa Musta\'mal': 'Used water — e.g., water that enters the mouth during wudu and is spat out',
+    },
+    examples: [
+      { scenario: 'You used eye drops during fasting hours', ruling: 'Eye drops do NOT break the fast — even if you taste them in the back of your throat. The eyes are not a normal pathway of nourishment.' },
+      { scenario: 'You brushed your teeth with toothpaste during Ramadan', ruling: 'Brushing teeth does NOT break the fast, provided you do not deliberately swallow the toothpaste. Using miswak is sunnah even while fasting.' },
+      { scenario: 'You are fasting and a fly accidentally flew into your throat', ruling: 'Your fast is NOT broken — this was completely unintentional. Dust, smoke, and insects entering accidentally do not invalidate the fast.' },
+      { scenario: 'You ate a full meal at 4 AM thinking Fajr had not entered, then heard the adhan mid-bite', ruling: 'Stop immediately. If you genuinely believed Fajr had not entered, your fast is valid per the strongest Hanafi opinion. If in doubt, make Qada for that day as a precaution.' },
+    ],
     points: [
       '1. Eating, drinking, or having intercourse forgetfully (fast remains valid — stop immediately upon remembering)',
       '2. An involuntary wet dream during the day',
@@ -561,7 +839,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'When Kaffarah (Expiation) + Qada is Required',
     rulingType: 'haram',
     sistersRelevant: true,
-    overview: 'Kaffarah is required when a Ramadan fast is deliberately broken in the most serious ways. The expiation is severe as a deterrent.',
+    overview: 'Kaffarah is required when a Ramadan fast is deliberately broken in the most serious ways. The expiation is severe as a deterrent. It only applies to Ramadan fard fasts — not to voluntary, Qada, or vow fasts.',
+    context: 'The severity of kaffarah (60 consecutive days of fasting or feeding 60 poor people) reflects how seriously Islam treats the sanctity of Ramadan. It is designed as a deterrent — breaking a Ramadan fast without excuse is one of the major sins. However, the 11 prerequisites show that kaffarah is narrowly applied: if even one condition is not met (e.g., the person made an honest mistake, was coerced, or didn\'t know it was Ramadan), only Qada is required.',
+    definitions: {
+      'Kaffarah': 'Expiation — a penalty for deliberately breaking a Ramadan fast: fast 60 consecutive days, or feed 60 poor people',
+      'Qada': 'Making up a missed fast — fasting one day for each day missed',
+    },
     points: [
       '── 11 PREREQUISITES FOR KAFFARAH ──',
       'Kaffarah + Qada is required when ALL of these conditions are met:',
@@ -594,7 +877,23 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'When Only Qada (Makeup) is Required (20 Cases)',
     rulingType: 'info',
     sistersRelevant: true,
-    overview: 'These acts break the fast but only require making up the day — no kaffarah.',
+    overview: 'These acts break the fast but only require making up the day (Qada) — no kaffarah. This is because the act either involved a genuine mistake, was not a normal form of nourishment, or was unintentional.',
+    context: 'The distinction between Qada-only and Kaffarah+Qada is important for a fasting Muslim\'s peace of mind. Most common fast-breaking situations fall into the Qada-only category — meaning the person simply fasts one day after Ramadan to make up for it. There is no 60-day penalty. Allah\'s mercy is evident in this — mistakes and accidents are treated leniently.',
+    hadith: [
+      {
+        arabic: 'رُفِعَ عَنْ أُمَّتِي الْخَطَأُ وَالنِّسْيَانُ وَمَا اسْتُكْرِهُوا عَلَيْهِ',
+        translation: 'My Ummah has been pardoned for mistakes, forgetfulness, and what they are forced to do.',
+        source: 'Ibn Majah',
+      },
+    ],
+    definitions: {
+      'Qada': 'Making up — fasting one day for each missed/broken day, at any time before the next Ramadan',
+    },
+    examples: [
+      { scenario: 'You deliberately made yourself vomit (induced vomiting) during Ramadan', ruling: 'Fast is broken — Qada required, no kaffarah. Involuntary vomiting does NOT break the fast; only deliberate vomiting of a mouthful does.' },
+      { scenario: 'You swallowed nose drops that reached your throat', ruling: 'Fast is broken — Qada only. Nose drops entering the throat via the nasal passage break the fast. Eye drops, however, do not.' },
+      { scenario: 'You used a nasal inhaler for asthma during Ramadan fasting hours', ruling: 'If the medication reaches the throat, Qada is required. Many scholars advise using the inhaler if medically necessary and making Qada for that day.' },
+    ],
     points: [
       '1. Eating or drinking by mistake (thinking Fajr had not entered or Maghrib had arrived)',
       '2. Intentionally vomiting a mouthful',
@@ -624,7 +923,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Who is Exempt from Fasting (9 Categories)',
     rulingType: 'info',
     sistersRelevant: true,
-    overview: 'Islam is in harmony with human nature. Those who face genuine hardship are permitted to break and make up later, or pay fidya.',
+    overview: 'Islam is in harmony with human nature. Those who face genuine hardship are permitted to break and make up later, or pay fidya. The Quran explicitly states: "Allah intends ease for you and does not intend hardship" (2:185).',
+    context: 'These exemptions show Islam\'s balance between obligation and mercy. A pregnant or nursing mother is not penalised — she simply makes up the days when she is able. An elderly person who will never be able to fast pays fidya (a small daily amount to feed the poor). The key principle: if fasting genuinely harms you or someone dependent on you, Islam provides a way out without sin.',
+    hadith: [
+      {
+        arabic: 'إِنَّ اللَّهَ يُحِبُّ أَنْ تُؤْتَى رُخَصُهُ كَمَا يَكْرَهُ أَنْ تُؤْتَى مَعْصِيَتُهُ',
+        translation: 'Indeed, Allah loves that His concessions be taken just as He dislikes that His prohibitions be violated.',
+        source: 'Ahmad',
+      },
+    ],
+    definitions: {
+      'Fidya': 'Compensation for missed fasts — feeding one poor person per missed day (approximately 1.632 kg of wheat or its cash value)',
+      'Qada': 'Making up missed fasts — fasting one day for each day missed, at any time during the year',
+    },
+    examples: [
+      { scenario: 'An elderly grandmother (80 years old) cannot fast without extreme difficulty', ruling: 'She does not fast. She pays Fidya — GYD $60,000 per missed day (2026 rate). No Qada is required since she will likely never be able to fast.' },
+      { scenario: 'A pregnant woman fears fasting may harm her baby based on medical advice', ruling: 'She breaks the fast. She must make up the missed days after delivery and recovery (after nifas ends). No fidya required — only Qada.' },
+      { scenario: 'A diabetic person was told by their doctor that fasting is dangerous for them', ruling: 'Legitimate medical advice is a valid excuse. If the condition is temporary, make Qada when able. If chronic and permanent, pay Fidya.' },
+      { scenario: 'A menstruating woman continued fasting during hayd, thinking it was permissible', ruling: 'Her fast is INVALID during menstruation — it is compulsory to leave the fast. She must make up these days as Qada after Ramadan.' },
+    ],
     points: [
       '1. The sick — if fasting harms them, worsens the illness, or delays cure. Must make up later.',
       '2. The traveller — on a journey long enough to warrant shortening Salah (~89 km). Must make up later.',
@@ -646,7 +963,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'I\'tikaf — Retreat in the Mosque',
     rulingType: 'sunnah',
     sistersRelevant: true,
-    overview: 'I\'tikaf is staying in a mosque with the intention of worship. It has 3 kinds: obligatory (vow), sunnah (last 10 of Ramadan), and desirable (any time).',
+    overview: 'I\'tikaf is staying in a mosque with the intention of worship. It has 3 kinds: obligatory (vow), sunnah (last 10 of Ramadan), and desirable (any time). It is one of the most powerful spiritual retreats in Islam.',
+    context: 'I\'tikaf in the last 10 nights of Ramadan is the ultimate spiritual seclusion — cutting off from worldly distractions to dedicate oneself fully to Allah. The Prophet ﷺ consistently performed I\'tikaf in the last 10 nights seeking Laylatul Qadr (the Night of Decree). In Guyana, many masajid facilitate I\'tikaf during Ramadan, with some brothers staying all 10 nights.',
+    hadith: [
+      {
+        arabic: 'كَانَ النَّبِيُّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ يَعْتَكِفُ فِي الْعَشْرِ الْأَوَاخِرِ مِنْ رَمَضَانَ',
+        translation: 'The Prophet ﷺ used to observe I\'tikaf in the last ten days of Ramadan.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'I\'tikaf': 'Spiritual retreat — staying in the mosque with the intention of worship',
+      'Laylatul Qadr': 'The Night of Decree — better than 1,000 months; sought in the last 10 nights of Ramadan',
+      'Fard Kifayah': 'Communal obligation — if some perform it, the obligation is lifted from all',
+    },
+    examples: [
+      { scenario: 'You are in I\'tikaf and need to use the toilet', ruling: 'You may leave the mosque for the toilet and return immediately. This is one of the permitted exits and does not invalidate your I\'tikaf.' },
+      { scenario: 'A woman wants to perform I\'tikaf but cannot stay in the mosque', ruling: 'She should designate a specific area in her home as her prayer space and perform I\'tikaf there. She must remain in that area.' },
+      { scenario: 'You are in I\'tikaf and your menstruation begins', ruling: 'Your I\'tikaf is invalidated — you must leave the mosque area. If it was a vowed I\'tikaf, you must make up the remaining days after your cycle ends.' },
+    ],
     points: [
       '── 3 KINDS OF I\'TIKAF ──',
       '1. Compulsory (Wajib): I\'tikaf of a vow — duration is whatever was vowed. Fasting on the day is a prerequisite.',
@@ -671,7 +1006,17 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Sadaqat al-Fitr (Charity of Fast-Breaking)',
     rulingType: 'wajib',
     sistersRelevant: true,
-    overview: 'A wajib charity paid at the end of Ramadan to purify the fasting person and feed the poor on Eid day.',
+    overview: 'A wajib charity paid at the end of Ramadan to purify the fasting person from any shortcomings during the fast and to provide food for the poor on Eid day so they can also celebrate.',
+    context: 'Sadaqat al-Fitr ensures that no Muslim goes hungry on the day of Eid. It simultaneously purifies the fasting person from any idle speech or minor faults committed during Ramadan. In Guyana, the rate is set annually by recognised bodies like Darul Uloom East Street. Payment in cash is preferred over food commodities because it is more beneficial to the recipient.',
+    definitions: {
+      'Sadaqat al-Fitr': 'Charity of fast-breaking — wajib payment at the end of Ramadan',
+      'Nisab': 'Zakah-cutoff wealth threshold — person must own this much surplus to be obligated',
+    },
+    examples: [
+      { scenario: 'You have 3 children under the age of 10 — do you pay Sadaqat al-Fitr for them?', ruling: 'Yes — you must pay for yourself and all non-adult dependants. If a child is wealthy in their own right, pay from their wealth.' },
+      { scenario: 'Can you pay Sadaqat al-Fitr at the beginning of Ramadan?', ruling: 'Yes — paying early in Ramadan is permissible and even recommended. The best time is before the Eid Salah. Delaying past the Eid Salah is makruh.' },
+      { scenario: 'Your wife has her own income — are you required to pay for her?', ruling: 'Paying Sadaqat al-Fitr for one\'s wife is NOT compulsory on the husband — but it is permissible and praiseworthy if he does.' },
+    ],
     hadith: [
       {
         arabic: 'فَرَضَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ زَكَاةَ الْفِطْرِ طُهْرَةً لِلصَّائِمِ مِنَ اللَّغْوِ وَالرَّفَثِ وَطُعْمَةً لِلْمَسَاكِينِ',
@@ -705,7 +1050,13 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Zakah',
     title: 'Zakah — 9 Prerequisites for Obligation',
     rulingType: 'fard',
-    overview: 'Zakah is the 3rd pillar of Islam. It purifies wealth and builds brotherhood between the rich and poor.',
+    overview: 'Zakah is the 3rd pillar of Islam. It purifies wealth and builds brotherhood between the rich and poor. It is not charity — it is the right of the poor in the wealth of the rich.',
+    context: 'The word "Zakah" means both "purification" and "growth" — it purifies the giver\'s wealth from greed and blesses it with increase. Refusing to pay Zakah is a major sin with severe warnings in the Quran and hadith. In Guyana, the 2026 Nisab is approximately GYD $547,298 (based on the gold nisab equivalent). Any Muslim whose surplus wealth (after debts and basic needs) meets or exceeds this amount for one lunar year must pay 2.5%.',
+    examples: [
+      { scenario: 'You have GYD $600,000 in savings for over a year — do you pay Zakah?', ruling: 'Yes — this exceeds the Nisab (GYD $547,298 for 2026). Pay 2.5% = GYD $15,000 on the total amount.' },
+      { scenario: 'You have savings but also owe GYD $400,000 in debt', ruling: 'Deduct the debt from your total wealth. If the remainder is below Nisab, no Zakah is due. Wealth must be free of debt.' },
+      { scenario: 'You own a car worth GYD $3,000,000 — is Zakah due on it?', ruling: 'No — a personal vehicle used for daily transportation is a basic need and is NOT zakatable. Only wealth surplus to basic needs counts.' },
+    ],
     hadith: [
       {
         arabic: 'مَنْ آتَاهُ اللَّهُ مَالًا فَلَمْ يُؤَدِّ زَكَاتَهُ مُثِّلَ لَهُ مَالُهُ يَوْمَ الْقِيَامَةِ شُجَاعًا أَقْرَعَ',
@@ -741,7 +1092,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Zakah',
     title: 'Zakah on Different Types of Wealth',
     rulingType: 'fard',
-    overview: 'Zakah applies differently to gold/silver, trade goods, loans, and inaccessible wealth.',
+    overview: 'Zakah applies differently to gold/silver, trade goods, loans, and inaccessible wealth. The key principle: Zakah is due on wealth that is "growing" (actually or potentially) — cash, gold, silver, trade inventory — but NOT on personal-use items.',
+    context: 'The different categories reflect the economic realities of both ancient and modern times. Gold and silver (and their modern equivalent — cash savings) are always zakatable. Business inventory is valued at market price. Personal items like your home, car, clothes, and tools of trade are exempt because they do not generate wealth — they serve basic needs. In Guyana, most Muslims will calculate Zakah on their cash savings, gold jewellery, and any business inventory.',
+    hadith: [
+      {
+        arabic: 'مَا مِنْ صَاحِبِ ذَهَبٍ وَلَا فِضَّةٍ لَا يُؤَدِّي مِنْهَا حَقَّهَا',
+        translation: 'There is no owner of gold or silver who does not pay what is due on it, except that on the Day of Resurrection, plates of fire will be heated for him...',
+        source: 'Muslim',
+      },
+    ],
+    definitions: {
+      'Zakatable': 'Subject to Zakah — wealth that is growing, surplus to needs, free of debt, at Nisab for one lunar year',
+      'Trade goods': 'Any item held for the purpose of resale — valued at current market price for Zakah calculation',
+    },
+    examples: [
+      { scenario: 'A woman owns gold jewellery worth more than the Nisab — is Zakah due?', ruling: 'Yes — gold jewellery (even if worn) is zakatable in the Hanafi madhab. She must pay 2.5% of its value annually. Shafi\'i: jewellery worn regularly is exempt.' },
+      { scenario: 'You run a grocery shop in Georgetown — how do you calculate Zakah?', ruling: 'Calculate the market value of ALL inventory held for sale at the end of your Zakah year. Add your cash savings and receivables. Deduct debts. If the total exceeds Nisab, pay 2.5%.' },
+      { scenario: 'You lent GYD $200,000 to a friend a year ago', ruling: 'This is a "strong loan" (acknowledged debt). Zakah is due on it for all years, but you only need to pay when you receive repayment (even partial).' },
+    ],
     points: [
       '── GOLD & SILVER ──',
       'Silver nisab: 200 dirhams = 595g → pay 5 dirhams (2.5%)',
@@ -775,7 +1143,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Zakah',
     title: 'The 8 Categories of Zakah Recipients & 7 Who Cannot Receive',
     rulingType: 'fard',
-    overview: 'Quran 9:60 specifies exactly 8 categories. Hanafi position: 7 remain active (those whose hearts are to be won is suspended by consensus of the Companions).',
+    overview: 'Quran 9:60 specifies exactly 8 categories. Hanafi position: 7 remain active (those whose hearts are to be won is suspended by consensus of the Companions). Zakah must be given with transfer of ownership — you cannot use it for building projects or communal expenses.',
+    context: 'The 8 categories are Divinely fixed — no scholar or government can add to or change them. Zakah must be placed directly into the hands of an eligible recipient (tamlik — transfer of ownership). This is why it cannot be used to build a masjid, pave a road, or pay for a funeral shroud — there is no individual receiving ownership. Give Zakah first to needy relatives (they get double reward: charity + maintaining family ties), then to neighbours, then to the wider community.',
+    hadith: [
+      {
+        arabic: 'الصَّدَقَةُ عَلَى الْمِسْكِينِ صَدَقَةٌ وَعَلَى ذِي الرَّحِمِ اثْنَتَانِ صَدَقَةٌ وَصِلَةٌ',
+        translation: 'Charity given to a poor person is one charity, but charity given to a relative is two: it is both charity and the maintaining of family ties.',
+        source: 'Tirmidhi, Nasai',
+      },
+    ],
+    definitions: {
+      'Tamlik': 'Transfer of ownership — Zakah must be placed in the hands of an eligible individual',
+      'Fuqara': 'The poor — those who own less than the Nisab threshold',
+      'Masakeen': 'The destitute — those who own absolutely nothing',
+      'Gharimeen': 'The indebted — those whose debts reduce their wealth below Nisab',
+    },
+    examples: [
+      { scenario: 'Can you give Zakah to your poor brother or cousin?', ruling: 'Yes — relatives who are poor are among the BEST recipients. However, you CANNOT give Zakah to your parents, grandparents, children, grandchildren, or spouse.' },
+      { scenario: 'Your masjid is asking for donations for construction — can you use Zakah funds?', ruling: 'No — Zakah cannot be used for masjid construction. It must be given to an individual person from the 8 categories. Donate from your voluntary sadaqah instead.' },
+      { scenario: 'A Muslim traveller from another country is stranded in Guyana without money', ruling: 'He qualifies as "Ibn al-Sabil" (stranded traveller) — even if he is wealthy back home. You may give him Zakah to cover his needs until he can access his own funds.' },
+    ],
     points: [
       '── 8 QUR\'ANIC CATEGORIES ──',
       '1. The Poor (Fuqara): owns less than nisab. May receive even if healthy and able to earn.',
@@ -810,7 +1197,13 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Hajj — Obligation, Prerequisites & 3 Types',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Hajj is the 5th pillar of Islam. It is fard once in a lifetime for every Muslim who meets the conditions.',
+    overview: 'Hajj is the 5th pillar of Islam. It is fard once in a lifetime for every Muslim who meets the conditions. It is the greatest act of worship that combines physical effort, financial sacrifice, and spiritual devotion.',
+    context: 'Hajj unites Muslims from every race, nation, and class — all dressed alike in simple white, circling the same Ka\'bah, standing together at Arafah. It is a rehearsal for the Day of Judgement. For Guyanese Muslims, Hajj is a once-in-a-lifetime journey that requires significant financial planning. The CIOG and local travel agencies coordinate Hajj packages annually. A person who is financially able but delays Hajj without excuse is sinful — the scholars said: "Hasten to Hajj, for none of you knows what may prevent him."',
+    examples: [
+      { scenario: 'You have enough savings for Hajj but your family needs new home repairs', ruling: 'If the home repairs are essential (structural/safety), they take priority as a basic need. Hajj is only obligatory on surplus wealth beyond basic necessities.' },
+      { scenario: 'A woman wants to perform Hajj but has no mahram to travel with', ruling: 'She cannot perform Hajj without a husband or mahram — this is a prerequisite for it to become obligatory on her. She is excused until a mahram is available.' },
+      { scenario: 'A person performed Hajj once — is he required to go again?', ruling: 'No — Hajj is fard only once in a lifetime. Additional Hajj is voluntary (nafl) and highly rewarded but not obligatory.' },
+    ],
     hadith: [
       {
         arabic: 'مَنْ حَجَّ لِلَّهِ فَلَمْ يَرْفُثْ وَلَمْ يَفْسُقْ رَجَعَ كَيَوْمِ وَلَدَتْهُ أُمُّهُ',
@@ -845,7 +1238,18 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Hajj',
     title: 'Essentials, Compulsory Acts & Traditions of Hajj',
     rulingType: 'fard',
-    overview: 'Hajj has only 2 essentials (arkaan), 10 compulsory acts (wajibaat), and 12 traditions (sunnahs).',
+    overview: 'Hajj has only 2 essentials (arkaan), 10 compulsory acts (wajibaat), and 12 traditions (sunnahs). Missing an essential invalidates the entire Hajj. Missing a wajib requires a penalty sacrifice (dam) but does not invalidate Hajj.',
+    context: 'The Hanafi classification of Hajj acts into 3 tiers (essential, compulsory, traditional) gives pilgrims clarity on what is absolutely critical versus what carries a penalty if missed versus what is optional. The most critical fact: if you miss Wuquf at Arafah entirely, your Hajj is void — it must be repeated the following year. Everything else can be compensated for with a sacrifice or charity.',
+    definitions: {
+      'Wuquf': 'Standing/presence at Arafah — the core of Hajj; even a moment of presence suffices',
+      'Tawaf al-Ziyarah': 'The essential circumambulation of the Ka\'bah performed after Arafah',
+      'Sa\'i': 'Walking 7 times between Safa and Marwah — commemorating Hajar\'s search for water',
+      'Dam': 'Penalty sacrifice — required when a wajib act is missed',
+    },
+    examples: [
+      { scenario: 'You were delayed at Muzdalifah and missed the Wuquf at Arafah entirely', ruling: 'Your Hajj is INVALID. You must exit Ihram by performing Umrah and repeat Hajj the following year.' },
+      { scenario: 'You forgot to perform the Farewell Tawaf before leaving Makkah', ruling: 'Tawaf al-Wada\' is wajib. You must sacrifice an animal (dam) as penalty. Your Hajj is still valid.' },
+    ],
     points: [
       '── 2 ESSENTIALS (Missing either invalidates Hajj) ──',
       '1. Wuquf at Arafah: Being present at the ground of Arafah between the sun\'s decline on 9th Dhul Hijjah and dawn of the 10th. Even a moment suffices.',
@@ -872,7 +1276,17 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Prohibited Acts in Ihram (12 Forbidden Acts)',
     rulingType: 'haram',
     sistersRelevant: true,
-    overview: 'A person in the state of Ihram must abstain from specific acts. Violations carry penalties ranging from sacrifice to charity.',
+    overview: 'A person in the state of Ihram must abstain from specific acts. Violations carry penalties ranging from sacrifice to charity. The state of Ihram demands simplicity, patience, and total focus on Allah.',
+    context: 'Ihram symbolises leaving behind worldly comforts and entering a state of complete devotion. The pilgrim strips away vanity (no perfume, no grooming, no stitched garments for men) and focuses on the spiritual journey. The penalties are graded by severity — the most severe being for sexual intercourse, which can void the entire Hajj. Understanding these prohibitions beforehand helps pilgrims avoid costly mistakes.',
+    definitions: {
+      'Ihram': 'State of consecration — entered with intention and Talbiyah, imposing specific prohibitions on the pilgrim',
+      'Dam': 'Penalty sacrifice — typically a goat/sheep slaughtered in the Haram (Makkah)',
+      'Fidyah (Hajj)': 'Compensation for minor violations — usually feeding the poor or fasting',
+    },
+    examples: [
+      { scenario: 'A man in Ihram accidentally applied deodorant out of habit', ruling: 'Applying fragrance in Ihram requires a penalty. If it was genuinely accidental and immediately washed off, some scholars show leniency. The safest view: sacrifice a goat.' },
+      { scenario: 'A woman in Ihram needs to cover her face from non-mahram men', ruling: 'She should use a hat brim, cap, or frame that keeps cloth away from touching her face directly. Cloth touching the face in Ihram requires a penalty.' },
+    ],
     points: [
       '1. Sexual intercourse — before Arafah: invalidates Hajj entirely (sacrifice + repeat next year). After Arafah/before shaving: sacrifice of large animal required.',
       '2. Foreplay (kissing, sensual touching) — sacrifice of small animal required',
@@ -905,7 +1319,17 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Udhiyyah',
     title: 'Udhiyyah — Ruling, Conditions & Time',
     rulingType: 'wajib',
-    overview: 'Sacrifice (Udhiyyah/Qurbani) is Compulsory per Imam Abu Hanifah. It is performed on 10–12 Dhul Hijjah.',
+    overview: 'Sacrifice (Udhiyyah/Qurbani) is Compulsory per Imam Abu Hanifah. It is performed on 10–12 Dhul Hijjah. Unlike Zakah, you do not need to hold Nisab for a full year — owning it on the day of Eid suffices.',
+    context: 'Qurbani commemorates Ibrahim (AS)\'s willingness to sacrifice his son Isma\'il (AS) for the sake of Allah. Allah replaced Isma\'il with a ram from Paradise, and this practice continues as a wajib act for every financially able Muslim. In Guyana, Qurbani is widely observed with cattle, goats, and sheep. The sacrifice feeds the poor, strengthens community bonds, and reminds Muslims of the spirit of submission to Allah.',
+    definitions: {
+      'Udhiyyah/Qurbani': 'The ritual sacrifice of an animal during the days of Eid al-Adha (10–12 Dhul Hijjah)',
+      'Dam': 'A sacrifice required as a penalty (e.g., for missing a wajib of Hajj)',
+    },
+    examples: [
+      { scenario: 'You own Nisab on the day of Eid al-Adha but did not have it a month ago', ruling: 'Qurbani is obligatory — unlike Zakah, owning Nisab on the day of sacrifice itself is sufficient. No full-year ownership required.' },
+      { scenario: '7 families want to share a cow for Qurbani', ruling: 'Valid — a cow or buffalo can be shared by up to 7 people, each paying at least 1/7. Every participant must intend worship (not just meat).' },
+      { scenario: 'You forgot to slaughter on the 10th and 11th — it is now sunset on the 12th', ruling: 'You must slaughter before sunset on the 12th. After sunset, the time for Qurbani has passed and it becomes Qada.' },
+    ],
     hadith: [
       {
         arabic: 'مَنْ وَجَدَ سَعَةً فَلَمْ يُضَحِّ فَلَا يَقْرَبَنَّ مُصَلَّانَا',
@@ -935,7 +1359,22 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Udhiyyah',
     title: 'Distribution of Qurbani Meat',
     rulingType: 'info',
-    overview: 'The Sunnah method is to divide into three equal parts.',
+    overview: 'The Sunnah method is to divide Qurbani meat into three equal parts: one-third for the poor, one-third for relatives/friends, and one-third for your family. This distribution maximises benefit across the community.',
+    context: 'The distribution method reflects Islam\'s emphasis on social welfare. The poor receive meat they might not otherwise afford, relatives and friends are honoured with gifts, and the family enjoys the blessing. In Guyana, it is common for communities to organise collective Qurbani events, distributing meat to families across the neighbourhood. The spirit of Qurbani is sharing — not hoarding.',
+    hadith: [
+      {
+        arabic: 'كُلُوا وَأَطْعِمُوا وَادَّخِرُوا',
+        translation: 'Eat (from the sacrifice), feed others, and store (for later use).',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Qurbani': 'Ritual sacrifice — the animal slaughtered for Allah during 10–12 Dhul Hijjah',
+    },
+    examples: [
+      { scenario: 'Can you give Qurbani meat to a non-Muslim neighbour?', ruling: 'Yes — you may gift Qurbani meat to non-Muslim neighbours as an act of kindness. Sharing with neighbours (Muslim and non-Muslim) is encouraged in Islam.' },
+      { scenario: 'The butcher asks to be paid with the animal\'s skin or a portion of meat', ruling: 'Not permissible — the butcher must be paid separately in cash. No part of the sacrificial animal (meat, skin, fat) can be given as wages.' },
+    ],
     points: [
       '── PREFERRED DISTRIBUTION ──',
       '1/3 for the poor as charity',
@@ -962,7 +1401,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Ghusl of the Deceased — Rulings & Method',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Bathing the deceased is fard kifayah. It must be performed by the same gender, though spouses may wash each other.',
+    overview: 'Bathing the deceased is fard kifayah — a communal obligation. If some community members perform it, the obligation is lifted from all. It must be performed by the same gender, though spouses may wash each other.',
+    context: 'Ghusl of the deceased is the first right of a Muslim upon death. It is an act of honour and mercy — treating the body with dignity. In Guyana, trained community members (usually from the masjid) perform this service. Learning the method is a communal responsibility, and teaching others is a great act of service to the Muslim community.',
+    hadith: [
+      {
+        arabic: 'اغْسِلُوهُ بِمَاءٍ وَسِدْرٍ وَكَفِّنُوهُ فِي ثَوْبَيْنِ',
+        translation: 'Wash him with water and lotus leaves, and shroud him in two garments.',
+        source: 'Bukhari & Muslim (regarding a pilgrim who died during Hajj)',
+      },
+    ],
+    definitions: {
+      'Fard Kifayah': 'Communal obligation — if some perform it, the rest are absolved; if none do, all are sinful',
+      'Sidr': 'Lotus tree leaves — used in the ghusl water for cleansing and fragrance',
+      'Kafoor': 'Camphor — added to the final wash of the deceased',
+    },
+    examples: [
+      { scenario: 'A husband dies — can his wife bathe him?', ruling: 'Yes — a wife may wash her deceased husband, and a husband may wash his deceased wife. The marital bond permits this even after death.' },
+      { scenario: 'A Muslim soldier is killed in battle by the enemy', ruling: 'He is a shaheed (martyr) — he is NOT washed. He is buried in his clothes with his blood. No ghusl and no kafan (shroud) is applied over his clothes.' },
+    ],
     points: [
       '── WHO WASHES WHOM ──',
       'A man should be washed by men. A woman by women. A husband may wash his wife. A wife may wash her husband. A child under the age of discernment may be washed by either gender.',
@@ -984,7 +1440,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Funeral',
     title: 'Kafan (Shroud) — Man & Woman',
     rulingType: 'fard',
-    overview: 'The shroud is from the deceased\'s own wealth. If poor, it is a communal responsibility.',
+    overview: 'The shroud (kafan) is taken from the deceased\'s own wealth before inheritance is distributed. If the deceased was poor, providing the kafan is a communal responsibility. The kafan should be simple, clean, and white.',
+    context: 'The simplicity of the kafan is a profound reminder of equality before Allah — whether rich or poor, every Muslim is wrapped in plain white cloth. No status symbols, no brand names, no adornment. The Prophet ﷺ said: "Wear white garments, for they are the purest and the best; and shroud your dead in them" (Tirmidhi). The kafan is perfumed at the prostration points (forehead, nose, hands, knees, feet) as a final honour.',
+    hadith: [
+      {
+        arabic: 'اِلْبَسُوا مِنْ ثِيَابِكُمُ الْبَيَاضَ فَإِنَّهَا مِنْ خَيْرِ ثِيَابِكُمْ وَكَفِّنُوا فِيهَا مَوْتَاكُمْ',
+        translation: 'Wear white from your garments, for it is among the best of your clothes, and shroud your dead in them.',
+        source: 'Abu Dawud, Tirmidhi',
+      },
+    ],
+    definitions: {
+      'Kafan': 'Shroud — the white cloth used to wrap the deceased before burial',
+      'Izaar': 'Lower wrap — covers from head to below feet',
+      'Lifafah': 'Outer wrap — the largest piece, covers from above head to below feet',
+      'Khimaar': 'Head covering — used for women\'s shroud',
+    },
+    examples: [
+      { scenario: 'The deceased left no money for a kafan', ruling: 'It is a communal obligation — the community must provide the kafan. This is a charitable responsibility.' },
+      { scenario: 'The family wants to use expensive silk cloth for the shroud', ruling: 'Silk is permissible for women but not for men (same ruling as in life). Extravagance in the kafan is discouraged — simplicity is the Sunnah.' },
+    ],
     points: [
       '── MAN\'S SHROUD (3 pieces) ──',
       '1. Izaar (lower wrap): from head to below the feet',
@@ -1009,7 +1483,23 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Janazah Salah — The 4 Takbirs',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Funeral prayer is fard kifayah — a communal obligation. It consists of 4 takbirs with no ruku, no sujud.',
+    overview: 'Funeral prayer is fard kifayah — a communal obligation. It consists of 4 takbirs with no ruku, no sujud. It is essentially a standing dua for the deceased, asking Allah for forgiveness and mercy.',
+    context: 'Janazah Salah is unique among all prayers — it has no ruku and no sujud, making it more of a supplication than a typical Salah. The larger the congregation, the greater the benefit to the deceased. The Prophet ﷺ said: "If a group of Muslims numbering one hundred pray over a dead person, all of them interceding for him, their intercession is accepted" (Muslim). In Guyana, Janazah Salah is typically performed at the masjid after one of the five daily prayers.',
+    hadith: [
+      {
+        arabic: 'مَنْ صَلَّى عَلَى جِنَازَةٍ فَلَهُ قِيرَاطٌ',
+        translation: 'Whoever prays over a funeral, he will have one qiraat (a mountain of reward). And whoever follows it until burial, he will have two qiraat.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Qiraat': 'A unit of reward — described by the Prophet ﷺ as being like the mountain of Uhud',
+      'Fard Kifayah': 'Communal obligation — if some perform it, the rest are absolved',
+    },
+    examples: [
+      { scenario: 'You arrived late and missed the first 2 takbirs of Janazah Salah', ruling: 'Join immediately. After the Imam\'s Tasleem, complete your missed takbirs (recite what was missed in each) before the body is lifted.' },
+      { scenario: 'A baby was stillborn — is Janazah Salah performed?', ruling: 'If the baby showed signs of life (cried, moved, breathed), Janazah Salah is performed and the baby is named. If stillborn with no signs of life, the body is wrapped and buried without Janazah Salah.' },
+    ],
     points: [
       '── METHOD (4 Takbirs) ──',
       '1st Takbir: Say "Allahu Akbar" and recite Thana (Subhanakallahunma wa bihamdika...)',
@@ -1031,7 +1521,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Funeral',
     title: 'Burial — Rulings & Etiquettes',
     rulingType: 'fard',
-    overview: 'Burial should be done quickly and with dignity.',
+    overview: 'Burial should be done quickly and with dignity. The Prophet ﷺ emphasised hastening the funeral — delaying without reason is disliked. The deceased should be buried in the Muslim cemetery, facing the Qibla.',
+    context: 'Islam\'s burial practices emphasise simplicity, speed, and respect for the body. Cremation is absolutely prohibited because it dishonours the body that Allah created. Elaborate monuments and tombstones are discouraged — a simple mound of earth suffices. The focus should be on the deeds of the deceased, not the decoration of their grave. In Guyana, Muslim burial grounds are maintained by community organisations like CIOG and local masjid boards.',
+    hadith: [
+      {
+        arabic: 'أَسْرِعُوا بِالْجِنَازَةِ',
+        translation: 'Hasten the funeral procession. If the deceased was righteous, you are bringing him closer to good. And if otherwise, it is an evil you are putting off your necks.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Lahd': 'Niche grave — a recess cut into the side wall of the grave facing the Qibla; the preferred type',
+      'Shaq': 'Trench grave — a channel cut in the centre of the grave floor',
+      'Taziyah': 'Condolence visit — sunnah for 3 days after death',
+    },
+    examples: [
+      { scenario: 'A family member dies abroad — can the body be transported home for burial?', ruling: 'If it causes significant delay, it is better to bury locally. Islam emphasises hastening the burial. If transport is quick and practical, it is permissible.' },
+      { scenario: 'A family wants to build an elaborate marble headstone with Quranic verses', ruling: 'Elaborate monuments, tombstone inscriptions, and plastering are disliked (makruh). A simple marker is sufficient. The money is better spent as sadaqah for the deceased.' },
+    ],
     points: [
       'Burial should be done without delay — hastening is from the Sunnah.',
       'Muslims MUST be buried in Muslim cemeteries. Cremation is absolutely haram.',
@@ -1060,6 +1567,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     rulingType: 'sunnah',
     sistersRelevant: true,
     overview: 'All scholars agree that marriage is recommended (Mustahab) in Islam. Some elevate it to Wajib for those with the ability and desire. Marriage is central to Islam\'s social agenda — obstacles to it (exorbitant dowries, economic injustice) must be combated.',
+    context: 'Marriage in Islam is not just a personal choice — it is a religious and social institution. The Prophet ﷺ married and encouraged his Ummah to marry. Remaining single by choice when one has the means and desire is contrary to the Sunnah. In Guyana, cultural pressures around high dowries and lavish weddings often delay marriages. The scholars strongly oppose excessive spending on weddings — simplicity and ease are the Prophetic way.',
+    examples: [
+      { scenario: 'A man has the financial means to marry and fears falling into sin if he remains single', ruling: 'Marriage becomes Wajib for him — he must marry to protect his chastity. Delaying without excuse is sinful in this case.' },
+      { scenario: 'A family demands a GYD $5 million dowry from the suitor', ruling: 'Exorbitant dowries are strongly discouraged. Umar (RA) said: "Do not become excessive in dowries." The Prophet\'s ﷺ own dowries were modest. The community should facilitate affordable marriages.' },
+    ],
     hadith: [
       {
         arabic: 'مَنِ اسْتَطَاعَ مِنْكُمُ الْبَاءَةَ فَلْيَتَزَوَّجْ فَإِنَّهُ أَغَضُّ لِلْبَصَرِ وَأَحْصَنُ لِلْفَرْجِ',
@@ -1101,6 +1613,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     rulingType: 'fard',
     sistersRelevant: true,
     overview: 'Marriage is a contract (\'aqd) with essential pillars (arkan) and prerequisites (shurut). A Rukn is an essential part without which the contract does not exist. A Shart is a prerequisite for validity but is external to the contract itself.',
+    context: 'The Islamic nikah is beautifully simple — an offer, an acceptance, two witnesses, and it is done. No elaborate ceremony is required by Islamic law. The complexity of modern weddings is cultural, not religious. A woman\'s consent is absolutely required — forced marriages are invalid. The Prophet ﷺ personally annulled marriages where women were married against their will. In Guyana, it is important to also register the marriage civilly with the Registrar-General\'s Department for legal protection.',
+    examples: [
+      { scenario: 'A woman\'s father married her off without her consent', ruling: 'INVALID — both parties must freely consent. The Prophet ﷺ gave a girl the choice to accept or annul a marriage her father arranged without her permission (Abu Dawud).' },
+      { scenario: 'A couple says the nikah words as a joke — does it count?', ruling: 'Yes — marriage, divorce, and taking back one\'s wife are binding even if said in jest. "Three things are serious whether serious or in jest: marriage, divorce, and taking back." (Ahmad)' },
+      { scenario: 'Can a nikah be done over the phone if the groom is overseas?', ruling: 'The Hanafi school requires offer and acceptance in one sitting (majlis). A phone call where both parties hear each other in real-time, with witnesses present, is accepted by many contemporary scholars.' },
+    ],
     points: [
       '── ARKAN (Pillars) OF MARRIAGE ──',
       'Hanafi: Only offer (Ijab) and acceptance (Qabool) are arkan — can begin from either party',
@@ -1140,7 +1658,13 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Mahr (Dowry) — Amounts, Types & Rulings',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Mahr is a marriage gift from husband to wife — her exclusive property. It is so essential that even if omitted from the contract, the law presumes it by virtue of the contract itself.',
+    overview: 'Mahr is a marriage gift from husband to wife — her exclusive property. It is so essential that even if omitted from the contract, the law presumes it by virtue of the contract itself. The mahr belongs to the wife alone — not to her family.',
+    context: 'The mahr is the wife\'s right from Allah — Quran 4:4 commands: "Give the women their dower as a free gift." It is NOT a payment to her family or a "bride price." The wife may use it as she wishes — save it, spend it, invest it. Islam discourages excessive mahrs because they create barriers to marriage. The most blessed marriages are those that are easiest in expense. In Guyana, mahr amounts should be discussed openly and agreed upon before the nikah.',
+    examples: [
+      { scenario: 'The mahr was never specified at the time of nikah', ruling: 'The marriage is STILL valid (Hanafi). However, mahr al-mithl (equivalent dowry) — calculated based on the woman\'s peers — becomes automatically binding on the husband.' },
+      { scenario: 'The husband never paid the mahr and then they divorced', ruling: 'The wife is entitled to the FULL mahr upon divorce. It is her debt upon the husband that must be settled. If he dies, it is taken from his estate before inheritance.' },
+      { scenario: 'A wife voluntarily waives her mahr', ruling: 'Permissible — but ONLY if done from her own free will without any pressure or coercion. Quran 4:4: "But if they, of their own good pleasure, remit any part of it, take it and enjoy it."' },
+    ],
     hadith: [
       {
         arabic: 'أَعْظَمُ النِّكَاحِ بَرَكَةً أَيْسَرُهُ مَؤُنَةً',
@@ -1178,7 +1702,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Rights and Duties in Marriage',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Marriage is a partnership of mutual rights and duties. The Quran and Sunnah emphasise the husband\'s duty of maintenance and the wife\'s right to dignified treatment.',
+    overview: 'Marriage is a partnership of mutual rights and duties. The Quran and Sunnah emphasise the husband\'s duty of maintenance and the wife\'s right to dignified treatment. Neither spouse should harm the other physically, emotionally, or financially.',
+    context: 'Islam established women\'s rights within marriage 1,400 years ago — including the right to own property, receive maintenance, and be treated with kindness — at a time when no other legal system guaranteed these. The Prophet ﷺ\'s Farewell Sermon emphasised: "Beware of your treatment of women." In Guyana, both Islamic and civil law provide frameworks for marital rights, and Muslim families should be aware of both.',
+    examples: [
+      { scenario: 'A husband refuses to provide his wife with food and clothing despite having the means', ruling: 'This is haram — maintenance (nafaqah) is the husband\'s fard duty. The wife may take what is sufficient from his wealth without his permission, as the Prophet ﷺ told Hind bint Utbah.' },
+      { scenario: 'A husband is polygamous — does he need to spend equally?', ruling: 'Absolute equality in maintenance and time is REQUIRED. If he cannot be fair, the Quran commands: "Marry only one" (4:3). Favouritism is a grave sin.' },
+    ],
+    definitions: {
+      'Nafaqah': 'Maintenance — food, clothing, and shelter that the husband must provide according to his means',
+      'Qawwam': 'Protector/maintainer — the Quranic term for the husband\'s role (Quran 4:34)',
+    },
     hadith: [
       {
         arabic: 'خَيْرُكُمْ خَيْرُكُمْ لِأَهْلِهِ وَأَنَا خَيْرُكُمْ لِأَهْلِي',
@@ -1210,6 +1743,18 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     rulingType: 'sunnah',
     sistersRelevant: true,
     overview: 'Islam prescribes specific etiquettes at the birth of a child, emphasising gratitude to Allah, good naming, and sacrifice. These are drawn from the practice of the Prophet ﷺ and the Companions.',
+    context: 'Every child is a gift from Allah — the Quran warns against feeling disappointment over the gender of a child. These etiquettes welcome the newborn into the Muslim community: the adhan in the ear introduces them to the testimony of faith, the good name shapes their identity, the aqiqah gives thanks to Allah, and the tahnik is a Prophetic blessing. In Guyana, these practices are widely observed and are part of the community\'s cultural fabric.',
+    hadith: [
+      {
+        arabic: 'كُلُّ غُلَامٍ مُرْتَهَنٌ بِعَقِيقَتِهِ تُذْبَحُ عَنْهُ يَوْمَ سَابِعِهِ',
+        translation: 'Every child is held in pledge for his Aqiqah — it is sacrificed on his seventh day, he is named, and his head is shaved.',
+        source: 'Abu Dawud, Tirmidhi',
+      },
+    ],
+    examples: [
+      { scenario: 'A baby is born — when should the adhan be given in the ear?', ruling: 'Immediately after birth — the adhan in the right ear and iqamah in the left ear, so the first words the child hears are the testimony of faith.' },
+      { scenario: 'A family cannot afford to sacrifice 2 lambs for a boy\'s aqiqah', ruling: 'One lamb is sufficient if 2 are not affordable. The obligation is based on ability. Even delaying the aqiqah until one can afford it is permissible.' },
+    ],
     points: [
       '1. Never rejoice at getting a boy or girl instead of the other — you have no way of knowing in which Allah may place the greatest good',
       '2. Pronounce the ADHAN in the baby\'s right ear and the IQAMAH in the left ear right after birth',
@@ -1231,6 +1776,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Prohibited Marriages',
     rulingType: 'haram',
     sistersRelevant: true,
+    overview: 'Islam prohibits marriage between close relatives (mahram) to protect family structure and prevent harm. Some prohibitions are permanent (e.g., mother, daughter) and some are temporary (e.g., two sisters simultaneously).',
+    context: 'The prohibitions are established in Quran 4:22-24 and are divided into permanent (those you can never marry) and temporary (those you cannot marry under certain conditions). These rules protect family honour, prevent genetic concerns, and maintain clear family roles. Understanding who is mahram also determines dress code and interaction rules in daily life.',
+    hadith: [
+      {
+        arabic: 'لَا يُجْمَعُ بَيْنَ الْمَرْأَةِ وَعَمَّتِهَا وَلَا بَيْنَ الْمَرْأَةِ وَخَالَتِهَا',
+        translation: 'A woman should not be married in combination with her paternal aunt, nor with her maternal aunt.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Mahram': 'A relative whom one can NEVER marry — permanent prohibition based on blood, marriage, or breastfeeding',
+      'Iddah': 'Waiting period — a woman must complete iddah before she can remarry',
+    },
+    examples: [
+      { scenario: 'A man wants to marry two sisters at the same time', ruling: 'HARAM — being simultaneously married to two sisters is prohibited. He may marry one, and if divorced/widowed, may then marry the other after iddah.' },
+      { scenario: 'A Muslim woman is approached by a non-Muslim man for marriage', ruling: 'Prohibited — a Muslim woman may NOT marry a non-Muslim man under any circumstances. This is by consensus of all madhabs.' },
+      { scenario: 'A man wants to marry his foster-sister (they were breastfed by the same woman)', ruling: 'Prohibited permanently — breastfeeding (rada\'ah) creates the same prohibitions as blood relations. "What is prohibited by blood is prohibited by breastfeeding" (Bukhari, Muslim).' },
+    ],
     points: [
       'Permanently prohibited (mahram relatives): mother, grandmother, daughter, granddaughter, sister, aunt, niece; foster mother and foster sister; wife\'s mother; son\'s wife; father\'s wife',
       'Temporarily prohibited: being simultaneously married to two sisters or to a woman and her aunt/niece',
@@ -1249,6 +1812,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Types of Talaq',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'Islam permits divorce as a last resort but considers it the most hated of permissible things. There are several types of talaq, each with different consequences and reversibility.',
+    context: 'Divorce exists as a mercy — when a marriage genuinely cannot work, forcing two people to remain together causes greater harm. However, the Prophet ﷺ said: "The most hated of permissible things to Allah is divorce" (Abu Dawud). The Sunnah method is to give ONE talaq during a clean period (no menstruation, no intercourse in that cycle), then observe the iddah — allowing time for reconciliation. The practice of saying "talaq" three times in one sitting is sinful and carries the maximum consequence in the Hanafi madhab.',
+    hadith: [
+      {
+        arabic: 'أَبْغَضُ الْحَلَالِ إِلَى اللَّهِ الطَّلَاقُ',
+        translation: 'The most hated of permissible things to Allah is divorce.',
+        source: 'Abu Dawud',
+      },
+    ],
+    definitions: {
+      'Talaq Raj\'i': 'Revocable divorce — husband may take back his wife during iddah without a new nikah',
+      'Talaq Ba\'in': 'Irrevocable divorce — requires a new nikah with new mahr to remarry',
+      'Talaq Mughallazah': 'Triple/final divorce — the couple CANNOT remarry until the wife genuinely marries and is divorced by another man',
+      'Tahleel/Halala': 'Arranged marriage solely to make the woman lawful again — HARAM and the nikah is invalid',
+    },
+    examples: [
+      { scenario: 'A husband says "I divorce you" once during an argument', ruling: 'One talaq has occurred (Talaq Raj\'i). He may revoke it during the iddah period without a new nikah. If iddah passes without revocation, a new nikah and mahr are needed to remarry.' },
+      { scenario: 'A husband says "talaq talaq talaq" three times in anger in one sitting', ruling: 'Hanafi position: all 3 count — the marriage is PERMANENTLY dissolved (Talaq Mughallazah). They cannot remarry until the wife genuinely marries another man. This is the strictest and most relevant position in Guyana.' },
+      { scenario: 'A man divorced his wife twice previously (two separate occasions). Now he gives a third talaq.', ruling: 'This is the final, irrevocable divorce. They cannot remarry until the wife genuinely marries another man, that marriage is consummated, and that husband genuinely divorces her.' },
+    ],
     points: [
       'Talaq Raj\'i (Revocable Divorce) — 1st or 2nd divorce. Husband may revoke during iddah without a new nikah. After iddah expires without revocation, becomes irrevocable.',
       'Talaq Ba\'in Sughra (Minor Irrevocable) — divorce where iddah has passed, or divorce by khul\', or conditional divorce. Remarriage requires a new nikah contract with new mahr.',
@@ -1263,6 +1846,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Iddah (Waiting Period)',
     rulingType: 'fard',
     sistersRelevant: true,
+    overview: 'Iddah is the mandatory waiting period after divorce or the death of a husband, during which a woman may not remarry. It serves to clarify pregnancy, allow reconciliation (in divorce), and honour the marriage bond.',
+    context: 'The wisdom of iddah is multi-fold: it ensures there is no confusion about the paternity of any child conceived during the marriage, it gives time for emotions to settle and for possible reconciliation in revocable divorce, and in the case of death, it honours the deceased husband through a mourning period. Iddah begins from the moment of divorce or death — not when the woman is informed.',
+    hadith: [
+      {
+        arabic: 'وَالْمُطَلَّقَاتُ يَتَرَبَّصْنَ بِأَنفُسِهِنَّ ثَلَاثَةَ قُرُوءٍ',
+        translation: 'Divorced women shall wait for three menstrual cycles (before remarrying).',
+        source: 'Quran 2:228',
+      },
+    ],
+    definitions: {
+      'Iddah': 'Waiting period — mandatory period after divorce or death before a woman may remarry',
+      'Quru\'': 'Menstrual cycle — the iddah measure for divorced women who menstruate (3 complete cycles in Hanafi)',
+      'Ihdad': 'Mourning period — the widow\'s obligation to avoid adornment and perfume during her 4 months 10 days iddah',
+    },
+    examples: [
+      { scenario: 'A woman is divorced while pregnant', ruling: 'Her iddah lasts until she gives birth — regardless of how long the pregnancy takes. This could be 1 day or 9 months.' },
+      { scenario: 'A woman\'s husband passed away — she is post-menopausal', ruling: 'Her iddah is 4 months and 10 days — the same as all widows, regardless of menstruation status. She must observe ihdad (mourning).' },
+      { scenario: 'A divorced woman finds out about the divorce 2 weeks after it happened', ruling: 'Iddah started at the moment of divorce, not when she was informed. Those 2 weeks count towards her iddah.' },
+    ],
     points: [
       'After talaq or death of husband — wife must observe iddah before remarrying',
       'Divorced woman who menstruates: 3 complete menstrual cycles (Quru\')',
@@ -1281,6 +1883,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Khul\' (Wife-Initiated Dissolution)',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'Khul\' gives a wife the right to end a marriage by returning the mahr to her husband. It is an exit for women who are unhappy in their marriage, even when the husband is not at fault.',
+    context: 'Islam gave women the right to dissolve their marriages 1,400 years ago — a right many Western legal systems only recognised centuries later. The first case of Khul\' in Islam was the wife of Thabit ibn Qays, who told the Prophet ﷺ she had no complaints about his character or religion, but could not remain married to him. The Prophet ﷺ ordered the khul\' immediately. In Guyana, Khul\' matters should be taken to CIOG, GII, or qualified local scholars for proper resolution.',
+    hadith: [
+      {
+        arabic: 'اقْبَلِ الْحَدِيقَةَ وَطَلِّقْهَا تَطْلِيقَةً',
+        translation: 'Accept the garden (mahr she returned) and divorce her with one divorce.',
+        source: 'Bukhari (regarding the wife of Thabit ibn Qays)',
+      },
+    ],
+    definitions: {
+      'Khul\'': 'Wife-initiated dissolution — she returns the mahr in exchange for a divorce',
+      'Ba\'in': 'Irrevocable — khul\' counts as one irrevocable divorce; remarriage requires a new nikah and mahr',
+    },
+    examples: [
+      { scenario: 'A wife is deeply unhappy but her husband refuses to divorce her', ruling: 'She may seek khul\' through an Islamic court or qualified scholars. If harm or incompatibility is established, the husband cannot refuse. The Prophet ﷺ commanded Thabit\'s wife be freed.' },
+      { scenario: 'The wife returned the mahr and khul\' was done — how long is her iddah?', ruling: 'Hanafi: iddah after khul\' is ONE menstrual cycle (not 3 cycles as in regular divorce). This is a specific concession.' },
+      { scenario: 'A husband pressures his wife into requesting khul\' to avoid paying her mahr', ruling: 'This is haram — khul\' must be the wife\'s genuine choice. If she is coerced into returning the mahr, it is not a valid khul\'. The mahr remains her right.' },
+    ],
     points: [
       'A wife may seek dissolution of marriage by returning the mahr to her husband',
       'Valid without husband\'s willingness if taken through an Islamic court or Qadi',
@@ -1296,6 +1916,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Faskh (Annulment by Court)',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'Faskh is the annulment of a marriage by an Islamic judge (qadi) or scholarly panel. It protects women from being trapped in marriages where the husband is absent, abusive, impotent, or unable to provide.',
+    context: 'Faskh exists as a safety valve in Islamic law — it prevents women from being left in limbo when their husbands disappear, refuse to divorce, or cannot fulfil marital duties. Unlike khul\' (where the wife returns the mahr), faskh does not require the wife to give up her financial rights. In Guyana, matters of faskh are handled by CIOG, GII, or panels of qualified scholars who act as a qadi (judge).',
+    definitions: {
+      'Faskh': 'Annulment — dissolution of marriage by judicial authority; counts as one irrevocable divorce',
+      'Qadi': 'Islamic judge — the authority who grants the faskh',
+    },
+    examples: [
+      { scenario: 'A husband has been missing for years with no contact or knowledge of his whereabouts', ruling: 'The wife may seek faskh through a scholarly panel. After investigation and a waiting period, the marriage can be annulled.' },
+      { scenario: 'A husband is physically abusive and refuses to grant talaq', ruling: 'The wife may seek faskh on the grounds of harm and cruelty. Abuse is valid grounds for annulment in all madhabs.' },
+    ],
     points: [
       'Faskh is annulment granted by an Islamic judge (qadi) or scholarly panel',
       'Valid grounds: husband\'s impotence, husband\'s failure to provide maintenance, husband\'s prolonged unknown absence, harm or cruelty from the husband, husband\'s apostasy',
@@ -1310,6 +1940,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     rulingType: 'fard',
     sistersRelevant: true,
     overview: 'Allah has ordered men to maintain their wives on reasonable terms. Maintenance includes food, clothing, and lodging — all compulsory upon the husband. This duty extends through iddah after divorce.',
+    context: 'Nafaqah is not optional generosity — it is a legal obligation backed by the Quran and Sunnah. A husband who refuses to maintain his wife is sinful, and she has the right to take what is sufficient from his wealth even without his permission (as the Prophet ﷺ told Hind). The quantum is not fixed — it is "according to his means." A wealthy man must provide more than a poor man, but even a poor man must provide basic necessities.',
+    definitions: {
+      'Nafaqah': 'Financial maintenance — food, clothing, and shelter that the husband is obligated to provide',
+      'Nashizah': 'A wife who leaves the marital home without valid reason — she forfeits her right to maintenance during that time',
+    },
+    examples: [
+      { scenario: 'A wife earns more than her husband — does he still need to provide maintenance?', ruling: 'Yes — maintenance is the husband\'s duty regardless of the wife\'s own wealth. Even if she is a millionaire, he must provide food, clothing, and shelter according to his means.' },
+      { scenario: 'A husband and wife are divorced — she is in iddah and pregnant', ruling: 'The husband must maintain her until she gives birth. Quran 65:6: "If they are pregnant, spend on them until they deliver."' },
+      { scenario: 'A husband dies during the marriage', ruling: 'The widow does NOT receive maintenance from the estate — she receives her inheritance share instead. Maintenance ceases at death.' },
+    ],
     hadith: [
       {
         arabic: 'اتَّقُوا اللَّهَ فِي النِّسَاءِ فَإِنَّكُمْ أَخَذْتُمُوهُنَّ بِأَمَانِ اللَّهِ',
@@ -1343,7 +1983,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Suckling (Rada\'ah) — Nursing Rights & Financial Obligation',
     rulingType: 'info',
     sistersRelevant: true,
-    overview: 'The nursing and welfare of a child remains the father\'s financial duty. The Quran details the rights and responsibilities around breastfeeding for the full 2-year term.',
+    overview: 'The nursing and welfare of a child remains the father\'s financial duty. The Quran details the rights and responsibilities around breastfeeding for the full 2-year term. Milk kinship (rada\'ah) creates permanent family bonds with important legal consequences.',
+    context: 'Breastfeeding is both a physical nourishment and a legal institution in Islam. Quran 2:233 devotes an entire verse to the rights and duties around nursing — showing its importance. The concept of milk kinship means that a woman who nurses a child becomes like a mother to that child, and her own children become siblings — creating permanent mahram relationships. This has implications for marriage, interaction, and dress code. In Guyana, understanding milk kinship is especially relevant in communities where babies are nursed by relatives or friends.',
+    definitions: {
+      'Rada\'ah': 'Milk kinship — breastfeeding relationship that creates permanent mahram bonds',
+      'Wet-nurse': 'A woman hired to breastfeed another woman\'s child — creates rada\'ah relationship',
+    },
+    examples: [
+      { scenario: 'A neighbour breastfed your son when he was 6 months old — can he marry her daughter?', ruling: 'No — the neighbour is now his foster-mother, and her daughter is his foster-sister. Marriage between them is permanently prohibited.' },
+      { scenario: 'A divorced mother demands wages from the father for nursing the child', ruling: 'During marriage/iddah: she cannot demand a separate wage (she is already maintained). After iddah: she CAN demand wages, and the father must pay.' },
+    ],
     points: [
       '"Mothers shall suckle their children for two whole years if the father wishes to complete the term. But he shall bear the cost of their food and clothing on equitable terms." (Quran 2:233)',
       'The mother, while married or in iddah, cannot demand a separate wage for nursing the child — she is already maintained',
@@ -1365,6 +2014,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Fixed Shares (Ashab al-Faraid)',
     rulingType: 'fard',
     sistersRelevant: true,
+    overview: 'Islamic inheritance law (Ilm al-Faraid) distributes the deceased\'s estate among fixed-share heirs according to Quranic verses (4:11-12). The shares are Divinely mandated — no one may alter them.',
+    context: 'The Prophet ﷺ said: "Learn the laws of inheritance and teach them, for it is half of knowledge" (Ibn Majah). Islamic inheritance is remarkable in its precision — each heir\'s share is fixed by the Quran itself. It ensures that wealth circulates rather than concentrating in one person. In Guyana, Muslims should prepare Islamic wills (wasiyyah) and register them, as the civil law default may not match Islamic distribution. Consult CIOG or a qualified scholar for estate matters.',
+    hadith: [
+      {
+        arabic: 'أَلْحِقُوا الْفَرَائِضَ بِأَهْلِهَا فَمَا بَقِيَ فَهُوَ لِأَوْلَى رَجُلٍ ذَكَرٍ',
+        translation: 'Give the fixed shares to those entitled to them, and whatever remains goes to the nearest male relative.',
+        source: 'Bukhari & Muslim',
+      },
+    ],
+    definitions: {
+      'Faraid': 'Fixed inheritance shares — mandated by the Quran; also the science of Islamic inheritance law',
+      'Ashab al-Faraid': 'Those entitled to fixed shares — wife, husband, daughter, mother, father, etc.',
+      'Asabah': 'Residuary heirs — they receive whatever remains after fixed-share holders are given their portions',
+    },
+    examples: [
+      { scenario: 'A man dies leaving a wife, 2 sons, and 1 daughter', ruling: 'Wife receives 1/8 (because children exist). The remainder is divided among the children: sons get double the share of daughters. So each son gets 2 shares, the daughter gets 1 share.' },
+      { scenario: 'A woman dies leaving only a husband and her mother', ruling: 'Husband receives 1/2 (no children). Mother receives 1/3 of the remainder. The rest goes to the nearest male relative (asabah).' },
+    ],
     points: [
       'Wife: 1/4 if no children; 1/8 if there are children',
       'Husband: 1/2 if no children; 1/4 if there are children',
@@ -1382,6 +2049,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'What Prevents Inheritance',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'Three things completely prevent a person from inheriting: murder, difference of religion, and slavery. Additionally, the scholars developed rules for when total shares exceed or fall short of the estate.',
+    context: 'The rule that a murderer cannot inherit from their victim is a safeguard against exploitation — it removes any financial incentive for harm. The rule about difference of religion maintains the separation of religious communities in matters of wealth transfer. \'Aul (proportional reduction) and Radd (redistribution) are mathematical solutions developed by the Companions to handle real-world scenarios where Quranic shares don\'t perfectly add up to 100%.',
+    definitions: {
+      '\'Aul': 'Proportional reduction — when total shares exceed 100% of the estate, all shares are reduced proportionally',
+      'Radd': 'Return — when total shares are less than 100%, the excess is redistributed to heirs (excluding spouse in Hanafi)',
+    },
+    examples: [
+      { scenario: 'A son murders his father', ruling: 'He is completely blocked from inheritance — a murderer cannot inherit from the person they killed. The estate is distributed among the remaining heirs.' },
+      { scenario: 'A Muslim man dies and his mother is Christian', ruling: 'She cannot inherit from him under Islamic law — difference of religion blocks inheritance. Similarly, a Muslim cannot inherit from a non-Muslim relative.' },
+    ],
     points: [
       'Murder — a person who kills the deceased (intentionally) cannot inherit from them',
       'Difference of religion — a non-Muslim cannot inherit from a Muslim; a Muslim cannot inherit from a non-Muslim (under Islamic law)',
@@ -1400,6 +2077,15 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Foundations of Halal Trade — Knowledge Before Trade',
     rulingType: 'info',
     overview: 'Before engaging in any trade or business, a Muslim must first learn the Islamic rulings that govern it. The scholars emphasised this as a precondition for entering the marketplace.',
+    context: 'Earning a halal livelihood is a form of worship in Islam. The Prophet ﷺ described the honest merchant as being "with the Prophets, the truthful ones, and the martyrs." But this high rank comes with responsibility — a Muslim trader must know what is permitted and what is not. The four foundations of unlawful trade identified by Ibn Rushd (unlawful goods, riba, gharar, and conditions leading to them) provide a clear framework for evaluating any business transaction.',
+    definitions: {
+      'Gharar': 'Excessive uncertainty in a transaction — e.g., selling something you don\'t own or that doesn\'t yet exist',
+      'Riba': 'Interest/usury — any stipulated increase on a loan; one of the gravest sins in Islam',
+    },
+    examples: [
+      { scenario: 'A young Muslim in Guyana wants to start a business — what should he learn first?', ruling: 'Before entering business, learn the basics of halal trade: avoid riba (interest), gharar (deception/uncertainty), and haram goods. Know the conditions of a valid sale.' },
+      { scenario: 'You sell goods online — are digital transactions valid?', ruling: 'Yes — online transactions are valid as long as the item is described accurately, the price is clear, both parties consent, and the item is deliverable. Deception and misrepresentation are haram.' },
+    ],
     hadith: [
       {
         arabic: 'مَنْ طَلَبَ الدُّنْيَا حَلَالًا اسْتِعْفَافًا عَنِ الْمَسْأَلَةِ وَسَعْيًا عَلَى أَهْلِهِ',
@@ -1421,6 +2107,17 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Valid Trade (Bay\') — Conditions & Invalid Sales',
     rulingType: 'info',
+    overview: 'A valid sale requires mutual consent, a clear price, an existing and deliverable item, and honest description. Sales involving excessive uncertainty (gharar), fake bidding, or items you do not own are invalid.',
+    context: 'Islam permits and encourages trade — "Allah has permitted trade and forbidden riba" (Quran 2:275). The conditions for a valid sale protect both buyer and seller from exploitation. Transparency is paramount: the seller must disclose defects, the price must be agreed upon, and both parties must consent freely. In Guyana, these principles apply to everyday transactions — from Stabroek Market to online shopping.',
+    definitions: {
+      'Bay\'': 'Sale/trade — the exchange of goods or services for a price',
+      'Bay\' al-Salam': 'Forward sale — full payment upfront for an item to be delivered later; the basis of many agricultural trades',
+      'Murabaha': 'Cost-plus sale — seller discloses cost and adds a known markup; the basis of Islamic home financing',
+    },
+    examples: [
+      { scenario: 'You sell a car but hide a known engine problem from the buyer', ruling: 'Haram — fraud and concealing defects is prohibited. The buyer has the right to return the car and demand a refund if the defect was hidden.' },
+      { scenario: 'A farmer sells his rice crop before it is harvested', ruling: 'This is Bay\' al-Salam — valid if the buyer pays the full price upfront AND the quantity, quality, and delivery date are fully specified.' },
+    ],
     points: [
       '── CONDITIONS FOR A VALID SALE ──',
       'Offer and acceptance (Ijab and Qabool) — verbal, written, or by clear mutual conduct',
@@ -1441,7 +2138,19 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Riba (Interest/Usury) — Strictly Prohibited',
     rulingType: 'haram',
-    overview: 'Riba is one of the gravest major sins in Islam. The Quran devotes multiple verses to its prohibition, including a declaration of war from Allah against those who persist in it.',
+    overview: 'Riba is one of the gravest major sins in Islam. The Quran devotes multiple verses to its prohibition, including a declaration of war from Allah against those who persist in it. It encompasses all forms of interest — bank loans, credit cards, mortgages, and any stipulated increase on a debt.',
+    context: 'Riba is unique in that Allah declares WAR on those who persist in it (Quran 2:278-279) — a warning not given for any other sin. The Prophet ﷺ cursed the one who takes riba, the one who pays it, the one who records it, and the two witnesses — showing all participants are guilty. In Guyana, most conventional banking involves interest. Muslims should seek Islamic finance alternatives where available, or at minimum consult a Mufti about necessity (darurah) before taking interest-bearing loans.',
+    definitions: {
+      'Riba al-Nasi\'ah': 'Delay riba — charging extra for deferred payment on a loan; all bank interest falls here',
+      'Riba al-Fadl': 'Excess riba — exchanging the same commodity in unequal amounts (gold for gold must be equal, hand to hand)',
+      'Murabaha': 'Islamic cost-plus financing — halal alternative to interest-based loans',
+      'Musharakah': 'Partnership — profit shared by agreed ratio; loss shared by capital ratio',
+    },
+    examples: [
+      { scenario: 'You take a bank loan of GYD $1,000,000 and must repay GYD $1,100,000 (10% interest)', ruling: 'This is riba — the extra GYD $100,000 stipulated in the contract is haram. Seek Islamic financing alternatives if available.' },
+      { scenario: 'You lend a friend money and he voluntarily gives you extra when repaying', ruling: 'Permissible — a voluntary gift from the borrower (without prior agreement) is generosity, not riba. The Prophet ﷺ himself returned more than he borrowed as a kindness.' },
+      { scenario: 'A credit card charges 20% annual interest on unpaid balances', ruling: 'Using a credit card and paying the FULL balance by the due date (no interest charged) is permissible. Carrying a balance that accrues interest is riba.' },
+    ],
     hadith: [
       {
         arabic: 'وَأَحَلَّ اللَّهُ الْبَيْعَ وَحَرَّمَ الرِّبَا',
@@ -1478,6 +2187,17 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Prohibited Business Practices',
     rulingType: 'haram',
+    overview: 'Islam prohibits 7 specific business practices that harm individuals and society: fraud, hoarding, short measures, fake bidding, bribery, monopolistic control, and supporting haram industries.',
+    context: 'Honest trade is an act of worship; dishonest trade is among the worst sins. The Prophet ﷺ said the honest merchant will be resurrected with the Prophets and martyrs, while cheaters will face severe punishment. Surah al-Mutaffifin (83) opens with "Woe to those who give short measure!" — an entire Surah revealed about commercial fraud. These principles are especially relevant in Guyana\'s marketplace economy.',
+    definitions: {
+      'Ihtikaar': 'Hoarding essential goods to drive up prices — a major sin',
+      'Najash': 'Fake bidding — employing shills to inflate prices at auction',
+      'Rishwah': 'Bribery — haram for the giver, receiver, and intermediary',
+    },
+    examples: [
+      { scenario: 'A rice dealer buys up all the rice during a shortage to resell at double the price', ruling: 'Haram — hoarding necessities to drive up prices is one of the worst commercial sins. "Whoever hoards food for forty days has disassociated from Allah" (hadith).' },
+      { scenario: 'A friend asks you to bid on his item at auction to drive the price up (you don\'t intend to buy)', ruling: 'Haram — this is Bay\' al-Najash (fake bidding). Both you and the seller are sinful.' },
+    ],
     hadith: [
       {
         arabic: 'وَيْلٌ لِّلْمُطَفِّفِينَ',
@@ -1505,6 +2225,15 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Loans (Qard Hasan) and Debt',
     rulingType: 'info',
+    overview: 'Lending money without interest (Qard Hasan) is one of the highest acts of generosity in Islam. However, debt carries enormous responsibility — dying with unpaid debt is a grave matter.',
+    context: 'The Quran devotes its longest verse (2:282) to the rules of debt — commanding that loans be documented in writing. This shows how seriously Islam treats financial obligations. The Prophet ﷺ initially refused to pray Janazah over a man who died in debt until a Companion guaranteed it. Islam encourages lending to those in need but warns borrowers to take debt seriously and repay promptly. In Guyana\'s close-knit Muslim community, personal loans between friends and family are common — documenting them properly prevents disputes.',
+    definitions: {
+      'Qard Hasan': 'Interest-free loan — lent for Allah\'s sake; Allah doubles the reward for the lender',
+    },
+    examples: [
+      { scenario: 'You lent GYD $100,000 to a friend — should you document it?', ruling: 'Yes — the Quran explicitly commands: "When you contract a debt for a fixed term, WRITE IT DOWN" (2:282). Have witnesses as well.' },
+      { scenario: 'A wealthy person owes you money but keeps delaying payment', ruling: 'This is unjust — the Prophet ﷺ said: "Procrastination by a wealthy person is an injustice" (Bukhari, Muslim). You may seek community mediation or legal recourse.' },
+    ],
     hadith: [
       {
         arabic: 'أَعْطُوا الْأَجِيرَ أَجْرَهُ قَبْلَ أَنْ يَجِفَّ عَرَقُهُ',
@@ -1527,6 +2256,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Employment Rights in Islam',
     rulingType: 'info',
+    overview: 'Islam established comprehensive workers\' rights — fair wages, prompt payment, agreed terms, and protection from overwork. Both employer and employee have duties to each other.',
+    context: 'The Prophet ﷺ said "Pay the worker his wages before his sweat dries" — a revolutionary standard that predated modern labour laws by over a millennium. Islam views honest work as an act of worship and considers it better than begging, no matter how humble the job. The employer has a duty of care, and the employee has a duty of honesty and diligence.',
+    definitions: {
+      'Ijarah': 'Hiring/lease contract — the basis of employment and rental agreements in Islam',
+      'Musharakah': 'Partnership — profit shared by agreed ratio; loss shared by capital ratio',
+    },
+    examples: [
+      { scenario: 'An employer delays paying his worker\'s salary for months', ruling: 'Sinful — the Prophet ﷺ said: "Pay the worker his wages before his sweat dries." Deliberately withholding wages is a form of oppression (dhulm).' },
+      { scenario: 'You are offered a high-paying job at a bank that deals in interest', ruling: 'Not permissible — working in interest-based operations is haram because you are supporting riba. Seek alternative halal employment.' },
+    ],
     points: [
       'Worker\'s wage must be agreed BEFORE the work begins',
       '"Pay the worker his wages before his sweat dries." (Ibn Majah)',
@@ -1542,6 +2281,23 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Muamalaat',
     title: 'Waqf (Endowment)',
     rulingType: 'info',
+    overview: 'Waqf is the perpetual dedication of an asset for charitable purposes. Once an asset is made waqf, it can never be sold, inherited, or given away — its benefit continues forever.',
+    context: 'Waqf is one of Islam\'s greatest contributions to social welfare. It is a form of sadaqah jariyah — continuous charity whose reward continues even after death. Historically, waqf endowments funded mosques, hospitals, schools, water wells, and orphanages across the Muslim world. In Guyana, many masjid properties are waqf land. The Prophet ﷺ told Umar (RA) about a piece of land: "If you wish, hold the property and give its produce in charity" — this became the foundation of waqf law.',
+    hadith: [
+      {
+        arabic: 'إِذَا مَاتَ الْإِنْسَانُ انْقَطَعَ عَمَلُهُ إِلَّا مِنْ ثَلَاثٍ',
+        translation: 'When a person dies, his deeds come to an end except for three: ongoing charity (sadaqah jariyah), knowledge that benefits others, and a righteous child who prays for him.',
+        source: 'Muslim',
+      },
+    ],
+    definitions: {
+      'Waqf': 'Perpetual endowment — an asset dedicated forever for a charitable purpose',
+      'Sadaqah Jariyah': 'Continuous charity — reward continues flowing to the giver even after death',
+    },
+    examples: [
+      { scenario: 'A wealthy community member donates land for a masjid as waqf', ruling: 'The land becomes permanently dedicated — it can never be sold, inherited, or used for anything other than the masjid. The donor receives continuous reward as long as the masjid serves worshippers.' },
+      { scenario: 'The waqf building is old and crumbling — can it be sold?', ruling: 'Waqf property cannot be sold. However, if it is no longer serving its purpose, the trustees may rebuild or redirect the benefit within the waqf\'s stated purpose. Consult scholars.' },
+    ],
     points: [
       'Waqf: dedicating an asset perpetually for charitable/Islamic purposes — it cannot be sold, inherited, or given away',
       'Examples: masjid land, Islamic school buildings, wells, medical facilities',
@@ -1560,6 +2316,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Halal & Haram Animals — Complete Classification',
     rulingType: 'info',
     overview: 'All animals are lawful for consumption except those declared Haram or Makruh Tahrimi. The Quran lists specific prohibitions; the Prophet ﷺ added further detail. The general principle: "He allows them as lawful what is good and pure and prohibits them from what is bad and impure." (Quran 7:157)',
+    context: 'Understanding which animals are halal and haram is essential for daily life — especially in Guyana where diverse meats and seafood are available. The Hanafi madhab is the most restrictive on seafood (only fish is fully permissible), which differs from the Shafi\'i position followed in some other communities. When eating out or buying meat, always verify the slaughter method and the type of animal.',
+    examples: [
+      { scenario: 'A restaurant in Guyana serves shrimp — is it halal?', ruling: 'Hanafi position: shrimp is Makruh Tahrimi (severely disliked, closer to haram). Shafi\'i/Maliki: fully halal. Some later Hanafi scholars permit shrimp. Follow your madhab or consult a local scholar.' },
+      { scenario: 'Someone offers you wild deer meat from hunting in the interior', ruling: 'Deer is halal. If it was hunted with a weapon (arrow, bullet) and Bismillah was said when releasing/firing, the meat is halal provided it was not already dead before you reached it.' },
+      { scenario: 'Is KFC in Guyana halal?', ruling: 'Check if the chicken is sourced from a halal-certified supplier (GHA, CIOG certified) and slaughtered according to Islamic rites. If unsure, avoid it — "Leave what makes you doubtful for what does not" (hadith).' },
+    ],
     hadith: [
       {
         arabic: 'حُرِّمَتْ عَلَيْكُمُ الْمَيْتَةُ وَالدَّمُ وَلَحْمُ الْخِنزِيرِ',
@@ -1601,6 +2363,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Alcohol, Intoxicants & Drugs — Complete Rulings',
     rulingType: 'haram',
     overview: 'Intoxicants are absolutely prohibited in Islam. The Prophet ﷺ called them "the mother of all vices." The prohibition extends far beyond drinking — to producing, selling, transporting, and even sitting at a table where alcohol is consumed.',
+    context: 'Allah prohibited alcohol in stages (Quran 2:219, 4:43, then 5:90-91) to ease the transition for the early Muslims. The final prohibition was absolute — "eschew such that you may prosper." The Prophet ﷺ cursed 10 categories of people involved with alcohol, showing the prohibition encompasses the entire chain from production to consumption. In Guyana, where alcohol is widely available and culturally normalised, Muslims must be especially vigilant about avoiding it in social settings, workplaces, and food ingredients.',
+    definitions: {
+      'Khamr': 'Intoxicant — specifically wine from grapes in the narrow sense; all intoxicating drinks in the broader fatwa position',
+      'Ma\'azif': 'Musical instruments — mentioned alongside khamr in the famous hadith of Bukhari predicting their legalisation',
+    },
+    examples: [
+      { scenario: 'You are invited to a dinner party where alcohol is being served', ruling: 'You should not sit at a table where alcohol is consumed: "Whoever believes in Allah and the Last Day must not sit at a table where khamr is consumed" (Ahmad). Politely decline or sit at a separate area.' },
+      { scenario: 'A medicine contains a small percentage of alcohol as a preservative', ruling: 'If an alternative alcohol-free medicine is available, use it. If not, and the medicine is genuinely necessary, some scholars permit it under necessity (darurah). Consult a Mufti.' },
+      { scenario: 'A friend offers you marijuana, saying it is "just a plant, not alcohol"', ruling: 'Haram — marijuana befogs the mind and is an intoxicant. All drugs that intoxicate or befog the psyche share the same ruling as alcohol.' },
+    ],
     hadith: [
       {
         arabic: 'لَعَنَ اللَّهُ الْخَمْرَ وَشَارِبَهَا وَسَاقِيَهَا وَبَائِعَهَا وَمُبْتَاعَهَا وَعَاصِرَهَا وَمُعْتَصِرَهَا وَحَامِلَهَا وَالْمَحْمُولَةَ إِلَيْهِ',
@@ -1633,6 +2405,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Islamic Slaughter (Dhabh) — Full Conditions',
     rulingType: 'fard',
     overview: 'All lawful animals (except fish and locusts) must be slaughtered according to Islamic rites before they may be eaten. Without proper slaughter, the animal is carrion — impure and impermissible.',
+    context: 'Islamic slaughter (dhabh) is designed to be the most humane method of killing an animal — a sharp blade cuts the major blood vessels swiftly, draining the blood (which is impure) while the animal loses consciousness almost instantly. Mentioning Allah\'s name acknowledges that only He has the right to permit taking a life, and that this life is being taken with His permission for a lawful purpose. In Guyana, GHA, CIOG, and D.E.H.C. are the recognised halal certifying bodies — always look for their certification when buying meat.',
+    definitions: {
+      'Dhabh': 'Islamic slaughter — cutting the throat with a sharp blade while saying Bismillah',
+      'Bismillah': '"In the Name of Allah" — must be said at the time of slaughter for the meat to be halal',
+      'Maitah': 'Carrion — an animal that died without proper Islamic slaughter; haram except fish and locust',
+    },
     points: [
       '── 4 CONDITIONS FOR HALAL SLAUGHTER ──',
       '1. The name of Allah MUST be mentioned at the time of slaughter — "Eat not of meats on which Allah\'s name has not been pronounced: that would be impiety." (Quran 6:121). Abu Hanifah, Malik, Ahmad: ESSENTIAL. Shafi\'i: desirable (not essential).',
@@ -1663,7 +2441,25 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Halal & Haram',
     title: 'Hidden Haram Ingredients in Everyday Products',
     rulingType: 'haram',
-    overview: 'Many common food products contain ingredients derived from haram sources. Checking labels and understanding E-numbers is essential for maintaining a halal diet.',
+    overview: 'Many common food products contain ingredients derived from haram sources. Checking labels and understanding E-numbers is essential for maintaining a halal diet. Not everything "vegetarian" is halal, and not everything labelled "natural" is permissible.',
+    context: 'Modern food processing often uses ingredients whose source is hidden behind chemical names or E-numbers. Gelatin (often from pork), carmine (from beetles), L-cysteine (from human hair or pig bristle), and alcohol-based flavourings are found in everyday products. In Guyana, imported processed foods may contain these ingredients without clear labelling. When in doubt, the Prophet ﷺ taught: "Leave what makes you doubtful for what does not make you doubtful" (Tirmidhi). Check labels, ask manufacturers, and prefer whole foods when uncertain.',
+    hadith: [
+      {
+        arabic: 'دَعْ مَا يَرِيبُكَ إِلَى مَا لَا يَرِيبُكَ',
+        translation: 'Leave what makes you doubtful for what does not make you doubtful.',
+        source: 'Tirmidhi',
+      },
+    ],
+    definitions: {
+      'Gelatin': 'A protein derived from animal collagen — haram if from pork or non-halal-slaughtered animals',
+      'E120 (Carmine)': 'Red food colouring from crushed beetles — haram in Hanafi (insects are haram)',
+      'E471': 'Mono and diglycerides — potentially from pork fat; must verify source',
+    },
+    examples: [
+      { scenario: 'A gummy candy lists "gelatin" as an ingredient but doesn\'t specify the source', ruling: 'Avoid it — unspecified gelatin is most commonly from pork. Look for "halal gelatin" or "fish gelatin" labels.' },
+      { scenario: 'A bread brand uses L-cysteine (E920) as a dough conditioner', ruling: 'L-cysteine is often derived from human hair or pig bristle. Check with the manufacturer. If the source is synthetic or halal, it is permissible.' },
+      { scenario: 'You want to buy cheese but it lists "rennet" as an ingredient', ruling: 'Microbial or vegetable rennet: halal. Animal rennet from properly slaughtered halal animals: halal (Abu Hanifah). From pork: haram. If unspecified, choose vegetarian/halal-certified cheese.' },
+    ],
     points: [
       '── COMMON HIDDEN HARAM INGREDIENTS ──',
       'Gelatin: haram if from pig or non-halal-slaughtered animal; halal if from fish or properly slaughtered animal. Avoid if source is unspecified.',
@@ -1692,6 +2488,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     rulingType: 'info',
     sistersRelevant: true,
     overview: 'Allah counts His bestowal of clothing as one of His favours to mankind. Islam establishes 6 fundamental principles for dress, leaving specific styles to individual choice within those bounds.',
+    context: 'Islam does not prescribe a specific uniform — it provides principles. Within those principles, any cultural dress is permissible. The Quran says: "O children of Adam, We have bestowed upon you clothing to conceal your private parts and as adornment" (7:26). Covering the awrah is the primary objective; beautification is secondary but encouraged. In Guyana\'s diverse Muslim community, both traditional Indo-Guyanese and African-Guyanese styles are perfectly acceptable as long as they meet the 6 principles.',
+    examples: [
+      { scenario: 'A man wears tight-fitting clothing that clearly outlines his body below the navel', ruling: 'Not permissible — clothing must conceal the shape of the awrah. Tight, transparent, or clingy clothing that reveals the body contour does not fulfil the purpose of covering.' },
+      { scenario: 'A woman wears Western-style business clothing that covers everything except face and hands', ruling: 'Permissible — as long as the clothing is not transparent, tight, or clingy. Islam does not require a specific cultural style of dress.' },
+    ],
     hadith: [
       {
         arabic: 'كُلُوا مَا شِئْتُمْ وَالْبَسُوا مَا شِئْتُمْ مَا أَخْطَأَتْكُمْ اثْنَتَانِ سَرَفٌ وَمَخِيلَةٌ',
@@ -1716,7 +2517,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Silk, Gold & Isbal — Specific Rulings',
     rulingType: 'haram',
     sistersRelevant: true,
-    overview: 'The prohibition of silk and gold for men, and the ruling on lowering garments below the ankles, are well-established in multiple authentic hadith.',
+    overview: 'The prohibition of silk and gold for men, and the ruling on lowering garments below the ankles, are well-established in multiple authentic hadith. These rulings are gender-specific — what is haram for men is fully permissible for women.',
+    context: 'The prohibition of silk and gold for men is about maintaining masculine modesty and avoiding extravagance. The Prophet ﷺ said these are "lawful for the females of my Ummah and unlawful for its males." The wisdom includes preserving gender distinction, avoiding excessive adornment, and keeping men focused on substance over appearance. The isbal (garments below ankles) prohibition specifically targets arrogance — a deeper spiritual issue.',
+    definitions: {
+      'Isbal': 'Lowering garments below the ankles — haram if done out of arrogance; makruh otherwise (for men only)',
+      'Makruh': 'Disliked — an act that is not sinful but better avoided',
+    },
     hadith: [
       {
         arabic: 'أُحِلَّ الذَّهَبُ وَالْحَرِيرُ لِإِنَاثِ أُمَّتِي وَحُرِّمَ عَلَى ذُكُورِهَا',
@@ -1752,7 +2558,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Awrah & Hijab — Covering Requirements',
     rulingType: 'fard',
     sistersRelevant: true,
-    overview: 'Islam obligates both men and women to cover their awrah. The requirements differ between the genders, and vary based on who is present.',
+    overview: 'Islam obligates both men and women to cover their awrah. The requirements differ between the genders, and vary based on who is present. Hijab is not just a headscarf — it is a comprehensive concept of modesty in dress and behaviour.',
+    context: 'The obligation of covering is established in multiple Quranic verses (24:31, 33:59) and numerous hadith. It applies to BOTH men and women — men are commanded to lower their gaze and cover from navel to knees; women are commanded to cover everything except face and hands in front of non-mahram men. The concept extends beyond clothing to include behaviour, speech, and interaction. In Guyana, hijab styles vary — all are valid as long as they meet the covering requirements.',
+    hadith: [
+      {
+        arabic: 'يَا أَسْمَاءُ إِنَّ الْمَرْأَةَ إِذَا بَلَغَتِ الْمَحِيضَ لَمْ تَصْلُحْ أَنْ يُرَى مِنْهَا إِلَّا هَذَا وَهَذَا',
+        translation: 'O Asma, when a woman reaches the age of menstruation, nothing should be seen of her except this and this — and he pointed to his face and hands.',
+        source: 'Abu Dawud',
+      },
+    ],
+    definitions: {
+      'Awrah': 'The parts of the body that must be covered — differs by gender and context',
+      'Mahram': 'A close male relative whom a woman cannot marry — she may show more of herself to him',
+      'Hijab': 'Literally "barrier" — the comprehensive concept of modest dress, covering the body as required by Islamic law',
+    },
+    examples: [
+      { scenario: 'A woman wears hijab but her clothing is see-through or skin-tight', ruling: 'Not sufficient — the Prophet ﷺ described "women who are clothed yet naked" (Muslim). Clothing must be opaque, loose enough to not reveal body shape, and cover all of the awrah.' },
+      { scenario: 'A teenage girl has just reached puberty — does she need to wear hijab?', ruling: 'Yes — once a girl reaches puberty (onset of menstruation), covering the awrah becomes obligatory. Parents should gradually introduce hijab before puberty to make the transition easier.' },
+    ],
     points: [
       '── MEN\'S AWRAH ──',
       'Navel to knees (knees included) — must be covered at all times in front of others',
@@ -1779,6 +2602,26 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Hayd (Menstruation) — Rules',
     rulingType: 'fard',
     sistersRelevant: true,
+    overview: 'Hayd (menstruation) has specific rulings that every Muslim woman must know — it affects Salah, fasting, Quran recitation, and marital relations. Understanding these rules removes confusion and empowers women to worship confidently.',
+    context: 'Islam does not view menstruation as a curse or punishment — it is a natural biological process created by Allah. The rulings around hayd are designed to provide rest and accommodation, not restriction. A menstruating woman is NOT "impure as a person" — the Prophet ﷺ would lean on Aisha (RA) while she was menstruating, eat from the same plate, and treated her with complete normalcy. The prohibitions are limited to specific acts of worship, not to interaction or dignity.',
+    hadith: [
+      {
+        arabic: 'إِنَّ هَذَا شَيْءٌ كَتَبَهُ اللَّهُ عَلَى بَنَاتِ آدَمَ',
+        transliteration: 'Inna hadha shay\'un katabahullahu \'ala banaati Aadam',
+        translation: 'This (menstruation) is something that Allah has decreed for the daughters of Adam.',
+        source: 'Bukhari & Muslim (said to Aisha RA during Hajj)',
+      },
+    ],
+    definitions: {
+      'Hayd': 'Menstruation — the regular monthly bleeding experienced by women of childbearing age',
+      'Tuhr': 'Clean/pure period — the time between two menstrual cycles (minimum 15 days)',
+      'Istihadah': 'Irregular bleeding — bleeding outside the normal hayd pattern; does NOT prevent worship',
+    },
+    examples: [
+      { scenario: 'A woman\'s period started during Dhuhr time — does she need to make up that Dhuhr later?', ruling: 'No — any Salah whose time she was menstruating during is completely waived. She does not make up missed prayers. However, missed Ramadan fasts MUST be made up.' },
+      { scenario: 'A woman\'s bleeding stopped on day 8 — should she wait until day 10 before making ghusl?', ruling: 'No — make ghusl IMMEDIATELY when bleeding stops and resume prayers. Do not wait for a specific number of days if the bleeding has clearly ended.' },
+      { scenario: 'A woman is unsure whether her bleeding is hayd or istihadah', ruling: 'Use her established pattern (habit). If bleeding exceeds her normal cycle length or exceeds 10 days (Hanafi), the extra days are istihadah — she must pray during those days.' },
+    ],
     points: [
       'Minimum duration: 3 days (Hanafi); 1 day + 1 night (Shafi\'i)',
       'Maximum duration: 10 days (Hanafi); 15 days (Shafi\'i)',
@@ -1796,6 +2639,23 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Nifas (Post-Natal Bleeding)',
     rulingType: 'fard',
     sistersRelevant: true,
+    overview: 'Nifas is bleeding after childbirth. The same worship restrictions as hayd apply (no Salah, no fasting, no intercourse). The maximum duration is 40 days in the Hanafi school.',
+    context: 'Nifas gives a new mother time to recover while her worship obligations are temporarily lifted. Islam\'s compassion is evident — a woman who just gave birth is not burdened with making up missed prayers (they are waived entirely). Only missed Ramadan fasts must be made up. The key rule many women are unsure about: if bleeding stops BEFORE 40 days, make ghusl and resume worship immediately. Do not wait for 40 days.',
+    hadith: [
+      {
+        arabic: 'كَانَتِ النُّفَسَاءُ تَجْلِسُ عَلَى عَهْدِ رَسُولِ اللَّهِ أَرْبَعِينَ يَوْمًا',
+        translation: 'The woman in nifas (post-natal bleeding) used to wait forty days during the time of the Messenger of Allah ﷺ.',
+        source: 'Abu Dawud, Tirmidhi',
+      },
+    ],
+    definitions: {
+      'Nifas': 'Post-natal bleeding — bleeding following childbirth',
+    },
+    examples: [
+      { scenario: 'A woman\'s bleeding stopped 15 days after delivery', ruling: 'Make ghusl immediately and resume praying and fasting. There is no minimum for nifas — whenever bleeding stops, purification is required.' },
+      { scenario: 'Bleeding continued for 42 days after childbirth', ruling: 'Hanafi: the maximum is 40 days. Bleeding after day 40 is istihadah. She must make ghusl on day 41, resume prayers, and treat ongoing bleeding as istihadah (make fresh wudu for each prayer).' },
+      { scenario: 'Ramadan falls during a woman\'s nifas period', ruling: 'She cannot fast during nifas. Once bleeding stops and she makes ghusl, she begins fasting. All missed days must be made up as Qada after Ramadan.' },
+    ],
     points: [
       'Nifas is bleeding after childbirth',
       'Maximum duration: 40 days (Hanafi/Hanbali); 60 days (Shafi\'i/Maliki)',
@@ -1812,6 +2672,24 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Istihadah (Irregular/Abnormal Bleeding)',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'Istihadah is bleeding outside the hayd or nifas period. Unlike hayd, it does NOT exempt a woman from Salah or fasting. She is treated as a person with a chronic excuse — she makes fresh wudu for each fard prayer.',
+    context: 'Istihadah can be confusing and distressing, but the key distinction is simple: hayd has defined durations (minimum 3 days, maximum 10 in Hanafi), and anything beyond those limits is istihadah. A woman in istihadah MUST continue all worship — Salah, fasting, Quran recitation, and even marital relations are all permitted. She is not in a state of major impurity. She simply makes a fresh wudu before each fard prayer time, and that wudu lasts for the entire prayer time.',
+    hadith: [
+      {
+        arabic: 'تَوَضَّئِي لِكُلِّ صَلَاةٍ',
+        translation: 'Make wudu for each prayer (said to a woman with istihadah).',
+        source: 'Bukhari',
+      },
+    ],
+    definitions: {
+      'Istihadah': 'Irregular/abnormal bleeding — bleeding outside the normal hayd/nifas pattern; treated as a chronic excuse',
+      '\'Adah': 'Habit/pattern — a woman\'s established menstrual cycle used to distinguish hayd from istihadah',
+      'Ma\'dhur': 'Person with a chronic excuse — their wudu lasts for the entire prayer time even if the excuse recurs',
+    },
+    examples: [
+      { scenario: 'A woman\'s bleeding has continued for 14 days — her normal cycle is 7 days', ruling: 'Hanafi: the first 7 days (her habit) are hayd. Days 8-14 are istihadah. She should have made ghusl after day 7 and resumed praying. She must make up the prayers she missed on days 8-14.' },
+      { scenario: 'A new Muslim girl experiences her first period and it lasts 12 days', ruling: 'She has no established pattern yet. Hanafi: if bleeding exceeds 10 days, the first 10 are hayd, the rest is istihadah. She makes ghusl on day 11 and resumes worship.' },
+    ],
     points: [
       'Istihadah is bleeding outside the hayd or nifas period — it is NOT hayd. It is treated as an ongoing impurity (like a nosebleed).',
       'A woman in istihadah: MUST continue Salah and fasting. She is not exempt from any ibadah.',
@@ -1828,6 +2706,22 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Ghusl After Hayd/Nifas — Step by Step',
     rulingType: 'fard',
     sistersRelevant: true,
+    overview: 'Ghusl after menstruation or post-natal bleeding follows the same method as regular ghusl, with special attention to ensuring water reaches all parts of the body, including hair roots and areas under nails.',
+    context: 'Many women worry about ghusl — especially regarding hair. The Prophet ﷺ eased this concern directly. When Umm Salamah (RA) asked if she needed to unbraid her thick hair for ghusl, he ﷺ said "No — three handfuls of water over your head suffice." The key is that water reaches the ROOTS, not that every strand is individually washed. Barriers like nail polish, acrylic nails, and waterproof makeup must be removed BEFORE ghusl — they prevent water from reaching the skin.',
+    hadith: [
+      {
+        arabic: 'لَا إِنَّمَا يَكْفِيكِ أَنْ تَحْثِي عَلَى رَأْسِكِ ثَلَاثَ حَثَيَاتٍ',
+        translation: 'No (you don\'t need to unbraid your hair). It suffices for you to throw three handfuls of water over your head, then pour water over yourself and you are purified.',
+        source: 'Muslim (said to Umm Salamah RA)',
+      },
+    ],
+    definitions: {
+      'Barrier': 'Any substance preventing water from reaching the skin/nail — nail polish, acrylic nails, wax, etc. must be removed before ghusl',
+    },
+    examples: [
+      { scenario: 'A woman has acrylic nails — is her ghusl valid?', ruling: 'No — acrylic nails create a waterproof barrier. They MUST be removed before ghusl and wudu. Otherwise, both are invalid and any prayers performed are invalid.' },
+      { scenario: 'A woman with very thick, long hair finds it difficult to ensure water reaches the roots', ruling: 'Pour water generously over the head at least 3 times, massaging the roots with the fingers. Unbraiding is NOT required if water can reach the roots. When in doubt, unbraid to be safe.' },
+    ],
     points: [
       'Make intention (niyyah) for ghusl from hayd/nifas',
       'Remove any barrier from the skin: nail polish, acrylic nails, wax, dried paint, thick cream',
@@ -1846,6 +2740,16 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     title: 'Women and the Quran During Hayd',
     rulingType: 'info',
     sistersRelevant: true,
+    overview: 'The interaction with the Quran during menstruation has specific rulings that vary by madhab. The Hanafi position is more restrictive, while other schools offer more flexibility. All schools agree that listening to Quran and making dua are fully permitted.',
+    context: 'This topic causes significant anxiety among Muslim women, and understanding the nuances brings peace of mind. The restriction is on formal RECITATION of Quran — not on dhikr, dua, listening, or learning. A woman during hayd can continue her spiritual growth through numerous avenues: listening to recitation, reading tafseer, making abundant dhikr and istighfar, learning fiqh, and making dua. She is not spiritually "cut off" — she simply observes specific boundaries with the Quranic text itself.',
+    definitions: {
+      'Mushaf': 'The physical Quran text — touching it requires wudu; touching it during hayd is forbidden by consensus',
+      'Tafseer': 'Quranic commentary/explanation — reading it during hayd is fully permitted',
+    },
+    examples: [
+      { scenario: 'A woman in hayd wants to read Quran on her phone', ruling: 'Hanafi scholars differ on this — many permit it since a phone is not a mushaf. Others advise caution. A practical approach: read from the phone without formal recitation intention, treating it as dhikr/dua.' },
+      { scenario: 'A Quran teacher is menstruating — can she continue teaching Quran class?', ruling: 'She may teach by explaining, giving tafseer, and correcting students. For the Hanafi madhab, she should avoid reciting full verses herself but may read word-by-word for teaching purposes (some scholars permit this for teachers).' },
+    ],
     points: [
       'Touching the physical Mushaf (Quran): FORBIDDEN during hayd — by consensus of all 4 madhabs',
       'Reciting Quran from memory (without a purpose other than recitation): Hanafi — forbidden; Shafi\'i/Maliki — permitted without touching mushaf',
@@ -1865,6 +2769,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     chapter: 'Q&A',
     title: 'Can I pray in English?',
     rulingType: 'info',
+    overview: 'A common question from new Muslims and those learning. The short answer: the formal parts of Salah must be in Arabic, but personal dua can be in any language.',
+    context: 'Arabic is the language of the Quran and the universal language of Islamic worship. Using Arabic ensures unity — a Muslim anywhere in the world can join any congregation and follow the prayer. For new Muslims, the scholars show compassion: learn the minimum Arabic for Salah as quickly as possible, but if you truly cannot yet, some scholars permit the meaning temporarily. Personal supplication (dua) — in sujud or after Salah — can be in any language at any time.',
+    examples: [
+      { scenario: 'A new Muslim just took shahada and does not know any Arabic', ruling: 'Begin learning al-Fatihah and basic dhikr immediately. In the interim, some Hanafi scholars allow reciting the meaning in your language. This is a temporary concession — learning Arabic Salah basics is a priority.' },
+      { scenario: 'You want to make a heartfelt dua in English during sujud', ruling: 'Fully permissible — personal supplication in any language during sujud and after Salah is valid. Pour your heart out to Allah in whatever language you speak.' },
+    ],
     points: [
       'The fard recitation of al-Fatihah and all dhikr within Salah must be in Arabic — consensus of all madhabs',
       'If a new Muslim genuinely cannot learn Arabic yet (Hanafi): may recite the meaning temporarily, but must learn Arabic as soon as possible',
