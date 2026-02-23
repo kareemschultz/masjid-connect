@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
+import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -176,6 +177,37 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [pwaInstalled, setPwaInstalled] = useState(false)
   const [signingIn, setSigningIn] = useState(false)
   const showRamadanStep = isNearRamadan()
+
+  // Location detection
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'detected' | 'error'>('idle')
+  const [detectedCity, setDetectedCity] = useState('')
+  const [detectedCountry, setDetectedCountry] = useState('')
+  const [recommendedMethodLabel, setRecommendedMethodLabel] = useState('')
+  const [recommendedMethodReason, setRecommendedMethodReason] = useState('')
+
+  const handleDetectLocation = async () => {
+    setLocationStatus('detecting')
+    try {
+      const coords = await detectLocation()
+      const { city, country, countryCode } = await reverseGeocode(coords.latitude, coords.longitude)
+      const rec = getRecommendedMethod(coords.latitude, coords.longitude, countryCode)
+      // Save to storage
+      setItem(KEYS.USER_LAT, coords.latitude)
+      setItem(KEYS.USER_LNG, coords.longitude)
+      setItem(KEYS.USER_CITY, city)
+      setItem(KEYS.USER_COUNTRY, country)
+      setItem(KEYS.USER_COUNTRY_CODE, countryCode)
+      // Update state
+      setDetectedCity(city)
+      setDetectedCountry(country)
+      setRecommendedMethodLabel(rec.label)
+      setRecommendedMethodReason(rec.reason)
+      setMethod(rec.method)
+      setLocationStatus('detected')
+    } catch {
+      setLocationStatus('error')
+    }
+  }
 
   // PWA install prompt capture
   useEffect(() => {
@@ -502,11 +534,49 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <h2 className="mb-1 text-center text-2xl font-bold text-white">Prayer Settings</h2>
             <p className="mb-5 text-center text-sm text-gray-400">Choose the method used in your community</p>
 
+            {/* Location Detection */}
+            <div className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/50 p-4">
+              {locationStatus === 'idle' && (
+                <>
+                  <p className="text-xs text-gray-400 mb-3">Let us recommend the best prayer settings for your location.</p>
+                  <button
+                    onClick={handleDetectLocation}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 py-2.5 text-sm font-semibold text-emerald-400 active:scale-95 transition-transform"
+                  >
+                    <MapPin className="h-4 w-4" /> Detect My Location
+                  </button>
+                </>
+              )}
+              {locationStatus === 'detecting' && (
+                <div className="flex items-center gap-3 py-1">
+                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin" />
+                  <p className="text-xs text-gray-400">Detecting your location...</p>
+                </div>
+              )}
+              {locationStatus === 'detected' && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <p className="text-sm font-bold text-white">{detectedCity}, {detectedCountry}</p>
+                  </div>
+                  <p className="text-xs text-emerald-400 font-medium">✓ Recommended: {recommendedMethodLabel}</p>
+                  <p className="text-[11px] text-gray-500">{recommendedMethodReason}. Pre-selected below — you can still change it.</p>
+                </div>
+              )}
+              {locationStatus === 'error' && (
+                <p className="text-xs text-gray-500">⚠️ Location unavailable. Please select your calculation method manually below.</p>
+              )}
+            </div>
+
             {/* Method */}
             <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Calculation Method
             </label>
-            <p className="mb-2 text-[11px] text-gray-500">This adjusts when Fajr and Isha begin. Most Guyanese Masjids use <span className="text-emerald-400 font-semibold">Standard (MWL)</span> — already selected for you.</p>
+            <p className="mb-2 text-[11px] text-gray-500">
+              {locationStatus === 'detected'
+                ? `We recommend ${recommendedMethodLabel} for your area. Change if needed.`
+                : 'Most Guyanese Masjids use Standard (MWL) — already selected for you.'}
+            </p>
             <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900">
               {CALCULATION_METHODS.map((m) => (
                 <button

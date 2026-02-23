@@ -147,7 +147,9 @@ export default function HomePage() {
       const adhan = await import('adhan')
       const methodKey = getItem(KEYS.CALCULATION_METHOD, 'Egyptian')
       const madhabKey = getItem(KEYS.MADHAB, 'Shafi')
-      const coords = new adhan.Coordinates(6.8013, -58.1551)
+      const lat = getItem(KEYS.USER_LAT, 6.8013)
+      const lng = getItem(KEYS.USER_LNG, -58.1551)
+      const coords = new adhan.Coordinates(lat, lng)
       const methodMap: Record<string, () => ReturnType<typeof adhan.CalculationMethod.Egyptian>> = {
         MuslimWorldLeague: () => adhan.CalculationMethod.MuslimWorldLeague(),
         Egyptian: () => adhan.CalculationMethod.Egyptian(),

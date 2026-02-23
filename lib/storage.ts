@@ -73,4 +73,9 @@ export const KEYS = {
   QURAN_SCRIPT: 'quran_script',
   QURAN_TAJWEED: 'quran_tajweed_colors',
   PRAYER_OFFSET: 'prayer_offset',
+  USER_LAT: 'user_lat',
+  USER_LNG: 'user_lng',
+  USER_CITY: 'user_city',
+  USER_COUNTRY: 'user_country',
+  USER_COUNTRY_CODE: 'user_country_code',
 } as const
