@@ -30,6 +30,11 @@ export const PRAYER_NOTIF_CONFIG: Record<string, { title: string; body: string; 
   Isha: { title: '🌙 Isha Adhan', body: 'Time for Isha prayer.\nEnd your day with salah.', tag: 'prayer-isha' },
   suhoor: { title: '🍽️ Suhoor Reminder', body: 'Fajr is in 30 minutes!\nEat and drink before the fast begins.\nاللَّهُمَّ إِنِّي لَكَ صُمْتُ', tag: 'suhoor-reminder' },
   iftaar: { title: '🎉 Iftaar Time!', body: 'Break your fast!\nاللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ\nDates · Water · Maghrib prayer', tag: 'iftaar-now' },
+  Ishraq: { title: '🌅 Ishraq Time', body: 'The sun has fully risen. Pray 2 rak\'ah Ishraq now for the reward of Hajj & Umrah! (Sunrise + 20 min)', tag: 'nawafil-ishraq' },
+  Duha: { title: '☀️ Duha Prayer', body: 'Time for Duha prayer (Chaste prayer). 2–8 rak\'ah. Best time: mid-morning.', tag: 'nawafil-duha' },
+  Awabeen: { title: '🌅 Awabeen Prayer', body: 'Time for Awabeen (6 rak\'ah after Maghrib). The Prophet ﷺ said: whoever prays 6 rak\'ah after Maghrib...', tag: 'nawafil-awabeen' },
+  Tahajjud: { title: '🌙 Last Third of Night', body: 'Allah descends to the lowest heaven: "Who calls upon Me that I may answer?" Rise for Tahajjud!', tag: 'nawafil-tahajjud' },
+  FastingMonThu: { title: '📅 Fasting Tomorrow', body: "Tomorrow is Monday. The Prophet ﷺ fasted on Mondays. Consider fasting today's intention tonight.", tag: 'fasting-mon-thu' },
 }
 
 export function parseNotifPrefs(sub: any): Record<string, boolean> {

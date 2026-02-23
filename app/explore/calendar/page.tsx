@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, ExternalLink, Star, Sparkles } from 'lucide-react'
+import { Calendar, ExternalLink, Star, Sparkles, Plus, X } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getHijriDate } from '@/lib/prayer-times'
@@ -150,12 +150,50 @@ function getGoogleCalendarUrl(event: IslamicEvent): string {
   return `https://calendar.google.com/calendar/r/eventedit?text=${title}&dates=${start}/${end}&details=${details}`
 }
 
+const EVENT_TYPES = ['Community Event', 'Islamic Lecture', 'Masjid Program', 'Eid Celebration', 'Fundraiser', 'Other']
+
 export default function CalendarPage() {
   const [hijri, setHijri] = useState('')
+  const [showSubmit, setShowSubmit] = useState(false)
+  const [submitForm, setSubmitForm] = useState({ name: '', type: 'Community Event', date: '', time: '', location: '', description: '', submittedBy: '' })
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
   useEffect(() => {
     setHijri(getHijriDate())
   }, [])
+
+  const handleSubmitEvent = async () => {
+    if (!submitForm.name.trim() || !submitForm.date) return
+    setSubmitLoading(true)
+    setSubmitMsg(null)
+    try {
+      const res = await fetch('/api/events/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: submitForm.name.trim(),
+          type: submitForm.type,
+          date: submitForm.date,
+          time: submitForm.time || undefined,
+          venue: submitForm.location.trim() || 'TBA',
+          description: submitForm.description.trim() || undefined,
+          submittedBy: submitForm.submittedBy.trim() || 'Anonymous',
+        }),
+      })
+      if (res.ok) {
+        setSubmitMsg({ ok: true, text: 'Event submitted! The admin team will review and add it to the calendar.' })
+        setSubmitForm({ name: '', type: 'Community Event', date: '', time: '', location: '', description: '', submittedBy: '' })
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setSubmitMsg({ ok: false, text: data.error || 'Failed to submit event. Please try again.' })
+      }
+    } catch {
+      setSubmitMsg({ ok: false, text: 'Network error. Please try again.' })
+    } finally {
+      setSubmitLoading(false)
+    }
+  }
 
   const sortedEvents = useMemo(() => {
     return [...ISLAMIC_EVENTS_2026].sort((a, b) => a.date.localeCompare(b.date))
@@ -195,6 +233,15 @@ export default function CalendarPage() {
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
+
+        {/* Submit an Event */}
+        <button
+          onClick={() => { setShowSubmit(true); setSubmitMsg(null) }}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-700 bg-gray-900/50 py-3.5 text-sm font-semibold text-emerald-400 transition-all active:bg-gray-800"
+        >
+          <Plus className="h-4 w-4" />
+          Submit an Event
+        </button>
 
         {/* Today's events */}
         {todayEvents.length > 0 && (
@@ -325,6 +372,114 @@ export default function CalendarPage() {
           </p>
         </div>
       </div>
+
+      {/* Submit Event Modal */}
+      {showSubmit && (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubmit(false)} />
+          <div className="relative w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-gray-800 bg-gray-900 p-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold text-white">Submit an Event</h3>
+              <button onClick={() => setShowSubmit(false)} className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-800 text-gray-400">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Event Name *</label>
+                <input
+                  type="text"
+                  value={submitForm.name}
+                  onChange={e => setSubmitForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="e.g. Jumu'ah Khutbah"
+                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Event Type</label>
+                <select
+                  value={submitForm.type}
+                  onChange={e => setSubmitForm(f => ({ ...f, type: e.target.value }))}
+                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                >
+                  {EVENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label className="text-[11px] font-medium text-gray-400 mb-1 block">Date *</label>
+                  <input
+                    type="date"
+                    value={submitForm.date}
+                    onChange={e => setSubmitForm(f => ({ ...f, date: e.target.value }))}
+                    className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="text-[11px] font-medium text-gray-400 mb-1 block">Time</label>
+                  <input
+                    type="time"
+                    value={submitForm.time}
+                    onChange={e => setSubmitForm(f => ({ ...f, time: e.target.value }))}
+                    className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Location / Masjid</label>
+                <input
+                  type="text"
+                  value={submitForm.location}
+                  onChange={e => setSubmitForm(f => ({ ...f, location: e.target.value }))}
+                  placeholder="e.g. Queenstown Masjid"
+                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Description <span className="text-gray-600">(max 500 chars)</span></label>
+                <textarea
+                  value={submitForm.description}
+                  onChange={e => setSubmitForm(f => ({ ...f, description: e.target.value.slice(0, 500) }))}
+                  placeholder="Brief description of the event..."
+                  rows={3}
+                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none"
+                />
+                <p className="text-right text-[10px] text-gray-600 mt-0.5">{submitForm.description.length}/500</p>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Submitted By</label>
+                <input
+                  type="text"
+                  value={submitForm.submittedBy}
+                  onChange={e => setSubmitForm(f => ({ ...f, submittedBy: e.target.value }))}
+                  placeholder="Your name or masjid name"
+                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                />
+              </div>
+
+              {submitMsg && (
+                <div className={`rounded-xl px-4 py-3 text-xs font-medium ${submitMsg.ok ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}`}>
+                  {submitMsg.text}
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmitEvent}
+                disabled={submitLoading || !submitForm.name.trim() || !submitForm.date}
+                className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition-all active:bg-emerald-600 disabled:opacity-40"
+              >
+                {submitLoading ? 'Submitting...' : 'Submit Event'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>

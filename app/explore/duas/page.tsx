@@ -230,6 +230,13 @@ const CATEGORIES: Category[] = [
         source: 'Bukhari',
         note: 'After Fajr prayer',
       },
+      {
+        arabic: 'اللَّهُمَّ اهْدِنَا فِيمَنْ هَدَيْتَ وَعَافِنَا فِيمَنْ عَافَيْتَ وَتَوَلَّنَا فِيمَنْ تَوَلَّيْتَ وَبَارِكْ لَنَا فِيمَا أَعْطَيْتَ وَقِنَا شَرَّ مَا قَضَيْتَ فَإِنَّكَ تَقْضِي وَلَا يُقْضَى عَلَيْكَ وَإِنَّهُ لَا يَذِلُّ مَنْ وَالَيْتَ وَلَا يَعِزُّ مَنْ عَادَيْتَ تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ',
+        transliteration: "Allahumm-ahdina fiman hadayt, wa 'afina fiman 'afayt, wa tawallana fiman tawallayt, wa barik lana fima a'tayt, wa qina sharra ma qadayt, fa innaka taqdi wa la yuqda 'alayk, wa innahu la yadhillu man walayt, wa la ya'izzu man 'adayt, tabarakta Rabbana wa ta'alayt",
+        meaning: 'O Allah, guide us among those You have guided, pardon us among those You have pardoned, befriend us among those You have befriended, bless us in what You have given us, and protect us from the evil of what You have decreed. Verily You decree and none can decree against You. He is not humiliated whom You befriend, nor is he honoured who is Your enemy. Blessed are You, O Lord, and Exalted.',
+        source: 'Abu Dawud, Tirmidhi',
+        note: 'Dua Qunoot — recited in Witr prayer (3rd rakat, before or after ruku depending on madhab). Wajib per Hanafi school. Narrated by al-Hasan ibn Ali (RA), taught by the Prophet ﷺ.',
+      },
     ],
   },
   {

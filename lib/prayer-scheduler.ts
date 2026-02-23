@@ -77,6 +77,63 @@ export function startPrayerScheduler() {
           await sendPrayerPush('iftaar').catch(console.error)
         }
       }
+
+      // ── Nawafil notifications ──────────────────────────────────────────
+      // Ishraq = Sunrise + 20 minutes
+      if (times.Sunrise && !sentToday.has('Ishraq')) {
+        const ishraqTime = new Date(times.Sunrise.getTime() + 20 * 60000)
+        const ishraqDiff = (ishraqTime.getTime() - now.getTime()) / 60000
+        if (ishraqDiff >= -0.5 && ishraqDiff < 0.5) {
+          sentToday.add('Ishraq')
+          await sendPrayerPush('Ishraq').catch(console.error)
+        }
+      }
+
+      // Duha = midpoint between Sunrise and Dhuhr
+      if (times.Sunrise && times.Dhuhr && !sentToday.has('Duha')) {
+        const duhaTime = new Date((times.Sunrise.getTime() + times.Dhuhr.getTime()) / 2)
+        const duhaDiff = (duhaTime.getTime() - now.getTime()) / 60000
+        if (duhaDiff >= -0.5 && duhaDiff < 0.5) {
+          sentToday.add('Duha')
+          await sendPrayerPush('Duha').catch(console.error)
+        }
+      }
+
+      // Awabeen = Maghrib + 15 minutes
+      if (times.Maghrib && !sentToday.has('Awabeen')) {
+        const awabeenTime = new Date(times.Maghrib.getTime() + 15 * 60000)
+        const awabeenDiff = (awabeenTime.getTime() - now.getTime()) / 60000
+        if (awabeenDiff >= -0.5 && awabeenDiff < 0.5) {
+          sentToday.add('Awabeen')
+          await sendPrayerPush('Awabeen').catch(console.error)
+        }
+      }
+
+      // Tahajjud = 2 hours before Fajr (last third of night)
+      if (times.Fajr && !sentToday.has('Tahajjud')) {
+        const tahajjudTime = new Date(times.Fajr.getTime() - 2 * 3600000)
+        const tahajjudDiff = (tahajjudTime.getTime() - now.getTime()) / 60000
+        if (tahajjudDiff >= -0.5 && tahajjudDiff < 0.5) {
+          sentToday.add('Tahajjud')
+          await sendPrayerPush('Tahajjud').catch(console.error)
+        }
+      }
+
+      // Mon/Thu fasting reminder — sent evening BEFORE at Asr + 30 min
+      // Monday fasting → notify Sunday; Thursday fasting → notify Wednesday
+      if (times.Asr && !sentToday.has('FastingMonThu')) {
+        const guyanaMs = now.getTime() + GUYANA_TZ_OFFSET * 3600000
+        const guyanaDay = new Date(guyanaMs).getUTCDay() // 0=Sun..6=Sat
+        // Sunday (0) → remind for Monday; Wednesday (3) → remind for Thursday
+        if (guyanaDay === 0 || guyanaDay === 3) {
+          const fastingReminderTime = new Date(times.Asr.getTime() + 30 * 60000)
+          const fastingDiff = (fastingReminderTime.getTime() - now.getTime()) / 60000
+          if (fastingDiff >= -0.5 && fastingDiff < 0.5) {
+            sentToday.add('FastingMonThu')
+            await sendPrayerPush('FastingMonThu').catch(console.error)
+          }
+        }
+      }
     } catch (err: any) {
       console.error('Prayer notification cron error:', err.message)
     }

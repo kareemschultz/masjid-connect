@@ -27,6 +27,12 @@ const PRAYER_NOTIF_CONFIG = [
   { key: 'Jumuah', label: 'Jumu\'ah Reminder', icon: Sun, color: 'bg-emerald-600' },
   { key: 'Suhoor', label: 'Suhoor Reminder', icon: MoonStar, color: 'bg-yellow-800' },
   { key: 'Iftaar', label: 'Iftaar Alert', icon: Sunset, color: 'bg-emerald-600' },
+  // Nawafil & Reminders
+  { key: 'Ishraq', label: 'Ishraq (Sunrise +20)', icon: Sun, color: 'bg-yellow-600' },
+  { key: 'Duha', label: 'Duha (Mid-morning)', icon: CloudSun, color: 'bg-orange-500' },
+  { key: 'Awabeen', label: 'Awabeen (Post-Maghrib)', icon: Sunset, color: 'bg-rose-600' },
+  { key: 'Tahajjud', label: 'Tahajjud (Last Third)', icon: MoonStar, color: 'bg-violet-700' },
+  { key: 'FastingMonThu', label: 'Mon/Thu Fasting Reminder', icon: Moon, color: 'bg-teal-700' },
 ]
 
 function GoogleIcon() {
@@ -376,14 +382,20 @@ export default function SettingsPage() {
           {notifs && (
             <>
               {PRAYER_NOTIF_CONFIG.map((p, i) => (
-                <SettingRow
-                  key={p.key}
-                  icon={p.icon}
-                  iconColor={p.color}
-                  label={p.label}
-                  isLast={i === PRAYER_NOTIF_CONFIG.length - 1}
-                  rightElement={<IOSToggle checked={enabledPrayers.includes(p.key)} onChange={() => togglePrayerNotif(p.key)} />}
-                />
+                <div key={p.key}>
+                  {i === 8 && (
+                    <div className="border-t border-gray-800 px-4 py-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Nawafil & Reminders</p>
+                    </div>
+                  )}
+                  <SettingRow
+                    icon={p.icon}
+                    iconColor={p.color}
+                    label={p.label}
+                    isLast={i === PRAYER_NOTIF_CONFIG.length - 1}
+                    rightElement={<IOSToggle checked={enabledPrayers.includes(p.key)} onChange={() => togglePrayerNotif(p.key)} />}
+                  />
+                </div>
               ))}
               <button onClick={disableAllNotifs} className="w-full border-t border-gray-800 px-4 py-3 text-center text-xs font-semibold text-red-400 active:bg-gray-800/50">Disable All Notifications</button>
             </>
