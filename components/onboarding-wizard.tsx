@@ -165,6 +165,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
+  const [usernameError, setUsernameError] = useState('')
   const [method, setMethod] = useState('Egyptian')
   const [madhab, setMadhab] = useState('Shafi')
   const [ramadanStart, setRamadanStart] = useState('ciog')
@@ -228,6 +231,18 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       setItem('moon_sighting', ramadanStart)
       setItem('ramadan_start_prompted', true)
     }
+    if (username.trim()) {
+      const cleaned = username.trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]/g, '')
+      fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: cleaned || undefined,
+          phoneNumber: phone.trim() || undefined,
+        }),
+      }).catch(() => {})
+    }
     setItem(KEYS.ONBOARDING_COMPLETE, true)
     onComplete()
   }
@@ -236,9 +251,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const steps = [
     'welcome',
     'features',
-    'name',
+    'profile',
     'prayer',
     ...(showRamadanStep ? ['ramadan'] : []),
+    'notifications',
+    'install',
     'done',
   ]
   const totalSteps = steps.length
@@ -371,41 +388,72 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           </div>
         )}
 
-        {/* ── Step 2: Your Name ────────────────────────────── */}
-        {currentStepKey === 'name' && (
-          <div className="relative flex flex-1 flex-col items-center justify-center px-8">
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              {/* Soft amber glints */}
-              {[[20,25],[75,20],[15,70],[80,60],[50,85]].map(([x,y],i)=>(
-                <div key={i} className="absolute h-1.5 w-1.5 rounded-full bg-amber-400/30"
-                  style={{left:`${x}%`,top:`${y}%`,animation:`gentle-pulse ${2+i*0.5}s ease-in-out infinite`,animationDelay:`${i*0.4}s`}} />
-              ))}
-              {/* Subtle sparkle lines */}
-              <div className="absolute top-16 left-8 h-px w-12 bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" style={{animation:'float-up 3s ease-in-out infinite'}} />
-              <div className="absolute bottom-20 right-10 h-px w-8 bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" style={{animation:'float-up 3.5s ease-in-out infinite',animationDelay:'1s'}} />
+        {/* ── Step 2: Profile ────────────────────────────── */}
+        {currentStepKey === 'profile' && (
+          <div className="flex flex-1 flex-col px-6 pt-6 space-y-5">
+            <div>
+              <div className="mb-1 flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/15">
+                  <span className="text-xl">👤</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">Your Profile</h2>
+                  <p className="text-xs text-gray-500">Help your Faith Buddies find you</p>
+                </div>
+              </div>
             </div>
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-500/20">
-              <Sparkles className="h-7 w-7 text-amber-400" />
-            </div>
-            <h2 className="text-2xl font-bold text-white">What should we call you?</h2>
-            <p className="mt-2 mb-6 text-center text-sm text-gray-400">
-              This personalises your experience across the app
-            </p>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && next()}
-              placeholder="Your name or kunya"
-              className="w-full max-w-xs rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4 text-center text-lg text-white placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-              autoFocus
-            />
-            <button onClick={next} className="mt-5 text-sm text-gray-500 underline underline-offset-4 active:text-gray-400">
-              Skip for now
-            </button>
 
-            <div className="mt-6 w-full max-w-xs">
-              <div className="flex items-center gap-3 mb-4">
+            {/* Display Name */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Your Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Abdullah, Sister Fatima..."
+                maxLength={40}
+                className="w-full rounded-2xl border border-gray-700 bg-gray-900 px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+              />
+              <p className="text-[11px] text-gray-600">Shown in the community and Faith Buddies leaderboard</p>
+            </div>
+
+            {/* @Username */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">@Username <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-emerald-400">@</span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())
+                    setUsernameError('')
+                  }}
+                  placeholder="your_username"
+                  maxLength={30}
+                  className="w-full rounded-2xl border border-gray-700 bg-gray-900 py-3.5 pl-9 pr-4 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                />
+              </div>
+              {usernameError && <p className="text-[11px] text-red-400">{usernameError}</p>}
+              <p className="text-[11px] text-gray-600">Buddies can search you by @username — no email needed</p>
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Phone / WhatsApp <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+5926123456"
+                className="w-full rounded-2xl border border-gray-700 bg-gray-900 px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+              />
+              <p className="text-[11px] text-gray-600">Let buddies find you via your WhatsApp number</p>
+            </div>
+
+            {/* Google sign-in */}
+            <div className="w-full">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="h-px flex-1 bg-gray-800" />
                 <span className="text-xs text-gray-600">or</span>
                 <div className="h-px flex-1 bg-gray-800" />
@@ -413,7 +461,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <button
                 onClick={handleGoogleSignIn}
                 disabled={signingIn}
-                className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-gray-900 px-5 py-4 text-sm font-semibold text-white transition-all active:bg-gray-800 disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white transition-all active:bg-gray-800 disabled:opacity-50"
               >
                 {signingIn ? (
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-gray-600 border-t-white" />
@@ -422,15 +470,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 )}
                 {signingIn ? 'Redirecting to Google...' : 'Continue with Google'}
               </button>
-              <p className="mt-2 text-center text-[10px] text-gray-600">
+              <p className="mt-1.5 text-center text-[10px] text-gray-600">
                 Sign in to sync your tracker and streaks across devices
               </p>
             </div>
 
-            {/* Data note */}
-            <p className="mt-4 max-w-xs text-center text-[11px] text-gray-600">
-              Your name is stored only on this device. No personal data is ever sent to a server without your consent.
-            </p>
+            <p className="text-center text-[10px] text-gray-700 pt-1">All fields optional — you can update these in Settings anytime</p>
           </div>
         )}
 
@@ -573,6 +618,141 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           </div>
         )}
 
+        {/* ── Step: Notifications ────────────────────────────── */}
+        {currentStepKey === 'notifications' && (
+          <div className="flex flex-1 flex-col items-center justify-center px-6 text-center space-y-6">
+            <div className="relative">
+              <div className="absolute -inset-6 rounded-full bg-amber-500/10 blur-2xl" />
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/20">
+                <Bell className="h-10 w-10 text-amber-400" />
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-white">Never Miss Salah</h2>
+              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+                Get notified at each of the 5 prayer times — Fajr, Dhuhr, Asr, Maghrib, and Isha.
+                {showRamadanStep ? ' Plus Suhoor and Iftaar reminders during Ramadan.' : ''}
+              </p>
+            </div>
+
+            {/* Preview cards */}
+            <div className="w-full space-y-2 text-left">
+              {[
+                { prayer: 'Fajr', time: '5:12 AM', icon: '🌅' },
+                { prayer: 'Dhuhr', time: '12:08 PM', icon: '☀️' },
+                { prayer: 'Maghrib', time: '6:21 PM', icon: '🌇' },
+              ].map(p => (
+                <div key={p.prayer} className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
+                  <span className="text-lg">{p.icon}</span>
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold text-white">{p.prayer} · {p.time}</p>
+                    <p className="text-[10px] text-gray-500">Time to pray</p>
+                  </div>
+                  <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+                </div>
+              ))}
+            </div>
+
+            {/* Enable button or granted state */}
+            {isPushSupported() ? (
+              <div className="w-full space-y-2">
+                <button
+                  onClick={requestNotifications}
+                  className={`w-full rounded-2xl py-4 text-sm font-bold transition-all active:scale-95 ${
+                    notifGranted
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
+                      : 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                  }`}
+                >
+                  {notifGranted ? '✓ Notifications Enabled' : '🔔 Enable Prayer Notifications'}
+                </button>
+                {!notifGranted && (
+                  <button onClick={next} className="w-full py-2 text-xs text-gray-600 underline underline-offset-2">
+                    Skip for now
+                  </button>
+                )}
+                {notifGranted && (
+                  <p className="text-xs text-gray-500">You can customise which prayers in Settings → Notifications</p>
+                )}
+              </div>
+            ) : (
+              <div className="w-full rounded-2xl border border-gray-800 bg-gray-900 p-4 text-center">
+                <p className="text-xs text-gray-500">Notifications not available in this browser. Use the installed app for prayer reminders.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Step: Install ─────────────────────────────────── */}
+        {currentStepKey === 'install' && (
+          <div className="flex flex-1 flex-col items-center justify-center px-6 text-center space-y-5">
+            <div className="relative">
+              <div className="absolute -inset-6 rounded-full bg-teal-500/10 blur-2xl" />
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-teal-500/20 to-emerald-500/10 border border-teal-500/20">
+                <Smartphone className="h-10 w-10 text-teal-400" />
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-white">Add to Home Screen</h2>
+              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+                Install MasjidConnect GY as an app for instant access — no App Store needed.
+                Works offline, loads faster, feels native.
+              </p>
+            </div>
+
+            {/* Already standalone */}
+            {isStandalone() ? (
+              <div className="w-full rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+                <p className="text-sm font-bold text-emerald-400">✓ Already installed!</p>
+                <p className="text-xs text-gray-500 mt-0.5">You are running the installed app.</p>
+              </div>
+            ) : isIOS() ? (
+              /* iOS instructions */
+              <div className="w-full rounded-2xl border border-teal-500/20 bg-teal-500/5 p-4 text-left space-y-3">
+                {[
+                  { n: '1', icon: '📤', text: 'Tap the Share button', sub: 'At the bottom of your Safari browser' },
+                  { n: '2', icon: '➕', text: 'Tap "Add to Home Screen"', sub: 'Scroll down in the share sheet' },
+                  { n: '3', icon: '✅', text: 'Tap "Add" to confirm', sub: 'The app will appear on your Home Screen' },
+                ].map(s => (
+                  <div key={s.n} className="flex items-start gap-2.5">
+                    <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-white text-[10px] font-bold mt-0.5">{s.n}</span>
+                    <div>
+                      <p className="text-xs font-semibold text-white">{s.icon} {s.text}</p>
+                      <p className="text-[10px] text-teal-400/60">{s.sub}</p>
+                    </div>
+                  </div>
+                ))}
+                <p className="text-[10px] text-gray-600 pt-1">⚠️ Must be opened in <strong className="text-gray-500">Safari</strong> — Chrome on iPhone cannot install apps.</p>
+              </div>
+            ) : deferredPrompt ? (
+              /* Android / Desktop install */
+              <div className="w-full space-y-2">
+                <button
+                  onClick={triggerInstall}
+                  disabled={pwaInstalled}
+                  className={`w-full rounded-2xl py-4 text-sm font-bold transition-all active:scale-95 ${
+                    pwaInstalled
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
+                      : 'bg-teal-500 text-white shadow-lg shadow-teal-500/20'
+                  }`}
+                >
+                  {pwaInstalled ? '✓ App Installed' : '📲 Install App Now'}
+                </button>
+                {pwaInstalled && (
+                  <p className="text-xs text-gray-500">Open it from your Home Screen for the best experience.</p>
+                )}
+              </div>
+            ) : (
+              /* No prompt available */
+              <div className="w-full rounded-2xl border border-gray-800 bg-gray-900 p-4 text-center">
+                <p className="text-xs text-gray-500">Install prompt not available right now. You can install later from your browser menu.</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ── Step: Done ───────────────────────────────────── */}
         {currentStepKey === 'done' && (
           <div className="relative flex flex-1 flex-col px-6 pt-6">
@@ -593,83 +773,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               {/* Radial glow behind CTA */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-40 w-64 rounded-full bg-emerald-500/5 blur-3xl" />
             </div>
-            {/* Notification & Install */}
-            <div className="space-y-3 mb-5">
-              {/* Push Notifications */}
-              {isPushSupported() && (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 px-5 py-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15">
-                      <Bell className="h-5 w-5 text-amber-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-white">Adhan Notifications</p>
-                      <p className="mt-0.5 text-xs text-gray-400">Get notified at each prayer time</p>
-                    </div>
-                    <button
-                      onClick={requestNotifications}
-                      className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
-                        notifGranted
-                          ? 'bg-emerald-500/15 text-emerald-400'
-                          : 'bg-amber-500 text-white active:bg-amber-600'
-                      }`}
-                    >
-                      {notifGranted ? '✓ Enabled' : 'Enable'}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* PWA Install */}
-              {!isStandalone() && (deferredPrompt || isIOS()) && (
-                <div className="rounded-2xl border border-teal-500/20 bg-teal-500/5 px-5 py-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15">
-                      <Smartphone className="h-5 w-5 text-teal-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-white">Install App</p>
-                      <p className="mt-0.5 text-xs text-teal-400/70">Add to your Home Screen for the best experience</p>
-                    </div>
-                    {!isIOS() && (
-                      <button
-                        onClick={triggerInstall}
-                        disabled={pwaInstalled}
-                        className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
-                          pwaInstalled
-                            ? 'bg-emerald-500/15 text-emerald-400'
-                            : 'bg-teal-500 text-white active:bg-teal-600'
-                        }`}
-                      >
-                        {pwaInstalled ? '✓ Installed' : 'Install'}
-                      </button>
-                    )}
-                  </div>
-                  {isIOS() && (
-                    <div className="space-y-2.5">
-                      {[
-                        { n: '1', text: 'Tap the Share button', sub: '📤 at the bottom of your Safari screen' },
-                        { n: '2', text: 'Scroll and tap "Add to Home Screen"', sub: 'Look for the icon with a plus sign' },
-                        { n: '3', text: 'Tap "Add" in the top right', sub: 'The app will appear on your Home Screen' },
-                      ].map(s => (
-                        <div key={s.n} className="flex items-start gap-2.5">
-                          <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-white text-[10px] font-bold mt-0.5">{s.n}</span>
-                          <div>
-                            <p className="text-xs font-semibold text-white">{s.text}</p>
-                            <p className="text-[10px] text-teal-400/60">{s.sub}</p>
-                          </div>
-                        </div>
-                      ))}
-                      <p className="text-[10px] text-gray-600 pt-1">⚠️ Must be opened in <strong className="text-gray-500">Safari</strong> — Chrome on iPhone cannot install apps.</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-            </div>
 
             {/* Completion CTA */}
-            <div className="flex flex-col items-center pb-4">
+            <div className="flex flex-1 flex-col items-center justify-center pb-4">
               <div className="relative mb-4">
                 <div className="absolute -inset-4 rounded-full bg-emerald-500/10 blur-2xl" />
                 <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500">
