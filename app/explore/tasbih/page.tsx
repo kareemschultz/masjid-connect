@@ -73,6 +73,8 @@ export default function TasbihPage() {
         subtitle="Digital Counter"
         gradient="from-emerald-900 to-teal-900"
         showBack
+      
+        heroTheme="tasbih"
       />
 
       <div className="relative flex flex-col items-center px-4 pt-8">

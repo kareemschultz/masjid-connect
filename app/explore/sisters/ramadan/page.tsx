@@ -80,6 +80,7 @@ export default function SistersRamadanPage() {
         subtitle="Worship during your cycle"
         gradient="from-rose-900 to-pink-900"
         showBack
+        heroTheme="ramadan"
       />
 
       <div className="px-4 pt-5 space-y-4">

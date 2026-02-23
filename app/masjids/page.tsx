@@ -121,6 +121,8 @@ export default function MasjidsPage() {
         title="Masjid Directory"
         subtitle="Guyana"
         gradient="from-teal-900 to-green-900"
+      
+        heroTheme="masjid"
       />
 
       <div className="px-4 pt-4 space-y-3">

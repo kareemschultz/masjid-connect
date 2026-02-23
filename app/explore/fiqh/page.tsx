@@ -82,6 +82,8 @@ function FiqhHubContent() {
         subtitle="Islamic Law & Jurisprudence"
         gradient="from-violet-950 to-purple-900"
         showBack
+      
+        heroTheme="fiqh"
       />
 
       {/* ── Hanafi badge ───────────────────────────────── */}

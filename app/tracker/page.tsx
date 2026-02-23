@@ -491,6 +491,8 @@ export default function TrackerPage() {
         title="Prayer Tracker"
         subtitle="Track Your Salah"
         gradient="from-blue-900 to-indigo-900"
+      
+        heroTheme="prayer"
       />
 
       {/* ── Daily Sunnah Score ── */}

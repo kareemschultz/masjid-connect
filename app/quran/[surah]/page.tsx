@@ -346,6 +346,7 @@ export default function SurahReaderPage() {
         title={surah.englishName}
         subtitle={surah.englishNameTranslation}
         gradient="from-violet-900 to-purple-900"
+        heroTheme="quran"
         showBack
       />
 

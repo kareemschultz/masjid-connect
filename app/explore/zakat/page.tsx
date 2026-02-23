@@ -74,6 +74,8 @@ export default function ZakatPage() {
         subtitle="In Guyanese Dollars (GYD)"
         gradient="from-teal-900 to-green-900"
         showBack
+      
+        heroTheme="zakat"
       />
 
       <div className="space-y-4 px-4 pt-5">

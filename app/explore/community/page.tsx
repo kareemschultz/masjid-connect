@@ -63,6 +63,7 @@ export default function CommunityPage() {
         gradient="from-violet-900 to-purple-900"
         showBack
         compact
+        heroTheme="community"
       />
 
       <div className="px-4 pt-5 -mt-2 space-y-3 animate-stagger">

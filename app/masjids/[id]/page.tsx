@@ -171,6 +171,7 @@ export default function MasjidDetailPage() {
         subtitle={masjid.area}
         gradient="from-teal-900 to-green-900"
         showBack
+        heroTheme="masjid"
       />
 
       <div className="px-4 pt-5 space-y-4">

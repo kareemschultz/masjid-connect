@@ -212,6 +212,7 @@ export default function FastingTrackerPage() {
         subtitle="Track your blessed fasts"
         gradient="from-orange-950 to-amber-900"
         showBack
+        heroTheme="ramadan"
         action={
           <button onClick={handleShare} className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/60 transition-transform active:scale-90" aria-label="Share">
             <Share2 className="h-4 w-4" />

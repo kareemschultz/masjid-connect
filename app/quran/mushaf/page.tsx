@@ -296,6 +296,8 @@ export default function MushafPage() {
         subtitle="Page-by-page Quran"
         gradient="from-amber-900 to-orange-900"
         showBack
+      
+        heroTheme="quran"
       />
 
       {/* Controls */}

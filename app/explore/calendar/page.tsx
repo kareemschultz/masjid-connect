@@ -222,6 +222,7 @@ export default function CalendarPage() {
         subtitle="2026 / 1447-1448 AH"
         gradient="from-rose-900 to-pink-900"
         showBack
+        heroTheme="prayer"
       />
 
       <div className="px-4 pt-5 space-y-5">

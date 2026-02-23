@@ -41,6 +41,7 @@ export default function LeaderboardPage() {
         subtitle="Community Ranking"
         gradient="from-amber-900 to-yellow-900"
         showBack
+        heroTheme="community"
       />
 
       <div className="px-4 pt-5 -mt-2 space-y-3 animate-stagger">

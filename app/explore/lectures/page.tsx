@@ -660,6 +660,8 @@ export default function LecturesPage() {
         subtitle={`${SCHOLARS.length} scholars · ${totalLectures} lectures`}
         gradient="from-teal-900 to-emerald-900"
         showBack
+      
+        heroTheme="lectures"
       />
 
       {/* ── Toolbar ──────────────────────────────────────────────── */}

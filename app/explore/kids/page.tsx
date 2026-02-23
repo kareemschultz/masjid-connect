@@ -177,6 +177,8 @@ export default function KidsPage() {
         subtitle="Learn Islam the Fun Way"
         gradient="from-rose-950 to-pink-900"
         showBack
+      
+        heroTheme="kids"
       />
 
       <div className="px-4 pt-4 space-y-2">

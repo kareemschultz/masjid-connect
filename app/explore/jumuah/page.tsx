@@ -102,6 +102,8 @@ export default function JumuahPage() {
     return (
       <div className="min-h-screen bg-[#0a0b14]">
         <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack />
+        heroTheme="prayer"
+      />
       </div>
     )
   }

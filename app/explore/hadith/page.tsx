@@ -36,6 +36,8 @@ export default function HadithPage() {
         subtitle="Essential hadith every Muslim should know"
         gradient="from-amber-950 to-orange-900"
         showBack
+      
+        heroTheme="hadith"
       />
 
       {/* ── Sticky filter bar ── */}

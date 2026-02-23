@@ -62,6 +62,8 @@ export default function NamesOfAllahPage() {
         subtitle="Al-Asma Al-Husna"
         gradient="from-amber-900 to-yellow-900"
         showBack
+      
+        heroTheme="names"
       />
 
       {/* Search */}

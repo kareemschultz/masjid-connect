@@ -18,6 +18,7 @@ export default function FidyaGuidePage() {
         subtitle="Darul Uloom Masjid East Street"
         gradient="from-amber-900 to-orange-900"
         showBack
+        heroTheme="zakat"
       />
 
       <div className="px-4 pt-5 space-y-4">

@@ -352,6 +352,8 @@ export default function JanazahGuidePage() {
         subtitle="Islamic Funeral Rites"
         gradient="from-gray-900 to-slate-900"
         showBack
+      
+        heroTheme="janazah"
       />
 
       <div className="px-4 pt-3 pb-1">

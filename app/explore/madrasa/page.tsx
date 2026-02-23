@@ -108,6 +108,7 @@ export default function MadrasaPage() {
         gradient="from-indigo-900 to-blue-900"
         showBack
         compact
+        heroTheme="quran"
       />
 
       <div className="space-y-3 px-4 pt-5 animate-stagger">

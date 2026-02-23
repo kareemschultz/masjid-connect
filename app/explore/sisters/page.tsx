@@ -91,6 +91,7 @@ export default function SistersPage() {
         gradient="from-rose-950 to-pink-900"
         showBack
         compact
+        heroTheme="sisters"
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

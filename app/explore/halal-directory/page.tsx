@@ -395,6 +395,7 @@ export default function HalalDirectoryPage() {
         subtitle="Certified businesses in Guyana"
         gradient="from-emerald-900 to-teal-900"
         showBack
+        heroTheme="fiqh"
       />
 
       <div className="px-4 pt-4 space-y-3">

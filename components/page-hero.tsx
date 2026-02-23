@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useMemo, type ReactNode } from 'react'
+import { HeroAnimation, type HeroTheme } from './hero-animations'
 
 interface PageHeroProps {
   icon: LucideIcon
@@ -17,6 +18,8 @@ interface PageHeroProps {
   stars?: boolean
   /** Compact mode — slim header for hub/nav pages visited frequently */
   compact?: boolean
+  /** Page-specific background animation theme */
+  heroTheme?: HeroTheme
 }
 
 function StarField() {
@@ -64,7 +67,7 @@ function StarField() {
   )
 }
 
-export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, action, stars, compact }: PageHeroProps) {
+export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, action, stars, compact, heroTheme }: PageHeroProps) {
   const router = useRouter()
 
   // ─── Compact variant — slim header for hub/nav pages ─────────────────────
@@ -73,6 +76,7 @@ export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, acti
       <div className={`relative overflow-hidden bg-gradient-to-br ${gradient}`}>
         <div className="islamic-pattern absolute inset-0 opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0b14]" />
+        {heroTheme && <HeroAnimation theme={heroTheme} />}
         <div className="relative flex items-center gap-3 px-5 py-4" style={{ paddingTop: 'max(1rem, calc(env(safe-area-inset-top) + 0.5rem))' }}>
           {showBack && (
             <button
@@ -107,6 +111,8 @@ export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, acti
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0b14]" />
       {/* Star field */}
       {stars && <StarField />}
+      {/* Page-specific animation */}
+      {heroTheme && <HeroAnimation theme={heroTheme} />}
 
       <div className="relative px-5 pb-10" style={{ paddingTop: 'max(3.5rem, calc(env(safe-area-inset-top) + 1rem))' }}>
         <div className="flex items-start justify-between">

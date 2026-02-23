@@ -855,6 +855,8 @@ export default function DuasPage() {
         subtitle={`${CATEGORIES.reduce((n, c) => n + c.duas.length, 0)} supplications · ${CATEGORIES.length} categories`}
         gradient="from-purple-900 to-violet-900"
         showBack
+      
+        heroTheme="duas"
       />
 
       {/* ── Toolbar ─────────────────────────────────── */}

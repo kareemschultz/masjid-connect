@@ -75,6 +75,7 @@ export default function QiblaPage() {
         subtitle="Direction to Mecca"
         gradient="from-blue-900 to-indigo-900"
         showBack
+        heroTheme="prayer"
       />
 
       <div className="flex flex-col items-center px-4 pt-10">

@@ -49,6 +49,8 @@ export default function AdhkarPage() {
         subtitle="Remembrance of Allah"
         gradient="from-amber-900 to-yellow-900"
         showBack
+      
+        heroTheme="tasbih"
       />
 
       {/* Category tabs */}

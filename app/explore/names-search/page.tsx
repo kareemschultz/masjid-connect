@@ -35,6 +35,7 @@ export default function NamesSearchPage() {
         subtitle="Names with meaning and origin"
         gradient="from-rose-900 to-pink-900"
         showBack
+        heroTheme="names"
       />
 
       <div className="px-4 pt-4 space-y-3">

@@ -354,6 +354,7 @@ export default function BuddyPage() {
         subtitle="Grow Together in Faith"
         gradient="from-sky-950 to-blue-900"
         showBack
+        heroTheme="community"
       />
 
       {/* How It Works link */}

@@ -118,6 +118,8 @@ export default function HalalGuidePage() {
         subtitle="Foods, Ingredients & E-Numbers Reference"
         gradient="from-emerald-900 to-teal-900"
         showBack
+      
+        heroTheme="fiqh"
       />
 
       <div className="px-4 pt-5 space-y-4">

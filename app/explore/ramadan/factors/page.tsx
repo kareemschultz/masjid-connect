@@ -50,6 +50,7 @@ export default function FactorsAffectingFastPage() {
         subtitle="Darul Uloom Masjid East Street"
         gradient="from-red-900 to-orange-900"
         showBack
+        heroTheme="ramadan"
       />
 
       <div className="px-4 pt-5 space-y-4">

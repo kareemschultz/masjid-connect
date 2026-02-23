@@ -192,6 +192,8 @@ export default function RecitationPage() {
     return (
       <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero icon={Headphones} title="Recitation" subtitle="Choose a Reciter" gradient="from-teal-900 to-emerald-900" showBack />
+        heroTheme="quran"
+      />
 
         <div className="px-4 pt-4">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-500">Select Reciter</p>
