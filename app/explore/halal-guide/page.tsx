@@ -20,9 +20,7 @@ interface HalalItem {
 
 const ITEMS: HalalItem[] = [
   // ── Certified Halal Products in Guyana ──────────────────────────────────
-  { name: 'Banks DIH Products (select)', status: 'halal', category: 'Certified Halal', detail: 'Select Banks DIH food products carry GHA or CIOG halal certification. Check packaging for the halal logo.', authority: 'GHA' },
-  { name: 'Demerara Distillers (non-alcoholic)', status: 'halal', category: 'Certified Halal', detail: 'Non-alcoholic products from DDL (juices, syrups) — halal. Alcoholic products (rum, spirits) are haram.', authority: 'CIOG' },
-  { name: 'Chicken purchased from Muslim butchers', status: 'halal', category: 'Certified Halal', detail: 'Zabiha chicken from certified Muslim butchers in Georgetown — slaughtered according to Islamic rites with the Name of Allah.', authority: 'CIOG' },
+  { name: 'Chicken from Muslim butchers', status: 'halal', category: 'Certified Halal', detail: 'Zabiha chicken from certified Muslim butchers in Georgetown — slaughtered according to Islamic rites with the Name of Allah. Verify butcher is certified before purchasing.', authority: 'CIOG / Darul Uloom' },
   { name: 'imported halal-certified meats', status: 'halal', category: 'Certified Halal', detail: 'Halal-certified imported meats (Brazil, Malaysia, UAE) commonly sold at Muslim butcher shops. Look for international halal logos.', authority: 'Various' },
   { name: 'Most fruits and vegetables', status: 'halal', category: 'Certified Halal', detail: 'All fresh fruits and vegetables are inherently halal unless processed with haram additives.', authority: 'Inherently Halal' },
   { name: 'Fish and seafood (general)', status: 'halal', category: 'Certified Halal', detail: 'All fish and most seafood are halal without the need for zabiha slaughter. Note: Hanafi school considers shellfish (shrimp, crab) to be makruh (disliked) to haram.', authority: 'Inherently Halal' },
@@ -60,22 +58,28 @@ const ITEMS: HalalItem[] = [
 
 const GUYANA_AUTHORITIES = [
   {
-    name: 'Guyana Halal Authority (GHA)',
-    description: 'Primary halal certification body in Guyana. Issues halal certificates to restaurants, butchers, and food manufacturers. Look for the GHA stamp on packaging.',
-    contact: 'Contact via CIOG',
-    logo: '🏛️',
-  },
-  {
-    name: 'CIOG Halal Committee',
-    description: 'The Central Islamic Organisation of Guyana also certifies and monitors halal compliance for food businesses in Guyana.',
-    contact: '592-225-6167 (CIOG)',
+    name: 'CIOG (Central Islamic Organisation of Guyana)',
+    description: 'One of Guyana\'s main Islamic bodies. The CIOG certifies and monitors halal compliance for food businesses, butchers, and restaurants in Guyana. Headquartered at Woolford Avenue, Thomas Lands, Georgetown.',
+    contact: '592-225-6167',
     logo: '☪️',
   },
   {
-    name: 'Muslim Youth Organisation (MYO)',
-    description: 'MYO participates in halal awareness and education programmes in Guyana.',
-    contact: 'Via MYO/CIOG',
-    logo: '👥',
+    name: 'Maulana Badruddeen / Darul Uloom',
+    description: 'Imam of Darul Uloom Masjid and a prominent halal certifier in Guyana. Regularly posts halal certifications and rulings for products — including canned goods, sausages, and local restaurants — on his social media pages. One of the most active halal authorities in the community.',
+    contact: 'Darul Uloom Masjid — 310 East Street, Alberttown',
+    logo: '🎓',
+  },
+  {
+    name: 'GIT (Guyana Islamic Trust)',
+    description: 'The Guyana Islamic Trust publishes official Islamic calendars, prayer timetables, and educational content. Also involved in halal awareness in the community.',
+    contact: 'N½ Lot 321 East Street, N/Cummingsburg, Georgetown | 227-0115 / 225-5934',
+    logo: '🏛️',
+  },
+  {
+    name: 'Important Note on Guyana\'s Halal Landscape',
+    description: 'Unlike some countries, Guyana does not have a single unified halal authority. Certification is issued by multiple organisations — CIOG, individual scholars (like Maulana Badruddeen), and imported products carry international halal logos. Always verify with the specific certifying body or your local imam when in doubt.',
+    contact: '',
+    logo: 'ℹ️',
   },
 ]
 
