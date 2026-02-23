@@ -101,16 +101,14 @@ export default function JumuahPage() {
   if (!mounted) {
     return (
       <div className="min-h-screen bg-[#0a0b14]">
-        <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack />
-        heroTheme="prayer"
-      />
+        <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack  heroTheme="prayer" />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack />
+      <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack  heroTheme="prayer" />
 
       <div className="mx-auto max-w-lg space-y-6 px-4 py-6">
 

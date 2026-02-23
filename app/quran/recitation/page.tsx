@@ -191,9 +191,7 @@ export default function RecitationPage() {
   if (step === 'reciter') {
     return (
       <div className="min-h-screen bg-[#0a0b14] pb-nav">
-        <PageHero icon={Headphones} title="Recitation" subtitle="Choose a Reciter" gradient="from-teal-900 to-emerald-900" showBack />
-        heroTheme="quran"
-      />
+        <PageHero icon={Headphones} title="Recitation" subtitle="Choose a Reciter" gradient="from-teal-900 to-emerald-900" showBack  heroTheme="quran" />
 
         <div className="px-4 pt-4">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-500">Select Reciter</p>
@@ -242,7 +240,7 @@ export default function RecitationPage() {
   if (step === 'surah') {
     return (
       <div className="min-h-screen bg-[#0a0b14] pb-nav">
-        <PageHero icon={Headphones} title="Recitation" subtitle={reciterData.name} gradient="from-teal-900 to-emerald-900" showBack />
+        <PageHero icon={Headphones} title="Recitation" subtitle={reciterData.name} gradient="from-teal-900 to-emerald-900" showBack  heroTheme="quran" />
 
         <div className="px-4 pt-4">
           {/* Selected reciter banner */}
@@ -299,7 +297,7 @@ export default function RecitationPage() {
   // ── STEP: Player ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-48">
-      <PageHero icon={Headphones} title={surah.englishName} subtitle={reciterData.name} gradient="from-teal-900 to-emerald-900" showBack />
+      <PageHero icon={Headphones} title={surah.englishName} subtitle={reciterData.name} gradient="from-teal-900 to-emerald-900" showBack  heroTheme="quran" />
 
       {/* Header info */}
       <div className="flex items-center gap-2 px-4 pt-3">
