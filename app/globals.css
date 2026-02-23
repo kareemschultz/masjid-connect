@@ -4,24 +4,24 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f5f5f0;
-  --foreground: #111827;
+  --background: #fafafa;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: #111827;
+  --card-foreground: #0f172a;
   --popover: #ffffff;
-  --popover-foreground: #111827;
+  --popover-foreground: #0f172a;
   --primary: #10b981;
   --primary-foreground: #ffffff;
-  --secondary: #f0ede8;
-  --secondary-foreground: #111827;
-  --muted: #f0ede8;
-  --muted-foreground: #6b7280;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f3f4f6;
+  --muted-foreground: #64748b;
   --accent: #f59e0b;
-  --accent-foreground: #0a0b14;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #d8d4cd;
-  --input: #f0ede8;
+  --border: #e2e8f0;
+  --input: #f1f5f9;
   --ring: #10b981;
   --chart-1: #10b981;
   --chart-2: #f59e0b;
@@ -29,24 +29,24 @@
   --chart-4: #8b5cf6;
   --chart-5: #ec4899;
   --radius: 1rem;
-  --sidebar: #f5f5f0;
-  --sidebar-foreground: #111827;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0f172a;
   --sidebar-primary: #10b981;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0ede8;
-  --sidebar-accent-foreground: #111827;
-  --sidebar-border: #d8d4cd;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
   --sidebar-ring: #10b981;
 
   /* Premium effects variables */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-emerald-bg: rgba(16, 185, 129, 0.08);
-  --glass-emerald-border: rgba(16, 185, 129, 0.18);
-  --glass-amber-bg: rgba(245, 158, 11, 0.08);
-  --glass-amber-border: rgba(245, 158, 11, 0.15);
-  --islamic-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpolygon points='30,2 35,22 55,22 40,34 46,54 30,42 14,54 20,34 5,22 25,22' fill='%23065f46' opacity='0.06'/%3E%3C/svg%3E");
-  --shimmer-gradient: linear-gradient(90deg, transparent, rgba(0,0,0,0.04), transparent);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-emerald-bg: rgba(16, 185, 129, 0.06);
+  --glass-emerald-border: rgba(16, 185, 129, 0.15);
+  --glass-amber-bg: rgba(245, 158, 11, 0.06);
+  --glass-amber-border: rgba(245, 158, 11, 0.12);
+  --islamic-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpolygon points='30,2 35,22 55,22 40,34 46,54 30,42 14,54 20,34 5,22 25,22' fill='%23065f46' opacity='0.04'/%3E%3C/svg%3E");
+  --shimmer-gradient: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
 }
 
 html:not([data-theme='light']) {
