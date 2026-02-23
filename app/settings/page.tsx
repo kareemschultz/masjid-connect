@@ -87,9 +87,9 @@ export default function SettingsPage() {
   const updateMoonSighting = (val: string) => {
     setMoonSighting(val)
     setItem('moon_sighting', val)
-    // Update ramadan_start to match the selected sighting
-    const DATES: Record<string, string> = { saudi: '2026-03-01', ciog: '2026-03-01' }
-    setItem('ramadan_start', DATES[val] || '2026-03-01')
+    // Update ramadan_start to match the selected sighting (per GIT official timetable 1447)
+    const DATES: Record<string, string> = { saudi: '2026-02-18', ciog: '2026-02-19' }
+    setItem('ramadan_start', DATES[val] || '2026-02-19')
   }
   const updateReciter = (val: string) => { setReciter(val); setItem(KEYS.RECITER, val) }
 

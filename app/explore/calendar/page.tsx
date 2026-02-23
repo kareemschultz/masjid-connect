@@ -33,50 +33,50 @@ const ISLAMIC_EVENTS_2026: IslamicEvent[] = [
   {
     name: 'Ramadan Begins',
     hijriDate: '1 Ramadan 1447',
-    date: '2026-03-01',   // CIOG local moon sighting — Guyana (moon sighted Feb 28 evening → Ramadan 1 = March 1)
-    description: 'The blessed month of fasting begins. Based on CIOG local moon sighting for Guyana.',
+    date: '2026-02-18',   // GIT/Saudi: Wed 18 Feb. CIOG: Thu 19 Feb. Per GIT official timetable.
+    description: 'The blessed month of fasting begins. GIT/Saudi: Wed 18 Feb. CIOG local sighting: Thu 19 Feb. Based on GIT Ramadan 1447 timetable for Guyana.',
     importance: 'Very Important',
   },
   {
     name: 'Laylatul Qadr (Night 21)',
     hijriDate: '21 Ramadan 1447',
-    date: '2026-03-21',
-    description: 'First odd night in the last 10 nights. The Night of Power is better than a thousand months.',
+    date: '2026-03-10',
+    description: 'First odd night in the last 10 nights. The Night of Power is better than a thousand months. Increase ibadah, dua, and Quran.',
     importance: 'Blessed Night',
   },
   {
     name: 'Laylatul Qadr (Night 23)',
     hijriDate: '23 Ramadan 1447',
-    date: '2026-03-23',
-    description: 'Odd night in the last 10 nights of Ramadan. Seek Laylatul Qadr.',
+    date: '2026-03-12',
+    description: 'Odd night in the last 10 nights of Ramadan. Seek Laylatul Qadr with extra prayer and dua.',
     importance: 'Blessed Night',
   },
   {
     name: 'Laylatul Qadr (Night 25)',
     hijriDate: '25 Ramadan 1447',
-    date: '2026-03-25',
+    date: '2026-03-14',
     description: 'Odd night in the last 10 nights of Ramadan. Seek Laylatul Qadr.',
     importance: 'Blessed Night',
   },
   {
     name: 'Laylatul Qadr (Night 27)',
     hijriDate: '27 Ramadan 1447',
-    date: '2026-03-27',
-    description: 'Most commonly believed to be the Night of Power. Increase worship and dua this night.',
+    date: '2026-03-16',
+    description: 'Most commonly believed to be Laylatul Qadr. The Night of Power is better than a thousand months (Q97:3). Increase worship, dua, and dhikr.',
     importance: 'Very Important',
   },
   {
     name: 'Laylatul Qadr (Night 29)',
     hijriDate: '29 Ramadan 1447',
-    date: '2026-03-29',
-    description: 'Last odd night in the last 10 nights of Ramadan.',
+    date: '2026-03-18',
+    description: 'Last odd night in the last 10 nights of Ramadan. Do not neglect this night.',
     importance: 'Blessed Night',
   },
   {
     name: 'Eid al-Fitr',
     hijriDate: '1 Shawwal 1447',
-    date: '2026-03-30',   // 29-day Ramadan (subject to moon sighting)
-    description: 'Festival of Breaking the Fast. Celebrate with family, pray Eid Salah, give Zakat al-Fitr. Date subject to CIOG moon sighting.',
+    date: '2026-03-20',   // Eid after 30-day Ramadan ending March 19 (per GIT timetable)
+    description: 'Festival of Breaking the Fast. Celebrate with family, pray Eid Salah, give Zakat al-Fitr before Eid prayer. Date subject to CIOG moon sighting announcement.',
     importance: 'Very Important',
   },
   {
