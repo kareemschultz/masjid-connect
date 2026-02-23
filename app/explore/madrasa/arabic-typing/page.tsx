@@ -120,6 +120,7 @@ export default function ArabicTypingPage() {
         subtitle="Learn to write Arabic letters"
         gradient="from-emerald-900 to-teal-900"
         showBack
+        heroTheme="quran"
       />
 
       {/* ── Mode toggle ──────────────────────────────────────────────── */}

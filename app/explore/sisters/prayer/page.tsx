@@ -61,6 +61,7 @@ export default function WomenPrayerPage() {
         gradient="from-purple-950 to-violet-900"
         showBack
         stars
+        heroTheme="prayer"
       />
 
       <div className="space-y-3 px-4 pt-5 animate-stagger">

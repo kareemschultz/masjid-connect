@@ -127,7 +127,7 @@ export default function CommunityFeedPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={MessageCircle} title="Community Feed" subtitle="Muslims in GY" gradient="from-blue-900 to-indigo-900" showBack />
+      <PageHero icon={MessageCircle} title="Community Feed" subtitle="Muslims in GY" gradient="from-blue-900 to-indigo-900" showBack heroTheme="community" />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">
         <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">

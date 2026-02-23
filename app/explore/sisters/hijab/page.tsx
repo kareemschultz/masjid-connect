@@ -14,6 +14,7 @@ export default function HijabGuidePage() {
         gradient="from-rose-950 to-pink-900"
         showBack
         stars
+        heroTheme="sisters"
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

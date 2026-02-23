@@ -93,6 +93,7 @@ export default function HalalDirectoryPage() {
         subtitle="Halal in Guyana"
         gradient="from-amber-900 to-orange-900"
         showBack
+        heroTheme="zakat"
       />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">

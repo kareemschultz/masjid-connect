@@ -331,6 +331,7 @@ export default function LearnToPrayPage() {
         subtitle="Wudu & Salah Guide"
         gradient="from-blue-950 to-indigo-900"
         showBack
+        heroTheme="prayer"
       />
 
       {/* Tab switcher */}

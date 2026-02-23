@@ -109,7 +109,7 @@ export default function KhatamPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={BookOpen} title="Khatam Collective" subtitle="Complete the Quran Together" gradient="from-emerald-900 to-teal-900" showBack />
+      <PageHero icon={BookOpen} title="Khatam Collective" subtitle="Complete the Quran Together" gradient="from-emerald-900 to-teal-900" showBack heroTheme="quran" />
 
       <div className="px-4 pt-5 -mt-2 space-y-5">
         {!userInitials ? (

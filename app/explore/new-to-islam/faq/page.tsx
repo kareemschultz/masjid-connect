@@ -60,6 +60,7 @@ export default function FAQPage() {
         gradient="from-rose-950 to-pink-900"
         showBack
         stars
+        heroTheme="fiqh"
       />
 
       <div className="space-y-3 px-4 pt-5">

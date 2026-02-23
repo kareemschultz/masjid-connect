@@ -41,6 +41,7 @@ export default function ScholarsPage() {
         subtitle="Guyanese Islamic Organisations"
         gradient="from-violet-950 to-purple-900"
         showBack
+        heroTheme="lectures"
       />
 
       <div className="px-4 pt-4 space-y-3">

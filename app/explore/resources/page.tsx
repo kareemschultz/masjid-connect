@@ -81,7 +81,7 @@ const CATEGORIES = [
 export default function ResourcesPage() {
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={Library} title="Resources" subtitle="Islamic Learning" gradient="from-sky-900 to-blue-900" showBack />
+      <PageHero icon={Library} title="Resources" subtitle="Islamic Learning" gradient="from-sky-900 to-blue-900" showBack heroTheme="hadith" />
 
       <div className="space-y-5 px-4 -mt-2">
         {CATEGORIES.map((cat) => (

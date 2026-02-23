@@ -108,6 +108,7 @@ export default function ProfilePage() {
         subtitle="Your Journey"
         gradient="from-emerald-900 to-teal-900"
         showBack
+        heroTheme="community"
       />
 
       <div className="space-y-5 px-4 pt-5">

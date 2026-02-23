@@ -190,6 +190,7 @@ export default function HowItWorksPage() {
         subtitle="The Faith Buddy System"
         gradient="from-sky-900 to-indigo-900"
         showBack
+        heroTheme="community"
       />
 
       <div className="space-y-6 px-4 pt-6">

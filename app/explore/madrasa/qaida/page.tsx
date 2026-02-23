@@ -100,6 +100,7 @@ export default function QaidaPage() {
         subtitle="Learn Arabic Letters & Tajweed"
         gradient="from-teal-900 to-cyan-900"
         showBack
+        heroTheme="quran"
       />
 
       {/* ── Progress bar ─────────────────────────────────────────────── */}

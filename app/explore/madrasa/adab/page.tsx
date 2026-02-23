@@ -194,6 +194,7 @@ export default function AdabPage() {
         subtitle="Manners of the Muslim"
         gradient="from-amber-900 to-orange-900"
         showBack
+        heroTheme="hadith"
       />
 
       <div className="mx-auto max-w-2xl space-y-3 px-4 pt-6 pb-6">

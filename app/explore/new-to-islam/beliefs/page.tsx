@@ -93,6 +93,7 @@ export default function BeliefsPage() {
         gradient="from-blue-950 to-indigo-900"
         showBack
         stars
+        heroTheme="prayer"
       />
 
       <div className="space-y-3 px-4 pt-5 animate-stagger">

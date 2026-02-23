@@ -84,6 +84,7 @@ export default function WomensDuasPage() {
         gradient="from-teal-950 to-cyan-900"
         showBack
         stars
+        heroTheme="duas"
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

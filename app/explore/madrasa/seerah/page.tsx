@@ -200,6 +200,7 @@ export default function SeerahPage() {
         subtitle="Life of the Prophet Muhammad \uFDFA"
         gradient="from-teal-900 to-cyan-900"
         showBack
+        heroTheme="hadith"
       />
 
       <div className="px-4 py-4 space-y-3">

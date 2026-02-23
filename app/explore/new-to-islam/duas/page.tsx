@@ -53,6 +53,7 @@ export default function NewMuslimDuasPage() {
         gradient="from-indigo-950 to-violet-900"
         showBack
         stars
+        heroTheme="duas"
       />
 
       <div className="space-y-4 px-4 pt-5">

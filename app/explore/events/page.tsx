@@ -40,6 +40,7 @@ export default function EventsPage() {
         subtitle="Community Gatherings"
         gradient="from-rose-900 to-pink-900"
         showBack
+        heroTheme="masjid"
       />
 
       <div className="px-4 pt-5 space-y-3">

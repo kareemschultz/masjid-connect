@@ -96,6 +96,7 @@ export default function VocabularyPage() {
         gradient="from-teal-950 to-cyan-900"
         showBack
         stars
+        heroTheme="quran"
       />
 
       <div className="px-4 pt-5 space-y-4">

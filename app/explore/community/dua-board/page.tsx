@@ -123,7 +123,7 @@ export default function DuaBoardPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={Heart} title="Dua Board" subtitle="Ask, Share, Say Ameen" gradient="from-purple-900 to-violet-900" showBack />
+      <PageHero icon={Heart} title="Dua Board" subtitle="Ask, Share, Say Ameen" gradient="from-purple-900 to-violet-900" showBack heroTheme="duas" />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">
         <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">

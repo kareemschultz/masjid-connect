@@ -78,6 +78,7 @@ export default function ScholarsPage() {
         gradient="from-violet-950 to-purple-900"
         showBack
         stars
+        heroTheme="lectures"
       />
 
       <div className="space-y-3 px-4 pt-5">

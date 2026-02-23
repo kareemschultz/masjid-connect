@@ -98,6 +98,7 @@ export default function ProphetsPage() {
         subtitle="Al-Anbiya' alayhim as-salam"
         gradient="from-amber-900 to-orange-900"
         showBack
+        heroTheme="hadith"
       />
 
       {/* Search */}

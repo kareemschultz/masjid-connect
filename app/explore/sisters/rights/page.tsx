@@ -97,6 +97,7 @@ export default function RightsOfWomenPage() {
         gradient="from-blue-950 to-indigo-900"
         showBack
         stars
+        heroTheme="sisters"
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

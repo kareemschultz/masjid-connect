@@ -330,6 +330,7 @@ export default function GIILibraryPage() {
         subtitle="Guyana Islamic Institute — Knowledge for the Ummah"
         gradient="from-emerald-950 to-teal-900"
         showBack
+        heroTheme="hadith"
       />
 
       {/* About GII */}

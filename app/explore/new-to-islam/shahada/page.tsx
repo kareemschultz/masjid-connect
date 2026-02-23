@@ -14,6 +14,7 @@ export default function ShahadaPage() {
         gradient="from-emerald-950 to-teal-900"
         showBack
         stars
+        heroTheme="prayer"
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

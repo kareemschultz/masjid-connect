@@ -102,6 +102,7 @@ export default function AllIslamicPrayersPage() {
         subtitle="Fard, Wajib, Sunnah & Nawafil"
         gradient="from-amber-950 via-yellow-950 to-gray-900"
         showBack
+        heroTheme="prayer"
       />
 
       <div className="px-4 py-5 space-y-5">
