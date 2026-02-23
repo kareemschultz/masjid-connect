@@ -1021,6 +1021,18 @@ function FiqhHubContent() {
         showBack
       />
 
+      {/* ── Hanafi badge ───────────────────────────────── */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="flex items-center gap-2 rounded-xl border border-violet-500/20 bg-violet-500/5 px-3 py-2">
+          <span className="shrink-0 rounded-lg bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-400 border border-violet-500/20">
+            Hanafi Fiqh
+          </span>
+          <p className="text-[11px] leading-snug text-gray-400">
+            Primary position: <span className="text-violet-300">Hanafi madhab</span> (predominant in Guyana). Positions of Imam Shafi&apos;i, Imam Malik, and Imam Ahmad ibn Hanbal noted where they differ.
+          </p>
+        </div>
+      </div>
+
       {/* ── Sticky filter bar ──────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">
         {/* Row 1: Chapter pills */}
