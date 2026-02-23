@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin, Keyboard } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin, Keyboard, ShieldCheck } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -37,6 +37,7 @@ const SECTIONS = [
       { icon: Users, label: 'Buddy', description: 'Faith Partners', href: '/explore/buddy', color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
       { icon: UtensilsCrossed, label: 'Iftaar', description: 'Tonight\'s Menu', href: '/iftaar', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
       { icon: MapPin, label: 'Masjids', description: 'Masjid Directory', href: '/masjids', color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
+      { icon: ShieldCheck, label: 'Halal Guide', description: 'Halal & Haram Reference', href: '/explore/halal-guide', color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400' },
     ],
   },
   {
