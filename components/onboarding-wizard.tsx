@@ -523,7 +523,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               ))}
             </div>
 
-            {/* Madhab */}
+            {/* Asr Calculation */}
             <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Asr Prayer Time
             </label>
