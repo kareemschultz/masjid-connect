@@ -1,5 +1,94 @@
 # Changelog
 
+## v2.20.0 — Quran Display Options: Script Toggle + Tajweed Colors (Feb 23, 2026)
+
+### Quran Reader — Display Settings
+- **NEW**: "Display" button in surah reader toolbar (Palette icon, turns violet when active)
+- **Script Toggle**: Uthmani (Amiri Quran font, default) ↔ IndoPak (Noto Nastaliq Urdu) — persists in localStorage
+- **Tajweed Color Coding**: Fetches `quran-tajweed` edition from alquran.cloud and parses bracket-encoded markup into colored spans
+  - 🟠 Ghunna (nasalization) — `#FF7E1D`
+  - 🔴 Qalqalah (echo) — `#DD0008`
+  - 🟣 Ikhfa / Qalb — `#DD00D5`
+  - 🟢 Idgham (merging) — `#169777`
+  - 🔵 Iqlab (conversion) — `#26BFFD`
+  - 💙 Madd (prolongation) — `#337FFF`
+- Color legend displayed below toggle when active
+- Both settings persist across sessions via localStorage
+
+### Bug Fixes
+- **Mushaf page**: Fixed "Could not load page" — Node v22 undici/native `fetch` fails for external HTTPS inside Docker containers; rewrote `/api/quran/page/route.ts` to use `node:https` with manual DNS resolution (same pattern as surah proxy). Upstream `api.qurancdn.com` returns 200 from host but undici can't connect from container.
+- **Translation sheet**: Bottom sheet cut off by audio player — fixed with `80dvh` max-height + `flex-col` layout so all 4 options visible and scrollable
+
+---
+
+## v2.19.0 — Full Feature Sprint: Eid Countdown, Prayer Offset, Qada Tracker, Bookmarks, Share, Adhkar, Zakat v2 (Feb 23, 2026)
+
+### Home Page
+- **Eid al-Fitr Countdown**: Card shows days until March 20, 2026 (CIOG official date); hidden after Eid
+
+### Settings
+- **Prayer Time Adjustment**: ±1–10 minute offset per prayer (±0 min = none); stored in `prayer_offset`; applied to all displayed prayer times
+
+### Tracker — New Sections
+- **Qada (Missed Prayers) Tracker**: Log missed prayers by type (Fajr/Dhuhr/Asr/Maghrib/Isha); running total; "All clear ✓" when at 0. Stored in `qada_log` (localStorage).
+- **Adhkar Counter**: Daily count for SubhanAllah / Alhamdulillah / AllahuAkbar with streak tracking
+
+### Quran Reader
+- **Bookmarks**: Per-ayah bookmark button (🔖); stored in `bookmarks` (localStorage key `KEYS.BOOKMARKS`)
+- **Share Button**: Per-ayah share with Arabic text + translation + attribution
+
+### Fiqh Hub + Duas
+- **Bookmarks**: Save Fiqh topics and Duas; accessible from the bookmarks icon
+- **Share Buttons**: Share individual Fiqh topics and Duas via native share / clipboard copy
+
+### Zakat v2
+- GYD-first Zakat calculator with 2026 Nisab values from Darul Uloom East Street (Maulana Badrudeen Khan & Mufti Irfan Qasmi)
+- Gold Nisab: 85g × GYD 800/g = GYD 68,000
+- Silver Nisab: 595g → GYD 547,298
+- Sadaqatul Fitr: GYD 2,000/person (2026 official)
+- Fidya: GYD 60,000/fast
+- 8 Asnaf listed with descriptions; Zakat distribution guidance
+
+### Khatam Tracker
+- **DB sync**: Khatam progress now syncs to `khatam_claims` PostgreSQL table (was localStorage only)
+
+### Navigation
+- **Redirect**: `/explore/madrasa/fiqh` → `/explore/fiqh` (old URL redirected)
+
+---
+
+## v2.18.0 — Fiqh Hub Content Enrichment (Feb 23, 2026)
+
+- 959 lines added to `lib/fiqh-data.ts`
+- 90+ topics enriched with `context`, `examples`, `hadith`, `definitions` fields
+- 69 topics have context (2–4 sentence Islamic background)
+- 68 topics have real-world examples with rulings
+- 57 topics have hadith evidence (⚠️ Arabic text AI-generated — pending Sunnah.com verification)
+- 67 topics have definitions
+- `context` field renders as border-left paragraph between overview and hadith
+
+---
+
+## v2.17.0 — Jami'yyatul Ulamaa Content (Feb 23, 2026)
+
+- **Community page**: Jam'iyyatul Ulamaa Guyana added as 6th organisation card
+- **Fiqh Hub Q&A**: 2 fatawa from Jami'yyatul Ulamaa — fasting with blood tests (`qa-blood-tests-fasting`), fasting with injections/IV (`qa-injections-fasting`)
+
+---
+
+## v2.16.0 — Fiqh Hub Deep Rebuild (Feb 23, 2026)
+
+- `lib/fiqh-data.ts` fully rebuilt with sourced content from PDF library:
+  - **Al Fiqh-ul Muyassar** (file_934): Tahara, Salah, Sawm, Zakah, Hajj, Udhiyyah, Funeral chapters
+  - **Islamic Jurisprudence II** (file_638): Nikah, Divorce, Nafaqah, Suckling, Children
+  - **Halal and Haram in Everyday Life** (file_623): Muamalaat, Halal & Haram chapters
+- Hadith Arabic text + references (Bukhari, Muslim, Abu Dawud, Tirmidhi, Ibn Majah)
+- Real scenarios with rulings, numbered lists from source
+- Bug fix: `ramadan_start` localStorage JSON encoding (was string, expected object with `date` key)
+- Bug fix: Moon sighting labels — GIT moved to Local Guyana group; Option 1 = "Saudi / International"; Option 2 = "Local Guyana Sighting — GIT, CIOG & Central Moon Sighting Committee"
+
+---
+
 ## v2.15.0 — Dedicated Fiqh Hub: 14 Chapters, Sisters Filter (Feb 23, 2026)
 
 ### New: `/explore/fiqh` — Comprehensive Fiqh Reference
