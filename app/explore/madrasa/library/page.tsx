@@ -40,13 +40,27 @@ const GII_BOOKS: GIIBook[] = [
     scribdUrl: 'https://www.scribd.com/document/228105475/Aqeedah-Tahawiyyah',
   },
   {
+    id: 213312968,
+    title: 'Adab — Islamic Mannerism',
+    subtitle: 'By Sh. Abdul-Fattah Abu-Ghuddah',
+    category: 'Adab',
+    pages: 45,
+    description:
+      'An authoritative exposition on Islamic manners and etiquette (Adab) by the great scholar Shaykh Abdul-Fattah Abu-Ghuddah. Covers the adab of speech, gathering, eating, seeking knowledge, and dealing with others — essential reading for every Muslim.',
+    accessKey: '',  // Public document — no access key required
+    color: 'from-amber-800 to-orange-900',
+    icon: '🤝',
+    available: true,
+    scribdUrl: 'https://www.scribd.com/document/213312968/Adab',
+  },
+  {
     id: 0,
     title: 'Fiqh-us-Seerah',
     subtitle: 'Lessons from the Life of Prophet Muhammad ﷺ',
     category: 'Seerah',
     pages: 185,
     description:
-      'A comprehensive study of the Seerah (biography) of the Prophet Muhammad ﷺ with fiqh-based lessons and practical guidance for modern Muslims.',
+      'A comprehensive study of the Seerah (biography) of the Prophet Muhammad ﷺ with fiqh-based lessons and practical guidance for modern Muslims. Published by Guyana Islamic Institute.',
     accessKey: '',
     color: 'from-blue-800 to-indigo-900',
     icon: '🌙',
@@ -57,10 +71,11 @@ const GII_BOOKS: GIIBook[] = [
 
 const CATEGORY_COLORS: Record<string, string> = {
   Aqeedah: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
-  Seerah: 'bg-blue-500/15 text-blue-400 border-blue-500/25',
-  Fiqh: 'bg-purple-500/15 text-purple-400 border-purple-500/25',
+  Seerah:  'bg-blue-500/15 text-blue-400 border-blue-500/25',
+  Fiqh:    'bg-purple-500/15 text-purple-400 border-purple-500/25',
   Tafseer: 'bg-amber-500/15 text-amber-400 border-amber-500/25',
-  Hadith: 'bg-teal-500/15 text-teal-400 border-teal-500/25',
+  Hadith:  'bg-teal-500/15 text-teal-400 border-teal-500/25',
+  Adab:    'bg-orange-500/15 text-orange-400 border-orange-500/25',
 }
 
 export default function GIILibraryPage() {
@@ -79,7 +94,9 @@ export default function GIILibraryPage() {
   }
 
   const scribdSrc = activeBook?.available
-    ? `https://www.scribd.com/embeds/${activeBook.id}/content?start_page=1&view_mode=scroll&access_key=${activeBook.accessKey}`
+    ? activeBook.accessKey
+      ? `https://www.scribd.com/embeds/${activeBook.id}/content?start_page=1&view_mode=scroll&access_key=${activeBook.accessKey}`
+      : `https://www.scribd.com/embeds/${activeBook.id}/content?start_page=1&view_mode=scroll`
     : ''
 
   return (

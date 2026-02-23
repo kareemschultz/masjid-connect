@@ -1,116 +1,53 @@
 'use client'
 
-import { useState } from 'react'
-import { Sparkles, Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Sparkles, Search, X, BookOpen, Heart } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import { NAMES_DETAIL, type NameDetail } from '@/lib/asmaul-husna-detail'
 
-const NAMES_OF_ALLAH = [
-  { number: 1, arabic: 'الرَّحْمَنُ', transliteration: 'Ar-Rahman', meaning: 'The Most Gracious' },
-  { number: 2, arabic: 'الرَّحِيمُ', transliteration: 'Ar-Raheem', meaning: 'The Most Merciful' },
-  { number: 3, arabic: 'الْمَلِكُ', transliteration: 'Al-Malik', meaning: 'The King' },
-  { number: 4, arabic: 'الْقُدُّوسُ', transliteration: 'Al-Quddus', meaning: 'The Most Holy' },
-  { number: 5, arabic: 'السَّلَامُ', transliteration: 'As-Salam', meaning: 'The Source of Peace' },
-  { number: 6, arabic: 'الْمُؤْمِنُ', transliteration: 'Al-Mu\'min', meaning: 'The Guardian of Faith' },
-  { number: 7, arabic: 'الْمُهَيْمِنُ', transliteration: 'Al-Muhaymin', meaning: 'The Protector' },
-  { number: 8, arabic: 'الْعَزِيزُ', transliteration: 'Al-Aziz', meaning: 'The Almighty' },
-  { number: 9, arabic: 'الْجَبَّارُ', transliteration: 'Al-Jabbar', meaning: 'The Compeller' },
-  { number: 10, arabic: 'الْمُتَكَبِّرُ', transliteration: 'Al-Mutakabbir', meaning: 'The Greatest' },
-  { number: 11, arabic: 'الْخَالِقُ', transliteration: 'Al-Khaliq', meaning: 'The Creator' },
-  { number: 12, arabic: 'الْبَارِئُ', transliteration: 'Al-Bari\'', meaning: 'The Maker of Order' },
-  { number: 13, arabic: 'الْمُصَوِّرُ', transliteration: 'Al-Musawwir', meaning: 'The Shaper of Beauty' },
-  { number: 14, arabic: 'الْغَفَّارُ', transliteration: 'Al-Ghaffar', meaning: 'The Forgiving' },
-  { number: 15, arabic: 'الْقَهَّارُ', transliteration: 'Al-Qahhar', meaning: 'The Subduer' },
-  { number: 16, arabic: 'الْوَهَّابُ', transliteration: 'Al-Wahhab', meaning: 'The Bestower' },
-  { number: 17, arabic: 'الرَّزَّاقُ', transliteration: 'Ar-Razzaq', meaning: 'The Provider' },
-  { number: 18, arabic: 'الْفَتَّاحُ', transliteration: 'Al-Fattah', meaning: 'The Opener' },
-  { number: 19, arabic: 'اَلْعَلِيْمُ', transliteration: 'Al-Aleem', meaning: 'The All-Knowing' },
-  { number: 20, arabic: 'الْقَابِضُ', transliteration: 'Al-Qabid', meaning: 'The Constrictor' },
-  { number: 21, arabic: 'الْبَاسِطُ', transliteration: 'Al-Basit', meaning: 'The Expander' },
-  { number: 22, arabic: 'الْخَافِضُ', transliteration: 'Al-Khafid', meaning: 'The Abaser' },
-  { number: 23, arabic: 'الرَّافِعُ', transliteration: 'Ar-Rafi\'', meaning: 'The Exalter' },
-  { number: 24, arabic: 'الْمُعِزُّ', transliteration: 'Al-Mu\'izz', meaning: 'The Honourer' },
-  { number: 25, arabic: 'المُذِلُّ', transliteration: 'Al-Mudhill', meaning: 'The Dishonourer' },
-  { number: 26, arabic: 'السَّمِيعُ', transliteration: 'As-Sami\'', meaning: 'The All-Hearing' },
-  { number: 27, arabic: 'الْبَصِيرُ', transliteration: 'Al-Basir', meaning: 'The All-Seeing' },
-  { number: 28, arabic: 'الْحَكَمُ', transliteration: 'Al-Hakam', meaning: 'The Judge' },
-  { number: 29, arabic: 'الْعَدْلُ', transliteration: 'Al-Adl', meaning: 'The Just' },
-  { number: 30, arabic: 'اللَّطِيفُ', transliteration: 'Al-Latif', meaning: 'The Subtle One' },
-  { number: 31, arabic: 'الْخَبِيرُ', transliteration: 'Al-Khabir', meaning: 'The All-Aware' },
-  { number: 32, arabic: 'الْحَلِيمُ', transliteration: 'Al-Halim', meaning: 'The Forbearing' },
-  { number: 33, arabic: 'الْعَظِيمُ', transliteration: 'Al-Azeem', meaning: 'The Magnificent' },
-  { number: 34, arabic: 'الْغَفُورُ', transliteration: 'Al-Ghafur', meaning: 'The All-Forgiving' },
-  { number: 35, arabic: 'الشَّكُورُ', transliteration: 'Ash-Shakur', meaning: 'The Appreciative' },
-  { number: 36, arabic: 'الْعَلِيُّ', transliteration: 'Al-Ali', meaning: 'The Most High' },
-  { number: 37, arabic: 'الْكَبِيرُ', transliteration: 'Al-Kabir', meaning: 'The Most Great' },
-  { number: 38, arabic: 'الْحَفِيظُ', transliteration: 'Al-Hafiz', meaning: 'The Preserver' },
-  { number: 39, arabic: 'المُقِيتُ', transliteration: 'Al-Muqit', meaning: 'The Nourisher' },
-  { number: 40, arabic: 'الْحسِيبُ', transliteration: 'Al-Hasib', meaning: 'The Reckoner' },
-  { number: 41, arabic: 'الْجَلِيلُ', transliteration: 'Al-Jalil', meaning: 'The Majestic' },
-  { number: 42, arabic: 'الْكَرِيمُ', transliteration: 'Al-Karim', meaning: 'The Generous' },
-  { number: 43, arabic: 'الرَّقِيبُ', transliteration: 'Ar-Raqib', meaning: 'The Watchful' },
-  { number: 44, arabic: 'الْمُجِيبُ', transliteration: 'Al-Mujib', meaning: 'The Responsive' },
-  { number: 45, arabic: 'الْوَاسِعُ', transliteration: 'Al-Wasi\'', meaning: 'The All-Encompassing' },
-  { number: 46, arabic: 'الْحَكِيمُ', transliteration: 'Al-Hakim', meaning: 'The Wise' },
-  { number: 47, arabic: 'الْوَدُودُ', transliteration: 'Al-Wadud', meaning: 'The Most Loving' },
-  { number: 48, arabic: 'الْمَجِيدُ', transliteration: 'Al-Majid', meaning: 'The Most Glorious' },
-  { number: 49, arabic: 'الْبَاعِثُ', transliteration: 'Al-Ba\'ith', meaning: 'The Resurrector' },
-  { number: 50, arabic: 'الشَّهِيدُ', transliteration: 'Ash-Shahid', meaning: 'The Witness' },
-  { number: 51, arabic: 'الْحَقُّ', transliteration: 'Al-Haqq', meaning: 'The Truth' },
-  { number: 52, arabic: 'الْوَكِيلُ', transliteration: 'Al-Wakil', meaning: 'The Trustee' },
-  { number: 53, arabic: 'الْقَوِيُّ', transliteration: 'Al-Qawiyy', meaning: 'The Most Strong' },
-  { number: 54, arabic: 'الْمَتِينُ', transliteration: 'Al-Matin', meaning: 'The Firm One' },
-  { number: 55, arabic: 'الْوَلِيُّ', transliteration: 'Al-Waliyy', meaning: 'The Protecting Friend' },
-  { number: 56, arabic: 'الْحَمِيدُ', transliteration: 'Al-Hamid', meaning: 'The Praiseworthy' },
-  { number: 57, arabic: 'الْمُحْصِي', transliteration: 'Al-Muhsi', meaning: 'The Accounter' },
-  { number: 58, arabic: 'الْمُبْدِئُ', transliteration: 'Al-Mubdi\'', meaning: 'The Originator' },
-  { number: 59, arabic: 'الْمُعِيدُ', transliteration: 'Al-Mu\'id', meaning: 'The Restorer' },
-  { number: 60, arabic: 'الْمُحْيِي', transliteration: 'Al-Muhyi', meaning: 'The Giver of Life' },
-  { number: 61, arabic: 'اَلْمُمِيتُ', transliteration: 'Al-Mumit', meaning: 'The Taker of Life' },
-  { number: 62, arabic: 'الْحَيُّ', transliteration: 'Al-Hayy', meaning: 'The Ever Living' },
-  { number: 63, arabic: 'الْقَيُّومُ', transliteration: 'Al-Qayyum', meaning: 'The Self-Existing' },
-  { number: 64, arabic: 'الْوَاجِدُ', transliteration: 'Al-Wajid', meaning: 'The Finder' },
-  { number: 65, arabic: 'الْمَاجِدُ', transliteration: 'Al-Majid', meaning: 'The Glorious' },
-  { number: 66, arabic: 'الْوَاحِدُ', transliteration: 'Al-Wahid', meaning: 'The One' },
-  { number: 67, arabic: 'اَلاَحَدُ', transliteration: 'Al-Ahad', meaning: 'The Unique' },
-  { number: 68, arabic: 'الصَّمَدُ', transliteration: 'As-Samad', meaning: 'The Eternal' },
-  { number: 69, arabic: 'الْقَادِرُ', transliteration: 'Al-Qadir', meaning: 'The Able' },
-  { number: 70, arabic: 'الْمُقْتَدِرُ', transliteration: 'Al-Muqtadir', meaning: 'The Powerful' },
-  { number: 71, arabic: 'الْمُقَدِّمُ', transliteration: 'Al-Muqaddim', meaning: 'The Expediter' },
-  { number: 72, arabic: 'الْمُؤَخِّرُ', transliteration: 'Al-Mu\'akhkhir', meaning: 'The Delayer' },
-  { number: 73, arabic: 'الأوَّلُ', transliteration: 'Al-Awwal', meaning: 'The First' },
-  { number: 74, arabic: 'الآخِرُ', transliteration: 'Al-Akhir', meaning: 'The Last' },
-  { number: 75, arabic: 'الظَّاهِرُ', transliteration: 'Az-Zahir', meaning: 'The Manifest' },
-  { number: 76, arabic: 'الْبَاطِنُ', transliteration: 'Al-Batin', meaning: 'The Hidden' },
-  { number: 77, arabic: 'الْوَالِي', transliteration: 'Al-Wali', meaning: 'The Governor' },
-  { number: 78, arabic: 'الْمُتَعَالِي', transliteration: 'Al-Muta\'ali', meaning: 'The Most Exalted' },
-  { number: 79, arabic: 'الْبَرُّ', transliteration: 'Al-Barr', meaning: 'The Source of Goodness' },
-  { number: 80, arabic: 'التَّوَّابُ', transliteration: 'At-Tawwab', meaning: 'The Acceptor of Repentance' },
-  { number: 81, arabic: 'الْمُنْتَقِمُ', transliteration: 'Al-Muntaqim', meaning: 'The Avenger' },
-  { number: 82, arabic: 'العَفُوُّ', transliteration: 'Al-Afuww', meaning: 'The Pardoner' },
-  { number: 83, arabic: 'الرَّؤُوفُ', transliteration: 'Ar-Ra\'uf', meaning: 'The Most Kind' },
-  { number: 84, arabic: 'مَالِكُ الْمُلْكِ', transliteration: 'Malik-ul-Mulk', meaning: 'Owner of Sovereignty' },
-  { number: 85, arabic: 'ذُوالْجَلَالِ وَالإكْرَامِ', transliteration: 'Dhul-Jalali Wal-Ikram', meaning: 'Lord of Majesty & Bounty' },
-  { number: 86, arabic: 'الْمُقْسِطُ', transliteration: 'Al-Muqsit', meaning: 'The Equitable' },
-  { number: 87, arabic: 'الْجَامِعُ', transliteration: 'Al-Jami\'', meaning: 'The Gatherer' },
-  { number: 88, arabic: 'الْغَنِيُّ', transliteration: 'Al-Ghani', meaning: 'The Self-Sufficient' },
-  { number: 89, arabic: 'الْمُغْنِي', transliteration: 'Al-Mughni', meaning: 'The Enricher' },
-  { number: 90, arabic: 'اَلْمَانِعُ', transliteration: 'Al-Mani\'', meaning: 'The Preventer' },
-  { number: 91, arabic: 'الضَّارَّ', transliteration: 'Ad-Darr', meaning: 'The Distresser' },
-  { number: 92, arabic: 'النَّافِعُ', transliteration: 'An-Nafi\'', meaning: 'The Benefiter' },
-  { number: 93, arabic: 'النُّورُ', transliteration: 'An-Nur', meaning: 'The Light' },
-  { number: 94, arabic: 'الْهَادِي', transliteration: 'Al-Hadi', meaning: 'The Guide' },
-  { number: 95, arabic: 'الْبَدِيعُ', transliteration: 'Al-Badi\'', meaning: 'The Originator' },
-  { number: 96, arabic: 'اَلْبَاقِي', transliteration: 'Al-Baqi', meaning: 'The Everlasting' },
-  { number: 97, arabic: 'الْوَارِثُ', transliteration: 'Al-Warith', meaning: 'The Inheritor' },
-  { number: 98, arabic: 'الرَّشِيدُ', transliteration: 'Ar-Rashid', meaning: 'The Guide to the Right Path' },
-  { number: 99, arabic: 'الصَّبُورُ', transliteration: 'As-Sabur', meaning: 'The Patient' },
-]
+const CATEGORY_COLORS: Record<NameDetail['category'], string> = {
+  mercy: 'bg-rose-500/15 text-rose-400 border-rose-500/25',
+  knowledge: 'bg-blue-500/15 text-blue-400 border-blue-500/25',
+  power: 'bg-red-500/15 text-red-400 border-red-500/25',
+  creation: 'bg-teal-500/15 text-teal-400 border-teal-500/25',
+  sovereignty: 'bg-amber-500/15 text-amber-400 border-amber-500/25',
+  beauty: 'bg-purple-500/15 text-purple-400 border-purple-500/25',
+  justice: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
+  uniqueness: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/25',
+}
 
 export default function NamesOfAllahPage() {
   const [search, setSearch] = useState('')
+  const [selectedName, setSelectedName] = useState<NameDetail | null>(null)
 
-  const filtered = NAMES_OF_ALLAH.filter(
+  // Lock body scroll when sheet is open — save/restore position to avoid jump on close
+  useEffect(() => {
+    if (selectedName) {
+      const scrollY = window.scrollY
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      const top = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (top) window.scrollTo(0, -parseInt(top, 10))
+    }
+    return () => {
+      const top = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (top) window.scrollTo(0, -parseInt(top, 10))
+    }
+  }, [selectedName])
+
+  const filtered = NAMES_DETAIL.filter(
     (n) =>
       n.transliteration.toLowerCase().includes(search.toLowerCase()) ||
       n.meaning.toLowerCase().includes(search.toLowerCase()) ||
@@ -145,18 +82,108 @@ export default function NamesOfAllahPage() {
       <div className="px-4 pt-4">
         <div className="grid grid-cols-2 gap-3">
           {filtered.map((name) => (
-            <div
+            <button
               key={name.number}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 px-3 py-5 transition-all"
+              onClick={() => setSelectedName(name)}
+              className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 px-3 py-5 transition-all active:scale-95 active:bg-gray-800 w-full"
             >
               <span className="text-[10px] font-medium text-amber-500/60">{name.number}</span>
               <p className="font-arabic text-2xl leading-tight text-amber-400">{name.arabic}</p>
               <p className="text-xs font-semibold text-foreground">{name.transliteration}</p>
               <p className="text-center text-[11px] leading-snug text-gray-400">{name.meaning}</p>
-            </div>
+              <span className="text-[9px] text-gray-700">tap for detail</span>
+            </button>
           ))}
         </div>
       </div>
+
+      {/* ── Detail Bottom Sheet ──────────────────────────────────────────── */}
+      {selectedName && (
+        <div className="fixed inset-0 z-50 flex flex-col">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setSelectedName(null)}
+          />
+
+          {/* Sheet */}
+          <div className="relative mt-auto flex max-h-[90vh] flex-col rounded-t-3xl bg-[#0a0b14] border-t border-gray-800">
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="h-1 w-10 rounded-full bg-gray-700" />
+            </div>
+
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedName(null)}
+              className="absolute right-4 top-4 rounded-full bg-gray-800 p-1.5"
+            >
+              <X className="h-4 w-4 text-gray-400" />
+            </button>
+
+            {/* Header */}
+            <div className="flex flex-col items-center gap-2 px-6 pt-2 pb-4">
+              <span className="text-xs font-medium text-amber-500/60">#{selectedName.number}</span>
+              <p className="font-arabic text-4xl leading-tight text-amber-400">{selectedName.arabic}</p>
+              <p className="text-base font-semibold text-foreground">{selectedName.transliteration}</p>
+              <p className="text-sm text-gray-400">{selectedName.meaning}</p>
+              <span className={`mt-1 rounded-full border px-3 py-0.5 text-[10px] font-medium capitalize ${CATEGORY_COLORS[selectedName.category]}`}>
+                {selectedName.category}
+              </span>
+            </div>
+
+            {/* Scrollable body */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-2 pb-10">
+              {/* Root word */}
+              <p className="mb-4 text-center text-xs text-gray-500">
+                Root: <span className="font-arabic text-sm text-gray-400">{selectedName.rootWord}</span>
+              </p>
+
+              {/* ① What This Name Means */}
+              <div className="mb-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-sm">&#9312;</span>
+                  <h3 className="text-sm font-semibold text-foreground">What This Name Means</h3>
+                </div>
+                <p className="text-sm leading-relaxed text-gray-300">
+                  {selectedName.explanation}
+                </p>
+              </div>
+
+              {/* ② In the Quran */}
+              <div className="mb-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-sm">&#9313;</span>
+                  <h3 className="text-sm font-semibold text-foreground">In the Quran</h3>
+                </div>
+                <div className="rounded-xl border border-teal-500/20 bg-teal-500/5 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <BookOpen className="h-3.5 w-3.5 text-teal-400" />
+                    <span className="text-xs font-medium text-teal-400">{selectedName.quranRef}</span>
+                  </div>
+                  <p className="text-sm italic leading-relaxed text-gray-300">
+                    &ldquo;{selectedName.quranText}&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* ③ Reflect & Benefit */}
+              <div className="mb-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-sm">&#9314;</span>
+                  <h3 className="text-sm font-semibold text-foreground">Reflect & Benefit</h3>
+                </div>
+                <div className="flex gap-3">
+                  <Heart className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
+                  <p className="text-sm leading-relaxed text-gray-300">
+                    {selectedName.benefit}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>
