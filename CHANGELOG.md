@@ -1,5 +1,33 @@
 # Changelog
 
+## v2.15.0 — Dedicated Fiqh Hub: 14 Chapters, Sisters Filter (Feb 23, 2026)
+
+### New: `/explore/fiqh` — Comprehensive Fiqh Reference
+- **14 chapters**: Tahara · Salah · Sawm · Zakah · Hajj & Umrah · Udhiyyah · Funeral Rites · Nikah · Divorce (Talaq) · Inheritance (Miraath) · Muamalaat · Halal & Haram · Women's Fiqh · Q&A
+- **Hanafi Fiqh** badge prominent at top — "Primary position: Hanafi madhab (predominant in Guyana). Positions of Imam Shafi'i, Imam Malik, and Imam Ahmad ibn Hanbal noted where they differ."
+- **Sisters Filter** toggle — one tap to show only women-relevant topics: hayd, nifas, istihadah, women's ghusl, women's Salah, nikah rights, mahr, khul', iddah, inheritance shares
+- **URL params**: `?sisters=true` auto-activates Sisters filter; `?chapter=Nikah` auto-selects chapter
+- 75+ madhab comparison notes throughout (Hanafi primary, Shafi'i/Maliki/Hanbali where they differ)
+- Colour-coded ruling badges: Fard (red), Wajib (orange), Sunnah (blue), Haram (rose), Halal (emerald), Info (gray)
+
+### New Content — Not Previously in App
+- **Zakah**: nisab calculation, zakatable wealth types, 8 asnaf, Zakat al-Fitr
+- **Hajj & Umrah**: obligation conditions, 4 pillars, prohibited acts in Ihram
+- **Udhiyyah (Qurbani)**: obligation, animal conditions, distribution (thirds)
+- **Funeral Rites**: ghusl of deceased, kafan (shroud), janazah salah (4 takbeeraat), burial
+- **Divorce (Talaq)**: raj'i/ba'in/mughallazah, talaq al-bid'ah, iddah, khul', faskh
+- **Inheritance (Miraath)**: fixed shares (wife/husband/daughter/mother/father), 'aul and radd, blockers
+- **Muamalaat**: valid sale conditions, riba (2 types), halal business, loans (qard hasan), employment, waqf
+- **Halal & Haram**: halal/haram animals, slaughter conditions, hidden haram ingredients (gelatin, E120, E471, L-cysteine)
+- **Women's Fiqh**: hayd (min/max duration, forbidden vs permitted acts), nifas (40-day max), istihadah (complex bleeding), ghusl step-by-step, Quran during hayd
+
+### Explore Page
+- **NEW section**: "⚖️ Fiqh & Islamic Law" with 4 cards: Fiqh Guide, Women's Fiqh, Nikah & Family, Muamalaat
+- New 'Fiqh' filter tab in Explore search
+- Madrasa hub fiqh card updated to point to `/explore/fiqh`
+
+---
+
 ## v2.14.0 — Sprint 9: Dua Qunoot · Adab · Omar Suleiman · Nawafil Notifications · Calendar Submission (Feb 23, 2026)
 
 ### Duas

@@ -62,15 +62,23 @@
 - **Nawafil tab** — Sunnah and optional prayers explained
 - **All Islamic Prayers** — complete taxonomy with rakat, timing, hadith rewards
 
-#### Fiqh (Islamic Law — Hanafi)
-- **Fiqh Guide** — sourced from Al Fiqh-ul Muyassar (Hanafi):
-  - **Taharah (Purification)** — 5 types of water, wudu pillars (4 fard), types of filth, ghusl, tayammum
-  - **Salah** — conditions, pillars, sunnahs, what invalidates
-  - **Sawm (Fasting)** — what invalidates, expiation, who is exempt
-  - **Zakah** — nisab, who must pay, the 8 asnaf
-  - **Nikah & Family** — marriage conditions, rights, divorce
-  - **Halal & Haram** — food, drink, earnings
-  - **Seeking Knowledge** — obligation, etiquette, sources
+#### Fiqh (Islamic Law — Hanafi Primary)
+- **Dedicated Fiqh Hub** (`/explore/fiqh`) — 14 chapters, Hanafi primary with Shafi'i/Maliki/Hanbali notes:
+  - **Tahara** — 5 types of water, wudu (steps + fard), ghusl, tayammum, types of najaasah
+  - **Salah** — conditions, pillars, wajibat, women's differences, Witr, qada
+  - **Sawm** — what breaks the fast (kaffarah vs qada), what doesn't, exemptions
+  - **Zakah** — nisab, zakatable wealth, 8 asnaf, Zakat al-Fitr
+  - **Hajj & Umrah** — obligation, 4 pillars, Ihram prohibitions
+  - **Udhiyyah (Qurbani)** — conditions, distribution (thirds)
+  - **Funeral Rites** — ghusl of deceased, kafan, janazah salah, burial
+  - **Nikah** — conditions, mahr, rights and duties, prohibited marriages
+  - **Divorce (Talaq)** — raj'i/ba'in, triple talaq, iddah, khul', faskh
+  - **Inheritance (Miraath)** — fixed shares, blockers, 'aul and radd
+  - **Muamalaat** — trade conditions, riba, halal business, loans, employment, waqf
+  - **Halal & Haram** — animals, slaughter, hidden haram ingredients
+  - **Women's Fiqh** — hayd, nifas, istihadah, ghusl after hayd, Quran during hayd
+  - **Q&A** — praying in English, combining prayers, making up years of missed prayers
+- **Sisters Filter** — toggle to show only women-relevant topics across all chapters
 
 #### Islamic History & Knowledge
 - **Seerah** — Life of the Prophet ﷺ across 4 eras
@@ -215,7 +223,7 @@ VAPID_SUBJECT=mailto:admin@masjidconnectgy.com
 
 ## Current Version
 
-**v2.14.0** — February 23, 2026
+**v2.15.0** — February 23, 2026
 
 See [CHANGELOG.md](./CHANGELOG.md) for full history.
 
