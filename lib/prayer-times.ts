@@ -50,11 +50,34 @@ export function formatTime(date: Date): string {
 
 export function getHijriDate(): string {
   try {
+    const today = new Date()
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+
+    // If user has a stored ramadan_start, calculate the Ramadan day from their preference
+    // so CIOG users see "Ramadan 5" rather than the Saudi "Ramadan 6" etc.
+    const storedStart = typeof window !== 'undefined' ? localStorage.getItem('ramadan_start') : null
+    if (storedStart) {
+      const startDate = new Date(storedStart + 'T00:00:00')
+      const endDate = new Date(startDate)
+      endDate.setDate(endDate.getDate() + 30)
+      if (today >= startDate && today <= endDate) {
+        const day = Math.floor((todayMidnight.getTime() - startDate.getTime()) / 86400000) + 1
+        // Get the year from Intl (or fallback to 1447)
+        let year = 1447
+        try {
+          const parts = new Intl.DateTimeFormat('en-TN-u-ca-islamic-umalqura', { year: 'numeric' }).formatToParts(today)
+          year = parseInt(parts.find(p => p.type === 'year')?.value || '1447')
+        } catch { /* use 1447 */ }
+        return `Ramadan ${day}, ${year} AH`
+      }
+    }
+
+    // No stored date (fresh/incognito) — fall back to Intl Hijri
     return new Intl.DateTimeFormat('en-TN-u-ca-islamic-umalqura', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(new Date())
+    }).format(today)
   } catch {
     return ''
   }
