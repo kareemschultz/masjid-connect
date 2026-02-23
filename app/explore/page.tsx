@@ -6,7 +6,7 @@ import {
   GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library,
   Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun,
   MapPin, Keyboard, ShieldCheck, ShieldAlert, HelpCircle, Search, X,
-  Scale, Banknote,
+  Scale, Banknote, BookText, HeartHandshake, Baby,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -37,6 +37,7 @@ const SECTIONS = [
       { icon: Users,       label: 'Prophets',        description: '25 Quranic Stories',     href: '/explore/madrasa/prophets',       color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
       { icon: Keyboard,    label: 'Arabic Practice', description: 'Learn the Letters',      href: '/explore/madrasa/arabic-typing',  color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
       { icon: Library,     label: 'GII Library',     description: 'Islamic Books',          href: '/explore/madrasa/library',        color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400' },
+      { icon: BookText,    label: 'Hadith',           description: '40 Nawawi Hadith',       href: '/explore/hadith',                 color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
     ],
   },
   {
@@ -62,6 +63,8 @@ const SECTIONS = [
       { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
       { icon: ShieldCheck, label: 'Halal Directory',  description: 'CIOG & D.E.H.C. certified businesses', href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400' },
       { icon: ShieldCheck, label: 'Halal Guide',     description: 'Haram foods, E-numbers & rulings',  href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400' },
+      { icon: HeartHandshake, label: 'Janazah Guide', description: 'Islamic Funeral Rites',  href: '/explore/janazah',                color: 'from-gray-500/20 to-gray-600/10', iconColor: 'text-gray-400' },
+      { icon: GraduationCap, label: 'Local Scholars', description: 'Guyanese Islamic Scholars', href: '/explore/scholars',            color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
     ],
   },
   {
@@ -81,6 +84,7 @@ const SECTIONS = [
       { icon: MessageCircle, label: 'New to Islam',  description: 'Start your journey',     href: '/explore/new-to-islam',           color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400' },
       { icon: Heart,       label: 'Sisters',         description: 'For Muslim women',       href: '/explore/sisters',                color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400' },
       { icon: Moon,        label: 'Sisters in Ramadan', description: 'Worship during your cycle', href: '/explore/sisters/ramadan', color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400' },
+      { icon: Baby,        label: 'Kids Corner',     description: 'Islamic learning for children', href: '/explore/kids',           color: 'from-yellow-500/20 to-yellow-600/10', iconColor: 'text-yellow-400' },
     ],
   },
   {
