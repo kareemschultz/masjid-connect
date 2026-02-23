@@ -297,7 +297,7 @@ export default function AdminPage() {
   // ─── Render ──────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={Shield} title="Admin Panel" subtitle={currentTab.subtitle} gradient="from-red-900 to-rose-900" showBack />
+      <PageHero icon={Shield} title="Admin Panel" subtitle={currentTab.subtitle} gradient="from-red-900 to-rose-900" showBack heroTheme="community" />
 
       {/* Tab pills */}
       <div className="overflow-x-auto scrollbar-none -mt-1">

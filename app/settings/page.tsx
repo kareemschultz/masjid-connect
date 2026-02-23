@@ -255,7 +255,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background pb-nav">
-      <PageHero icon={Settings} title="Settings" subtitle="Customize Your Experience" gradient="from-gray-800 to-gray-900" showBack />
+      <PageHero icon={Settings} title="Settings" subtitle="Customize Your Experience" gradient="from-gray-800 to-gray-900" showBack heroTheme="explore" />
 
       <div className="space-y-5 px-4 pt-5">
         {/* Account */}

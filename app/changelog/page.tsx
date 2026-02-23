@@ -146,7 +146,7 @@ const ACCENT_COLORS: Record<string, any> = {
 export default function ChangelogPage() {
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={GitCommit} title="Changelog" subtitle="What is New" gradient="from-blue-900 to-indigo-900" showBack />
+      <PageHero icon={GitCommit} title="Changelog" subtitle="What is New" gradient="from-blue-900 to-indigo-900" showBack heroTheme="hadith" />
 
       <div className="px-4 pt-5 space-y-5">
         {changelog.map((release) => {
