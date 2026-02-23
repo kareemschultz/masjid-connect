@@ -383,6 +383,9 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex gap-2">
+              <Link href="/explore" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Explore">
+                <Compass className="h-5 w-5" />
+              </Link>
               <Link href="/profile" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Profile">
                 <User className="h-5 w-5" />
               </Link>
