@@ -11,6 +11,10 @@ export interface Masjid {
   phone?: string
   hours?: string
   prayerTimes?: string
+  prayerTimesDetail?: Record<string, string>   // { Fajr: '5:20 AM', ... }
+  imam?: string                                 // Imam / Ameer name
+  notes?: string                               // Community notes / description
+  iftaarInfo?: string                          // Ramadan iftaar arrangements
   verified?: boolean
 }
 

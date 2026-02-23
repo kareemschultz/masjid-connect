@@ -67,4 +67,5 @@ export const KEYS = {
   QURAN_LAST_PAGE: 'quran_last_page',
   SUNNAH_LOG: 'sunnah_log',
   NAWAFIL_LOG: 'nawafil_log',
+  HOME_MASJID: 'home_masjid_id',
 } as const

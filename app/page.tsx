@@ -24,6 +24,7 @@ import {
 } from '@/lib/notifications'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
 import { getTodayHadith } from '@/lib/hadith-data'
+import { MASJIDS } from '@/lib/masjid-data'
 
 interface PrayerTimeData { name: string; time: string; date: Date }
 
@@ -107,6 +108,7 @@ export default function HomePage() {
   const [iftaarCountdown, setIftaarCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
   const [suhoorCountdown, setSuhoorCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [homeMasjidName, setHomeMasjidName] = useState<string>('')
 
   const dailyVerse = getDailyVerse()
   const hadith = getTodayHadith()
@@ -214,6 +216,12 @@ export default function HomePage() {
     setPoints(getItem(KEYS.POINTS, 0))
     setUsername(getItem(KEYS.USERNAME, ''))
     setLastRead(getItem(KEYS.LAST_READ, null))
+    // Home masjid
+    const savedHomeMasjidId = getItem<string>(KEYS.HOME_MASJID, '')
+    if (savedHomeMasjidId) {
+      const found = MASJIDS.find((m) => m.id === savedHomeMasjidId)
+      if (found) setHomeMasjidName(found.name)
+    }
 
     const onboardingDone = getItem(KEYS.ONBOARDING_COMPLETE, false)
     if (onboardingDone) {
@@ -480,6 +488,11 @@ export default function HomePage() {
       {/* ========== PRAYER STRIP ========== */}
       <div className="-mt-2 pt-2">
         <PrayerStrip prayers={prayers} />
+        {homeMasjidName && (
+          <p className="mt-1 px-4 text-center text-[10px] text-gray-600">
+            ⭐ Prayer times for <span className="text-gray-500">{homeMasjidName}</span>
+          </p>
+        )}
       </div>
 
       {/* ========== HADITH OF THE DAY ========== */}

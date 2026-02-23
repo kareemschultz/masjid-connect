@@ -73,11 +73,11 @@ const GII_BOOKS: GIIBook[] = [
     category: 'Tafseer',
     pages: 291,
     description: "Detailed exegesis of Juz' Amma (the 30th part of the Quran) drawn from the classic tafsir of Imam Ibn Kathir. Covers all surahs from An-Naba to An-Nas with authentic narrations and explanations.",
-    accessKey: '',
+    accessKey: 'key-29k82oaahqsumjdanolp',
     color: 'from-purple-800 to-violet-900',
     icon: '📜',
     available: true,
-    scribdUrl: 'https://www.scribd.com/document/206921362',
+    scribdUrl: 'https://www.scribd.com/document/206921362/Tafseer-Ibn-Kathir',
   },
   {
     id: 227185213,
@@ -404,8 +404,11 @@ export default function GIILibraryPage() {
       {/* ── Full-screen Book Reader ──────────────────────────────────────── */}
       {activeBook && (
         <div className="fixed inset-0 z-50 flex flex-col bg-[#0a0b14]">
-          {/* Reader header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-gray-800 bg-[#0a0b14] px-4 py-3">
+          {/* Reader header — safe-area-inset-top so status bar never covers buttons */}
+          <div
+            className="flex shrink-0 items-center justify-between border-b border-gray-800 bg-[#0a0b14] px-4 pb-3"
+            style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+          >
             <div className="flex-1 min-w-0 pr-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400">GII Library</p>
               <h2 className="truncate text-sm font-bold text-foreground">{activeBook.title}</h2>
