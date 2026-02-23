@@ -49,8 +49,8 @@ const SECTIONS = [
       { icon: Users,       label: 'Buddy',           description: 'Faith Partners',         href: '/explore/buddy',                  color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
       { icon: UtensilsCrossed, label: 'Iftaar',      description: "Tonight's Menu",         href: '/iftaar',                         color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
       { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
-      { icon: ShieldCheck, label: 'Halal Directory',  description: 'Certified restaurants & food', href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400' },
-      { icon: ShieldCheck, label: 'Halal Guide',     description: 'Halal & Haram reference',  href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400' },
+      { icon: ShieldCheck, label: 'Halal Directory',  description: 'CIOG & D.E.H.C. certified businesses', href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400' },
+      { icon: ShieldCheck, label: 'Halal Guide',     description: 'Haram foods, E-numbers & rulings',  href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400' },
     ],
   },
   {

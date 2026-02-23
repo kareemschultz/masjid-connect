@@ -1,59 +1,25 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle2, XCircle, AlertCircle, ChevronDown, ChevronUp, ShieldCheck, Search } from 'lucide-react'
+import { CheckCircle2, XCircle, AlertCircle, ChevronDown, ChevronUp, ShieldCheck, Search, ArrowRight } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import Link from 'next/link'
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const CATEGORIES = ['All', 'Certified Halal', 'Revoked', 'Haram', 'Doubtful', 'E-Numbers', 'Rules'] as const
+const CATEGORIES = ['All', 'Haram', 'Doubtful', 'E-Numbers', 'Rules'] as const
 type Category = typeof CATEGORIES[number]
 
 interface HalalItem {
   name: string
-  status: 'halal' | 'haram' | 'doubtful' | 'revoked'
+  status: 'halal' | 'haram' | 'doubtful'
   category: string
   detail: string
   authority?: string
 }
 
 const ITEMS: HalalItem[] = [
-  // ── D.E.H.C. Certified Businesses ───────────────────────────────────────
-  { name: "Church's Chicken Guyana", status: 'halal', category: 'Certified Halal', detail: "Certified by both CIOG and D.E.H.C. 18+ locations nationwide: Corriverton, Durban St Georgetown, Ave of the Republic, Linden, Vreed-en-Hoop, Rose Hall Berbice, Hinck St, Bartica, Camp & Middle St, Parika, Rosignol, Giftland Mall, New Amsterdam, Robb & Camp St, Amazonia Mall, Leonora West Central Mall, Diamond Rd EBD, Buxton. Ramadan Iftar Meal: GYD $3,500.", authority: 'CIOG + D.E.H.C.' },
-  { name: "Jade's Wok Asian Cuisine", status: 'halal', category: 'Certified Halal', detail: "D.E.H.C. certified. Asian cuisine — chicken, beef, fish, prawn. Catering packages for Iftaar and Khana. Giftland Mall Turkeyen, Amazonia Mall Providence, West Central Mall Leonora. Tel: 608-0053 / 222-7111. www.jadeswokgy.net", authority: 'D.E.H.C.' },
-  // ── CIOG Certified Food Outlets ──────────────────────────────────────────
-  { name: "Chicken 'N' Burger Delight", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 2 locations: Leonora, Groenveldt, West Coast Demerara | Track A, Vreed en Hoop Junction, West Coast Demerara.', authority: 'CIOG' },
-  { name: 'Burger Republik Inc', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. Locations: Giftland Mall Food Court ECD | Movietowne, East Coast Demerara | Amazonia Mall, East Bank Demerara.', authority: 'CIOG' },
-  { name: 'Royal Castle', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. Locations: 52 Sheriff & Garnett Sts Georgetown | Great Diamond Food Court EBD | Regent St City Mall | Croal St Stabroek | Giftland Mall ECD | Vlissingen Rd Bel Air Georgetown.', authority: 'CIOG' },
-  { name: "Popeye's Chicken and Seafood", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. Locations: 42 Water & America St Georgetown | 228-229 Camp St Georgetown | 195 Parika East Bank Essequibo | 1E Vlissengen & Duncan Rd Georgetown.', authority: 'CIOG' },
-  { name: "Jerry's Juice Centre", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 85 Robb Street, Bourda, Georgetown.', authority: 'CIOG' },
-  { name: 'Beacon Café', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 127 Quamina St, South Cummingsburg, Georgetown.', authority: 'CIOG' },
-  { name: "BIG B'S — Baksh Restaurant", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 5 locations in Berbice: 11D Edward Village Rosignol | Bath WCB | Bushlot WCB | New Amsterdam | 321 Public Rd North Belvedere Village Berbice.', authority: 'CIOG' },
-  { name: 'M&M Snackette & Fastfood', status: 'halal', category: 'Certified Halal', detail: "CIOG certified. Track A, East Bank Public Road, Peter's Hall, East Bank Demerara.", authority: 'CIOG' },
-  { name: 'Global Fine Foods Inc', status: 'halal', category: 'Certified Halal', detail: '80 Duncan Street, Back building, New Town Kitty, Georgetown. CIOG certified.', authority: 'CIOG' },
-  { name: 'Hacks Halaal', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 5 Commerce Street, Georgetown.', authority: 'CIOG' },
-  { name: "Mario's Pizza", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 231 Camp & Middle Street, Georgetown.', authority: 'CIOG' },
-  { name: 'Mezze Inc.', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. Giftland Mall Food Court ECD | Amazonia Mall, East Bank Demerara.', authority: 'CIOG' },
-  // ── CIOG Certified Meat Processing Plants ────────────────────────────────
-  { name: 'Toucan Poultry Farm', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified halal meat processing plant. 9-12 Soesdyke, East Bank Demerara.', authority: 'CIOG' },
-  { name: 'Royal Chicken', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified halal meat processing plant. 60 Garden-of-Eden, East Bank Demerara.', authority: 'CIOG' },
-  { name: 'Bounty Farm Limited', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified — POULTRY MEAT ONLY. Public Road Timehri, East Bank Demerara.', authority: 'CIOG' },
-  { name: 'A & Z Halal Butchery', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified halal butchery. 14 North Road, Lacytown, Georgetown.', authority: 'CIOG' },
-  { name: 'Rising Sun Farm', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 27 North Road, Georgetown.', authority: 'CIOG' },
-  { name: 'Gorchum Farms Inc.', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified. 2 Gorchum, Mahaica.', authority: 'CIOG' },
-  { name: 'Madani Butcher Shop', status: 'halal', category: 'Certified Halal', detail: 'CIOG certified halal butcher. 190 Lusignan, East Coast Demerara.', authority: 'CIOG' },
-  { name: "Rasheed's And Sons Halal Meat Centre", status: 'halal', category: 'Certified Halal', detail: 'CIOG certified halal meat centre. 94 Grove Public Road, East Bank Demerara.', authority: 'CIOG' },
-  // ── REVOKED / USE CAUTION ────────────────────────────────────────────────
-  { name: 'Gangbao Restaurant', status: 'revoked', category: 'Revoked', detail: 'CIOG REVOKED this restaurant\'s halal certificate (October 21, 2025) after inspectors confirmed they were using non-halal chicken — a serious breach of halal compliance. The establishment has been formally notified. Do NOT assume halal status. Verify directly with CIOG before dining.', authority: 'CIOG (Revoked)' },
-  // ── Certified Halal Products in Guyana ──────────────────────────────────
-  { name: 'Chicken from Muslim butchers', status: 'halal', category: 'Certified Halal', detail: 'Zabiha chicken from certified Muslim butchers in Georgetown — slaughtered according to Islamic rites with the Name of Allah. Verify butcher is certified before purchasing.', authority: 'CIOG / D.E.H.C.' },
-  { name: 'imported halal-certified meats', status: 'halal', category: 'Certified Halal', detail: 'Halal-certified imported meats (Brazil, Malaysia, UAE) commonly sold at Muslim butcher shops. Look for international halal logos.', authority: 'Various' },
-  { name: 'Most fruits and vegetables', status: 'halal', category: 'Certified Halal', detail: 'All fresh fruits and vegetables are inherently halal unless processed with haram additives.', authority: 'Inherently Halal' },
-  { name: 'Fish and seafood (general)', status: 'halal', category: 'Certified Halal', detail: 'All fish and most seafood are halal without the need for zabiha slaughter. Note: Hanafi school considers shellfish (shrimp, crab) to be makruh (disliked) to haram.', authority: 'Inherently Halal' },
-  { name: 'Eggs', status: 'halal', category: 'Certified Halal', detail: 'Chicken, duck, and other permissible bird eggs are halal.', authority: 'Inherently Halal' },
-  { name: 'Dairy (pure milk, butter, cheese)', status: 'halal', category: 'Certified Halal', detail: 'Pure dairy from permissible animals is halal. Processed cheese may contain rennet — check for animal rennet vs microbial rennet.', authority: 'Inherently Halal' },
-
   // ── Haram ────────────────────────────────────────────────────────────────
   { name: 'Pork and all pork products', status: 'haram', category: 'Haram', detail: 'Pork, bacon, ham, lard, pork gelatin — strictly forbidden in Islam. Always check ingredient labels for "lard," "porcine," or "pig-derived" ingredients.' },
   { name: 'Alcohol and alcoholic beverages', status: 'haram', category: 'Haram', detail: 'All intoxicating beverages — beer, rum, wine, spirits — are haram. This includes Banks Beer, El Dorado Rum, and similar local products. Non-alcoholic variants may be acceptable.' },
@@ -123,11 +89,6 @@ function StatusBadge({ status }: { status: HalalItem['status'] }) {
       <XCircle className="h-3 w-3" /> Haram
     </span>
   )
-  if (status === 'revoked') return (
-    <span className="flex items-center gap-1 rounded-full bg-orange-500/15 px-2.5 py-1 text-[10px] font-bold text-orange-400">
-      <XCircle className="h-3 w-3" /> Cert Revoked
-    </span>
-  )
   return (
     <span className="flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-1 text-[10px] font-bold text-amber-400">
       <AlertCircle className="h-3 w-3" /> Doubtful
@@ -154,7 +115,7 @@ export default function HalalGuidePage() {
       <PageHero
         icon={ShieldCheck}
         title="Halal Guide"
-        subtitle="Guyana Muslim Community Reference"
+        subtitle="Foods, Ingredients & E-Numbers Reference"
         gradient="from-emerald-900 to-teal-900"
         showBack
       />
@@ -187,6 +148,17 @@ export default function HalalGuidePage() {
             ))}
           </div>
         </div>
+
+        {/* Directory cross-link */}
+        <Link
+          href="/explore/halal-directory"
+          className="flex items-center justify-between gap-3 rounded-xl border-l-4 border-emerald-500 bg-emerald-950/30 px-4 py-3"
+        >
+          <span className="text-xs text-gray-300">Looking for halal restaurants &amp; food outlets?</span>
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-semibold text-white">
+            View Halal Directory <ArrowRight className="h-3 w-3" />
+          </span>
+        </Link>
 
         {/* Search */}
         <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
