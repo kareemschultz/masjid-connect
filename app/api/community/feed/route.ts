@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { getPool } from '@/lib/db'
+import { rateLimit, getClientIp, rateLimitResponse } from '@/lib/rate-limit'
 
 const INIT_SQL = `
 CREATE TABLE IF NOT EXISTS community_posts (
@@ -35,6 +36,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (!rateLimit(ip, 10, 60000)) return rateLimitResponse()
   try {
     await ensureTable()
     const body = await request.json()
