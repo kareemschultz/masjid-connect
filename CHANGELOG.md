@@ -1,5 +1,62 @@
 # Changelog
 
+## v2.14.0 — Sprint 9: Dua Qunoot · Adab · Omar Suleiman · Nawafil Notifications · Calendar Submission (Feb 23, 2026)
+
+### Duas
+- **NEW**: Dua Qunoot added to Prayer (Salah) category — full Arabic, transliteration, source (Abu Dawud / Tirmidhi), Hanafi note (Wajib in Witr, 3rd rakat)
+
+### Madrasa — Islamic Adab
+- **NEW**: Bathroom Etiquettes section (18 rules from Al Fiqh-ul Muyassar, Hanafi): entering/exiting duas, istinja method, Qiblah ruling, privacy, right/left hand, what not to bring inside, avoiding splashes, etc.
+
+### Lectures — 6th Scholar
+- **NEW**: Dr. Omar Suleiman added as 6th scholar
+- Series: "The Firsts — Stories of the Companions" — **60 episodes** covering the earliest believers (Khadijah, Ali, Abu Bakr, Omar, Bilal, Sumayyah, Uthman and more)
+- Source: archive.org `the-firsts-dr.-omar-suleiman` (all 60 filenames verified)
+- Full bio, specialty: Companions of the Prophet ﷺ · Fiqh · Civil Rights · Founder of Yaqeen Institute
+
+### Nawafil Push Notifications
+- **NEW**: 5 new notification types wired into prayer scheduler:
+  - **Ishraq** — Sunrise + 20 minutes ("pray 2 rak'ah for reward of Hajj & Umrah")
+  - **Duha** — mid-morning between Sunrise and Dhuhr
+  - **Awabeen** — Maghrib + 15 minutes (6 rak'ah after Maghrib)
+  - **Tahajjud** — 2 hours before Fajr (last third of the night)
+  - **Mon/Thu Fasting Reminder** — evening before (Asr + 30 min on Sunday/Wednesday)
+- Settings: 5 new toggles under "Nawafil & Reminders" section
+- Server-side: `lib/prayer-scheduler.ts` extended; `lib/webpush.ts` updated with rich notification payloads
+
+### Calendar
+- **NEW**: "Submit an Event" modal — community members can submit local events for admin review
+- Fields: event name, type (6 categories), date, time, location/masjid, description, submitted by
+- POSTs to existing `POST /api/events/submit` route; success/error feedback inline
+
+---
+
+## v2.13.0 — GII Library: Practical Essentials (Feb 23, 2026)
+- **NEW**: "Practical Essentials for Muslim Students" added to GII Library (Scribd ID 228087653)
+- Category: Fiqh | 40 pages | GII publication
+- Note: Scribd AI had mislabelled this as "Necessity of Nose Piercing for Nikah" — actual content is student fiqh guide
+
+---
+
+## v2.12.0 — Fiqh Guide + 7 New Duas Categories (Feb 23, 2026)
+
+### Fiqh Guide — New Madrasa Section
+- **NEW**: `/explore/madrasa/fiqh` — Hanafi Fiqh reference sourced from Al Fiqh-ul Muyassar
+- 7 chapters: Taharah (Purification) · Salah · Sawm (Fasting) · Zakah · Nikah & Family · Halal & Haram · Seeking Knowledge
+- Each chapter: overview, key rulings, Quranic/hadith references, links to GII Library for full reading
+- Fiqh card added to Madrasa hub
+
+### New Duas Categories (7 added)
+- **Bathroom**: entering dua (أعوذ بالله من الخبث والخبائث) + exiting dua (sourced from Al Fiqh-ul Muyassar)
+- **Wudu**: dua before wudu + after wudu (Shahada dua from Muslim)
+- **Dressing**: putting on clothes + removing clothes
+- **Mirror**: looking in the mirror dua
+- **Anger**: seeking refuge from anger (3 steps: silence, sit, wudu)
+- **Seeking Knowledge**: before study, increasing knowledge (Surah Ta-Ha 114)
+- **Istighfar & Repentance**: Sayyidul Istighfar + short forms
+
+---
+
 ## v2.11.0 — Darul Uloom Data + Ramadan Content (Feb 23, 2026)
 
 ### Critical Data Fixes
