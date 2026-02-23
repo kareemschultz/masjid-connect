@@ -57,6 +57,10 @@ export default function SettingsPage() {
   const [usernameInput, setUsernameInput] = useState('')
   const [usernameSaving, setUsernameSaving] = useState(false)
   const [usernameMsg, setUsernameMsg] = useState('')
+  const [phone, setPhone] = useState('')
+  const [phoneInput, setPhoneInput] = useState('')
+  const [phoneSaving, setPhoneSaving] = useState(false)
+  const [phoneMsg, setPhoneMsg] = useState('')
 
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
@@ -71,13 +75,17 @@ export default function SettingsPage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data?.user) setSession(data) })
       .catch(() => {})
-    // Load username from profile
+    // Load username + phone from profile
     fetch('/api/user/profile', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data?.username) {
           setUsername(data.username)
           setUsernameInput(data.username)
+        }
+        if (data?.phoneNumber) {
+          setPhone(data.phoneNumber)
+          setPhoneInput(data.phoneNumber)
         }
       })
       .catch(() => {})
@@ -198,6 +206,34 @@ export default function SettingsPage() {
     }
   }
 
+  const savePhone = async () => {
+    const val = phoneInput.trim().replace(/[\s-]/g, '')
+    if (!val) return
+    setPhoneSaving(true)
+    setPhoneMsg('')
+    try {
+      const res = await fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ phoneNumber: val })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setPhone(val)
+        setPhoneInput(val)
+        setPhoneMsg('Phone number saved!')
+      } else {
+        setPhoneMsg(data.error || 'Failed to save')
+      }
+    } catch {
+      setPhoneMsg('Error saving phone number')
+    } finally {
+      setPhoneSaving(false)
+      setTimeout(() => setPhoneMsg(''), 3000)
+    }
+  }
+
   const resetAllData = () => { localStorage.clear(); window.location.reload() }
 
   const methodLabel = CALCULATION_METHODS.find(m => m.key === method)?.label || method
@@ -285,6 +321,39 @@ export default function SettingsPage() {
                   Others can find you by searching <span className="text-blue-400 font-medium">@{username}</span> in the buddy search.
                 </p>
               )}
+
+              {/* Phone number */}
+              <div className="border-t border-gray-800 pt-3 space-y-2">
+                <p className="text-xs text-gray-400">
+                  Add your phone number so buddies can find you by WhatsApp number (e.g. +5926123456).
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    placeholder="+5926123456"
+                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                  />
+                  <button
+                    onClick={savePhone}
+                    disabled={phoneSaving || !phoneInput.trim() || phoneInput === phone}
+                    className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white disabled:opacity-40"
+                  >
+                    {phoneSaving ? '...' : 'Save'}
+                  </button>
+                </div>
+                {phoneMsg && (
+                  <p className={`text-xs ${phoneMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {phoneMsg}
+                  </p>
+                )}
+                {phone && (
+                  <p className="text-[11px] text-gray-500">
+                    Buddies can find you by searching <span className="text-blue-400 font-medium">{phone}</span>.
+                  </p>
+                )}
+              </div>
             </div>
           </SettingGroup>
         )}

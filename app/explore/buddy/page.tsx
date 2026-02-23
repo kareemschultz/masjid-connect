@@ -172,6 +172,7 @@ export default function BuddyPage() {
   const [showBuddyDetail, setShowBuddyDetail] = useState<Buddy | null>(null)
   const [copied, setCopied] = useState(false)
   const [nudgeSent, setNudgeSent] = useState<Record<string, boolean>>({})
+  const [myUsername, setMyUsername] = useState<string | null>(null)
   const [addMode, setAddMode] = useState<'email' | 'username' | 'phone'>('email')
   const [newBuddyInput, setNewBuddyInput] = useState('')
   const [toastMsg, setToastMsg] = useState('')
@@ -217,6 +218,11 @@ export default function BuddyPage() {
     const stored = getItem(KEYS.BUDDY_CHALLENGES, DEMO_CHALLENGES)
     const withProgress = stored.map((c: Challenge) => ({ ...c, current: computeProgress(c) }))
     setChallenges(withProgress)
+    // Fetch own profile to personalise the invite link
+    fetch('/api/user/profile', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.username) setMyUsername(data.username) })
+      .catch(() => {})
   }, [fetchBuddies, fetchLeaderboard])
 
   useEffect(() => {
@@ -322,7 +328,8 @@ export default function BuddyPage() {
   }
 
   const copyInviteLink = () => {
-    const link = 'https://masjidconnectgy.com'
+    const base = 'https://masjidconnectgy.com/explore/buddy'
+    const link = myUsername ? `${base}?invite=@${myUsername}` : base
     navigator.clipboard?.writeText(link).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -445,7 +452,7 @@ export default function BuddyPage() {
               <button
                 onClick={() => shareOrCopy({
                   title: 'Join MasjidConnect GY',
-                  text: 'Join me on MasjidConnect GY! Let\'s grow our faith together.\n\nhttps://masjidconnectgy.com'
+                  text: `Join me on MasjidConnect GY — Faith Buddies! Let's grow together in faith.\n\n${myUsername ? `Add me: @${myUsername}\n\n` : ''}https://masjidconnectgy.com/explore/buddy`
                 })}
                 className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-all active:scale-[0.97]"
               >
