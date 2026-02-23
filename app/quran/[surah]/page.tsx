@@ -542,7 +542,7 @@ export default function SurahReaderPage() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 shadow-lg transition-all active:scale-90" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 120px)' }}
+          className="fixed right-4 z-[70] flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 shadow-lg transition-all active:scale-90" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 120px)' }}
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-5 w-5" />

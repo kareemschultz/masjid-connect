@@ -811,7 +811,7 @@ export default function TrackerPage() {
 
         {/* Reward toast */}
         {rewardToast && (
-          <div className="fixed bottom-24 left-4 right-4 z-50 animate-fade-in">
+          <div className="fixed bottom-24 left-4 right-4 z-[70] animate-fade-in">
             <div className="rounded-2xl border border-emerald-500/30 bg-gray-900/95 p-4 shadow-2xl backdrop-blur-md">
               <p className="text-xs text-emerald-300 leading-relaxed">{rewardToast}</p>
             </div>

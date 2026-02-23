@@ -99,7 +99,7 @@ export default function NamesOfAllahPage() {
 
       {/* ── Detail Bottom Sheet ──────────────────────────────────────────── */}
       {selectedName && (
-        <div className="fixed inset-0 z-50 flex flex-col">
+        <div className="fixed inset-0 z-[70] flex flex-col">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60"

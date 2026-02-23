@@ -416,7 +416,7 @@ export default function GIILibraryPage() {
 
       {/* ── Full-screen Book Reader ──────────────────────────────────────── */}
       {activeBook && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-[#0a0b14]">
+        <div className="fixed inset-0 z-[70] flex flex-col bg-[#0a0b14]">
           {/* Reader header — safe-area-inset-top so status bar never covers buttons */}
           <div
             className="flex shrink-0 items-center justify-between border-b border-gray-800 bg-[#0a0b14] px-4 pb-3"

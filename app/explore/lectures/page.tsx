@@ -943,7 +943,7 @@ export default function LecturesPage() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-emerald-600/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[70] rounded-xl bg-emerald-600/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
           {toast}
         </div>
       )}

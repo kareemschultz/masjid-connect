@@ -411,7 +411,7 @@ export default function MushafPage() {
 
       {/* ── Verse Share Bottom Sheet ─────────────────────── */}
       {selectedVerse && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setSelectedVerse(null)}>
+        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setSelectedVerse(null)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
           <div
             className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-5 pb-8 pt-5 animate-slide-up"

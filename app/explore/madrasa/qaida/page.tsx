@@ -160,7 +160,7 @@ export default function QaidaPage() {
 
       {/* ── Bottom-sheet overlay ──────────────────────────────────────── */}
       {activeLesson && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[70] flex flex-col justify-end">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
