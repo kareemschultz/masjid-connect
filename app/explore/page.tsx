@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -21,6 +21,8 @@ const EXPLORE_ITEMS = [
   { icon: UtensilsCrossed, label: 'Iftaar', description: 'Tonight\'s Menu', href: '/iftaar', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
   { icon: Headphones, label: 'Lectures', description: 'Anwar al-Awlaki', href: '/explore/lectures', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
   { icon: Users2, label: 'Community', description: 'Connect with Muslims', href: '/explore/community', color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400' },
+  { icon: MessageCircle, label: 'New to Islam', description: 'Start your journey', href: '/explore/new-to-islam', color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400' },
+  { icon: Heart, label: 'Sisters', description: 'For Muslim women', href: '/explore/sisters', color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400' },
 ]
 
 export default function ExplorePage() {
