@@ -332,6 +332,15 @@ All lecture file lists were verified via `https://archive.org/metadata/{identifi
 - Both `username` AND `displayUsername` columns required in `user` table
 - If schema migrations are run, ensure both columns exist
 
+### Bottom Sheet Z-Index (CRITICAL RULE)
+- The **audio player** in the Quran surah reader is `z-[65]`
+- All bottom sheets (reciter, translation, display, tafsir) **MUST use `z-[70]`** — NOT `z-50`
+- If a sheet uses `z-50` it will render BELOW the audio player and appear cut off
+- Sheet outer wrapper pattern: `fixed inset-0 z-[70] flex items-end justify-center`
+- Sheet inner container: `relative flex w-full max-w-lg flex-col rounded-t-3xl ... pb-6 pt-4` + `style={{ maxHeight: '80dvh' }}`
+- Sheet scroll area: `flex-1 overflow-y-auto overscroll-contain`
+- **Never use `pb-safe`** — it's not a valid Tailwind class; use `pb-6` or explicit pixel values
+
 ### CSP Headers
 - Check `next.config.mjs` Content-Security-Policy for completeness:
   - `media-src` must include archive.org, cdn.islamic.network, qurancdn.com
