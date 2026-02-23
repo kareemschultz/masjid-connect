@@ -61,6 +61,8 @@ export const GIT_RAMADAN_1447: RamadanDay[] = [
   { day: 28, date: '2026-03-17', weekday: 'Tue', fajr: '4:49', sunrise: '5:58', zuhr: '12:06', asrShafi: '3:14', asrHanafi: '4:19', maghrib: '6:07', isha: '7:13' },
   { day: 29, date: '2026-03-18', weekday: 'Wed', fajr: '4:49', sunrise: '5:58', zuhr: '12:06', asrShafi: '3:13', asrHanafi: '4:19', maghrib: '6:07', isha: '7:13' },
   { day: 30, date: '2026-03-19', weekday: 'Thu', fajr: '4:48', sunrise: '5:57', zuhr: '12:05', asrShafi: '3:12', asrHanafi: '4:19', maghrib: '6:07', isha: '7:13' },
+  // Eid day (for CIOG users whose Day 30 = Mar 19, Eid = Mar 20)
+  { day: 31, date: '2026-03-20', weekday: 'Fri', fajr: '4:48', sunrise: '5:57', zuhr: '12:05', asrShafi: '3:12', asrHanafi: '4:18', maghrib: '6:06', isha: '7:13' },
 ]
 
 /** Returns today's timetable row, or null if outside Ramadan */
@@ -72,11 +74,21 @@ export function getTodayRamadanTimes(): RamadanDay | null {
 /** Alias: Returns today's timetable row (used by iftaar page) */
 export const getTodayTimetable = getTodayRamadanTimes
 
-/** Returns the current Ramadan day number (1-30), or 0 if outside Ramadan */
+/**
+ * Returns the current Ramadan day number (1-30), or 0 if outside Ramadan.
+ * Accounts for user's moon sighting preference:
+ *   Saudi / GIT → ramadan_start = 2026-02-18 → Day 1 = Feb 18
+ *   CIOG (local) → ramadan_start = 2026-02-19 → Day 1 = Feb 19
+ */
 export function getRamadanDay(): number {
-  const today = new Date().toISOString().split('T')[0]
-  const row = GIT_RAMADAN_1447.find(d => d.date === today)
-  return row?.day ?? 0
+  if (typeof window === 'undefined') return 0
+  const startStr = localStorage.getItem('ramadan_start') || '2026-02-19'
+  const start = new Date(startStr + 'T00:00:00')
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const diff = Math.floor((today.getTime() - start.getTime()) / 86400000) + 1
+  if (diff < 1 || diff > 30) return 0
+  return diff
 }
 
 /** Returns today's iftaar time string (e.g. "6:08 PM"), or null if outside Ramadan */
