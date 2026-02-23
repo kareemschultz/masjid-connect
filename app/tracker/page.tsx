@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import {
   CheckSquare, Flame, TrendingUp, UtensilsCrossed, Table2, ChevronRight, Share2,
   ChevronDown, ChevronUp, Plus, Minus, Trash2, BookOpen as BookOpenIcon, Heart, Droplets, Moon as MoonIcon,
+  BarChart2,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -288,6 +289,57 @@ export default function TrackerPage() {
     })
   }, [today])
 
+  /* ── weekly prayer stats for chart ── */
+  const weeklyStats = useMemo(() => {
+    return weekDates.map((date) => {
+      const key = dateKey(date)
+      const dayData = log[key]
+      const count = dayData ? PRAYER_NAMES.filter((p) => dayData[p]).length : 0
+      const hasFajr = dayData ? !!dayData['Fajr' as PrayerName] : false
+      return { date, key, count, hasFajr }
+    })
+  }, [weekDates, log])
+
+  const weekAverage = useMemo(() => {
+    const pastDays = weeklyStats.filter(s => s.date <= new Date())
+    if (pastDays.length === 0) return 0
+    return pastDays.reduce((sum, s) => sum + s.count, 0) / pastDays.length
+  }, [weeklyStats])
+
+  const prayerStreak = useMemo(() => {
+    let count = 0
+    const d = new Date()
+    while (count < 365) {
+      const key = dateKey(d)
+      const dayData = log[key]
+      if (dayData && PRAYER_NAMES.some((p) => dayData[p])) {
+        count++
+        d.setDate(d.getDate() - 1)
+      } else {
+        break
+      }
+    }
+    return count
+  }, [log])
+
+  const bestDay = useMemo(() => {
+    let best = { label: '-', count: 0 }
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    for (const s of weeklyStats) {
+      if (s.count > best.count) {
+        best = { label: dayNames[s.date.getDay()], count: s.count }
+      }
+    }
+    return best
+  }, [weeklyStats])
+
+  const fajrRate = useMemo(() => {
+    const pastDays = weeklyStats.filter(s => s.date <= new Date())
+    if (pastDays.length === 0) return 0
+    const fajrCount = pastDays.filter(s => s.hasFajr).length
+    return Math.round((fajrCount / pastDays.length) * 100)
+  }, [weeklyStats])
+
   /* ── derived prayer stats ── */
   const todayLog = log[today] || ({} as Record<PrayerName, boolean>)
   const todayCount = PRAYER_NAMES.filter((p) => todayLog[p]).length
@@ -362,6 +414,50 @@ export default function TrackerPage() {
       />
 
       <div className="space-y-5 px-4 pt-5">
+        {/* ── Prayer Statistics ── */}
+        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart2 className="h-4 w-4 text-emerald-400" />
+            <span className="text-sm font-bold text-white">Prayer Statistics</span>
+          </div>
+
+          {/* 7-day bar chart */}
+          <div className="flex items-end justify-between gap-1.5 h-[60px] mb-2">
+            {weeklyStats.map((s, i) => {
+              const height = s.count > 0 ? (s.count / 5) * 100 : 4
+              const isToday = s.key === today
+              const barColor = s.count === 5 ? 'bg-emerald-500' : s.count >= 3 ? 'bg-amber-500' : s.count >= 1 ? 'bg-rose-500' : 'bg-gray-700'
+              return (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                  <div className={`w-full rounded-t-md transition-all ${barColor} ${isToday ? 'ring-2 ring-emerald-400/50' : ''}`} style={{ height: `${height}%`, minHeight: '2px' }} />
+                </div>
+              )
+            })}
+          </div>
+          <div className="flex justify-between gap-1.5 mb-3">
+            {DAY_LABELS.map((label, i) => (
+              <div key={i} className={`flex-1 text-center text-[10px] font-medium ${weeklyStats[i]?.key === today ? 'text-emerald-400' : 'text-gray-500'}`}>{label}</div>
+            ))}
+          </div>
+          <p className="text-center text-xs text-gray-400">Week Average: <span className="font-bold text-white">{weekAverage.toFixed(1)}/5</span> prayers</p>
+
+          {/* Stat cards */}
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+              <p className="text-lg font-bold text-amber-400">{prayerStreak}</p>
+              <p className="text-[10px] text-gray-500">Day Streak</p>
+            </div>
+            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+              <p className="text-lg font-bold text-emerald-400">{bestDay.count > 0 ? `${bestDay.label}` : '-'}</p>
+              <p className="text-[10px] text-gray-500">Best Day</p>
+            </div>
+            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+              <p className="text-lg font-bold text-blue-400">{fajrRate}%</p>
+              <p className="text-[10px] text-gray-500">Fajr Rate</p>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Row */}
         <div className="flex gap-3">
           <div className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">

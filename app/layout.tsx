@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { PwaInstallPrompt } from '@/components/pwa-install-prompt'
+import { OfflineBadge } from '@/components/offline-badge'
 import './globals.css'
 
 const geistSans = Geist({
@@ -59,6 +60,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-[#0a0b14] text-[#f9fafb]">
+        <OfflineBadge />
         {children}
         <PwaInstallPrompt />
       </body>

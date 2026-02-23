@@ -98,7 +98,11 @@ async function fetchPage(page: number): Promise<PageData | null> {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function MushafPage() {
-  const [currentPage, setCurrentPage] = useState(() => getItem<number>('mushaf_page', 1))
+  const [currentPage, setCurrentPage] = useState(() => {
+    const urlPage = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('page') : null
+    if (urlPage) return Math.max(1, Math.min(604, parseInt(urlPage) || 1))
+    return getItem<number>('mushaf_page', 1)
+  })
   const [pageData, setPageData] = useState<PageData | null>(null)
   const [loading, setLoading] = useState(true)
   const [showNav, setShowNav] = useState(false)
@@ -112,6 +116,7 @@ export default function MushafPage() {
     setPageData(data)
     setLoading(false)
     setItem('mushaf_page', page)
+    localStorage.setItem('quran_last_page', String(page))
   }, [])
 
   useEffect(() => { loadPage(currentPage) }, [currentPage, loadPage])

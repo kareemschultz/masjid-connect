@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import {
   Headphones, Play, Pause, SkipBack, SkipForward,
-  Loader2, ChevronDown, ChevronUp, Search, X, Filter
+  Loader2, ChevronDown, ChevronUp, Search, X, Filter, Check
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -384,9 +384,12 @@ export default function LecturesPage() {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [speed, setSpeed] = useState(1)
+  const [completedLectures, setCompletedLectures] = useState<Record<string, boolean>>({})
+  const [toast, setToast] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const lastSaveRef = useRef(0)
 
-  // Restore last played
+  // Restore last played + completed lectures
   useEffect(() => {
     const saved = getItem<{ scholarId: string; seriesId: string; idx: number } | null>('last_lecture_v2', null)
     if (saved) {
@@ -394,6 +397,15 @@ export default function LecturesPage() {
       setPlayingSeriesId(saved.seriesId)
       setPlayingIdx(saved.idx)
     }
+    // Load completed lectures
+    const completed: Record<string, boolean> = {}
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key?.startsWith('lecture_done_') && localStorage.getItem(key) === '1') {
+        completed[key] = true
+      }
+    }
+    setCompletedLectures(completed)
   }, [])
 
   // Audio setup
@@ -405,6 +417,15 @@ export default function LecturesPage() {
     audio.ontimeupdate = () => {
       setCurrentTime(audio.currentTime)
       setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0)
+      // Save position every 5 seconds
+      const now = Date.now()
+      if (now - lastSaveRef.current > 5000 && audio.currentTime > 10) {
+        lastSaveRef.current = now
+        const saved = getItem<{ scholarId: string; seriesId: string; idx: number } | null>('last_lecture_v2', null)
+        if (saved) {
+          localStorage.setItem(`lecture_pos_${saved.scholarId}_${saved.seriesId}_${saved.idx}`, String(audio.currentTime))
+        }
+      }
     }
     audio.ondurationchange = () => setDuration(audio.duration)
     audio.onplay = () => { setIsPlaying(true); setIsLoading(false) }
@@ -412,11 +433,23 @@ export default function LecturesPage() {
     audio.onwaiting = () => setIsLoading(true)
     audio.oncanplay = () => setIsLoading(false)
     audio.onended = () => {
+      // Mark current lecture as completed
+      const saved = getItem<{ scholarId: string; seriesId: string; idx: number } | null>('last_lecture_v2', null)
+      if (saved) {
+        const doneKey = `lecture_done_${saved.scholarId}_${saved.seriesId}_${saved.idx}`
+        localStorage.setItem(doneKey, '1')
+        setCompletedLectures(prev => ({ ...prev, [doneKey]: true }))
+        // Clear saved position
+        localStorage.removeItem(`lecture_pos_${saved.scholarId}_${saved.seriesId}_${saved.idx}`)
+      }
+
       const series = getPlayingSeries()
       if (series && playingIdx < series.lectures.length - 1) {
         playLecture(playingScholarId!, playingSeriesId!, playingIdx + 1)
       } else {
         setIsPlaying(false)
+        setToast('Series Complete \uD83C\uDF89')
+        setTimeout(() => setToast(null), 3000)
       }
     }
     return () => { audio.pause(); audio.src = '' }
@@ -438,6 +471,13 @@ export default function LecturesPage() {
     audioRef.current.src = audioUrl(series.archiveId, lec.file)
     audioRef.current.playbackRate = speed
     audioRef.current.load()
+
+    // Restore saved position
+    const savedPos = localStorage.getItem(`lecture_pos_${scholarId}_${seriesId}_${idx}`)
+    if (savedPos) {
+      audioRef.current.currentTime = parseFloat(savedPos)
+    }
+
     audioRef.current.play().catch(() => {})
 
     setPlayingScholarId(scholarId)
@@ -663,6 +703,9 @@ export default function LecturesPage() {
                       <div className="border-t border-gray-800/50 pb-1">
                         {series.lectures.map((lec, i) => {
                           const isCurrent = isThisPlaying && playingIdx === i
+                          const doneKey = `lecture_done_${scholar.id}_${series.id}_${i}`
+                          const isDone = completedLectures[doneKey]
+                          const savedPos = typeof window !== 'undefined' ? localStorage.getItem(`lecture_pos_${scholar.id}_${series.id}_${i}`) : null
                           return (
                             <button
                               key={i}
@@ -671,17 +714,22 @@ export default function LecturesPage() {
                                 isCurrent ? acc.bg : 'active:bg-white/5'
                               }`}
                             >
-                              <span className={`text-[11px] font-bold w-5 text-right shrink-0 ${isCurrent ? acc.text : 'text-gray-600'}`}>
-                                {i + 1}
+                              <span className={`text-[11px] font-bold w-5 text-right shrink-0 ${isDone ? 'text-emerald-500' : isCurrent ? acc.text : 'text-gray-600'}`}>
+                                {isDone ? <Check className="h-3.5 w-3.5 inline" /> : i + 1}
                               </span>
-                              <p className={`text-xs flex-1 truncate ${isCurrent ? acc.text + ' font-semibold' : 'text-gray-300'}`}>
-                                {lec.title}
-                              </p>
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-xs truncate ${isCurrent ? acc.text + ' font-semibold' : isDone ? 'text-gray-500' : 'text-gray-300'}`}>
+                                  {lec.title}
+                                </p>
+                                {savedPos && !isCurrent && (
+                                  <p className="text-[10px] text-amber-400 mt-0.5">Resume {fmt(parseFloat(savedPos))}</p>
+                                )}
+                              </div>
                               {isCurrent && isLoading && (
                                 <Loader2 className={`h-3 w-3 animate-spin shrink-0 ${acc.text}`} />
                               )}
                               {isCurrent && isPlaying && !isLoading && (
-                                <span className={`text-[9px] font-black shrink-0 ${acc.text}`}>▶</span>
+                                <span className={`text-[9px] font-black shrink-0 ${acc.text}`}>{'\u25B6'}</span>
                               )}
                             </button>
                           )
@@ -760,6 +808,13 @@ export default function LecturesPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-emerald-600/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
+          {toast}
         </div>
       )}
 

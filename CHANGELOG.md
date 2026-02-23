@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.2.0 — Feb 23, 2026
+- Home: Hadith of the Day card (40-hadith rotation, Arabic + transliteration + source)
+- Tracker: 7-day prayer statistics chart with streak, best day, Fajr rate stats
+- Quran: "Continue Reading" bookmark — saves last page, shows progress bar
+- New page: Islamic Names search — 80+ names, Arabic, meaning, gender, origin filter
+- Lectures: Playback position saved (Resume at X:XX badge); auto-advance on completion
+- Layout: Offline status badge — amber pill when offline, auto-hides when reconnected
+- Settings: Notification preferences UI — per-prayer toggles with permission prompt (added Jumu'ah)
+- Madrasa: 5 Pillars + Articles of Faith linked to existing New to Islam pages
+
 ## v2.1.0 — Feb 23, 2026
 - Lectures: Added Bilal Philips (Foundations of Islamic Studies 10, Al-Qada Wal-Qadar 9)
 - Lectures: Added Yasmin Mogahed (Reclaim Your Heart 3, Spiritual Gems 12)

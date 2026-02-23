@@ -23,6 +23,7 @@ import {
   cancelAllNotifications,
 } from '@/lib/notifications'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
+import { getTodayHadith } from '@/lib/hadith-data'
 
 interface PrayerTimeData { name: string; time: string; date: Date }
 
@@ -106,6 +107,7 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false)
 
   const dailyVerse = getDailyVerse()
+  const hadith = getTodayHadith()
   const ramadanStatus = getRamadanStatus()
   const ramadan = ramadanStatus.isRamadan
 
@@ -399,6 +401,21 @@ export default function HomePage() {
       {/* ========== PRAYER STRIP ========== */}
       <div className="-mt-2 pt-2">
         <PrayerStrip prayers={prayers} />
+      </div>
+
+      {/* ========== HADITH OF THE DAY ========== */}
+      <div className="mx-4 mb-4 mt-3 rounded-xl bg-gray-900/70 border border-gray-800 p-4 backdrop-blur-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-amber-400 text-sm">{'\uD83D\uDCDC'}</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-amber-400/80">Hadith of the Day</span>
+        </div>
+        <p className="font-arabic text-right text-lg leading-loose text-white mb-2">{hadith.arabic}</p>
+        <p className="text-xs text-gray-400 italic mb-2">&ldquo;{hadith.transliteration}&rdquo;</p>
+        <p className="text-sm text-gray-200 mb-3">&ldquo;{hadith.english}&rdquo;</p>
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] text-gray-500">{hadith.narrator}</span>
+          <span className="text-[10px] text-amber-500/70 bg-amber-500/10 px-2 py-0.5 rounded-full">{hadith.source}</span>
+        </div>
       </div>
 
       {/* ========== STATS BAR ========== */}

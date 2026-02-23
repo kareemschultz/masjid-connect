@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { BookOpen, Search, Star, ChevronRight, Bookmark, Target, Headphones, BookMarked, Layers } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SURAHS } from '@/lib/quran-data'
@@ -56,9 +57,11 @@ const MODES = [
 ]
 
 export default function QuranPage() {
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<'all' | 'meccan' | 'medinan' | 'bookmarked'>('all')
   const [lastRead, setLastRead] = useState<{ surah: number; name: string } | null>(null)
+  const [lastPage, setLastPage] = useState<string | null>(null)
   const [bookmarks, setBookmarks] = useState<{ surah: number; ayah: number }[]>([])
   const [completedSurahs, setCompletedSurahs] = useState<number[]>([])
 
@@ -66,6 +69,7 @@ export default function QuranPage() {
     setLastRead(getItem(KEYS.LAST_READ, null))
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
     setCompletedSurahs(getItem(KEYS.KHATAM_PROGRESS, []))
+    setLastPage(localStorage.getItem('quran_last_page'))
   }, [])
 
   const toggleKhatam = (num: number) => {
@@ -124,7 +128,29 @@ export default function QuranPage() {
         </div>
       </div>
 
-      {/* ── Continue Reading ───────────────────────── */}
+      {/* ── Continue Reading (Mushaf Page) ─────────── */}
+      {lastPage && (
+        <div className="px-4 pt-4">
+          <div
+            className="rounded-xl bg-emerald-900/30 border border-emerald-700/30 p-4 cursor-pointer transition-all active:scale-[0.98]"
+            onClick={() => router.push(`/quran/mushaf?page=${lastPage}`)}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-emerald-400 mb-1">Continue Reading</p>
+                <p className="text-white font-semibold">Page {lastPage} / 604</p>
+                <p className="text-xs text-gray-400 mt-0.5">Tap to resume</p>
+              </div>
+              <BookOpen className="h-8 w-8 text-emerald-400/60" />
+            </div>
+            <div className="mt-2 h-1 rounded-full bg-gray-800">
+              <div className="h-1 rounded-full bg-emerald-500" style={{ width: `${(parseInt(lastPage) / 604) * 100}%` }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Continue Reading (Surah) ─────────────────── */}
       {lastRead && (
         <div className="px-4 pt-4">
           <Link

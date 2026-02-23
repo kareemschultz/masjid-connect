@@ -74,8 +74,8 @@
 10. [ ] **Leaderboard** — /leaderboard page exists but points need to actually save to DB and sync across devices (currently partially wired)
 
 ### Medium Priority (Polish & Enhancements)
-11. [ ] **Explore grid sections** — visual grouping with section headers (Quran & Learning / Prayer & Practice / Community / New Here? / Tools)
-12. [ ] **Madrasa** — "Learn to Pray" card now links correctly; the other 5 modules (Five Pillars, Articles of Faith, etc.) are "Coming Soon" — wire to New to Islam pages
+11. [x] **Explore grid sections** — visual grouping with section headers ✅ Sprint 4
+12. [x] **Madrasa** — Five Pillars, Articles of Faith linked to New to Islam pages ✅ Sprint 4
 13. [ ] **Lectures** — add more scholars/series:
     - Dr. Bilal Philips lectures
     - Mufti Menk series  
@@ -212,22 +212,19 @@ docker network connect kt-net-databases kt-masjidconnect-prod
 
 ### From msg 7480 — "Incorporate into the body system"
 Master Kareem asked for the Tracker to go beyond fasting/prayer into broader ibadah & wellness:
-- [ ] **Quran daily log** — pages read today, cumulative progress toward Khatam
-- [ ] **Sadaqah/charity log** — amount given (GYD), type (Sadaqah, Zakat, Sadaqah Jariyah)
-- [ ] **Good deeds counter** — custom daily deeds to tick off (e.g., visited sick person, fed someone)
-- [ ] **Sleep tracker** — hours of sleep (especially important during Ramadan; Suhoor alarm integration)
-- [ ] **Water intake** — glasses drunk during non-fasting hours
-- [ ] **Adhkar completion** — did I complete morning adhkar today? Evening adhkar?
-- [ ] **Istighfar counter** — how many times said Astaghfirullah today
+- [x] **Quran daily log** — pages read today, cumulative progress toward Khatam ✅ Sprint 5
+- [x] **Sadaqah/charity log** — amount given (GYD), type ✅ Sprint 4
+- [x] **Good deeds counter** — custom daily deeds to tick off ✅ Sprint 4
+- [x] **Sleep tracker** — hours of sleep ✅ Sprint 4
+- [x] **Water intake** — glasses drunk during non-fasting hours ✅ Sprint 4
+- [x] **Adhkar completion** — did I complete morning adhkar today? Evening adhkar? ✅ Sprint 5
+- [x] **Istighfar counter** — how many times said Astaghfirullah today ✅ Sprint 5
 All to live under Tracker tab as additional cards/sections.
 
 ### From msg 7474 — "Remember we had that so we can determine when that person fast started"
 The moon sighting preference (CIOG/Saudi) should feed into the Fasting Tracker:
-- [ ] **Ramadan start auto-detect** — when user selects CIOG sighting in onboarding, 
-  automatically set Ramadan 1 based on CIOG announcement date (Feb 28 or Mar 1, 2026).
-  When Saudi selected, use Saudi announcement date.
-  Store as `ramadan_start` in localStorage (already partially wired from v1).
-- [ ] **Fasting streak calculation** — start counting from the correct Ramadan Day 1 per sighting
+- [x] **Ramadan start auto-detect** — based on moon sighting preference ✅ Sprint 4
+- [x] **Fasting streak calculation** — start counting from correct Ramadan Day 1 ✅ Sprint 4
 
 ### From msg 7482 — "Relative to each palette" (background animations)
 The star field is on Explore/Quran heroes only. Request was for THEMED animations per section:
@@ -246,25 +243,33 @@ positioned SVG patterns with opacity animation. Keep subtle — not distracting.
 Beyond Qaida, v1 had or was planned to have:
 - [ ] **How to make Wudu** ✅ done (inside Learn to Pray page)
 - [ ] **Stories of the Prophets** (fully written content, not just a card)
-- [ ] **Seerah (Life of the Prophet)** ﷺ — summary by era: Birth, Makkah, Hijra, Madinah
-- [ ] **Islamic etiquette (Adab)** — manners when eating, entering home, greeting, sneezing
+- [x] **Seerah (Life of the Prophet)** ﷺ — summary by era ✅ Sprint 4
+- [x] **Islamic etiquette (Adab)** — manners when eating, entering home, greeting ✅ Sprint 4
 - [ ] **Halal & Haram basics** — what's permissible/forbidden (food, finance, speech, relations)
 - [ ] **Death & Afterlife** — Barzakh, Day of Judgement, Jannah, Jahannam (in plain terms)
 - [ ] **Children's section** — simplified content for kids (basic Arabic letters fun mode, colouring-style SVG icons)
 
 ### From msg 7481 — "Jumu'ah stuff"
 The check-in has a Friday banner. "Jumu'ah stuff" may also mean:
-- [ ] **Jumu'ah prep checklist** — Thursday evening reminder, ghusl, Surah Al-Kahf, early arrival
-- [ ] **Jumu'ah khutbah log** — what topic was discussed (personal note)
-- [ ] **Surah Al-Kahf reminder** — push notification Thursday evening/Friday morning
+- [x] **Jumu'ah prep checklist** — ghusl, Surah Al-Kahf link, khutbah log, Friday duas ✅ Sprint 4
+- [x] **Jumu'ah khutbah log** — what topic was discussed (personal note) ✅ Sprint 4
+- [x] **Surah Al-Kahf reminder** — link to /quran/18 on Jumu'ah page ✅ Sprint 4
 
 ### From msg 7483 — "Log what we've done today + update the docs"  
 - [x] Session log written to KareTech Vault ✅
 - [x] CLAUDE_CODE_CONTEXT.md created ✅
 - [x] ROADMAP.md created ✅
-- [ ] **README.md** for the GitHub repo still needs updating (probably shows old v0.dev placeholder)
+- [x] **README.md** for the GitHub repo ✅ Sprint 4
 
 ### Additional from screenshots / captions
+### Sprint 5 New Items (added Feb 23, 2026)
+- [ ] **Quran verse sharer** — generate image card with Ayah + translation to share on WhatsApp
+- [ ] **Real halal business listing** — Master Kareem to provide Georgetown halal spot names
+- [ ] **Arabic typing practice** — tap the keyboard to spell Arabic words (Madrasa tool)
+- [ ] **Khatam tracker** — personal progress toward completing the Quran
+- [ ] **Google Sign-In end-to-end test in production**
+- [ ] **Stories of Prophets** — full written content for 25 prophets
+
 - From iftaar screenshot (original issue): iftaar page masjid cards white/light — ✅ FIXED
 - Submit form native select — ✅ FIXED (dark glass SelectModal)
 - Explore bottom cards cropped (Community, New to Islam partially cut off) — ✅ FIXED (pb-nav)

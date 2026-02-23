@@ -23,6 +23,7 @@ const PRAYER_NOTIF_CONFIG = [
   { key: 'Asr', label: 'Asr', icon: CloudSun, color: 'bg-orange-600' },
   { key: 'Maghrib', label: 'Maghrib', icon: Sunset, color: 'bg-red-600' },
   { key: 'Isha', label: 'Isha', icon: Moon, color: 'bg-indigo-600' },
+  { key: 'Jumuah', label: 'Jumu\'ah Reminder', icon: Sun, color: 'bg-emerald-600' },
   { key: 'Suhoor', label: 'Suhoor Reminder', icon: MoonStar, color: 'bg-yellow-800' },
   { key: 'Iftaar', label: 'Iftaar Alert', icon: Sunset, color: 'bg-emerald-600' },
 ]
