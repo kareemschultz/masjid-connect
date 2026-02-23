@@ -19,6 +19,9 @@ interface HalalItem {
 }
 
 const ITEMS: HalalItem[] = [
+  // ── D.E.H.C. Certified Businesses ───────────────────────────────────────
+  { name: "Church's Chicken Guyana", status: 'halal', category: 'Certified Halal', detail: "Officially certified by D.E.H.C. (Darul Uloom East Street Halaal Committee). All chicken sourced and prepared to Islamic Halaal standards. Available at all Church's Chicken locations in Guyana. Ramadan Iftar Meal: GYD $3,500 (4 pcs chicken, 2 sides, 1 drink).", authority: 'D.E.H.C.' },
+  { name: "Jade's Wok Asian Cuisine", status: 'halal', category: 'Certified Halal', detail: "D.E.H.C. certified. Asian cuisine — chicken, beef, fish, prawn. Catering packages for Iftaar and Khana. Giftland Mall Turkeyen, Amazonia Mall Providence, West Central Mall Leonora. Tel: 608-0053 / 222-7111. www.jadeswokgy.net", authority: 'D.E.H.C.' },
   // ── Certified Halal Products in Guyana ──────────────────────────────────
   { name: 'Chicken from Muslim butchers', status: 'halal', category: 'Certified Halal', detail: 'Zabiha chicken from certified Muslim butchers in Georgetown — slaughtered according to Islamic rites with the Name of Allah. Verify butcher is certified before purchasing.', authority: 'CIOG / Darul Uloom' },
   { name: 'imported halal-certified meats', status: 'halal', category: 'Certified Halal', detail: 'Halal-certified imported meats (Brazil, Malaysia, UAE) commonly sold at Muslim butcher shops. Look for international halal logos.', authority: 'Various' },
@@ -64,9 +67,9 @@ const GUYANA_AUTHORITIES = [
     logo: '☪️',
   },
   {
-    name: 'Maulana Badruddeen / Darul Uloom',
-    description: 'Imam of Darul Uloom Masjid and a prominent halal certifier in Guyana. Regularly posts halal certifications and rulings for products — including canned goods, sausages, and local restaurants — on his social media pages. One of the most active halal authorities in the community.',
-    contact: 'Darul Uloom Masjid — 310 East Street, Alberttown',
+    name: 'D.E.H.C. — Darul Uloom East Street Halaal Committee',
+    description: 'The official halal certification committee of Darul Uloom East Street, headed by Maulana Badrudeen Khan. D.E.H.C. certifies restaurants, fast food chains (including Church\'s Chicken), and food businesses in Guyana. 2026 Ramadan Values: Nisab $547,298 GYD (19.687 silver), Sadaqatul Fitr $2,000 GYD/person, Fidya $60,000 GYD/fast.',
+    contact: 'Maulana Badrudeen Khan: 623-2780 | Darul Uloom Office: 223-0579 | darululoomgt@gmail.com | 310 East Street, South Cummingsburg, Georgetown',
     logo: '🎓',
   },
   {

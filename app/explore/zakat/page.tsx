@@ -5,8 +5,12 @@ import { Calculator, Users, Heart, Info } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
-const NISAB_GYD = 1_500_000
-const ZAKAT_FITR_DEFAULT = 500
+// Nisab 2026 — per Maulana Badrudeen Khan & Mufti Irfan Qasmi (Darul Uloom East Street, Feb 2026)
+// Based on 19.687 silver (tola) equivalent in GYD
+const NISAB_GYD = 547_298
+const SADAQATUL_FITR_GYD = 2_000      // per person
+const FIDYA_GYD = 60_000               // per fast missed
+const ZAKAT_FITR_DEFAULT = SADAQATUL_FITR_GYD  // $2,000 GYD — official 2026 value (Darul Uloom)
 
 const ASNAF = [
   { name: 'Al-Fuqara (The Poor)', desc: 'Those with very little or no income' },
@@ -70,11 +74,13 @@ export default function ZakatPage() {
       <div className="space-y-4 px-4 pt-5">
         {/* Nisab info */}
         <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
-          <p className="text-xs font-medium text-amber-400">Current Nisab Threshold</p>
-          <p className="mt-1 text-lg font-bold text-[#f9fafb]">{fmtGYD(NISAB_GYD)}</p>
-          <p className="mt-1 text-[11px] text-gray-400">
-            Nisab based on ~85g gold. Update based on current gold prices.
-          </p>
+          <p className="text-xs font-medium text-amber-400">Nisab 2026 — Zakat Threshold</p>
+          <p className="mt-1 text-2xl font-bold text-[#f9fafb]">{fmtGYD(NISAB_GYD)}</p>
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+            <span className="text-gray-500">Sadaqatul Fitr</span><span className="text-right font-semibold text-emerald-400">{fmtGYD(SADAQATUL_FITR_GYD)}/person</span>
+            <span className="text-gray-500">Fidya per fast</span><span className="text-right font-semibold text-orange-400">{fmtGYD(FIDYA_GYD)}</span>
+          </div>
+          <p className="mt-2 text-[10px] text-gray-600">Based on 19.687 silver — set by Maulana Badrudeen Khan & Mufti Irfan Qasmi (Darul Uloom East St., Feb 2026)</p>
         </div>
 
         {/* Input fields */}
