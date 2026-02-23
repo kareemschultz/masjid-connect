@@ -45,9 +45,10 @@ function getTodayKey() { return new Date().toISOString().split('T')[0] }
 /** Returns true if we are currently in Ramadan (ramadan_start localStorage key exists and today ≤ Eid) */
 function isRamadanNow(): boolean {
   try {
-    const ramadanStart = localStorage.getItem('ramadan_start')
+    // Use getItem() so JSON-encoded values (from setItem) are parsed correctly
+    const ramadanStart = getItem<string | null>('ramadan_start', null)
     if (!ramadanStart) return false
-    const start = new Date(ramadanStart)
+    const start = new Date(ramadanStart + 'T00:00:00')
     const end = new Date(start)
     end.setDate(end.getDate() + 30) // Ramadan is 29-30 days
     const today = new Date()

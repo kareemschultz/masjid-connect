@@ -1,9 +1,15 @@
+import { getItem, setItem } from './storage'
+
 /**
  * Detect if today is in Ramadan.
  * Priority order:
  *   1. User-stored ramadan_start in localStorage
  *   2. Intl Hijri calendar (umm al-qura)
  *   3. Hardcoded 2026 Ramadan fallback (Feb 18 – Mar 19) — covers browser Intl failures
+ *
+ * NOTE: Always use getItem/setItem (not raw localStorage) so JSON-encoding is consistent.
+ * setItem() stores "2026-02-19" as '"2026-02-19"' (JSON); raw localStorage.getItem would
+ * return the quoted string and new Date('"2026-02-19"T00:00:00') is an Invalid Date.
  */
 
 // Hardcoded Ramadan 1447 bounds (earliest possible start / latest possible end)
@@ -30,7 +36,8 @@ export function getRamadanStatus() {
   const isHijriRamadan = hijriMonth === 9
 
   // ── 1. User-stored start date ────────────────────────────────────────────
-  const storedStart = typeof window !== 'undefined' ? localStorage.getItem('ramadan_start') : null
+  // Use getItem() so JSON-encoded values are parsed correctly (setItem stores with JSON.stringify)
+  const storedStart = getItem<string | null>('ramadan_start', null)
 
   if (storedStart) {
     const startDate = new Date(storedStart + 'T00:00:00')
@@ -42,7 +49,7 @@ export function getRamadanStatus() {
       const correctedStart = new Date(today)
       correctedStart.setDate(today.getDate() - (hijriDay - 1))
       const correctedStr = correctedStart.toISOString().split('T')[0]
-      if (typeof window !== 'undefined') localStorage.setItem('ramadan_start', correctedStr)
+      setItem('ramadan_start', correctedStr)
       const ramadanDay = hijriDay
       return { isRamadan: true, hijriMonth, hijriDay, hijriYear, ramadanDay }
     }
@@ -64,9 +71,7 @@ export function getRamadanStatus() {
   const inFallbackWindow = today >= RAMADAN_1447_EARLIEST && today <= RAMADAN_1447_LATEST
   if (inFallbackWindow) {
     // Auto-set a default ramadan_start so subsequent renders are consistent
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ramadan_start', RAMADAN_1447_DEFAULT_START)
-    }
+    setItem('ramadan_start', RAMADAN_1447_DEFAULT_START)
     const startDate = new Date(RAMADAN_1447_DEFAULT_START + 'T00:00:00')
     const ramadanDay = Math.floor((todayMidnight.getTime() - startDate.getTime()) / 86400000) + 1
     // hijriYear for 1447 if Intl failed

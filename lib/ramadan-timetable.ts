@@ -77,12 +77,15 @@ export const getTodayTimetable = getTodayRamadanTimes
 /**
  * Returns the current Ramadan day number (1-30), or 0 if outside Ramadan.
  * Accounts for user's moon sighting preference:
- *   Saudi / GIT → ramadan_start = 2026-02-18 → Day 1 = Feb 18
- *   CIOG (local) → ramadan_start = 2026-02-19 → Day 1 = Feb 19
+ *   Saudi / International → ramadan_start = 2026-02-18 → Day 1 = Feb 18
+ *   Local Guyana (GIT, CIOG, Central Moon Sighting Committee) → ramadan_start = 2026-02-19 → Day 1 = Feb 19
  */
+import { getItem } from './storage'
+
 export function getRamadanDay(): number {
   if (typeof window === 'undefined') return 0
-  const startStr = localStorage.getItem('ramadan_start') || '2026-02-19'
+  // Use getItem() so JSON-encoded values (from setItem) are parsed correctly
+  const startStr = getItem<string>('ramadan_start', '2026-02-19')
   const start = new Date(startStr + 'T00:00:00')
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())

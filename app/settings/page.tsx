@@ -368,7 +368,7 @@ export default function SettingsPage() {
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
           <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Calculation Method" value={methodLabel.split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
           <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Madhab" value={madhabLabel.split('/')[0].trim()} onClick={() => setModalOpen('madhab')} />
-          <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'CIOG (Guyana)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
+          <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
         </SettingGroup>
 
         {/* Notifications */}
@@ -441,7 +441,7 @@ export default function SettingsPage() {
         onClose={() => setModalOpen(null)}
         title="Ramadan Moon Sighting"
         options={[
-          { key: 'ciog', label: 'CIOG / Guyana (Central Moon Sighting Committee)' },
+          { key: 'ciog', label: 'Local Guyana Sighting — GIT, CIOG & Central Moon Sighting Committee' },
           { key: 'saudi', label: 'Saudi Arabia / International Sighting' },
         ]}
         selected={moonSighting}

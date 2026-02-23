@@ -90,15 +90,15 @@ const FEATURES = [
 
 const RAMADAN_OPTIONS = [
   {
-    value: '2026-02-18',   // GIT/Saudi Ramadan 1447 = Wed 18 Feb 2026 (per GIT official timetable)
-    label: 'Saudi / International Sighting (GIT)',
-    note: 'Follows GIT/Saudi Arabia\u2019s official moon sighting — Ramadan began Wed 18 Feb 2026',
+    value: '2026-02-18',
+    label: 'Saudi / International Sighting',
+    note: 'Follows Saudi Arabia\u2019s official moon sighting announcement — Ramadan began Wed 18 Feb 2026',
     moonKey: 'saudi',
   },
   {
-    value: '2026-02-19',   // CIOG local sighting — one day after GIT/Saudi
-    label: 'CIOG / Central Sighting Committee',
-    note: 'Follows the Guyanese local moon sighting (CIOG & Central Moon Sighting Committee) — Ramadan began Thu 19 Feb 2026',
+    value: '2026-02-19',
+    label: 'Local Guyana Sighting',
+    note: 'Follows the local Guyanese regional moon sighting — as announced by GIT, CIOG, and the Central Moon Sighting Committee — Ramadan began Thu 19 Feb 2026',
     moonKey: 'ciog',
   },
 ]
@@ -609,7 +609,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
             <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 space-y-2">
               <p className="text-[11px] leading-relaxed text-gray-500">
-                Both CIOG and the Central Moon Sighting Committee typically announce the same date for Guyana.
+                GIT (Guyana Islamic Trust), CIOG, and the Central Moon Sighting Committee are separate organisations. All three follow the local Guyanese regional moon sighting and typically announce the same start date.
               </p>
               <p className="text-[11px] leading-relaxed text-gray-500">
                 This setting affects Iftaar times, Ramadan day count, and fasting tracker. You can change it anytime under Settings.

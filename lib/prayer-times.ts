@@ -1,5 +1,7 @@
 // Prayer time calculation using the Adhan library
 // Georgetown, Guyana coordinates
+import { getItem } from './storage'
+
 export const GEORGETOWN_COORDS = { latitude: 6.8013, longitude: -58.1551 }
 
 export const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const
@@ -55,7 +57,7 @@ export function getHijriDate(): string {
 
     // If user has a stored ramadan_start, calculate the Ramadan day from their preference
     // so CIOG users see "Ramadan 5" rather than the Saudi "Ramadan 6" etc.
-    const storedStart = typeof window !== 'undefined' ? localStorage.getItem('ramadan_start') : null
+    const storedStart = getItem<string | null>('ramadan_start', null)
     if (storedStart) {
       const startDate = new Date(storedStart + 'T00:00:00')
       const endDate = new Date(startDate)
