@@ -18,15 +18,15 @@ export async function POST(request: NextRequest) {
       [type, name || null, email || null, message]
     )
 
-    const typeLabel: Record<string, string> = { correction: 'Correction', add_masjid: 'Add Masjid', prayer_time: 'Prayer Time Fix', feature: 'Feature Idea', bug: 'Bug Report', other: 'Other' }
-    const typeEmoji: Record<string, string> = { correction: '✏️', add_masjid: '🕌', prayer_time: '🕐', feature: '💡', bug: '🐛', other: '💬' }
+    const typeLabel: Record<string, string> = { correction: 'Correction', add_masjid: 'Add Masjid', prayer_time: 'Prayer Time Fix', feature: 'Feature Idea', bug: 'Bug Report', halal_update: 'Halal Directory Update', other: 'Other' }
+    const typeEmoji: Record<string, string> = { correction: '✏️', add_masjid: '🕌', prayer_time: '🕐', feature: '💡', bug: '🐛', halal_update: '🥩', other: '💬' }
     const emoji = typeEmoji[type] || '💬'
     const label = typeLabel[type] || type
     const from = name ? `${name}${email ? ` <${email}>` : ''}` : (email || 'Anonymous')
     sendNtfy({
       title: `MasjidConnect Feedback: ${label}`,
       message: `${emoji} ${label}\nFrom: ${from}\n\n${message}`,
-      priority: type === 'bug' ? 4 : 3,
+      priority: (type === 'bug' || type === 'halal_update') ? 4 : 3,
       tags: [type === 'bug' ? 'bug' : 'speech_balloon', 'masjid'],
     })
 

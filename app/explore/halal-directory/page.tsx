@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ShieldCheck, Search, X, MapPin, Phone, Globe, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react'
+import { ShieldCheck, Search, X, MapPin, Phone, Globe, AlertTriangle, ChevronDown, ChevronUp, Info, Plus } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -330,6 +330,44 @@ export default function HalalDirectoryPage() {
   const [showRevoked, setShowRevoked] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
+  // ── Submit modal ──────────────────────────────────────────────────────────
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+  const [submitType, setSubmitType] = useState<'new_business' | 'revocation' | 'correction'>('new_business')
+  const [submitBiz, setSubmitBiz] = useState('')
+  const [submitMessage, setSubmitMessage] = useState('')
+  const [submitName, setSubmitName] = useState('')
+  const [submitEmail, setSubmitEmail] = useState('')
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitDone, setSubmitDone] = useState(false)
+
+  const openModal = () => { setSubmitDone(false); setSubmitBiz(''); setSubmitMessage(''); setSubmitName(''); setSubmitEmail(''); setSubmitType('new_business'); setShowSubmitModal(true) }
+
+  const handleSubmit = async () => {
+    if (!submitBiz.trim() || !submitMessage.trim()) return
+    setSubmitLoading(true)
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'halal_update',
+          message: `[${submitType.replace('_', ' ').toUpperCase()}] Business: ${submitBiz}\n\n${submitMessage}`,
+          name: submitName.trim() || null,
+          email: submitEmail.trim() || null,
+        }),
+      })
+      setSubmitDone(true)
+    } finally {
+      setSubmitLoading(false)
+    }
+  }
+
+  const placeholderMap = {
+    new_business: 'Certification authority (CIOG/D.E.H.C.), address, contact info…',
+    revocation: 'Why you believe the certificate was revoked, source or evidence…',
+    correction: 'What needs to be corrected in the current listing…',
+  }
+
   const activeBiz = useMemo(() => BUSINESSES.filter(b => b.status === 'active'), [])
   const revokedBiz = useMemo(() => BUSINESSES.filter(b => b.status === 'revoked'), [])
 
@@ -360,6 +398,19 @@ export default function HalalDirectoryPage() {
       />
 
       <div className="px-4 pt-4 space-y-3">
+
+        {/* ── Disclaimer ── */}
+        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 px-4 py-3 flex items-start gap-3">
+          <Info className="h-4 w-4 text-sky-400 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              Updated regularly from publicly available information. Always verify certification directly with CIOG or D.E.H.C. before dining.
+            </p>
+            <button onClick={openModal} className="mt-1 text-[11px] text-sky-400 underline underline-offset-2">
+              Know of a new addition or revocation? Submit an update →
+            </button>
+          </div>
+        </div>
 
         {/* ── Search ── */}
         <div className="relative">
@@ -560,6 +611,117 @@ export default function HalalDirectoryPage() {
         </div>
 
       </div>
+
+      {/* ── Floating Submit button ── */}
+      <button
+        onClick={openModal}
+        className="fixed bottom-[5.5rem] right-4 z-50 flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg active:bg-emerald-700"
+      >
+        <Plus className="h-3.5 w-3.5" />
+        Submit Update
+      </button>
+
+      {/* ── Submit modal ── */}
+      {showSubmitModal && (
+        <div className="fixed inset-0 z-[100] flex flex-col justify-end">
+          <div className="absolute inset-0 bg-black/70" onClick={() => setShowSubmitModal(false)} />
+          <div className="relative rounded-t-3xl border-t border-gray-800 bg-gray-900 p-5 max-h-[85vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-base font-bold text-white">Submit a Directory Update</p>
+                <p className="text-[11px] text-gray-500 mt-0.5">Help us keep this directory accurate</p>
+              </div>
+              <button onClick={() => setShowSubmitModal(false)} className="rounded-full bg-gray-800 p-1.5 text-gray-400">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {submitDone ? (
+              <div className="text-center py-8 space-y-3">
+                <p className="text-3xl">🤲</p>
+                <p className="text-sm font-bold text-white">JazakAllah Khair!</p>
+                <p className="text-xs text-gray-400 leading-relaxed px-4">Your submission has been received. We&apos;ll review it and update the directory accordingly.</p>
+                <button onClick={() => setShowSubmitModal(false)} className="mt-4 rounded-2xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white">Close</button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Type selector */}
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-2">Type of update</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {(['new_business', 'revocation', 'correction'] as const).map(t => (
+                      <button
+                        key={t}
+                        onClick={() => setSubmitType(t)}
+                        className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                          submitType === t ? 'bg-emerald-600 text-white' : 'bg-gray-800 text-gray-400'
+                        }`}
+                      >
+                        {t === 'new_business' ? '➕ New Business' : t === 'revocation' ? '⚠️ Revocation Report' : '✏️ Correction'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Business name */}
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Business name</p>
+                  <input
+                    value={submitBiz}
+                    onChange={e => setSubmitBiz(e.target.value)}
+                    placeholder="e.g. Church's Chicken"
+                    className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                  />
+                </div>
+
+                {/* Details */}
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Details</p>
+                  <textarea
+                    rows={3}
+                    value={submitMessage}
+                    onChange={e => setSubmitMessage(e.target.value)}
+                    placeholder={placeholderMap[submitType]}
+                    className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600 resize-none"
+                  />
+                </div>
+
+                {/* Optional contact */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Your name <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
+                    <input
+                      value={submitName}
+                      onChange={e => setSubmitName(e.target.value)}
+                      placeholder="Anonymous"
+                      className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Contact <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
+                    <input
+                      value={submitEmail}
+                      onChange={e => setSubmitEmail(e.target.value)}
+                      placeholder="Email or WhatsApp"
+                      className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitLoading || !submitBiz.trim() || !submitMessage.trim()}
+                  className="w-full rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-white disabled:opacity-40 active:bg-emerald-700"
+                >
+                  {submitLoading ? 'Submitting…' : 'Submit Update'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <BottomNav />
     </div>
   )
