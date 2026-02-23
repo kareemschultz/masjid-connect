@@ -157,9 +157,6 @@ function FiqhHubContent() {
                               {topic.rulingType}
                             </span>
                           )}
-                          {topic.sistersRelevant && (
-                            <span className="shrink-0 text-[10px] text-rose-400/60">sisters</span>
-                          )}
                         </div>
                       </div>
                       {isOpen ? (
