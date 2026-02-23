@@ -151,7 +151,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [name, setName] = useState('')
   const [method, setMethod] = useState('Egyptian')
   const [madhab, setMadhab] = useState('Shafi')
-  const [ramadanStart, setRamadanStart] = useState('2026-02-19')
+  const [ramadanStart, setRamadanStart] = useState('ciog')
   const [notifGranted, setNotifGranted] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [pwaInstalled, setPwaInstalled] = useState(false)
@@ -207,7 +207,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     setItem(KEYS.CALCULATION_METHOD, method)
     setItem(KEYS.MADHAB, madhab)
     if (showRamadanStep) {
-      setItem('ramadan_start', ramadanStart)
+      const selectedOption = RAMADAN_OPTIONS.find(o => o.moonKey === ramadanStart)
+      setItem('ramadan_start', selectedOption?.value || '2026-03-01')
+      setItem('moon_sighting', ramadanStart)
       setItem('ramadan_start_prompted', true)
     }
     setItem(KEYS.ONBOARDING_COMPLETE, true)
@@ -475,25 +477,25 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <div className="space-y-3">
               {RAMADAN_OPTIONS.map((opt) => (
                 <button
-                  key={opt.value}
-                  onClick={() => setRamadanStart(opt.value)}
+                  key={opt.moonKey}
+                  onClick={() => setRamadanStart(opt.moonKey)}
                   className={`w-full flex items-start gap-3 rounded-2xl border-2 px-4 py-4 text-left transition-all ${
-                    ramadanStart === opt.value
+                    ramadanStart === opt.moonKey
                       ? 'border-orange-500/40 bg-orange-500/10'
                       : 'border-gray-800 bg-gray-900 active:bg-gray-800'
                   }`}
                 >
                   <span
                     className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                      ramadanStart === opt.value ? 'border-orange-400' : 'border-gray-600'
+                      ramadanStart === opt.moonKey ? 'border-orange-400' : 'border-gray-600'
                     }`}
                   >
-                    {ramadanStart === opt.value && (
+                    {ramadanStart === opt.moonKey && (
                       <span className="h-2.5 w-2.5 rounded-full bg-orange-400" />
                     )}
                   </span>
                   <div>
-                    <p className={`text-sm font-semibold ${ramadanStart === opt.value ? 'text-orange-300' : 'text-gray-200'}`}>
+                    <p className={`text-sm font-semibold ${ramadanStart === opt.moonKey ? 'text-orange-300' : 'text-gray-200'}`}>
                       {opt.label}
                     </p>
                     <p className="mt-0.5 text-[11px] text-gray-500">{opt.note}</p>
