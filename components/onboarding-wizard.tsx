@@ -74,13 +74,13 @@ const FEATURES = [
 
 const RAMADAN_OPTIONS = [
   {
-    value: '2026-03-01',
+    value: '2026-02-18',
     label: 'Saudi / International Sighting',
     note: 'Follows Saudi Arabia\u2019s official moon sighting announcement',
     moonKey: 'saudi',
   },
   {
-    value: '2026-03-01',
+    value: '2026-02-19',
     label: 'CIOG / Central Sighting Committee',
     note: 'Follows the Guyanese moon sighting (CIOG & Central Moon Sighting Committee)',
     moonKey: 'ciog',
@@ -208,7 +208,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     setItem(KEYS.MADHAB, madhab)
     if (showRamadanStep) {
       const selectedOption = RAMADAN_OPTIONS.find(o => o.moonKey === ramadanStart)
-      setItem('ramadan_start', selectedOption?.value || '2026-03-01')
+      setItem('ramadan_start', selectedOption?.value || '2026-02-19')
       setItem('moon_sighting', ramadanStart)
       setItem('ramadan_start_prompted', true)
     }
