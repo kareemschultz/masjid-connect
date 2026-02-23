@@ -63,7 +63,6 @@ export default function MasjidDetailPage() {
   const [isHomeMasjid, setIsHomeMasjid] = useState(false)
   const [ramadan, setRamadan] = useState(false)
   const [iftaarReports, setIftaarReports] = useState<IftaarReport[]>([])
-  const [showAllReports, setShowAllReports] = useState(false)
   const [showReportForm, setShowReportForm] = useState(false)
   const [reportMenu, setReportMenu] = useState('')
   const [reportName, setReportName] = useState('')
@@ -341,48 +340,12 @@ export default function MasjidDetailPage() {
               <p className="text-sm text-gray-500 italic">No iftaar reports yet today. Be the first to share!</p>
             )}
 
-            {/* Archive — always visible so users know it exists */}
+            {/* Link to full archive on Iftaar page */}
             <div className="border-t border-orange-900/30 pt-3">
-              <button
-                onClick={() => setShowAllReports(v => !v)}
-                className="flex w-full items-center justify-between gap-1.5 text-xs text-gray-500 active:text-gray-300"
-              >
-                <div className="flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5" />
-                  <span className="font-semibold">Past Iftaar Reports</span>
-                  {iftaarReports.filter(r => r.date !== today).length > 0 && (
-                    <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
-                      {iftaarReports.filter(r => r.date !== today).length}
-                    </span>
-                  )}
-                </div>
-                {showAllReports ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              </button>
-              {showAllReports && (
-                <div className="mt-2.5 space-y-2">
-                  {iftaarReports.filter(r => r.date !== today).length === 0 ? (
-                    <p className="text-xs text-gray-600 italic py-2">No archived reports yet — reports from past days will appear here.</p>
-                  ) : (
-                    iftaarReports.filter(r => r.date !== today).map(report => {
-                      const d = new Date(report.date)
-                      const label = d.toLocaleDateString('en-GY', { weekday: 'short', month: 'short', day: 'numeric' })
-                      return (
-                        <div key={report.id} className="rounded-xl bg-gray-900/50 border border-gray-800/60 p-3">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-[10px] font-semibold text-orange-400/60 uppercase tracking-wide">{label}</span>
-                            <div className="flex items-center gap-1 text-[10px] text-gray-600">
-                              <ThumbsUp className="h-2.5 w-2.5" /> {report.likes}
-                            </div>
-                          </div>
-                          <p className="text-xs font-semibold text-gray-300">{report.menu}</p>
-                          {report.notes && <p className="mt-0.5 text-[11px] text-gray-500">{report.notes}</p>}
-                          <p className="mt-1 text-[10px] text-gray-600">by {report.submittedBy}</p>
-                        </div>
-                      )
-                    })
-                  )}
-                </div>
-              )}
+              <Link href="/iftaar" className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-orange-400 transition-colors">
+                <CalendarDays className="h-3.5 w-3.5" />
+                <span>View full Iftaar history →</span>
+              </Link>
             </div>
 
             {masjid.phone && (

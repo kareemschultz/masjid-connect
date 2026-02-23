@@ -33,6 +33,8 @@ export default function MasjidsPage() {
   const [facility, setFacility] = useState<string>('All')
   const [checkins, setCheckins] = useState<Record<string, CheckinData>>({})
   const [checkedIn, setCheckedIn] = useState<Record<string, boolean>>({})
+  const [homeMasjidId, setHomeMasjidId] = useState<string | null>(null)
+  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null)
 
   const isFriday = new Date().getDay() === 5
   const today = getTodayKey()
@@ -48,6 +50,15 @@ export default function MasjidsPage() {
     }
     setCheckins(cleaned)
     setCheckedIn(getItem<Record<string, boolean>>('masjid_checked_in_today', {}))
+    setHomeMasjidId(localStorage.getItem('home_masjid_id'))
+    // Try to get user location for proximity sort
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => setUserLoc({ lat: 6.8013, lng: -58.1551 }), // Georgetown fallback
+        { timeout: 4000, maximumAge: 300000 }
+      )
+    }
   }, [today])
 
   const handleCheckin = (masjidId: string) => {
@@ -59,6 +70,14 @@ export default function MasjidsPage() {
     const newCheckedIn = { ...checkedIn, [masjidId]: true }
     setCheckedIn(newCheckedIn)
     setItem('masjid_checked_in_today', newCheckedIn)
+  }
+
+  const haversineKm = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371
+    const dLat = ((lat2 - lat1) * Math.PI) / 180
+    const dLng = ((lng2 - lng1) * Math.PI) / 180
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   }
 
   const filtered = useMemo(() => {
@@ -79,13 +98,21 @@ export default function MasjidsPage() {
       list = list.filter((m) => m.facilities.includes("Women's Section"))
     }
 
-    // On Fridays, sort Jumuah masjids first
-    if (isFriday) {
-      list = [...list].sort((a, b) => (b.jumuah ? 1 : 0) - (a.jumuah ? 1 : 0))
-    }
+    // Sort: My Masjid first, then by proximity (GPS if available), then Jumuah on Fridays
+    list = [...list].sort((a, b) => {
+      if (a.id === homeMasjidId) return -1
+      if (b.id === homeMasjidId) return 1
+      if (userLoc) {
+        const da = haversineKm(userLoc.lat, userLoc.lng, a.lat, a.lng)
+        const db = haversineKm(userLoc.lat, userLoc.lng, b.lat, b.lng)
+        return da - db
+      }
+      if (isFriday) return (b.jumuah ? 1 : 0) - (a.jumuah ? 1 : 0)
+      return 0
+    })
 
     return list
-  }, [search, area, facility, isFriday])
+  }, [search, area, facility, isFriday, homeMasjidId, userLoc])
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
@@ -174,8 +201,14 @@ export default function MasjidsPage() {
             return (
               <div
                 key={masjid.id}
-                className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900"
+                className={`overflow-hidden rounded-2xl border bg-gray-900 ${masjid.id === homeMasjidId ? 'border-emerald-600/40 ring-1 ring-emerald-600/20' : 'border-gray-800'}`}
               >
+                {masjid.id === homeMasjidId && (
+                  <div className="bg-emerald-600/20 border-b border-emerald-600/20 px-4 py-1.5 flex items-center gap-1.5">
+                    <Star className="h-3 w-3 text-emerald-400 fill-emerald-400" />
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">My Masjid — tap to remove</span>
+                  </div>
+                )}
                 <div className="p-4">
                   <div className="flex items-start justify-between">
                     <Link href={`/masjids/${masjid.id}`} className="flex-1 min-w-0">
