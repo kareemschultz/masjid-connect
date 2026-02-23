@@ -580,8 +580,8 @@ export default function SurahReaderPage() {
       {showTranslationSheet && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowTranslationSheet(false)} />
-          <div className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-8 pt-4">
-            <div className="mb-4 flex items-center justify-between">
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-safe pt-4" style={{maxHeight:'80dvh'}}>
+            <div className="mb-3 flex shrink-0 items-center justify-between">
               <h3 className="text-sm font-bold text-white">Choose Translation</h3>
               <button
                 onClick={() => setShowTranslationSheet(false)}
@@ -591,7 +591,7 @@ export default function SurahReaderPage() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="max-h-[50vh] space-y-1 overflow-y-auto">
+            <div className="flex-1 space-y-1 overflow-y-auto overscroll-contain pb-6">
               {QURAN_TRANSLATIONS.map((t) => (
                 <button
                   key={t.key}
