@@ -620,9 +620,9 @@ export default function SurahReaderPage() {
 
       {/* Reciter selector bottom sheet */}
       {showReciterSheet && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowReciterSheet(false)} />
-          <div className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-8 pt-4">
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-6 pt-4" style={{ maxHeight: '80dvh' }}>
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-bold text-white">Choose Reciter</h3>
               <button
@@ -633,7 +633,7 @@ export default function SurahReaderPage() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="max-h-[50vh] space-y-1 overflow-y-auto">
+            <div className="flex-1 space-y-1 overflow-y-auto overscroll-contain pb-2">
               {RECITERS.map((r) => (
                 <button
                   key={r.id}
@@ -658,9 +658,9 @@ export default function SurahReaderPage() {
 
       {/* Display options bottom sheet */}
       {showDisplaySheet && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowDisplaySheet(false)} />
-          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pt-4 pb-8" style={{ maxHeight: '80dvh' }}>
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pt-4 pb-6" style={{ maxHeight: '80dvh' }}>
             <div className="mb-4 flex shrink-0 items-center justify-between">
               <h3 className="text-sm font-bold text-white">Display Options</h3>
               <button onClick={() => setShowDisplaySheet(false)} className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white" aria-label="Close">
@@ -673,19 +673,19 @@ export default function SurahReaderPage() {
             <div className="mb-5 grid shrink-0 grid-cols-2 gap-2">
               <button
                 onClick={() => { setDisplayScript('uthmani'); setItem(KEYS.QURAN_SCRIPT, 'uthmani') }}
-                className={`rounded-xl p-3 text-center transition-colors ${displayScript === 'uthmani' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'uthmani' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
               >
-                <p className="font-arabic text-xl leading-loose text-foreground">بِسۡمِ</p>
-                <p className="mt-1 text-[10px] font-medium text-gray-400">Uthmani (Hafs)</p>
-                {displayScript === 'uthmani' && <p className="mt-0.5 text-[9px] text-emerald-400">Active</p>}
+                <p className="font-arabic text-2xl text-white" style={{ lineHeight: '2' }}>بِسْمِ اللّٰهِ</p>
+                <p className="mt-2 text-[10px] font-medium text-gray-400">Uthmani (Hafs)</p>
+                {displayScript === 'uthmani' && <p className="mt-0.5 text-[9px] text-emerald-400">● Active</p>}
               </button>
               <button
                 onClick={() => { setDisplayScript('indopak'); setItem(KEYS.QURAN_SCRIPT, 'indopak') }}
-                className={`rounded-xl p-3 text-center transition-colors ${displayScript === 'indopak' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'indopak' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
               >
-                <p className="font-indopak text-xl leading-loose text-foreground">بِسمِ</p>
-                <p className="mt-1 text-[10px] font-medium text-gray-400">IndoPak Script</p>
-                {displayScript === 'indopak' && <p className="mt-0.5 text-[9px] text-emerald-400">Active</p>}
+                <p className="font-indopak text-2xl text-white" style={{ lineHeight: '2.5' }}>بِسۡمِ اللّٰہِ</p>
+                <p className="mt-2 text-[10px] font-medium text-gray-400">IndoPak Script</p>
+                {displayScript === 'indopak' && <p className="mt-0.5 text-[9px] text-emerald-400">● Active</p>}
               </button>
             </div>
 
@@ -731,9 +731,9 @@ export default function SurahReaderPage() {
 
       {/* Translation selector bottom sheet */}
       {showTranslationSheet && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowTranslationSheet(false)} />
-          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-safe pt-4" style={{maxHeight:'80dvh'}}>
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-6 pt-4" style={{maxHeight:'80dvh'}}>
             <div className="mb-3 flex shrink-0 items-center justify-between">
               <h3 className="text-sm font-bold text-white">Choose Translation</h3>
               <button
