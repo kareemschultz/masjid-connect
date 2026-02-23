@@ -101,7 +101,7 @@ export default function ProfilePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={User}
         title="Profile"

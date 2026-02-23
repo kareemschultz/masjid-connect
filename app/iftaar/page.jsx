@@ -411,7 +411,7 @@ export default function IftaarPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-24">
+      <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero
           icon={UtensilsCrossed}
           title="Iftaar Reports"
@@ -429,7 +429,7 @@ export default function IftaarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <Toaster position="top-center" richColors />
       <PageHero
         icon={UtensilsCrossed}

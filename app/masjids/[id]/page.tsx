@@ -60,7 +60,7 @@ export default function MasjidDetailPage() {
 
   if (!masjid) {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-24">
+      <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero icon={MapPin} title="Not Found" subtitle="Masjid not found" gradient="from-teal-900 to-green-900" showBack />
         <div className="px-4 pt-8 text-center">
           <p className="text-gray-400">This masjid could not be found.</p>
@@ -74,7 +74,7 @@ export default function MasjidDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
         icon={MapPin}
         title={masjid.name}

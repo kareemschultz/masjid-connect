@@ -70,7 +70,7 @@ const SCHOLARS = [
 
 export default function ScholarsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
         icon={GraduationCap}
         title="Inspiring Sisters"

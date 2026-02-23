@@ -285,7 +285,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#0a0b14] pb-24 ${mounted ? '' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
+    <div className={`min-h-screen bg-[#0a0b14] pb-nav ${mounted ? '' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
       {/* ========== HERO ========== */}
       <div className="relative overflow-hidden">
         {/* Background gradient */}

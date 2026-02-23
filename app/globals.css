@@ -114,6 +114,10 @@
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0px);
 }
+/* Bottom nav clearance — nav is ~64px + safe area inset */
+.pb-nav {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 20px));
+}
 
 /* ——— Premium Animations ——— */
 

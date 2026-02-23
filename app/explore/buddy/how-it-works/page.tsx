@@ -139,7 +139,7 @@ const HADITHS = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Users}
         title="How It Works"

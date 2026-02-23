@@ -97,7 +97,7 @@ export default function TimetablePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero icon={Table2} title="Prayer Timetable" subtitle="Monthly Schedule" gradient="from-cyan-900 to-teal-900" showBack />
 
       <div className="space-y-4 px-4 -mt-2">

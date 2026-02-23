@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Info} title="About" subtitle="MasjidConnect GY" gradient="from-emerald-900 to-teal-900" showBack />
 
       <div className="px-4 pt-5 space-y-5">

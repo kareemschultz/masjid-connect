@@ -33,7 +33,7 @@ const EVENTS = [
 
 export default function EventsPage() {
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Calendar}
         title="Events"

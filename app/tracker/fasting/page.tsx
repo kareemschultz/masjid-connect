@@ -205,7 +205,7 @@ export default function FastingTrackerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
         icon={UtensilsCrossed}
         title="Fasting Tracker"

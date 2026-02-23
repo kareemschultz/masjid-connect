@@ -49,7 +49,7 @@ export default function FeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-24">
+      <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero icon={MessageSquarePlus} title="Feedback" subtitle="Your Voice Matters" gradient="from-rose-900 to-pink-900" showBack />
         <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20">
@@ -67,7 +67,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero icon={MessageSquarePlus} title="Send Feedback" subtitle="Your Voice Matters" gradient="from-rose-900 to-pink-900" showBack />
 
       <div className="space-y-4 px-4 -mt-2">

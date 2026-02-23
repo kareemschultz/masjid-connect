@@ -29,7 +29,7 @@ export default function ExplorePage() {
   const { isRamadan, hijriYear } = getRamadanStatus()
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" stars />
 
       <div className="px-4 pt-5 -mt-2">

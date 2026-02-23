@@ -122,7 +122,7 @@ export default function AdminPage() {
   if (!isAdmin) return null
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero icon={Shield} title="Admin Panel" subtitle="Manage Announcements" gradient="from-red-900 to-rose-900" showBack />
 
       <div className="space-y-4 px-4 -mt-2">

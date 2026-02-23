@@ -51,7 +51,7 @@ export function PwaInstallPrompt() {
   if (!showBanner) return null
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-50 animate-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed left-4 right-4 z-[70] animate-in slide-in-from-bottom-4 duration-300" style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 20px) + 0.5rem)' }}>
       <div className="mx-auto max-w-lg rounded-2xl border border-emerald-500/20 bg-gray-900 p-4 shadow-xl shadow-black/40">
         <div className="flex items-start gap-3">
           <Image

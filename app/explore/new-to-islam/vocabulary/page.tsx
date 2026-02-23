@@ -88,7 +88,7 @@ export default function VocabularyPage() {
   }, [filtered])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-24">
+    <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
         icon={MessageCircle}
         title="Islamic Vocabulary"

@@ -169,7 +169,7 @@ export default function TrackerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={CheckSquare}
         title="Prayer Tracker"

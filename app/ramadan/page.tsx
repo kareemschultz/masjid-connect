@@ -121,7 +121,7 @@ export default function RamadanPage() {
   const todayFasted = fastingLog[todayKey] === 'fasted'
 
   return (
-    <div className={`min-h-screen bg-[#0a0b14] pb-24 ${mounted ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
+    <div className={`min-h-screen bg-[#0a0b14] pb-nav ${mounted ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
       {/* Hero */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-950 to-violet-900" />

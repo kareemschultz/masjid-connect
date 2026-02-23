@@ -42,7 +42,7 @@ export default function AdhkarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Star}
         title="Adhkar"

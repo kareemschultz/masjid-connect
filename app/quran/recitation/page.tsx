@@ -190,7 +190,7 @@ export default function RecitationPage() {
   // ── STEP: Reciter Selection ───────────────────────────────────────────────────
   if (step === 'reciter') {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-24">
+      <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero icon={Headphones} title="Recitation" subtitle="Choose a Reciter" gradient="from-teal-900 to-emerald-900" showBack />
 
         <div className="px-4 pt-4">
@@ -239,7 +239,7 @@ export default function RecitationPage() {
   // ── STEP: Surah Selection ──────────────────────────────────────────────────────
   if (step === 'surah') {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-24">
+      <div className="min-h-screen bg-[#0a0b14] pb-nav">
         <PageHero icon={Headphones} title="Recitation" subtitle={reciterData.name} gradient="from-teal-900 to-emerald-900" showBack />
 
         <div className="px-4 pt-4">

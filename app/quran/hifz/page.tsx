@@ -165,7 +165,7 @@ export default function HifzPage() {
   )
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-950 to-violet-900">
         <div className="islamic-pattern absolute inset-0 opacity-80" />

@@ -129,7 +129,7 @@ export default function SettingsPage() {
   const reciterLabel = RECITERS.find(r => r.key === reciter)?.label || reciter
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Settings} title="Settings" subtitle="Customize Your Experience" gradient="from-gray-800 to-gray-900" showBack />
 
       <div className="space-y-5 px-4 pt-5">

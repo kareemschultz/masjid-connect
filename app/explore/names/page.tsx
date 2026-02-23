@@ -118,7 +118,7 @@ export default function NamesOfAllahPage() {
   )
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Sparkles}
         title="99 Names of Allah"
