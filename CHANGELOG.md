@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.5.0 — Feb 23, 2026
+- Onboarding: Per-step themed animations (crescent+stars on welcome, amber sparkles on name, compass ring on prayer, Ramadan lantern+crescent, confetti on done)
+- Onboarding: iOS PWA install expanded to full 3-step guide with numbered badges
+- Onboarding: Google Sign-In removed from done step (moved to name step in Sprint 6)
+
 ## v2.4.0 — Feb 23, 2026
 - New: Sunnah & Nawafil prayer tracker (Witr, Fajr Sunnah, all confirmed sunnahs, Tahajjud, Duha, Ishraq, Awwabeen, Tarawih)
 - New: lib/prayer-types.ts — full Islamic prayer taxonomy with rakat, timing, hadith rewards
