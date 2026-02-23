@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin, Keyboard, ShieldCheck } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin, Keyboard, ShieldCheck, ShieldAlert, HelpCircle } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -41,10 +41,18 @@ const SECTIONS = [
     ],
   },
   {
+    label: '\u{1F319} Ramadan Guides',
+    items: [
+      { icon: ShieldAlert, label: 'Fasting Guide', description: 'What breaks the fast?', href: '/explore/ramadan/factors', color: 'from-red-500/20 to-orange-600/10', iconColor: 'text-red-400' },
+      { icon: HelpCircle, label: 'Fidya Guide', description: 'Missed fasts & Fidya', href: '/explore/ramadan/fidya', color: 'from-amber-500/20 to-orange-600/10', iconColor: 'text-amber-400' },
+    ],
+  },
+  {
     label: '\u{1F331} New Here?',
     items: [
       { icon: MessageCircle, label: 'New to Islam', description: 'Start your journey', href: '/explore/new-to-islam', color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400' },
       { icon: Heart, label: 'Sisters', description: 'For Muslim women', href: '/explore/sisters', color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400' },
+      { icon: Heart, label: 'Sisters in Ramadan', description: 'Worship during your cycle', href: '/explore/sisters/ramadan', color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400' },
     ],
   },
   {

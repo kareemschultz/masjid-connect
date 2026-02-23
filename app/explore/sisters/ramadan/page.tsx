@@ -1,67 +1,119 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { Heart, BookOpen, HandHeart, Mic2, Ear, GraduationCap, Lightbulb, Coins } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
-export default function RamadanForSistersPage() {
+const ACTIONS = [
+  {
+    num: 1,
+    title: 'Dua (Supplication)',
+    icon: HandHeart,
+    color: 'text-rose-400',
+    bg: 'bg-rose-500/10',
+    text: "Ramadan is a blessed month for seeking Allah Ta'ala's mercy and forgiveness. Make heartfelt duas for yourself, your family, the Ummah, for both worldly and spiritual needs. Make 40 Rabeana and any duas with the intention of Dua.",
+  },
+  {
+    num: 2,
+    title: 'Dhikr (Remembrance of Allah)',
+    icon: BookOpen,
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/10',
+    text: 'Can recite tasbih, tahleel, takbeer, and istighfar. SubhanAllah, Alhamdulillah, Allahu Akbar, La ilaha illallah, Astaghfirullah.',
+  },
+  {
+    num: 3,
+    title: 'Seeking Forgiveness (Istighfar)',
+    icon: Heart,
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/10',
+    text: 'Repeating Astaghfirullah and sincerely repenting for past sins. Istighfar is one of the most powerful acts of worship.',
+  },
+  {
+    num: 4,
+    title: 'Sending Salawat (Durood)',
+    icon: Mic2,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10',
+    text: 'Can recite any form of Durood Sharif, sending blessings upon Rasulullah \uFDFA. This brings immense rewards.',
+  },
+  {
+    num: 5,
+    title: 'Listening to the Quran',
+    icon: Ear,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    text: 'While she cannot recite the Quran from memory or a physical Mushaf, she can listen to its recitation for spiritual benefit.',
+  },
+  {
+    num: 6,
+    title: 'Gaining Knowledge',
+    icon: GraduationCap,
+    color: 'text-orange-400',
+    bg: 'bg-orange-500/10',
+    text: "Can read Islamic books, tafseer, hadith, or listen to beneficial lectures as a way to increase with Allah Ta'ala and deen.",
+  },
+  {
+    num: 7,
+    title: 'Making Intentions for Good Deeds',
+    icon: Lightbulb,
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/10',
+    text: 'Plan good actions she wishes to implement in her life, such as improving her character, increasing her worship, or helping others.',
+  },
+  {
+    num: 8,
+    title: 'Charity (Sadaqah)',
+    icon: Coins,
+    color: 'text-teal-400',
+    bg: 'bg-teal-500/10',
+    text: "Giving charity, even if small, as a simple, easy way to earn rewards from Allah Ta'ala.",
+  },
+]
+
+export default function SistersRamadanPage() {
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero
-        icon={Star}
+        icon={Heart}
         title="Ramadan for Sisters"
-        subtitle="Fasting, Exemptions & Worship"
-        gradient="from-amber-950 to-orange-900"
+        subtitle="Worship during your cycle"
+        gradient="from-rose-900 to-pink-900"
         showBack
-        stars
       />
 
-      <div className="space-y-4 px-4 pt-5 animate-stagger">
-        {/* Fasting in Ramadan */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5">
-          <h2 className="text-lg font-bold text-[#f9fafb] mb-3">Fasting in Ramadan</h2>
-          <ul className="space-y-2 text-sm text-gray-400 leading-relaxed list-disc list-inside">
-            <li>Fasting from dawn (Fajr) to sunset (Maghrib) &mdash; no food, drink, or intimate relations</li>
-            <li>Exemptions from fasting: pregnancy, breastfeeding, illness, travel, menstruation, elderly/chronic illness</li>
-            <li>Making up missed fasts (Qadha): missed days must be made up before the next Ramadan</li>
-            <li>Fidyah: for those permanently unable to fast (e.g., chronic illness, elderly), they feed one poor person per missed day instead</li>
-          </ul>
-        </div>
+      <div className="px-4 pt-5 space-y-4">
 
-        {/* Menstruation During Ramadan */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5">
-          <h2 className="text-lg font-bold text-[#f9fafb] mb-3">Menstruation During Ramadan</h2>
-          <ul className="space-y-2 text-sm text-gray-400 leading-relaxed list-disc list-inside">
-            <li>During haid (menstruation), fasting is not permitted &mdash; missed days must be made up after Ramadan</li>
-            <li>She does not pray Salah during this time &mdash; and there is no makeup prayer required. This is a mercy from Allah.</li>
-            <li>What she CAN do during haid: make dhikr (remembrance), make dua (supplication), read Quran (most scholars allow it, especially from a device/app), listen to Quran, give charity, cook for others, make istighfar</li>
-            <li>On Eid: She fully participates even if she is on her period &mdash; dress up, attend the Eid prayer gathering (without praying), make takbir, give Zakat al-Fitr, celebrate with the community</li>
-          </ul>
-        </div>
-
-        {/* Tips for Sisters in Ramadan */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5">
-          <h2 className="text-lg font-bold text-[#f9fafb] mb-3">Tips for Sisters in Ramadan</h2>
-          <ul className="space-y-2 text-sm text-gray-400 leading-relaxed list-disc list-inside">
-            <li>Prepare suhoor (pre-dawn meal) ahead of time &mdash; overnight oats, prepared ingredients, easy options</li>
-            <li>Use haid days for extra dua, reflection, and Quran listening &mdash; they are not wasted days</li>
-            <li>Make a Ramadan plan: set a Quran reading goal, a charity target, and a daily dhikr schedule</li>
-            <li>Rest is ibadah &mdash; do not exhaust yourself. Allah does not burden a soul beyond its capacity (Quran 2:286)</li>
-            <li>Involve your children in Ramadan activities &mdash; it builds lasting memories</li>
-          </ul>
-        </div>
-
-        {/* Laylatul Qadr While in Haid */}
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
-          <h2 className="text-lg font-bold text-[#f9fafb] mb-3">Laylatul Qadr While in Haid</h2>
-          <p className="text-sm text-gray-400 leading-relaxed">
-            A sister who is menstruating during the last ten nights of Ramadan can absolutely still worship and seek Laylatul Qadr (the Night of Decree &mdash; better than 1,000 months).
+        <div className="rounded-2xl border border-rose-800/30 bg-rose-950/20 p-4">
+          <p className="text-sm text-rose-200 leading-relaxed">
+            A menstruating woman can still engage in various acts of worship during Ramadan even though she cannot pray or fast during these days. Here are <strong>8 beneficial actions</strong> she can do:
           </p>
-          <p className="text-sm text-gray-400 leading-relaxed mt-2">
-            She can make dua, dhikr, read Quran (from a device), make istighfar, give charity, and remember Allah abundantly.
+        </div>
+
+        {ACTIONS.map((action) => {
+          const Icon = action.icon
+          return (
+            <div key={action.num} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+              <div className="flex items-center gap-3 mb-2.5">
+                <div className={`flex h-8 w-8 items-center justify-center rounded-full ${action.bg}`}>
+                  <Icon className={`h-4 w-4 ${action.color}`} />
+                </div>
+                <div>
+                  <span className="text-[10px] text-gray-500">Action {action.num}</span>
+                  <h3 className={`text-sm font-bold ${action.color}`}>{action.title}</h3>
+                </div>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed pl-11">{action.text}</p>
+            </div>
+          )
+        })}
+
+        <div className="rounded-2xl border border-rose-800/20 bg-rose-950/10 p-4">
+          <p className="text-xs text-gray-400 leading-relaxed">
+            Even though menstruation prevents certain acts of worship, a woman can still engage in immense devotion and earn rewards through these acts. The key is to connect with Allah Ta&apos;ala sincerely and seek His mercy and guidance.
           </p>
-          <p className="text-sm text-gray-400 leading-relaxed mt-2">
-            Missing the Salah of that night is not a loss &mdash; the exemption is from Allah Himself. He knows your heart and your intention.
+          <p className="mt-2 text-[10px] text-gray-600">
+            Source: Darul Uloom/Masjid Islamic & Academic Institute Inc., East Street, Georgetown.
           </p>
         </div>
       </div>
