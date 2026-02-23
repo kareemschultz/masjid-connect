@@ -1,7 +1,10 @@
 import { NextRequest } from 'next/server'
 import { getPool } from '@/lib/db'
+import { rateLimit, getClientIp, rateLimitResponse } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (!rateLimit(ip, 30, 60000)) return rateLimitResponse()
   try {
     const body = await request.json()
     const { request_id } = body
