@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
-import { Shield, Plus, Trash2, AlertTriangle, Info, CalendarDays, Loader, Check, Eye, EyeOff } from 'lucide-react'
+import { Shield, Plus, Trash2, AlertTriangle, Info, CalendarDays, Loader, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 // ─── Types ───────────────────────────────────────────────────────────
@@ -268,16 +268,17 @@ export default function AdminPage() {
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${badge}`}>{label}</span>
-            {item.reviewed && <span className="flex items-center gap-0.5 text-[10px] text-emerald-400"><Check className="h-3 w-3" /> Reviewed</span>}
           </div>
           <button
             onClick={() => toggleReviewed(item)}
-            className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-all ${item.reviewed ? 'bg-gray-800 text-gray-400' : 'bg-emerald-600 text-white'}`}
+            title={item.reviewed ? 'Mark unreviewed' : 'Mark reviewed'}
+            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-all ${item.reviewed ? 'bg-emerald-600/20 text-emerald-400' : 'bg-gray-800 text-gray-500 hover:text-gray-300'}`}
           >
-            {item.reviewed ? <><EyeOff className="h-3 w-3" /> Unmark</> : <><Eye className="h-3 w-3" /> Mark Reviewed</>}
+            <Check className="h-3 w-3" />
+            {item.reviewed ? 'Done' : 'Review'}
           </button>
         </div>
-        <p className="mt-1.5 text-[11px] text-gray-500">{from}</p>
+        <p className="mt-1 text-[11px] text-gray-500">{from}</p>
         <p
           className={`mt-1.5 text-xs text-gray-300 whitespace-pre-wrap ${!isExpanded ? 'line-clamp-3' : ''} cursor-pointer`}
           onClick={() => {
@@ -299,20 +300,22 @@ export default function AdminPage() {
       <PageHero icon={Shield} title="Admin Panel" subtitle={currentTab.subtitle} gradient="from-red-900 to-rose-900" showBack />
 
       {/* Tab pills */}
-      <div className="flex gap-2 overflow-x-auto px-4 pb-3 -mt-1 scrollbar-none">
-        {TABS.map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === tab.key
-                ? 'bg-white text-gray-900'
-                : 'bg-gray-800 text-gray-400'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="overflow-x-auto scrollbar-none -mt-1">
+        <div className="flex gap-2 px-4 pb-3 w-max min-w-full">
+          {TABS.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-all ${
+                activeTab === tab.key
+                  ? 'bg-white text-gray-900'
+                  : 'bg-gray-800 text-gray-400'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-4 px-4 mt-2">
@@ -378,18 +381,20 @@ export default function AdminPage() {
         {/* ─── Tab 2: Feedback ───────────────────────────────────── */}
         {activeTab === 'feedback' && (
           <>
-            <div className="flex gap-2 overflow-x-auto scrollbar-none">
-              {feedbackFilters.map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => setFeedbackFilter(f.key)}
-                  className={`flex-shrink-0 rounded-full px-3 py-1.5 text-[11px] font-medium whitespace-nowrap transition-all ${
-                    feedbackFilter === f.key ? 'bg-white text-gray-900' : 'bg-gray-800 text-gray-400'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
+            <div className="overflow-x-auto scrollbar-none -mx-4">
+              <div className="flex gap-2 px-4 pb-1 w-max min-w-full">
+                {feedbackFilters.map(f => (
+                  <button
+                    key={f.key}
+                    onClick={() => setFeedbackFilter(f.key)}
+                    className={`flex-shrink-0 rounded-full px-3 py-1.5 text-[11px] font-medium whitespace-nowrap transition-all ${
+                      feedbackFilter === f.key ? 'bg-white text-gray-900' : 'bg-gray-800 text-gray-400'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-3">
