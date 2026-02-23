@@ -6,6 +6,8 @@ import { PrayerStrip } from '@/components/prayer-strip'
 import { HeroAnimation } from '@/components/hero-animations'
 import { getHijriDate, formatTime, getTimeUntil, PRAYER_NAMES } from '@/lib/prayer-times'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
+import { applyOffset, DEFAULT_OFFSETS, type PrayerOffsets } from '@/lib/prayer-offsets'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -119,6 +121,8 @@ export default function HomePage() {
   const [suhoorCountdown, setSuhoorCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
   const [mounted, setMounted] = useState(false)
   const [homeMasjidName, setHomeMasjidName] = useState<string>('')
+  const [locationDetected, setLocationDetected] = useState(false)
+  const [locationFailed, setLocationFailed] = useState(false)
 
   const dailyVerse = getDailyVerse()
   const hadith = getTodayHadith()
@@ -168,9 +172,13 @@ export default function HomePage() {
       params.madhab = madhabKey === 'Hanafi' ? adhan.Madhab.Hanafi : adhan.Madhab.Shafi
       const pt = new adhan.PrayerTimes(coords, new Date(), params)
       const prayerMap: Record<string, Date> = { Fajr: pt.fajr, Dhuhr: pt.dhuhr, Asr: pt.asr, Maghrib: pt.maghrib, Isha: pt.isha }
-      const prayerData: PrayerTimeData[] = PRAYER_NAMES.map((name) => ({
-        name, time: formatTime(prayerMap[name]), date: prayerMap[name],
-      }))
+      const offsets: PrayerOffsets = getItem(KEYS.PRAYER_OFFSETS, DEFAULT_OFFSETS)
+      const prayerData: PrayerTimeData[] = PRAYER_NAMES.map((name) => {
+        const rawDate = prayerMap[name]
+        const offsetMin = offsets[name as keyof PrayerOffsets] ?? 0
+        const adjustedDate = applyOffset(rawDate, offsetMin)
+        return { name, time: formatTime(adjustedDate), date: adjustedDate }
+      })
       setPrayers(prayerData)
       prayersRef.current = prayerData
       scheduleNotifications(prayerData)
@@ -282,6 +290,34 @@ export default function HomePage() {
         setItem(KEYS.CHECKLIST, merged)
       })
       .catch(() => {})
+  }, [loadPrayerTimes])
+
+  // Auto-detect location if never set
+  useEffect(() => {
+    const hasLocation = localStorage.getItem('user_lat') !== null
+    if (hasLocation) return
+
+    detectLocation()
+      .then(async (coords) => {
+        const geo = await reverseGeocode(coords.latitude, coords.longitude)
+        setItem(KEYS.USER_LAT, coords.latitude)
+        setItem(KEYS.USER_LNG, coords.longitude)
+        setItem(KEYS.USER_CITY, geo.city)
+        setItem(KEYS.USER_COUNTRY, geo.country)
+        setItem(KEYS.USER_COUNTRY_CODE, geo.countryCode)
+
+        const rec = getRecommendedMethod(coords.latitude, coords.longitude, geo.countryCode)
+        const currentMethod = getItem(KEYS.CALCULATION_METHOD, '')
+        if (!currentMethod || currentMethod === 'Egyptian') {
+          setItem(KEYS.CALCULATION_METHOD, rec.method)
+        }
+
+        loadPrayerTimes()
+        setLocationDetected(true)
+      })
+      .catch(() => {
+        setLocationFailed(true)
+      })
   }, [loadPrayerTimes])
 
   // Countdown timers — uses ref to avoid stale closure
@@ -428,6 +464,22 @@ export default function HomePage() {
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </span>
           </div>
+
+          {/* Location notice */}
+          {locationFailed && !locationDetected && (
+            <div className="mb-3 flex items-center justify-between rounded-2xl border border-amber-500/20 bg-amber-500/5 px-4 py-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <MapPin className="h-4 w-4 shrink-0 text-amber-400" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-amber-400">Using Georgetown, Guyana</p>
+                  <p className="text-[10px] text-white/40 truncate">Prayer times may be incorrect for your location</p>
+                </div>
+              </div>
+              <Link href="/settings" className="ml-3 shrink-0 rounded-full bg-amber-500/15 px-3 py-1.5 text-[10px] font-semibold text-amber-400 active:scale-95 transition-transform">
+                Update
+              </Link>
+            </div>
+          )}
 
           {/* Next Prayer Countdown */}
           <div data-tour="prayer-countdown" className="glass-emerald rounded-3xl p-5 animate-scale-in" style={{ animationDelay: '0.15s', animationFillMode: 'backwards' }}>

@@ -876,7 +876,7 @@ export default function DuasPage() {
       </Link>
 
       {/* ── Toolbar ─────────────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">
+      <div data-tour="duas-categories" className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">
         {/* Actions row */}
         <div className="flex items-center gap-2">
           {/* Bookmarks toggle */}

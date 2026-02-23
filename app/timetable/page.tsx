@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, KEYS } from '@/lib/storage'
-import { Table2, ChevronLeft, ChevronRight, Share2, Copy, Check } from 'lucide-react'
+import { applyOffset, DEFAULT_OFFSETS, type PrayerOffsets } from '@/lib/prayer-offsets'
+import { Table2, ChevronLeft, ChevronRight, Share2, Copy, Check, MapPin } from 'lucide-react'
+import Link from 'next/link'
 
 interface DayRow {
   date: string
@@ -25,6 +27,7 @@ export default function TimetablePage() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [rows, setRows] = useState<DayRow[]>([])
   const [copied, setCopied] = useState(false)
+  const [userCity, setUserCity] = useState('')
 
   const loadTimetable = useCallback(async () => {
     try {
@@ -56,6 +59,7 @@ export default function TimetablePage() {
       const month = currentMonth.getMonth()
       const daysInMonth = new Date(year, month + 1, 0).getDate()
 
+      const offsets: PrayerOffsets = getItem(KEYS.PRAYER_OFFSETS, DEFAULT_OFFSETS)
       const data: DayRow[] = []
       for (let i = 1; i <= daysInMonth; i++) {
         const d = new Date(year, month, i)
@@ -64,11 +68,11 @@ export default function TimetablePage() {
           date: d.toISOString().split('T')[0],
           dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
           dayNum: i,
-          fajr: formatTime(pt.fajr),
-          dhuhr: formatTime(pt.dhuhr),
-          asr: formatTime(pt.asr),
-          maghrib: formatTime(pt.maghrib),
-          isha: formatTime(pt.isha),
+          fajr: formatTime(applyOffset(pt.fajr, offsets.Fajr ?? 0)),
+          dhuhr: formatTime(applyOffset(pt.dhuhr, offsets.Dhuhr ?? 0)),
+          asr: formatTime(applyOffset(pt.asr, offsets.Asr ?? 0)),
+          maghrib: formatTime(applyOffset(pt.maghrib, offsets.Maghrib ?? 0)),
+          isha: formatTime(applyOffset(pt.isha, offsets.Isha ?? 0)),
         })
       }
       setRows(data)
@@ -77,7 +81,12 @@ export default function TimetablePage() {
     }
   }, [currentMonth])
 
-  useEffect(() => { loadTimetable() }, [loadTimetable])
+  useEffect(() => {
+    loadTimetable()
+    const city = getItem(KEYS.USER_CITY, '')
+    const country = getItem(KEYS.USER_COUNTRY, '')
+    setUserCity(city ? (country ? `${city}, ${country}` : city) : 'Georgetown, Guyana')
+  }, [loadTimetable])
 
   const today = new Date().toISOString().split('T')[0]
   const year = currentMonth.getFullYear()
@@ -85,7 +94,7 @@ export default function TimetablePage() {
   const monthLabel = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   const shareTimetable = async () => {
-    const text = `Prayer Timetable - ${monthLabel}\nGeorgetown, Guyana\n\n` +
+    const text = `Prayer Timetable - ${monthLabel}\n${userCity}\n\n` +
       rows.map(r => `${r.dayName} ${r.dayNum}: F ${r.fajr} | D ${r.dhuhr} | A ${r.asr} | M ${r.maghrib} | I ${r.isha}`).join('\n') +
       '\n\nvia MasjidConnect GY'
 
@@ -101,6 +110,14 @@ export default function TimetablePage() {
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
       <PageHero icon={Table2} title="Prayer Timetable" subtitle="Monthly Schedule" gradient="from-cyan-900 to-teal-900" showBack heroTheme="prayer" />
+
+      {userCity && (
+        <div className="mx-4 mt-3 flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 text-emerald-500" />
+          <span className="text-xs text-gray-400">{userCity}</span>
+          <Link href="/settings" className="ml-auto text-[10px] text-emerald-500 underline">Change</Link>
+        </div>
+      )}
 
       <div className="space-y-4 px-4 -mt-2">
         {/* Month Navigator */}

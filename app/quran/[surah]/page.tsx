@@ -196,7 +196,13 @@ export default function SurahReaderPage() {
   // Reset tajweed data when surah changes
   useEffect(() => { setTajweedData({}) }, [surahNum])
 
-  const scriptClass = displayScript === 'indopak' ? 'font-indopak' : 'font-arabic'
+  // Quran font preference from Settings (overrides script selection)
+  const [quranFont, setQuranFontPref] = useState('default')
+  useEffect(() => {
+    setQuranFontPref(getItem(KEYS.QURAN_FONT, 'default'))
+  }, [])
+
+  const scriptClass = quranFont === 'indopak' ? 'font-indopak' : quranFont === 'amiri' ? 'font-arabic' : (displayScript === 'indopak' ? 'font-indopak' : 'font-arabic')
 
   const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
     if (audioRef.current) {

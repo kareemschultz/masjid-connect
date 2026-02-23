@@ -195,7 +195,7 @@ export default function MasjidsPage() {
         </div>
 
         {/* Masjid cards */}
-        <div className="space-y-3 animate-stagger">
+        <div data-tour="masjid-list" className="space-y-3 animate-stagger">
           {filtered.map((masjid) => {
             const checkinCount = checkins[masjid.id]?.count || 0
             const isCheckedIn = checkedIn[masjid.id]

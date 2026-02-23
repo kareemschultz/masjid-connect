@@ -153,7 +153,7 @@ function FiqhHubContent() {
       </div>
 
       {/* ── Topics ─────────────────────────────────────── */}
-      <div className="px-4 pt-4 space-y-1">
+      <div data-tour="fiqh-chapters" className="px-4 pt-4 space-y-1">
         {grouped.length === 0 && (
           <div className="rounded-2xl border border-dashed border-gray-800 py-12 text-center">
             <p className="text-sm text-gray-500">No topics match the current filters</p>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BookOpen, ChevronRight, X, ArrowLeft } from 'lucide-react'
+import { BookOpen, ChevronRight, X, ArrowLeft, Volume2 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import {
@@ -14,6 +14,7 @@ import {
   type TajweedSection,
 } from '@/lib/qaida-data'
 import { getItem, setItem } from '@/lib/storage'
+import { speakArabic, stopSpeech, isSpeechSupported } from '@/lib/arabic-speech'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -35,11 +36,65 @@ export default function QaidaPage() {
   const [started, setStarted] = useState<string[]>([])
   const [activeLesson, setActiveLesson] = useState<QaidaLesson | null>(null)
   const [selectedLetter, setSelectedLetter] = useState<AlphabetContent | null>(null)
+  const [speaking, setSpeaking] = useState<string | null>(null)
+  const [speechSupported, setSpeechSupported] = useState(false)
 
   // Hydrate from localStorage
   useEffect(() => {
     setStarted(getItem<string[]>(PROGRESS_KEY, []))
   }, [])
+
+  // Detect speech support
+  useEffect(() => {
+    setSpeechSupported(isSpeechSupported())
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.getVoices()
+      window.speechSynthesis.addEventListener('voiceschanged', () => {
+        setSpeechSupported(true)
+      })
+    }
+  }, [])
+
+  const playArabic = (text: string, id: string) => {
+    if (speaking === id) {
+      stopSpeech()
+      setSpeaking(null)
+      return
+    }
+    setSpeaking(id)
+    speakArabic(text, () => setSpeaking(null))
+  }
+
+  const playAllLetters = (letters: AlphabetContent[]) => {
+    let i = 0
+    const playNext = () => {
+      if (i >= letters.length) { setSpeaking(null); return }
+      const letter = letters[i++]
+      setSpeaking(`letter-${letter.name}`)
+      speakArabic(letter.arabic, () => {
+        setTimeout(playNext, 600)
+      })
+    }
+    playNext()
+  }
+
+  const SpeakerBtn = ({ text, id }: { text: string; id: string }) => {
+    if (!speechSupported) return null
+    const isPlaying = speaking === id
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); playArabic(text, id) }}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
+          isPlaying
+            ? 'bg-emerald-500/20 text-emerald-400 animate-pulse'
+            : 'bg-gray-800 text-gray-400 active:bg-gray-700 active:text-white'
+        }`}
+        aria-label={isPlaying ? 'Stop' : 'Play pronunciation'}
+      >
+        <Volume2 className="h-4 w-4" />
+      </button>
+    )
+  }
 
   // Lock body scroll when sheet is open — save/restore position to avoid jump on close
   useEffect(() => {
@@ -198,30 +253,57 @@ export default function QaidaPage() {
               </button>
             </div>
 
+            {/* Audio not supported notice */}
+            {!speechSupported && (
+              <div className="mx-4 mb-3 rounded-xl border border-gray-800 bg-gray-900/50 p-3 text-center shrink-0">
+                <p className="text-xs text-gray-500">Audio not supported on this device</p>
+              </div>
+            )}
+
             {/* Content area — this is the ONLY thing that scrolls */}
             <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4 pb-16">
               {/* ── Alphabet ───────────────────────────────────────────── */}
               {activeLesson.type === 'alphabet' && (
-                <AlphabetView
-                  content={activeLesson.content as AlphabetContent[]}
-                  selectedLetter={selectedLetter}
-                  onSelect={setSelectedLetter}
-                />
+                <>
+                  {speechSupported && (
+                    <button
+                      onClick={() => {
+                        if (speaking) { stopSpeech(); setSpeaking(null) }
+                        else playAllLetters(activeLesson.content as AlphabetContent[])
+                      }}
+                      className={`mb-4 flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+                        speaking
+                          ? 'bg-red-500/15 text-red-400'
+                          : 'bg-emerald-500/15 text-emerald-400'
+                      }`}
+                    >
+                      <Volume2 className="h-4 w-4" />
+                      {speaking ? 'Stop' : 'Play All Letters'}
+                    </button>
+                  )}
+                  <AlphabetView
+                    content={activeLesson.content as AlphabetContent[]}
+                    selectedLetter={selectedLetter}
+                    onSelect={setSelectedLetter}
+                    SpeakerBtn={SpeakerBtn}
+                    speaking={speaking}
+                  />
+                </>
               )}
 
               {/* ── Compounds ──────────────────────────────────────────── */}
               {activeLesson.type === 'compounds' && (
-                <CompoundsView content={activeLesson.content as CompoundContent[]} />
+                <CompoundsView content={activeLesson.content as CompoundContent[]} SpeakerBtn={SpeakerBtn} />
               )}
 
               {/* ── Harakat / Maddah ───────────────────────────────────── */}
               {(activeLesson.type === 'harakat' || activeLesson.type === 'maddah') && (
-                <HarakatView content={activeLesson.content as HarakatSection[]} />
+                <HarakatView content={activeLesson.content as HarakatSection[]} SpeakerBtn={SpeakerBtn} />
               )}
 
               {/* ── Tajweed ────────────────────────────────────────────── */}
               {activeLesson.type === 'tajweed' && (
-                <TajweedView content={activeLesson.content as TajweedSection[]} />
+                <TajweedView content={activeLesson.content as TajweedSection[]} SpeakerBtn={SpeakerBtn} />
               )}
             </div>
           </div>
@@ -239,27 +321,34 @@ function AlphabetView({
   content,
   selectedLetter,
   onSelect,
+  SpeakerBtn,
+  speaking,
 }: {
   content: AlphabetContent[]
   selectedLetter: AlphabetContent | null
   onSelect: (l: AlphabetContent | null) => void
+  SpeakerBtn: React.ComponentType<{ text: string; id: string }>
+  speaking: string | null
 }) {
   const forms = selectedLetter ? LETTER_FORMS[selectedLetter.arabic] : null
 
   return (
     <>
-      {/* Letter grid */}
-      <div className="grid grid-cols-4 gap-3">
+      {/* Letter grid — RTL: alif on the right, letters flow right→left */}
+      <div className="grid grid-cols-4 gap-3" dir="rtl">
         {content.map((letter) => {
           const isActive = selectedLetter?.arabic === letter.arabic
+          const isSpeaking = speaking === `letter-${letter.name}`
           return (
             <button
               key={letter.arabic}
               onClick={() => onSelect(isActive ? null : letter)}
-              className={`flex flex-col items-center justify-center rounded-2xl border p-3 transition-all active:scale-95 ${
+              className={`relative flex flex-col items-center justify-center rounded-2xl border p-3 transition-all active:scale-95 ${
                 isActive
                   ? 'border-teal-500/50 bg-teal-500/10'
-                  : 'border-gray-800 bg-gray-900'
+                  : isSpeaking
+                    ? 'border-emerald-500/50 bg-emerald-500/10'
+                    : 'border-gray-800 bg-gray-900'
               }`}
             >
               <span className="font-arabic text-4xl text-[#f9fafb] leading-none">
@@ -267,6 +356,9 @@ function AlphabetView({
               </span>
               <span className="mt-1.5 text-xs text-teal-400">{letter.trans}</span>
               <span className="text-[10px] text-gray-500">{letter.name}</span>
+              <div className="absolute top-1 right-1 scale-75">
+                <SpeakerBtn text={letter.arabic} id={`letter-${letter.name}`} />
+              </div>
             </button>
           )
         })}
@@ -283,12 +375,21 @@ function AlphabetView({
             >
               <ArrowLeft className="h-3.5 w-3.5" />
             </button>
-            <h3 className="text-sm font-bold text-teal-300">
+            <h3 className="flex-1 text-sm font-bold text-teal-300">
               {forms.name} &mdash; Letter Forms
             </h3>
+            <SpeakerBtn text={selectedLetter.arabic} id={`detail-${selectedLetter.name}`} />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          {/* Large letter display with pronunciation */}
+          <div className="mb-4 flex items-center justify-center gap-4">
+            <span className="font-arabic text-6xl text-[#f9fafb] leading-none">
+              {selectedLetter.arabic}
+            </span>
+          </div>
+
+          {/* Forms grid RTL: initial on right (reading start), final on left (reading end) */}
+          <div className="grid grid-cols-3 gap-3" dir="rtl">
             {(['initial', 'medial', 'final'] as const).map((pos) => (
               <div
                 key={pos}
@@ -300,6 +401,9 @@ function AlphabetView({
                 <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
                   {pos}
                 </span>
+                <div className="mt-1 scale-75">
+                  <SpeakerBtn text={forms[pos]} id={`form-${selectedLetter.name}-${pos}`} />
+                </div>
               </div>
             ))}
           </div>
@@ -317,26 +421,41 @@ function AlphabetView({
   )
 }
 
-function CompoundsView({ content }: { content: CompoundContent[] }) {
+function CompoundsView({
+  content,
+  SpeakerBtn,
+}: {
+  content: CompoundContent[]
+  SpeakerBtn: React.ComponentType<{ text: string; id: string }>
+}) {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-3" dir="rtl">
       {content.map((pair, i) => (
         <div
           key={i}
-          className="flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-4"
+          className="relative flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-4"
         >
           <span className="font-arabic text-3xl text-[#f9fafb] leading-none">
             {pair.arabic}
           </span>
           <span className="mt-2 text-xs font-semibold text-teal-400">{pair.name}</span>
           <span className="mt-0.5 text-[10px] text-gray-500 text-center">{pair.note}</span>
+          <div className="mt-1.5 scale-75">
+            <SpeakerBtn text={pair.arabic} id={`compound-${i}`} />
+          </div>
         </div>
       ))}
     </div>
   )
 }
 
-function HarakatView({ content }: { content: HarakatSection[] }) {
+function HarakatView({
+  content,
+  SpeakerBtn,
+}: {
+  content: HarakatSection[]
+  SpeakerBtn: React.ComponentType<{ text: string; id: string }>
+}) {
   return (
     <div className="space-y-6">
       {content.map((section, si) => (
@@ -344,7 +463,7 @@ function HarakatView({ content }: { content: HarakatSection[] }) {
           <h3 className="text-sm font-bold text-teal-300 mb-1">{section.section}</h3>
           <p className="text-xs text-gray-400 mb-3">{section.desc}</p>
 
-          <div className="grid grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-4 gap-2.5" dir="rtl">
             {section.examples.map((ex, ei) => (
               <div
                 key={ei}
@@ -354,6 +473,9 @@ function HarakatView({ content }: { content: HarakatSection[] }) {
                   {ex.arabic}
                 </span>
                 <span className="mt-1.5 text-[10px] text-gray-400">{ex.trans}</span>
+                <div className="mt-1 scale-75">
+                  <SpeakerBtn text={ex.arabic} id={`harakat-${si}-${ei}`} />
+                </div>
               </div>
             ))}
           </div>
@@ -363,7 +485,13 @@ function HarakatView({ content }: { content: HarakatSection[] }) {
   )
 }
 
-function TajweedView({ content }: { content: TajweedSection[] }) {
+function TajweedView({
+  content,
+  SpeakerBtn,
+}: {
+  content: TajweedSection[]
+  SpeakerBtn: React.ComponentType<{ text: string; id: string }>
+}) {
   return (
     <div className="space-y-6">
       {content.map((section, si) => (
@@ -375,12 +503,17 @@ function TajweedView({ content }: { content: TajweedSection[] }) {
             {section.examples.map((ex, ei) => (
               <div
                 key={ei}
-                className="flex items-center gap-4 rounded-xl border border-gray-800 bg-gray-900 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 px-4 py-3"
               >
-                <span className="font-arabic text-xl text-[#f9fafb] leading-none">
-                  {ex.arabic}
-                </span>
-                <span className="text-xs text-gray-400">{ex.trans}</span>
+                {/* Transliteration on the left (LTR English) */}
+                <span className="text-xs text-gray-400 flex-1">{ex.trans}</span>
+                {/* Arabic + speaker on the right */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="font-arabic text-xl text-[#f9fafb] leading-none">
+                    {ex.arabic}
+                  </span>
+                  <SpeakerBtn text={ex.arabic} id={`tajweed-${si}-${ei}`} />
+                </div>
               </div>
             ))}
           </div>

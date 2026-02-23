@@ -248,7 +248,7 @@ export default function QuranPage() {
         </div>
 
         {/* Surah List */}
-        <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+        <div data-tour="quran-surah-list" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
           {filtered.map((surah, i) => {
             const hasBookmark = bookmarkedSurahs.includes(surah.number)
             const isCompleted = completedSurahs.includes(surah.number)

@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import { X, ChevronRight, Sparkles } from 'lucide-react'
 
 // ─── Tour steps ───────────────────────────────────────────────────────────────
 
 interface TourStep {
   target: string | null          // data-tour selector, null = center card
+  route?: string                 // navigate to this route before spotlighting
   emoji: string
   title: string
   description: string
@@ -17,102 +19,114 @@ interface TourStep {
 const STEPS: TourStep[] = [
   {
     target: null,
-    emoji: '🕌',
+    emoji: '\u{1F54C}',
     title: 'Welcome to MasjidConnect GY',
-    description: "Your complete Islamic companion for the Guyanese Muslim community. Let's take a quick tour — tap Next to begin.",
+    description: "Your complete Islamic companion for the Guyanese Muslim community. Let's take a quick tour \u2014 I'll show you exactly where everything is.",
     tooltipSide: 'center',
   },
   {
     target: '[data-tour="prayer-countdown"]',
-    emoji: '⏱️',
+    route: '/',
+    emoji: '\u23F1\uFE0F',
     title: 'Live Prayer Countdown',
-    description: 'Always know exactly how long until the next prayer. The ring shows progress since the last salah. Prayer times auto-calculate for Georgetown using your chosen method.',
+    description: 'Always know exactly how long until the next salah. Prayer times auto-calculate for Georgetown using your chosen method.',
     tooltipSide: 'below',
   },
   {
-    target: '[data-tour="hadith-card"]',
-    emoji: '📜',
-    title: 'Hadith of the Day',
-    description: 'A new authentic hadith every day — Arabic, transliteration, and English translation. Drawn from the 40 Nawawi collection. Tap Explore → Hadith to browse all 40.',
-    tooltipSide: 'below',
-  },
-  {
-    target: '[data-tour="verse-card"]',
-    emoji: '🌟',
-    title: 'Verse of the Day',
-    description: 'A daily ayah rotated from 18 carefully selected verses. Tap "Read Surah" to jump straight into the full Quran reader for that surah.',
-    tooltipSide: 'above',
-  },
-  {
-    target: '[data-tour="nav-quran"]',
-    emoji: '📖',
+    target: '[data-tour="quran-surah-list"]',
+    route: '/quran',
+    emoji: '\u{1F4D6}',
     title: 'Full Quran Reader',
-    description: 'All 114 surahs with high-quality audio recitation, 4 English translations (Sahih International, Yusuf Ali, Pickthall, Asad), and Ibn Kathir tafsir per verse.',
-    hint: 'Also: tajweed colour coding, Uthmani & IndoPak script toggle, and the complete 604-page Mushaf.',
-    tooltipSide: 'above',
+    description: 'All 114 surahs with audio recitation, 4 English translations, and Ibn Kathir tafsir per verse. Switch between Uthmani and IndoPak script, or enable tajweed colour coding.',
+    hint: 'Tap the Mushaf button at the top for the full 604-page Arabic Mushaf.',
+    tooltipSide: 'below',
   },
   {
-    target: '[data-tour="nav-tracker"]',
-    emoji: '✅',
+    target: '[data-tour="tracker-prayer-buttons"]',
+    route: '/tracker',
+    emoji: '\u2705',
     title: 'Ibadah Tracker',
-    description: 'Log all 5 daily prayers, Sunnah, Witr, Tahajjud, fasting days, Quran pages, Sadaqah, and missed (Qada) prayers. Build streaks and earn points.',
-    hint: 'Your stats, 7-day chart, and Fajr consistency rate are all tracked.',
-    tooltipSide: 'above',
+    description: 'Log all 5 daily prayers, Sunnah, Witr, Tahajjud, fasting days, Quran pages, and missed Qada prayers. Build streaks and earn points toward your level.',
+    tooltipSide: 'below',
   },
   {
-    target: '[data-tour="nav-masjids"]',
-    emoji: '📍',
+    target: '[data-tour="masjid-list"]',
+    route: '/masjids',
+    emoji: '\u{1F4CD}',
     title: 'Masjid Directory',
-    description: 'Find all 31 masjids across Georgetown, East Coast, East Bank, Berbice, Linden, and West Demerara — with prayer times, contact info, Imam details, and directions.',
-    tooltipSide: 'above',
+    description: 'Find all 31 masjids across Guyana \u2014 prayer times, contact info, Imam details, and directions. Tap any masjid to see full details.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="explore-grid"]',
+    route: '/explore',
+    emoji: '\u{1F9ED}',
+    title: 'Explore \u2014 Everything in One Place',
+    description: 'This is the heart of the app. Every Islamic tool and resource is organised here \u2014 tap any card to go directly to that section.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="duas-categories"]',
+    route: '/explore/duas',
+    emoji: '\u{1F932}',
+    title: 'Duas \u2014 80+ in 21 Categories',
+    description: 'Authentic duas for every moment of your day \u2014 waking up, meals, travel, protection, after salah, and more. All with Arabic, transliteration, and translation.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="fiqh-chapters"]',
+    route: '/explore/fiqh',
+    emoji: '\u{1F4DA}',
+    title: 'Fiqh Hub \u2014 Hanafi Rulings',
+    description: "105+ topics across 14 chapters of Hanafi fiqh \u2014 Taharah, Salah, Sawm, Zakah, and more. Includes rulings, examples, and local fatawa from Jami'yyatul Ulamaa.",
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="lectures-scholars"]',
+    route: '/explore/lectures',
+    emoji: '\u{1F399}\uFE0F',
+    title: '235+ Islamic Lectures',
+    description: 'Full audio lecture series from Imam Anwar al-Awlaki, Shaykh Hamza Yusuf, Dr. Bilal Philips, Ustadha Yasmin Mogahed, Dr. Omar Suleiman, and more \u2014 all free.',
+    hint: 'Filter by scholar using the buttons above, or browse all series.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="community-features"]',
+    route: '/explore/community',
+    emoji: '\u{1F465}',
+    title: 'Community',
+    description: 'Post to the Feed, share duas on the Dua Board, join the Khatam Collective to complete the Quran together, and add Faith Buddies to keep each other accountable.',
+    tooltipSide: 'below',
+  },
+  {
+    target: '[data-tour="madrasa-cards"]',
+    route: '/explore/madrasa',
+    emoji: '\u{1F393}',
+    title: 'Madrasa \u2014 Learn Islam',
+    description: "Noorani Qaida, How to Pray step-by-step, Stories of the Prophets, Seerah of the Prophet \uFDFA, Islamic Adab, and the full GII Islamic Library.",
+    tooltipSide: 'below',
   },
   {
     target: '[data-tour="quick-actions"]',
-    emoji: '⚡',
+    route: '/',
+    emoji: '\u26A1',
     title: 'Quick Actions',
-    description: 'Jump anywhere in the app in one tap — Fiqh Hub, Duas, Lectures, Community, Madrasa, Tasbih counter, Qibla compass, and Zakat calculator.',
+    description: 'Jump to any section in one tap \u2014 Fiqh Hub, Duas, Lectures, Community, Tasbih counter, Qibla compass, Zakat calculator, and more.',
     tooltipSide: 'above',
-  },
-  {
-    target: '[data-tour="nav-explore"]',
-    emoji: '🧭',
-    title: 'Explore — Islamic Tools',
-    description: 'The heart of the app. Over 80 Duas in 21 categories, the full Fiqh Guide (14 chapters, 105+ Hanafi rulings), 99 Names of Allah, Kids section, and Sisters section.',
-    tooltipSide: 'above',
-  },
-  {
-    target: null,
-    emoji: '🎓',
-    title: 'Madrasa — Learn Islam',
-    description: "In Explore → Madrasa you'll find: Noorani Qaida for learning to read Arabic, How to Pray step-by-step, Stories of the Prophets, Seerah of the Prophet ﷺ, Islamic Adab, and the GII Islamic Library.",
-    tooltipSide: 'center',
-  },
-  {
-    target: null,
-    emoji: '🎙️',
-    title: '235+ Islamic Lectures',
-    description: 'In Explore → Lectures: full audio series from Imam Anwar al-Awlaki, Shaykh Hamza Yusuf, Dr. Bilal Philips, Ustadha Yasmin Mogahed, Dr. Omar Suleiman, and more — all free.',
-    tooltipSide: 'center',
-  },
-  {
-    target: null,
-    emoji: '👥',
-    title: 'Community Features',
-    description: 'In Explore → Community: post to the Feed, share and say Ameen on the Dua Board, join the Khatam Collective to complete the Quran together, and add Faith Buddies to keep each other accountable.',
-    tooltipSide: 'center',
   },
   {
     target: '[data-tour="checklist"]',
-    emoji: '☑️',
+    route: '/',
+    emoji: '\u2611\uFE0F',
     title: 'Daily Ibadah Checklist',
-    description: 'Tick off your daily goals — Fajr prayed, Quran read, Dua made, Charity given, Dhikr done, and Sunnah prayers. Each tick earns points toward your level.',
+    description: 'Tick off your daily goals \u2014 Fajr prayed, Quran read, Dua made, Charity given, Dhikr done, Sunnah prayers. Each tick earns points toward your level.',
     tooltipSide: 'above',
   },
   {
     target: null,
-    emoji: '🤲',
-    title: "You're All Set — Bismillah!",
-    description: 'بارك الله فيك — May Allah accept your worship and make this app a source of benefit for you and the Guyanese Muslim community. Ameen.',
+    emoji: '\u{1F932}',
+    title: "You're All Set \u2014 Bismillah!",
+    description: '\u0628\u0627\u0631\u0643 \u0627\u0644\u0644\u0647 \u0641\u064A\u0643 \u2014 May Allah accept your worship and make this app a source of benefit for you and the Guyanese Muslim community. Ameen.',
     tooltipSide: 'center',
   },
 ]
@@ -132,6 +146,8 @@ function getSpotRect(selector: string): SpotRect | null {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AppTour({ onComplete }: { onComplete: () => void }) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [stepIdx, setStepIdx] = useState(0)
   const [spot, setSpot] = useState<SpotRect | null>(null)
   const [visible, setVisible] = useState(false)
@@ -140,14 +156,28 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   const isLast = stepIdx === STEPS.length - 1
   const isCenter = step.tooltipSide === 'center' || !step.target
 
+  const handleComplete = useCallback(() => {
+    router.push('/')
+    onComplete()
+  }, [router, onComplete])
+
   // Scroll element into view, then calculate spotlight
-  const updateSpot = useCallback((target: string | null) => {
+  const updateSpot = useCallback(async (target: string | null, route?: string) => {
     setVisible(false)
+
+    // Navigate if needed
+    if (route && pathname !== route) {
+      router.push(route)
+      // Wait for page to load before trying to find elements
+      await new Promise(resolve => setTimeout(resolve, 900))
+    }
+
     if (!target) {
       setSpot(null)
       setTimeout(() => setVisible(true), 120)
       return
     }
+
     const el = document.querySelector(target)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -157,14 +187,15 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
         setVisible(true)
       }, 450)
     } else {
+      // Element not found — fall back to center card
       setSpot(null)
       setTimeout(() => setVisible(true), 120)
     }
-  }, [])
+  }, [pathname, router])
 
   useEffect(() => {
-    updateSpot(step.target)
-  }, [stepIdx, step.target, updateSpot])
+    updateSpot(step.target, step.route)
+  }, [stepIdx, step.target, step.route, updateSpot])
 
   // Recalculate on resize
   useEffect(() => {
@@ -175,11 +206,11 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   }, [step.target])
 
   const handleNext = useCallback(() => {
-    if (isLast) { onComplete(); return }
+    if (isLast) { handleComplete(); return }
     setStepIdx(i => i + 1)
-  }, [isLast, onComplete])
+  }, [isLast, handleComplete])
 
-  const handleSkip = useCallback(() => { onComplete() }, [onComplete])
+  const handleSkip = useCallback(() => { handleComplete() }, [handleComplete])
 
   // Tooltip position
   const tooltipStyle = (): React.CSSProperties => {
@@ -187,7 +218,6 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
       return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '340px' }
     }
     const viewH = window.innerHeight
-    const spaceAbove = spot.top
     const spaceBelow = viewH - (spot.top + spot.height)
 
     if (step.tooltipSide === 'above' || spaceBelow < 220) {
@@ -286,7 +316,7 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
               className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 active:bg-emerald-600 active:scale-95 transition-transform"
             >
               {isLast ? (
-                <><Sparkles className="h-4 w-4" /> Let's go!</>
+                <><Sparkles className="h-4 w-4" /> Let&apos;s go!</>
               ) : (
                 <>Next <ChevronRight className="h-4 w-4" /></>
               )}

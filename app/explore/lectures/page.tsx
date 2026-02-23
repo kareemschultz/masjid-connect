@@ -667,7 +667,7 @@ export default function LecturesPage() {
       {/* ── Toolbar ──────────────────────────────────────────────── */}
       <div className="sticky top-0 z-30 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-3 space-y-3">
         {/* Scholar filter pills */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
+        <div data-tour="lectures-scholars" className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
           <button
             onClick={() => setActiveScholar(null)}
             className={`flex-shrink-0 rounded-xl px-4 py-1.5 text-xs font-bold transition-all ${

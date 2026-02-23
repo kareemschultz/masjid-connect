@@ -18,7 +18,22 @@ export default function AboutPage() {
           <h2 className="mt-4 text-xl font-bold text-foreground">MasjidConnect GY</h2>
           <p className="mt-1 text-sm text-emerald-400">Linking Faith and Community</p>
           <p className="mt-0.5 text-[11px] text-gray-400">Georgetown, Guyana</p>
-          <span className="mt-2 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-400">v1.0.0</span>
+          <span className="mt-2 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-400">v2.20.0</span>
+        </div>
+
+        {/* Fisabilillah */}
+        <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/60 to-teal-950/60 p-5 text-center">
+          <p className="font-arabic text-3xl text-emerald-300 leading-loose">فِي سَبِيلِ اللَّهِ</p>
+          <p className="mt-1 text-sm font-semibold text-emerald-400">Fisabilillah — For the sake of Allah</p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-300">
+            This app is built as an act of worship and sadaqah — free, forever, with no ads, no subscriptions, and no profit motive. Every line of code is an intention to serve the Guyanese Muslim community for the pleasure of Allah alone.
+          </p>
+          <p className="mt-3 text-xs leading-relaxed text-gray-500 font-arabic">
+            مَنْ كَانَ يُرِيدُ حَرْثَ الْآخِرَةِ نَزِدْ لَهُ فِي حَرْثِهِ
+          </p>
+          <p className="mt-1 text-[10px] text-gray-600 italic">
+            "Whoever desires the harvest of the Hereafter — We increase for him his harvest." — Quran 42:20
+          </p>
         </div>
 
         {/* Independence Statement */}
@@ -84,8 +99,9 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="py-4 text-center">
-          <p className="text-[10px] text-gray-600">Built with faith, for the community</p>
+        <div className="py-4 text-center space-y-1">
+          <p className="text-[11px] text-emerald-600 font-medium">بُنِيَ فِي سَبِيلِ اللَّهِ</p>
+          <p className="text-[10px] text-gray-600">Built fisabilillah — for the sake of Allah</p>
         </div>
       </div>
 

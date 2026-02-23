@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Settings, Clock, BookOpen, Bell, Moon, Globe,
   Info, FileText, RotateCcw, Volume2, MessageSquarePlus,
-  Sun, Sunset, CloudSun, MoonStar, Shield, LogOut, User
+  Sun, Sunset, CloudSun, MoonStar, Shield, LogOut, User, ChevronRight, MapPin
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -17,6 +17,8 @@ import { applyTheme } from '@/components/theme-provider'
 import { CALCULATION_METHODS, MADHABS, RECITERS } from '@/lib/prayer-times'
 import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
 import { requestNotificationPermission } from '@/lib/notifications'
+import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
+import { DEFAULT_OFFSETS, OFFSET_OPTIONS, offsetLabel, type PrayerOffsets } from '@/lib/prayer-offsets'
 import { isPushSupported, subscribeToPush, unsubscribeFromPush, updatePushPreferences } from '@/lib/push-notifications'
 import Link from 'next/link'
 
@@ -67,11 +69,17 @@ export default function SettingsPage() {
   const [usernameSaving, setUsernameSaving] = useState(false)
   const [usernameMsg, setUsernameMsg] = useState('')
   const [prayerOffset, setPrayerOffset] = useState(0)
+  const [prayerOffsets, setPrayerOffsets] = useState<PrayerOffsets>(DEFAULT_OFFSETS)
   const [phone, setPhone] = useState('')
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [phoneInput, setPhoneInput] = useState('')
   const [phoneSaving, setPhoneSaving] = useState(false)
   const [phoneMsg, setPhoneMsg] = useState('')
+  const [userCity, setUserCity] = useState('')
+  const [userCountry, setUserCountry] = useState('')
+  const [quranFont, setQuranFont] = useState('default')
+  const [locationLoading, setLocationLoading] = useState(false)
+  const [locationMsg, setLocationMsg] = useState('')
 
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'MuslimWorldLeague'))
@@ -83,7 +91,11 @@ export default function SettingsPage() {
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
     setIsAdmin(getItem(KEYS.IS_ADMIN, false))
     setPrayerOffset(getItem(KEYS.PRAYER_OFFSET, 0))
+    setPrayerOffsets(getItem(KEYS.PRAYER_OFFSETS, DEFAULT_OFFSETS))
     setTheme(getItem<'dark' | 'light'>(KEYS.THEME, 'dark'))
+    setUserCity(getItem(KEYS.USER_CITY, ''))
+    setUserCountry(getItem(KEYS.USER_COUNTRY, ''))
+    setQuranFont(getItem(KEYS.QURAN_FONT, 'default'))
     // Check auth session
     fetch('/api/auth/get-session', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
@@ -107,6 +119,11 @@ export default function SettingsPage() {
 
   const updateMethod = (val: string) => { setMethod(val); setItem(KEYS.CALCULATION_METHOD, val) }
   const updateMadhab = (val: string) => { setMadhab(val); setItem(KEYS.MADHAB, val) }
+  const updatePrayerOffset = (prayer: keyof PrayerOffsets, value: number) => {
+    const updated = { ...prayerOffsets, [prayer]: value }
+    setPrayerOffsets(updated)
+    setItem(KEYS.PRAYER_OFFSETS, updated)
+  }
   const updateMoonSighting = (val: string) => {
     setMoonSighting(val)
     setItem('moon_sighting', val)
@@ -249,6 +266,43 @@ export default function SettingsPage() {
     }
   }
 
+  const handleDetectLocation = async () => {
+    setLocationLoading(true)
+    setLocationMsg('')
+    try {
+      const coords = await detectLocation()
+      const geo = await reverseGeocode(coords.latitude, coords.longitude)
+      setItem(KEYS.USER_LAT, coords.latitude)
+      setItem(KEYS.USER_LNG, coords.longitude)
+      setItem(KEYS.USER_CITY, geo.city)
+      setItem(KEYS.USER_COUNTRY, geo.country)
+      setItem(KEYS.USER_COUNTRY_CODE, geo.countryCode)
+      const rec = getRecommendedMethod(coords.latitude, coords.longitude, geo.countryCode)
+      setItem(KEYS.CALCULATION_METHOD, rec.method)
+      setMethod(rec.method)
+      setUserCity(geo.city)
+      setUserCountry(geo.country)
+      setLocationMsg(`Updated to ${geo.city}, ${geo.country}`)
+    } catch {
+      setLocationMsg('Could not detect location. Please allow location access in your browser settings.')
+    } finally {
+      setLocationLoading(false)
+    }
+  }
+
+  const handleResetLocation = () => {
+    setItem(KEYS.USER_LAT, 6.8013)
+    setItem(KEYS.USER_LNG, -58.1551)
+    setItem(KEYS.USER_CITY, 'Georgetown')
+    setItem(KEYS.USER_COUNTRY, 'Guyana')
+    setItem(KEYS.USER_COUNTRY_CODE, 'GY')
+    setItem(KEYS.CALCULATION_METHOD, 'MuslimWorldLeague')
+    setMethod('MuslimWorldLeague')
+    setUserCity('Georgetown')
+    setUserCountry('Guyana')
+    setLocationMsg('Reset to Georgetown, Guyana')
+  }
+
   const resetAllData = () => { localStorage.clear(); window.location.reload() }
 
   const methodLabel = CALCULATION_METHODS.find(m => m.key === method)?.label || method
@@ -374,6 +428,47 @@ export default function SettingsPage() {
           </SettingGroup>
         )}
 
+        {/* Location */}
+        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <MapPin className="h-4 w-4 text-emerald-400" />
+            <h3 className="text-sm font-semibold text-foreground">Your Location</h3>
+          </div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
+              <MapPin className="h-5 w-5 text-emerald-400" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                {userCity || 'Georgetown'}
+              </p>
+              <p className="text-xs text-gray-400">{userCountry || 'Guyana (default)'}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleDetectLocation}
+            disabled={locationLoading}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-opacity disabled:opacity-60 active:scale-[0.98]"
+          >
+            {locationLoading ? (
+              <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />Detecting...</>
+            ) : (
+              <><MapPin className="h-4 w-4" />Detect My Location</>
+            )}
+          </button>
+          {locationMsg && (
+            <p className={`mt-2 text-center text-xs ${locationMsg.startsWith('Could not') ? 'text-red-400' : 'text-emerald-400'}`}>
+              {locationMsg}
+            </p>
+          )}
+          <button
+            onClick={handleResetLocation}
+            className="mt-2 w-full text-center text-[10px] text-gray-600 underline active:text-gray-400"
+          >
+            Reset to Georgetown, Guyana
+          </button>
+        </div>
+
         {/* Prayer Settings */}
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
           <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Fajr & Isha Calculation" value={methodLabel.split('—')[0].split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
@@ -381,6 +476,35 @@ export default function SettingsPage() {
           <SettingRow icon={Clock} iconColor="bg-teal-600" label="Prayer Time Adjustment" value={prayerOffset === 0 ? 'None' : `${prayerOffset > 0 ? '+' : ''}${prayerOffset} min`} onClick={() => setModalOpen('prayerOffset')} />
           <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
         </SettingGroup>
+
+        {/* Per-Prayer Time Adjustment */}
+        <div className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-600">
+              <Clock className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Prayer Time Adjustment</p>
+              <p className="text-[10px] text-gray-500">Fine-tune each prayer time individually</p>
+            </div>
+          </div>
+          <div className="divide-y divide-gray-800/60">
+            {(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const).map((prayer) => (
+              <div key={prayer} className="flex items-center justify-between px-4 py-3">
+                <span className="text-sm font-medium text-foreground w-16">{prayer}</span>
+                <select
+                  value={prayerOffsets[prayer] ?? 0}
+                  onChange={(e) => updatePrayerOffset(prayer, Number(e.target.value))}
+                  className="rounded-xl border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-foreground focus:outline-none focus:border-teal-500"
+                >
+                  {OFFSET_OPTIONS.map((min) => (
+                    <option key={min} value={min}>{offsetLabel(min)}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Notifications */}
         <SettingGroup label="Notifications" accentColor="bg-amber-500">
@@ -421,7 +545,7 @@ export default function SettingsPage() {
         {/* Display */}
         <SettingGroup label="Display" accentColor="bg-blue-500">
           <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Translation" value={quranTranslationLabel} onClick={() => setModalOpen('quranTranslation')} />
-          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value="Default" onClick={() => {}} />
+          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value={quranFont === 'indopak' ? 'IndoPak Nastaliq' : quranFont === 'amiri' ? 'Amiri' : 'Default'} onClick={() => setModalOpen('quranFont')} />
           <SettingRow
             icon={theme === 'light' ? Sun : Moon}
             iconColor={theme === 'light' ? 'bg-amber-500' : 'bg-slate-700'}
@@ -439,7 +563,7 @@ export default function SettingsPage() {
 
         {/* App */}
         <SettingGroup label="About" accentColor="bg-teal-500">
-          <SettingRow icon={Globe} iconColor="bg-teal-600" label="Language" value="English" onClick={() => {}} />
+          <SettingRow icon={Globe} iconColor="bg-teal-600" label="Language" value="English" onClick={() => setModalOpen('language')} />
           <Link href="/feedback"><SettingRow icon={MessageSquarePlus} iconColor="bg-rose-600" label="Send Feedback" onClick={() => {}} /></Link>
           <Link href="/changelog"><SettingRow icon={FileText} iconColor="bg-blue-600" label="Changelog" onClick={() => {}} /></Link>
           <Link href="/about"><SettingRow icon={Info} iconColor="bg-gray-600" label="About" onClick={() => {}} /></Link>
@@ -448,6 +572,18 @@ export default function SettingsPage() {
           )}
           <SettingRow icon={RotateCcw} iconColor="bg-red-600" label="Reset All Data" isLast onClick={() => setResetConfirm(true)} />
         </SettingGroup>
+
+        {/* Support */}
+        <Link href="/support" className="flex items-center justify-between rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 active:scale-[0.98] transition-transform">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-xl">🤲</div>
+            <div>
+              <p className="text-sm font-semibold text-white">Support the App</p>
+              <p className="text-xs text-gray-400">Built fisabilillah — donate to help</p>
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-gray-500" />
+        </Link>
 
         <div className="pb-4 text-center">
           <button onClick={handleVersionTap} className="inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
@@ -462,6 +598,32 @@ export default function SettingsPage() {
       <SelectModal open={modalOpen === 'madhab'} onClose={() => setModalOpen(null)} title="Asr Prayer Time" options={MADHABS.map(m => ({ key: m.key, label: m.key === 'Hanafi' ? 'Hanafi — later Asr time' : "Standard (earlier) — Shafi\u2019i / Hanbali / Maliki" }))} selected={madhab} onSelect={updateMadhab} />
       <SelectModal open={modalOpen === 'reciter'} onClose={() => setModalOpen(null)} title="Default Reciter" options={RECITERS.map(r => ({ key: r.key, label: r.label }))} selected={reciter} onSelect={updateReciter} />
       <SelectModal open={modalOpen === 'quranTranslation'} onClose={() => setModalOpen(null)} title="Quran Translation" subtitle="Choose the English translation shown alongside the Arabic text in the Quran reader." options={QURAN_TRANSLATIONS.map(t => ({ key: t.key, label: t.label, note: t.note }))} selected={quranTranslation} onSelect={updateQuranTranslation} />
+      <SelectModal
+        open={modalOpen === 'quranFont'}
+        onClose={() => setModalOpen(null)}
+        title="Quran Font"
+        options={[
+          { key: 'default', label: 'Default (System Arabic)' },
+          { key: 'amiri', label: 'Amiri' },
+          { key: 'indopak', label: 'IndoPak Nastaliq (Noto)' }
+        ]}
+        selected={quranFont}
+        onSelect={(val) => {
+          setQuranFont(val)
+          setItem(KEYS.QURAN_FONT, val)
+          setModalOpen(null)
+        }}
+      />
+      <SelectModal
+        open={modalOpen === 'language'}
+        onClose={() => setModalOpen(null)}
+        title="Language"
+        options={[
+          { key: 'en', label: 'English', note: 'More languages coming soon' }
+        ]}
+        selected="en"
+        onSelect={() => setModalOpen(null)}
+      />
       <SelectModal
         open={modalOpen === 'prayerOffset'}
         onClose={() => setModalOpen(null)}

@@ -110,7 +110,7 @@ export default function MadrasaPage() {
         heroTheme="quran"
       />
 
-      <div className="space-y-3 px-4 pt-5 animate-stagger">
+      <div data-tour="madrasa-cards" className="space-y-3 px-4 pt-5 animate-stagger">
         {/* ── Noorani Qaida — primary CTA ─────────────────────────────── */}
         <Link href="/explore/madrasa/qaida" className="block">
           <div className="relative overflow-hidden rounded-2xl border border-teal-500/30 bg-teal-500/5 p-5 transition-transform active:scale-[0.98]">

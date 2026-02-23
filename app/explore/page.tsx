@@ -94,6 +94,7 @@ const SECTIONS = [
       { icon: Sparkles,    label: '99 Names',        description: 'Asma Al-Husna',          href: '/explore/names',                  color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
       { icon: Heart,       label: 'Islamic Names',   description: 'Meanings & origins',     href: '/explore/names-search',           color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400' },
       { icon: Library,     label: 'Resources',       description: 'Islamic Learning',       href: '/explore/resources',              color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400' },
+      { icon: HeartHandshake, label: 'Support the App', description: 'Donate to keep it free', href: '/support', color: 'from-amber-500/20 to-yellow-600/10', iconColor: 'text-amber-400' },
     ],
   },
 ]
@@ -220,7 +221,7 @@ export default function ExplorePage() {
 
         {/* ── Section grid (no search active) ── */}
         {!isSearching && (
-          <>
+          <div data-tour="explore-grid">
             {/* Ramadan banner (only shown on All or Ramadan filter) */}
             {(filter === 'all' || filter === 'ramadan') && (
               <Link
@@ -272,7 +273,7 @@ export default function ExplorePage() {
                 </div>
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
 

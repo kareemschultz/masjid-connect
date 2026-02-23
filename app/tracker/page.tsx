@@ -642,7 +642,7 @@ export default function TrackerPage() {
 
         {/* Today's Prayers */}
         <SettingGroup label="Fard (Obligatory) Prayers" accentColor="bg-blue-500">
-          <div className="p-4">
+          <div data-tour="tracker-prayer-buttons" className="p-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs text-gray-400">{todayCount}/5 completed</span>
               <span className="text-xs font-medium text-emerald-400">
