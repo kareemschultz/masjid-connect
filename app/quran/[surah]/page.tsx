@@ -8,7 +8,8 @@ import { SURAHS } from '@/lib/quran-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
   BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain,
-  ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic, Languages
+  ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic, Languages,
+  SlidersHorizontal, Palette, ToggleLeft, ToggleRight
 } from 'lucide-react'
 import { shareOrCopy } from '@/lib/share'
 import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
@@ -40,6 +41,25 @@ const RECITERS = [
   { id: 'ar.saoodshuraym', name: 'Saud Al-Shuraym' },
 ]
 
+// ─── Tajweed color parser ─────────────────────────────────────────────────────
+// alquran.cloud quran-tajweed edition uses bracket notation: [code[:N][text]
+const TAJWEED_COLORS: Record<string, string> = {
+  n: '#FF7E1D', m: '#FF7E1D',        // ghunna (nasalization)
+  q: '#DD0008',                       // qalqalah (echo)
+  p: '#DD00D5', o: '#DD00D5', Q: '#DD00D5', // ikhfa / qalb
+  u: '#169777', v: '#169777', f: '#169777',  // idgham (merging)
+  i: '#26BFFD',                       // iqlab (conversion)
+  r: '#337FFF', R: '#337FFF',         // madd (prolongation)
+  e: '#4050FF', E: '#4050FF', x: '#4050FF',  // madd compulsory
+}
+function parseTajweedText(text: string): string {
+  return text.replace(/\[([a-zA-Z])(?::\d+)?\[([^\]]+)\]/g, (_: string, code: string, content: string) => {
+    const color = TAJWEED_COLORS[code]
+    if (!color) return content
+    return `<span style="color:${color}">${content}</span>`
+  })
+}
+
 export default function SurahReaderPage() {
   const params = useParams()
   const surahNum = Number(params.surah)
@@ -58,7 +78,12 @@ export default function SurahReaderPage() {
   const [reciter, setReciter] = useState('ar.alafasy')
   const [showReciterSheet, setShowReciterSheet] = useState(false)
   const [translation, setTranslation] = useState('en.sahih')
+  const [displayScript, setDisplayScript] = useState<'uthmani' | 'indopak'>('uthmani')
+  const [tajweedColors, setTajweedColors] = useState(false)
+  const [tajweedData, setTajweedData] = useState<Record<number, string>>({})
+  const [tajweedLoading, setTajweedLoading] = useState(false)
   const [showTranslationSheet, setShowTranslationSheet] = useState(false)
+  const [showDisplaySheet, setShowDisplaySheet] = useState(false)
   const [tafsirVerse, setTafsirVerse] = useState<number | null>(null)
   const [tafsirText, setTafsirText] = useState('')
   const [tafsirLoading, setTafsirLoading] = useState(false)
@@ -72,6 +97,8 @@ export default function SurahReaderPage() {
     setFontSize(getItem(KEYS.QURAN_FONT_SIZE, 28))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
     setTranslation(getItem(KEYS.QURAN_TRANSLATION, 'en.sahih'))
+    setDisplayScript(getItem(KEYS.QURAN_SCRIPT, 'uthmani'))
+    setTajweedColors(getItem(KEYS.QURAN_TAJWEED, false))
   }, [])
 
   // Save last read position
@@ -141,6 +168,35 @@ export default function SurahReaderPage() {
     }
     refetchTranslation()
   }, [translation, surahNum])
+
+  // Fetch tajweed data when color mode is enabled
+  useEffect(() => {
+    if (!tajweedColors) return
+    if (Object.keys(tajweedData).length > 0) return // already loaded for this surah
+    let cancelled = false
+    async function loadTajweed() {
+      setTajweedLoading(true)
+      try {
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-tajweed`)
+        const data = await res.json()
+        if (!cancelled && data.data?.ayahs) {
+          const map: Record<number, string> = {}
+          data.data.ayahs.forEach((a: { numberInSurah: number; text: string }) => {
+            map[a.numberInSurah] = parseTajweedText(a.text)
+          })
+          setTajweedData(map)
+        }
+      } catch { /* silently fail, fall back to plain text */ }
+      finally { if (!cancelled) setTajweedLoading(false) }
+    }
+    loadTajweed()
+    return () => { cancelled = true }
+  }, [tajweedColors, surahNum]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset tajweed data when surah changes
+  useEffect(() => { setTajweedData({}) }, [surahNum])
+
+  const scriptClass = displayScript === 'indopak' ? 'font-indopak' : 'font-arabic'
 
   const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
     if (audioRef.current) {
@@ -327,6 +383,18 @@ export default function SurahReaderPage() {
             <Languages className="h-3 w-3" />
             {QURAN_TRANSLATIONS.find(t => t.key === translation)?.label || 'Sahih Intl'}
           </button>
+          <button
+            onClick={() => setShowDisplaySheet(true)}
+            className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
+              tajweedColors || displayScript === 'indopak'
+                ? 'bg-violet-500/15 text-violet-400'
+                : 'bg-gray-800 text-gray-400'
+            }`}
+            aria-label="Display options"
+          >
+            <Palette className="h-3 w-3" />
+            Display
+          </button>
           <Link
             href="/quran/hifz"
             className="flex items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
@@ -401,14 +469,26 @@ export default function SurahReaderPage() {
                 </div>
               </div>
 
-              {/* Arabic text */}
-              <p
-                className="mb-3 text-right font-arabic leading-[2.2] text-foreground"
-                dir="rtl"
-                style={{ fontSize: `${fontSize}px` }}
-              >
-                {ayah.text}
-              </p>
+              {/* Arabic text — tajweed or plain */}
+              {tajweedColors && tajweedData[ayah.numberInSurah] ? (
+                <p
+                  className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
+                  dir="rtl"
+                  style={{ fontSize: `${fontSize}px` }}
+                  dangerouslySetInnerHTML={{ __html: tajweedData[ayah.numberInSurah] }}
+                />
+              ) : (
+                <p
+                  className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
+                  dir="rtl"
+                  style={{ fontSize: `${fontSize}px` }}
+                >
+                  {tajweedColors && tajweedLoading
+                    ? <span className="text-gray-500 text-sm">Loading tajweed...</span>
+                    : ayah.text
+                  }
+                </p>
+              )}
 
               {/* Translation */}
               <p className="text-sm leading-relaxed text-gray-400">
@@ -572,6 +652,79 @@ export default function SurahReaderPage() {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Display options bottom sheet */}
+      {showDisplaySheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowDisplaySheet(false)} />
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pt-4 pb-8" style={{ maxHeight: '80dvh' }}>
+            <div className="mb-4 flex shrink-0 items-center justify-between">
+              <h3 className="text-sm font-bold text-white">Display Options</h3>
+              <button onClick={() => setShowDisplaySheet(false)} className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white" aria-label="Close">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Script section */}
+            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-500">Arabic Script</p>
+            <div className="mb-5 grid shrink-0 grid-cols-2 gap-2">
+              <button
+                onClick={() => { setDisplayScript('uthmani'); setItem(KEYS.QURAN_SCRIPT, 'uthmani') }}
+                className={`rounded-xl p-3 text-center transition-colors ${displayScript === 'uthmani' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+              >
+                <p className="font-arabic text-xl leading-loose text-foreground">بِسۡمِ</p>
+                <p className="mt-1 text-[10px] font-medium text-gray-400">Uthmani (Hafs)</p>
+                {displayScript === 'uthmani' && <p className="mt-0.5 text-[9px] text-emerald-400">Active</p>}
+              </button>
+              <button
+                onClick={() => { setDisplayScript('indopak'); setItem(KEYS.QURAN_SCRIPT, 'indopak') }}
+                className={`rounded-xl p-3 text-center transition-colors ${displayScript === 'indopak' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+              >
+                <p className="font-indopak text-xl leading-loose text-foreground">بِسمِ</p>
+                <p className="mt-1 text-[10px] font-medium text-gray-400">IndoPak Script</p>
+                {displayScript === 'indopak' && <p className="mt-0.5 text-[9px] text-emerald-400">Active</p>}
+              </button>
+            </div>
+
+            {/* Tajweed section */}
+            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-500">Tajweed Coloring</p>
+            <button
+              onClick={() => { const v = !tajweedColors; setTajweedColors(v); setItem(KEYS.QURAN_TAJWEED, v) }}
+              className={`flex shrink-0 items-center gap-3 rounded-xl p-3 transition-colors ${tajweedColors ? 'bg-violet-500/15' : 'bg-gray-800'}`}
+            >
+              <Palette className={`h-5 w-5 ${tajweedColors ? 'text-violet-400' : 'text-gray-500'}`} />
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-medium ${tajweedColors ? 'text-violet-300' : 'text-gray-300'}`}>
+                  Color-Coded Tajweed
+                </p>
+                <p className="text-[10px] text-gray-500">Highlight tajweed rules with colors</p>
+              </div>
+              {tajweedColors
+                ? <ToggleRight className="h-5 w-5 text-violet-400" />
+                : <ToggleLeft className="h-5 w-5 text-gray-600" />}
+            </button>
+
+            {/* Color legend */}
+            {tajweedColors && (
+              <div className="mt-3 grid grid-cols-2 gap-1.5 rounded-xl bg-gray-800/60 p-3">
+                {[
+                  { color: '#FF7E1D', label: 'Ghunna (nasalization)' },
+                  { color: '#DD0008', label: 'Qalqalah (echo)' },
+                  { color: '#DD00D5', label: 'Ikhfa / Qalb' },
+                  { color: '#169777', label: 'Idgham (merging)' },
+                  { color: '#26BFFD', label: 'Iqlab (conversion)' },
+                  { color: '#337FFF', label: 'Madd (prolongation)' },
+                ].map(r => (
+                  <div key={r.label} className="flex items-center gap-2">
+                    <div className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: r.color }} />
+                    <span className="text-[10px] text-gray-400">{r.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

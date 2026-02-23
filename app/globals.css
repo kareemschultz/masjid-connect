@@ -101,6 +101,12 @@
   font-family: 'Amiri', serif;
 }
 
+/* IndoPak script (Noto Nastaliq Urdu) */
+.font-indopak {
+  font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+  line-height: 3.2 !important;
+}
+
 /* Islamic pattern SVG background */
 .islamic-pattern {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpolygon points='30,2 35,22 55,22 40,34 46,54 30,42 14,54 20,34 5,22 25,22' fill='white' opacity='0.06'/%3E%3C/svg%3E");
