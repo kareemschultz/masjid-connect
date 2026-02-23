@@ -74,7 +74,7 @@ const items = [
 
 export default function SistersPage() {
   return (
-    <div className="relative min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="relative min-h-screen bg-background pb-nav">
       {/* Soft geometric flower */}
       <div className="pointer-events-none absolute bottom-20 right-4 h-24 w-24 overflow-hidden" aria-hidden>
         <svg viewBox="0 0 100 100" className="text-rose-400" fill="currentColor" style={{animation:'gentle-spin 20s linear infinite',opacity:0.08}}>
@@ -97,8 +97,8 @@ export default function SistersPage() {
         {/* Welcome Card */}
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-5">
           <p className="font-arabic text-xl text-rose-300">أُخُوَّةٌ فِي الإِسْلَام</p>
-          <p className="mt-1 text-sm font-semibold text-[#f9fafb]">Sisterhood in Islam</p>
-          <p className="mt-2 text-xs leading-relaxed text-gray-400">
+          <p className="mt-1 text-sm font-semibold text-foreground">Sisterhood in Islam</p>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
             This space is for you, sister — your guidance, your questions, your community.
           </p>
         </div>
@@ -115,8 +115,8 @@ export default function SistersPage() {
                 <item.icon className={`h-6 w-6 ${item.iconColor}`} />
               </div>
               <div className="text-center">
-                <p className="text-sm font-bold text-white">{item.label}</p>
-                <p className="mt-0.5 text-[11px] text-gray-500">{item.description}</p>
+                <p className="text-sm font-bold text-foreground">{item.label}</p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground/80">{item.description}</p>
               </div>
             </Link>
           ))}

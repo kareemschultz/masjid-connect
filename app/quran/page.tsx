@@ -98,7 +98,7 @@ export default function QuranPage() {
   })
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="Quran"
@@ -122,7 +122,7 @@ export default function QuranPage() {
               </div>
               <div>
                 <p className={`text-sm font-bold ${m.textColor}`}>{m.label}</p>
-                <p className="text-[11px] text-gray-400">{m.desc}</p>
+                <p className="text-[11px] text-muted-foreground">{m.desc}</p>
               </div>
             </Link>
           ))}
@@ -139,12 +139,12 @@ export default function QuranPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-emerald-400 mb-1">Continue Reading</p>
-                <p className="text-white font-semibold">Page {lastPage} / 604</p>
-                <p className="text-xs text-gray-400 mt-0.5">Tap to resume</p>
+                <p className="text-foreground font-semibold">Page {lastPage} / 604</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Tap to resume</p>
               </div>
               <BookOpen className="h-8 w-8 text-emerald-400/60" />
             </div>
-            <div className="mt-2 h-1 rounded-full bg-gray-800">
+            <div className="mt-2 h-1 rounded-full bg-secondary">
               <div className="h-1 rounded-full bg-emerald-500" style={{ width: `${(parseInt(lastPage) / 604) * 100}%` }} />
             </div>
           </div>
@@ -163,8 +163,8 @@ export default function QuranPage() {
             </div>
             <div className="flex-1">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-purple-300/60">Continue Reading</p>
-              <p className="text-sm font-bold text-white">{lastRead.name}</p>
-              <p className="text-[11px] text-gray-400">Surah {lastRead.surah}</p>
+              <p className="text-sm font-bold text-foreground">{lastRead.name}</p>
+              <p className="text-[11px] text-muted-foreground">Surah {lastRead.surah}</p>
             </div>
             <ChevronRight className="h-5 w-5 text-purple-400/50" />
           </Link>
@@ -173,7 +173,7 @@ export default function QuranPage() {
 
       {/* ── Khatam Progress ────────────────────────── */}
       <div className="px-4 pt-3">
-        <div className="flex items-center gap-4 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5">
+        <div className="flex items-center gap-4 rounded-2xl border border-border bg-card px-4 py-3.5">
           <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
             <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">
               <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1f2937" strokeWidth="3" />
@@ -184,10 +184,10 @@ export default function QuranPage() {
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <Target className="h-3.5 w-3.5 text-emerald-400" />
-              <h3 className="text-sm font-bold text-white">Khatam Progress</h3>
+              <h3 className="text-sm font-bold text-foreground">Khatam Progress</h3>
             </div>
-            <p className="mt-0.5 text-xs text-gray-400">{completedSurahs.length} of 114 surahs completed</p>
-            <p className="mt-1 text-[10px] text-gray-600">Long-press any surah to mark complete</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{completedSurahs.length} of 114 surahs completed</p>
+            <p className="mt-1 text-[10px] text-muted-foreground/60">Long-press any surah to mark complete</p>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function QuranPage() {
       {/* ── Bookmarked Surahs ──────────────────────── */}
       {bookmarkedSurahs.length > 0 && (
         <div className="px-4 pt-4">
-          <h3 className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+          <h3 className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
             <Bookmark className="h-3 w-3 fill-amber-400 text-amber-400" />
             Bookmarked
           </h3>
@@ -210,7 +210,7 @@ export default function QuranPage() {
                   className="flex shrink-0 items-center gap-2 rounded-xl border border-amber-500/15 bg-amber-500/5 px-3 py-2 transition-all active:scale-95"
                 >
                   <span className="text-xs font-bold text-amber-400">{s.number}</span>
-                  <span className="text-xs font-medium text-white">{s.englishName}</span>
+                  <span className="text-xs font-medium text-foreground">{s.englishName}</span>
                 </Link>
               )
             })}
@@ -221,14 +221,14 @@ export default function QuranPage() {
       {/* ── Surah Browser ──────────────────────────── */}
       <div className="px-4 pt-4">
         {/* Search */}
-        <div className="mb-3 flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
-          <Search className="h-4 w-4 text-gray-500" />
+        <div className="mb-3 flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+          <Search className="h-4 w-4 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search by name, number, or meaning..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent text-sm text-white placeholder-gray-500 outline-none"
+            className="w-full bg-transparent text-sm text-foreground placeholder-gray-500 outline-none"
           />
         </div>
 
@@ -239,7 +239,7 @@ export default function QuranPage() {
               key={f}
               onClick={() => setFilter(f)}
               className={`rounded-xl px-3 py-1.5 text-[11px] font-bold capitalize transition-all ${
-                filter === f ? 'bg-purple-500 text-white' : 'bg-gray-800 text-gray-400'
+                filter === f ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {f === 'bookmarked' ? `Saved (${bookmarkedSurahs.length})` : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -248,7 +248,7 @@ export default function QuranPage() {
         </div>
 
         {/* Surah List */}
-        <div data-tour="quran-surah-list" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+        <div data-tour="quran-surah-list" className="overflow-hidden rounded-2xl border border-border bg-card">
           {filtered.map((surah, i) => {
             const hasBookmark = bookmarkedSurahs.includes(surah.number)
             const isCompleted = completedSurahs.includes(surah.number)
@@ -258,7 +258,7 @@ export default function QuranPage() {
                 href={`/quran/${surah.number}`}
                 onContextMenu={(e) => { e.preventDefault(); toggleKhatam(surah.number) }}
                 className={`flex items-center gap-4 px-4 py-3.5 transition-colors active:bg-white/5 ${
-                  i < filtered.length - 1 ? 'border-b border-gray-800/50' : ''
+                  i < filtered.length - 1 ? 'border-b border-border/50' : ''
                 }`}
               >
                 <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isCompleted ? 'bg-emerald-500/20' : 'bg-purple-500/15'}`}>
@@ -266,17 +266,17 @@ export default function QuranPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white">{surah.englishName}</span>
+                    <span className="text-sm font-semibold text-foreground">{surah.englishName}</span>
                     {hasBookmark && <Bookmark className="h-3 w-3 fill-amber-400 text-amber-400" />}
-                    <span className="rounded-md bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-400">
+                    <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[9px] text-muted-foreground">
                       {surah.revelationType === 'Meccan' ? 'Makkah' : 'Madinah'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-500">{surah.englishNameTranslation}</p>
+                  <p className="text-[11px] text-muted-foreground/80">{surah.englishNameTranslation}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-arabic text-xl leading-none text-white">{surah.name}</p>
-                  <p className="mt-1 flex items-center justify-end gap-0.5 text-[10px] text-gray-600">
+                  <p className="font-arabic text-xl leading-none text-foreground">{surah.name}</p>
+                  <p className="mt-1 flex items-center justify-end gap-0.5 text-[10px] text-muted-foreground/60">
                     <Star className="h-2.5 w-2.5" />{surah.numberOfAyahs}
                   </p>
                 </div>

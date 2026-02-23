@@ -251,7 +251,7 @@ export default function AdminPage() {
   ]
 
   // ─── Loading / Auth gate ─────────────────────────────────────────
-  if (loading) return <div className="min-h-screen bg-[#0a0b14] flex items-center justify-center text-white"><Loader className="animate-spin" /></div>
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-foreground"><Loader className="animate-spin" /></div>
   if (!isAdmin) return null
 
   const currentTab = TABS.find(t => t.key === activeTab)!
@@ -264,23 +264,23 @@ export default function AdminPage() {
     const from = item.name ? `${item.name}${item.email ? ` <${item.email}>` : ''}` : (item.email || 'Anonymous')
 
     return (
-      <div key={item.id} className={`rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-opacity ${item.reviewed ? 'opacity-50' : ''}`}>
+      <div key={item.id} className={`rounded-2xl border border-border bg-card p-4 transition-opacity ${item.reviewed ? 'opacity-50' : ''}`}>
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${badge}`}>{label}</span>
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-foreground ${badge}`}>{label}</span>
           </div>
           <button
             onClick={() => toggleReviewed(item)}
             title={item.reviewed ? 'Mark unreviewed' : 'Mark reviewed'}
-            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-all ${item.reviewed ? 'bg-emerald-600/20 text-emerald-400' : 'bg-gray-800 text-gray-500 hover:text-gray-300'}`}
+            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-all ${item.reviewed ? 'bg-emerald-600/20 text-emerald-400' : 'bg-secondary text-muted-foreground/80 hover:text-muted-foreground'}`}
           >
             <Check className="h-3 w-3" />
             {item.reviewed ? 'Done' : 'Review'}
           </button>
         </div>
-        <p className="mt-1 text-[11px] text-gray-500">{from}</p>
+        <p className="mt-1 text-[11px] text-muted-foreground/80">{from}</p>
         <p
-          className={`mt-1.5 text-xs text-gray-300 whitespace-pre-wrap ${!isExpanded ? 'line-clamp-3' : ''} cursor-pointer`}
+          className={`mt-1.5 text-xs text-muted-foreground whitespace-pre-wrap ${!isExpanded ? 'line-clamp-3' : ''} cursor-pointer`}
           onClick={() => {
             const next = new Set(expandedSet)
             isExpanded ? next.delete(item.id) : next.add(item.id)
@@ -289,14 +289,14 @@ export default function AdminPage() {
         >
           {item.message}
         </p>
-        <p className="mt-2 text-[10px] text-gray-600">{timeAgo(item.created_at)}</p>
+        <p className="mt-2 text-[10px] text-muted-foreground/60">{timeAgo(item.created_at)}</p>
       </div>
     )
   }
 
   // ─── Render ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Shield} title="Admin Panel" subtitle={currentTab.subtitle} gradient="from-red-900 to-rose-900" showBack heroTheme="community" />
 
       {/* Tab pills */}
@@ -309,7 +309,7 @@ export default function AdminPage() {
               className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-all ${
                 activeTab === tab.key
                   ? 'bg-white text-gray-900'
-                  : 'bg-gray-800 text-gray-400'
+                  : 'bg-secondary text-muted-foreground'
               }`}
             >
               {tab.label}
@@ -322,52 +322,52 @@ export default function AdminPage() {
         {/* ─── Tab 1: Announcements ──────────────────────────────── */}
         {activeTab === 'announcements' && (
           <>
-            <button onClick={() => setShowForm(!showForm)} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-white active:scale-[0.98] transition-transform">
+            <button onClick={() => setShowForm(!showForm)} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-foreground active:scale-[0.98] transition-transform">
               <Plus className="h-4 w-4" /> New Announcement
             </button>
 
             {showForm && (
-              <div className="space-y-3 rounded-2xl border border-gray-800 bg-gray-900 p-4">
-                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Announcement title" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
-                <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Announcement message" rows={3} className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
+              <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
+                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Announcement title" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+                <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Announcement message" rows={3} className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
                 <div className="flex gap-2">
                   {(['info', 'urgent', 'event'] as const).map(t => (
-                    <button key={t} onClick={() => setType(t)} className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all ${type === t ? announcementTypeConfig[t].badge + ' text-white' : 'bg-gray-800 text-gray-400'}`}>{t}</button>
+                    <button key={t} onClick={() => setType(t)} className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all ${type === t ? announcementTypeConfig[t].badge + ' text-foreground' : 'bg-secondary text-muted-foreground'}`}>{t}</button>
                   ))}
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-xs text-gray-400">Expires in</label>
-                  <select value={expiresIn} onChange={e => setExpiresIn(e.target.value)} className="rounded-lg border border-gray-800 bg-gray-800 px-2 py-1 text-xs text-[#f9fafb] outline-none">
+                  <label className="text-xs text-muted-foreground">Expires in</label>
+                  <select value={expiresIn} onChange={e => setExpiresIn(e.target.value)} className="rounded-lg border border-border bg-secondary px-2 py-1 text-xs text-foreground outline-none">
                     <option value="1">1 day</option><option value="3">3 days</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option>
                   </select>
                 </div>
-                <button onClick={addAnnouncement} disabled={submitting || !title.trim() || !body.trim()} className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white disabled:opacity-40 active:scale-[0.98] transition-transform">
+                <button onClick={addAnnouncement} disabled={submitting || !title.trim() || !body.trim()} className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40 active:scale-[0.98] transition-transform">
                   {submitting ? 'Publishing...' : 'Publish'}
                 </button>
               </div>
             )}
 
             <div className="space-y-3">
-              {!announcementsLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-gray-500" /></div>}
+              {!announcementsLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-muted-foreground/80" /></div>}
               {announcementsLoaded && announcements.length === 0 && (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 py-12 text-center text-sm text-gray-500">No announcements yet</div>
+                <div className="rounded-2xl border border-border bg-card py-12 text-center text-sm text-muted-foreground/80">No announcements yet</div>
               )}
               {announcements.map(a => {
                 const cfg = announcementTypeConfig[a.type] || announcementTypeConfig.info
                 const expiresDate = a.expires_at ? new Date(a.expires_at) : new Date()
                 const expired = expiresDate < new Date()
                 return (
-                  <div key={a.id} className={`rounded-2xl border p-4 ${expired ? 'opacity-40 border-gray-800 bg-gray-900' : cfg.color}`}>
+                  <div key={a.id} className={`rounded-2xl border p-4 ${expired ? 'opacity-40 border-border bg-card' : cfg.color}`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${cfg.badge}`}>{cfg.label}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-foreground ${cfg.badge}`}>{cfg.label}</span>
                         {expired && <span className="text-[10px] text-red-400">Expired</span>}
                       </div>
-                      <button onClick={() => deleteAnnouncement(a.id)} className="text-gray-500 active:text-red-400" aria-label="Delete"><Trash2 className="h-4 w-4" /></button>
+                      <button onClick={() => deleteAnnouncement(a.id)} className="text-muted-foreground/80 active:text-red-400" aria-label="Delete"><Trash2 className="h-4 w-4" /></button>
                     </div>
-                    <h3 className="mt-2 text-sm font-bold text-[#f9fafb]">{a.title}</h3>
-                    <p className="mt-1 text-xs text-gray-400">{a.body}</p>
-                    <div className="mt-2 flex justify-between text-[10px] text-gray-600">
+                    <h3 className="mt-2 text-sm font-bold text-foreground">{a.title}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{a.body}</p>
+                    <div className="mt-2 flex justify-between text-[10px] text-muted-foreground/60">
                       <span>Expires: {expiresDate.toLocaleDateString()}</span>
                       {a.author_name && <span>By {a.author_name}</span>}
                     </div>
@@ -388,7 +388,7 @@ export default function AdminPage() {
                     key={f.key}
                     onClick={() => setFeedbackFilter(f.key)}
                     className={`flex-shrink-0 rounded-full px-3 py-1.5 text-[11px] font-medium whitespace-nowrap transition-all ${
-                      feedbackFilter === f.key ? 'bg-white text-gray-900' : 'bg-gray-800 text-gray-400'
+                      feedbackFilter === f.key ? 'bg-white text-gray-900' : 'bg-secondary text-muted-foreground'
                     }`}
                   >
                     {f.label}
@@ -398,9 +398,9 @@ export default function AdminPage() {
             </div>
 
             <div className="space-y-3">
-              {!feedbackLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-gray-500" /></div>}
+              {!feedbackLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-muted-foreground/80" /></div>}
               {feedbackLoaded && feedback.filter(f => feedbackFilter === 'all' || f.type === feedbackFilter).length === 0 && (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 py-12 text-center text-sm text-gray-500">No feedback found</div>
+                <div className="rounded-2xl border border-border bg-card py-12 text-center text-sm text-muted-foreground/80">No feedback found</div>
               )}
               {feedback
                 .filter(f => feedbackFilter === 'all' || f.type === feedbackFilter)
@@ -412,16 +412,16 @@ export default function AdminPage() {
         {/* ─── Tab 3: Events ─────────────────────────────────────── */}
         {activeTab === 'events' && (
           <div className="space-y-3">
-            {!eventsLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-gray-500" /></div>}
+            {!eventsLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-muted-foreground/80" /></div>}
             {eventsLoaded && events.length === 0 && (
-              <div className="rounded-2xl border border-gray-800 bg-gray-900 py-12 text-center text-sm text-gray-500">No event submissions yet</div>
+              <div className="rounded-2xl border border-border bg-card py-12 text-center text-sm text-muted-foreground/80">No event submissions yet</div>
             )}
             {events.map(ev => (
-              <div key={ev.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+              <div key={ev.id} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-sm font-bold text-[#f9fafb]">{ev.title}</h3>
-                    <span className="rounded-full bg-purple-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">{ev.type || 'community'}</span>
+                    <h3 className="text-sm font-bold text-foreground">{ev.title}</h3>
+                    <span className="rounded-full bg-purple-500 px-2 py-0.5 text-[10px] font-bold uppercase text-foreground">{ev.type || 'community'}</span>
                   </div>
                   {ev.approved ? (
                     <span className="flex items-center gap-0.5 rounded-full bg-emerald-600/20 px-2.5 py-1 text-[10px] font-medium text-emerald-400">
@@ -430,25 +430,25 @@ export default function AdminPage() {
                   ) : (
                     <button
                       onClick={() => toggleApproved(ev)}
-                      className="rounded-full bg-emerald-600 px-2.5 py-1 text-[10px] font-medium text-white transition-all active:scale-95"
+                      className="rounded-full bg-emerald-600 px-2.5 py-1 text-[10px] font-medium text-foreground transition-all active:scale-95"
                     >
                       Approve
                     </button>
                   )}
                 </div>
-                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-gray-400">
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                   <span>📍 {ev.venue}</span>
                   <span>📅 {new Date(ev.date).toLocaleDateString()}</span>
                   {ev.time && <span>🕐 {ev.time}</span>}
                 </div>
-                {ev.description && <p className="mt-2 text-xs text-gray-300">{ev.description}</p>}
-                {ev.contact && <p className="mt-1.5 text-[11px] text-gray-500">Contact: {ev.contact}</p>}
+                {ev.description && <p className="mt-2 text-xs text-muted-foreground">{ev.description}</p>}
+                {ev.contact && <p className="mt-1.5 text-[11px] text-muted-foreground/80">Contact: {ev.contact}</p>}
                 <div className="mt-2 flex items-center justify-between">
-                  <p className="text-[10px] text-gray-600">Submitted by {ev.submitted_by} · {timeAgo(ev.created_at)}</p>
+                  <p className="text-[10px] text-muted-foreground/60">Submitted by {ev.submitted_by} · {timeAgo(ev.created_at)}</p>
                   {ev.approved && (
                     <button
                       onClick={() => toggleApproved(ev)}
-                      className="text-[10px] text-gray-600 underline"
+                      className="text-[10px] text-muted-foreground/60 underline"
                     >
                       Unapprove
                     </button>
@@ -462,9 +462,9 @@ export default function AdminPage() {
         {/* ─── Tab 4: Prayer Times ───────────────────────────────── */}
         {activeTab === 'prayer' && (
           <div className="space-y-3">
-            {!prayerLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-gray-500" /></div>}
+            {!prayerLoaded && <div className="flex justify-center py-8"><Loader className="h-5 w-5 animate-spin text-muted-foreground/80" /></div>}
             {prayerLoaded && prayerFeedback.length === 0 && (
-              <div className="rounded-2xl border border-gray-800 bg-gray-900 py-12 text-center text-sm text-gray-500">No prayer time reports yet</div>
+              <div className="rounded-2xl border border-border bg-card py-12 text-center text-sm text-muted-foreground/80">No prayer time reports yet</div>
             )}
             {prayerFeedback.map(item => renderFeedbackCard(item, expandedPrayer, setExpandedPrayer))}
           </div>

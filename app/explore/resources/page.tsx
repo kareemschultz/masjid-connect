@@ -80,7 +80,7 @@ const CATEGORIES = [
 
 export default function ResourcesPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Library} title="Resources" subtitle="Islamic Learning" gradient="from-sky-900 to-blue-900" showBack heroTheme="hadith" />
 
       <div className="space-y-5 px-4 -mt-2">
@@ -88,7 +88,7 @@ export default function ResourcesPage() {
           <div key={cat.title}>
             <div className="mb-2 flex items-center gap-2">
               <div className="h-4 w-1 rounded-full bg-emerald-500" />
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400">{cat.title}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{cat.title}</h2>
             </div>
             <div className="space-y-2">
               {cat.items.map((item) => (
@@ -97,16 +97,16 @@ export default function ResourcesPage() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98] hover:border-gray-700"
+                  className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition-all active:scale-[0.98] hover:border-border"
                 >
                   <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${cat.color}`}>
                     <cat.icon className={`h-4 w-4 ${cat.iconColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-[#f9fafb]">{item.title}</div>
-                    <div className="text-xs text-gray-400 truncate">{item.desc}</div>
+                    <div className="text-sm font-semibold text-foreground">{item.title}</div>
+                    <div className="text-xs text-muted-foreground truncate">{item.desc}</div>
                   </div>
-                  <ExternalLink className="h-4 w-4 shrink-0 text-gray-600" />
+                  <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                 </a>
               ))}
             </div>

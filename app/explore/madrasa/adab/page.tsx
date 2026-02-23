@@ -165,7 +165,7 @@ function getRulingBadges(ruling: string, rulingType: string) {
     <div className="flex flex-wrap gap-1.5">
       {parts.map((part, i) => {
         const lower = part.toLowerCase()
-        let color = 'bg-gray-500/20 text-gray-400'
+        let color = 'bg-gray-500/20 text-muted-foreground'
         if (lower.includes('wajib')) color = 'bg-red-500/20 text-red-400'
         else if (lower.includes('sunnah')) color = 'bg-emerald-500/20 text-emerald-400'
         else if (lower.includes('mustahabb')) color = 'bg-blue-500/20 text-blue-400'
@@ -187,7 +187,7 @@ export default function AdabPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Star}
         title="Islamic Adab"
@@ -203,7 +203,7 @@ export default function AdabPage() {
           return (
             <div
               key={index}
-              className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 transition-all duration-300"
+              className="overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300"
             >
               {/* Header */}
               <button
@@ -211,7 +211,7 @@ export default function AdabPage() {
                 className="flex w-full items-center justify-between px-4 py-4 text-left transition-colors hover:bg-white/[0.02]"
               >
                 <div className="flex-1">
-                  <h3 className="text-[15px] font-semibold text-white">{cat.title}</h3>
+                  <h3 className="text-[15px] font-semibold text-foreground">{cat.title}</h3>
                   {!isExpanded && (
                     <div className="mt-1.5">
                       {getRulingBadges(cat.ruling, cat.rulingType)}
@@ -220,16 +220,16 @@ export default function AdabPage() {
                 </div>
                 <div className="ml-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/5">
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   )}
                 </div>
               </button>
 
               {/* Expanded content */}
               {isExpanded && (
-                <div className="border-t border-gray-800 px-4 pt-4 pb-5 animate-fade-up">
+                <div className="border-t border-border px-4 pt-4 pb-5 animate-fade-up">
                   {/* Arabic */}
                   {cat.arabic && (
                     <div className="mb-4 rounded-xl bg-white/[0.03] px-4 py-3 text-center">
@@ -237,7 +237,7 @@ export default function AdabPage() {
                         {cat.arabic}
                       </p>
                       {cat.transliteration && (
-                        <p className="mt-1 text-[13px] italic text-gray-400">
+                        <p className="mt-1 text-[13px] italic text-muted-foreground">
                           {cat.transliteration}
                         </p>
                       )}
@@ -247,7 +247,7 @@ export default function AdabPage() {
                   {/* Details */}
                   <ul className="space-y-2.5">
                     {cat.details.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-gray-300">
+                      <li key={i} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground">
                         <Star className="mt-0.5 h-3 w-3 flex-shrink-0 text-amber-500/60" />
                         <span>{detail}</span>
                       </li>
@@ -256,14 +256,14 @@ export default function AdabPage() {
 
                   {/* Source */}
                   {cat.source && (
-                    <p className="mt-3 text-[12px] italic text-gray-500">
+                    <p className="mt-3 text-[12px] italic text-muted-foreground/80">
                       {cat.source}
                     </p>
                   )}
 
                   {/* Ruling badge */}
                   <div className="mt-4 flex items-center gap-2">
-                    <span className="text-[11px] font-medium uppercase tracking-wider text-gray-500">Ruling:</span>
+                    <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/80">Ruling:</span>
                     {getRulingBadges(cat.ruling, cat.rulingType)}
                   </div>
                 </div>

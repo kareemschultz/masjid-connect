@@ -53,7 +53,7 @@ export default function WomenPrayerPage() {
   const [openIndex, setOpenIndex] = useState(-1)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Moon}
         title="Women in Prayer"
@@ -67,7 +67,7 @@ export default function WomenPrayerPage() {
       <div className="space-y-3 px-4 pt-5 animate-stagger">
         {/* Intro Card */}
         <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-4">
-          <p className="text-sm leading-relaxed text-gray-400">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             The core of Salah is the same for men and women. The differences below are based on the majority scholarly position. For the full step-by-step guide:
           </p>
           <Link href="/explore/madrasa/salah" className="mt-2 inline-block text-sm font-medium text-purple-400">
@@ -83,7 +83,7 @@ export default function WomenPrayerPage() {
             <div
               key={section.title}
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
-              className="rounded-2xl border border-gray-800 bg-gray-900/50 cursor-pointer transition-all"
+              className="rounded-2xl border border-border bg-card/50 cursor-pointer transition-all"
             >
               {/* Header */}
               <div className="p-4 flex items-center justify-between">
@@ -91,10 +91,10 @@ export default function WomenPrayerPage() {
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-xs font-bold text-purple-400">
                     {index + 1}
                   </span>
-                  <h3 className="text-sm font-semibold text-[#f9fafb] ml-3">{section.title}</h3>
+                  <h3 className="text-sm font-semibold text-foreground ml-3">{section.title}</h3>
                 </div>
                 <ChevronDown
-                  className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                  className={`h-4 w-4 shrink-0 text-muted-foreground/80 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
                 />
               </div>
 
@@ -103,7 +103,7 @@ export default function WomenPrayerPage() {
                 className={`grid transition-all duration-300 ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
               >
                 <div className="overflow-hidden">
-                  <p className="px-4 pb-4 text-sm text-gray-400 leading-relaxed">{section.content}</p>
+                  <p className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed">{section.content}</p>
                 </div>
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function WomenPrayerPage() {
         })}
 
         {/* Footer Note */}
-        <p className="text-xs text-gray-500 text-center mt-4">
+        <p className="text-xs text-muted-foreground/80 text-center mt-4">
           These rulings are based on the majority scholarly position across the four madhahib (Shafi&apos;i, Hanbali, Hanafi, Maliki).
         </p>
       </div>

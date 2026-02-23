@@ -323,7 +323,7 @@ export default function GIILibraryPage() {
     : ''
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookMarked}
         title="GII Islamic Library"
@@ -341,7 +341,7 @@ export default function GIILibraryPage() {
           </div>
           <div>
             <p className="text-sm font-semibold text-emerald-300">Guyana Islamic Institute (GII)</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-gray-400">
+            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
               Lot 1 Jesburg, West Coast Demerara · Tel: (592) 277-0064
               · giipc.com · Books uploaded by GII for community benefit.
             </p>
@@ -352,7 +352,7 @@ export default function GIILibraryPage() {
       {/* Book Grid */}
       <div className="space-y-3 px-4 pt-4">
         {GII_BOOKS.map((book) => {
-          const catStyle = CATEGORY_COLORS[book.category] || 'bg-gray-700/20 text-gray-400 border-gray-700/30'
+          const catStyle = CATEGORY_COLORS[book.category] || 'bg-muted/20 text-muted-foreground border-border/30'
           return (
             <button
               key={book.id || book.title}
@@ -360,8 +360,8 @@ export default function GIILibraryPage() {
               disabled={!book.available}
               className={`w-full overflow-hidden rounded-2xl border text-left transition-all active:scale-[0.98] ${
                 book.available
-                  ? 'border-gray-800 bg-gray-900 active:bg-gray-800'
-                  : 'border-gray-800/60 bg-gray-900/50 opacity-60'
+                  ? 'border-border bg-card active:bg-secondary'
+                  : 'border-border/60 bg-card/50 opacity-60'
               }`}
             >
               {/* Colour bar top */}
@@ -378,16 +378,16 @@ export default function GIILibraryPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground leading-snug">{book.title}</p>
                       {book.subtitle && (
-                        <p className="mt-0.5 text-[11px] text-gray-500 truncate">{book.subtitle}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground/80 truncate">{book.subtitle}</p>
                       )}
                     </div>
                     {book.available
-                      ? <ChevronRight className="h-4 w-4 shrink-0 text-gray-600 mt-0.5" />
-                      : <span className="shrink-0 rounded-md bg-gray-800 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-gray-500">Coming Soon</span>
+                      ? <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/60 mt-0.5" />
+                      : <span className="shrink-0 rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground/80">Coming Soon</span>
                     }
                   </div>
 
-                  <p className="mt-1.5 text-[11px] leading-relaxed text-gray-400 line-clamp-2">
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground line-clamp-2">
                     {book.description}
                   </p>
 
@@ -395,7 +395,7 @@ export default function GIILibraryPage() {
                     <span className={`rounded-md border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${catStyle}`}>
                       {book.category}
                     </span>
-                    <span className="text-[10px] text-gray-600">{book.pages} pages</span>
+                    <span className="text-[10px] text-muted-foreground/60">{book.pages} pages</span>
                     {book.available && (
                       <span className="text-[10px] text-emerald-500">Read &amp; Download</span>
                     )}
@@ -408,25 +408,25 @@ export default function GIILibraryPage() {
       </div>
 
       {/* Attribution */}
-      <div className="mx-4 mt-4 rounded-xl bg-gray-900/60 px-4 py-3 text-center">
-        <p className="text-[11px] text-gray-500">
-          Books provided by <span className="text-gray-400">Guyana Islamic Institute</span> for educational purposes.
+      <div className="mx-4 mt-4 rounded-xl bg-card/60 px-4 py-3 text-center">
+        <p className="text-[11px] text-muted-foreground/80">
+          Books provided by <span className="text-muted-foreground">Guyana Islamic Institute</span> for educational purposes.
           Download available within the reader. JazakAllahu Khayran to GII.
         </p>
       </div>
 
       {/* ── Full-screen Book Reader ──────────────────────────────────────── */}
       {activeBook && (
-        <div className="fixed inset-0 z-[70] flex flex-col bg-[#0a0b14]">
+        <div className="fixed inset-0 z-[70] flex flex-col bg-background">
           {/* Reader header — safe-area-inset-top so status bar never covers buttons */}
           <div
-            className="flex shrink-0 items-center justify-between border-b border-gray-800 bg-[#0a0b14] px-4 pb-3"
+            className="flex shrink-0 items-center justify-between border-b border-border bg-background px-4 pb-3"
             style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
           >
             <div className="flex-1 min-w-0 pr-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400">GII Library</p>
               <h2 className="truncate text-sm font-bold text-foreground">{activeBook.title}</h2>
-              <p className="text-[10px] text-gray-500">{activeBook.pages} pages · {activeBook.category}</p>
+              <p className="text-[10px] text-muted-foreground/80">{activeBook.pages} pages · {activeBook.category}</p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
               {/* Download — opens Scribd page where download button is available */}
@@ -443,7 +443,7 @@ export default function GIILibraryPage() {
               )}
               <button
                 onClick={closeBook}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-gray-400 active:scale-90 transition-transform"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground active:scale-90 transition-transform"
                 aria-label="Close reader"
               >
                 <X className="h-4 w-4" />
@@ -454,9 +454,9 @@ export default function GIILibraryPage() {
           {/* Scribd iframe */}
           <div className="relative flex-1 bg-gray-100">
             {!readerLoaded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0a0b14]">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-700 border-t-emerald-500" />
-                <p className="text-xs text-gray-500">Loading {activeBook.title}…</p>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-emerald-500" />
+                <p className="text-xs text-muted-foreground/80">Loading {activeBook.title}…</p>
               </div>
             )}
             <iframe
@@ -472,12 +472,12 @@ export default function GIILibraryPage() {
           </div>
 
           {/* Bottom bar — open on Scribd */}
-          <div className="flex shrink-0 items-center justify-center border-t border-gray-800 bg-[#0a0b14] py-3">
+          <div className="flex shrink-0 items-center justify-center border-t border-border bg-background py-3">
             <a
               href={activeBook.scribdUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-gray-500 active:text-gray-300"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground/80 active:text-muted-foreground"
             >
               <ExternalLink className="h-3 w-3" />
               Open on Scribd

@@ -40,26 +40,26 @@ function Section({
     accent === 'amber' ? 'border-amber-500/20' :
     accent === 'emerald' ? 'border-emerald-500/20' :
     accent === 'indigo' ? 'border-indigo-500/20' :
-    'border-gray-800'
+    'border-border'
 
   const accentBg =
     accent === 'amber' ? 'bg-amber-500/10' :
     accent === 'emerald' ? 'bg-emerald-500/10' :
     accent === 'indigo' ? 'bg-indigo-500/10' :
-    'bg-gray-800/50'
+    'bg-secondary/50'
 
   const accentText =
     accent === 'amber' ? 'text-amber-400' :
     accent === 'emerald' ? 'text-emerald-400' :
     accent === 'indigo' ? 'text-indigo-400' :
-    'text-gray-300'
+    'text-muted-foreground'
 
   return (
-    <div className={`rounded-2xl border ${accentBorder} bg-gray-900 overflow-hidden`}>
+    <div className={`rounded-2xl border ${accentBorder} bg-card overflow-hidden`}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className={`w-full flex items-center justify-between gap-3 px-5 py-4 transition-colors active:bg-gray-800`}
+        className={`w-full flex items-center justify-between gap-3 px-5 py-4 transition-colors active:bg-secondary`}
       >
         <h2 className={`text-base font-bold ${accentText}`}>{title}</h2>
         {open
@@ -95,7 +95,7 @@ function CategoryBadge({ category }: { category: string }) {
 
 export default function AllIslamicPrayersPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="All Islamic Prayers"
@@ -109,7 +109,7 @@ export default function AllIslamicPrayersPage() {
 
         {/* ── 1. The 5 Fard Prayers ──────────────────────────────────────── */}
         <Section title="The 5 Fard Prayers" accent="amber">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             The five daily obligatory prayers are the second pillar of Islam. Every sane adult Muslim must pray them.
           </p>
           <div className="overflow-x-auto -mx-1">
@@ -124,8 +124,8 @@ export default function AllIslamicPrayersPage() {
               </thead>
               <tbody>
                 {FARD_PRAYERS.map(p => (
-                  <tr key={p.name} className="border-b border-gray-800/50 last:border-0">
-                    <td className="py-3 px-2 font-semibold text-[#f9fafb]">{p.name}</td>
+                  <tr key={p.name} className="border-b border-border/50 last:border-0">
+                    <td className="py-3 px-2 font-semibold text-foreground">{p.name}</td>
                     <td className="py-3 px-2 text-center">
                       <span className="font-arabic text-lg text-amber-300">{p.arabic}</span>
                     </td>
@@ -134,7 +134,7 @@ export default function AllIslamicPrayersPage() {
                         {p.rakat}
                       </span>
                     </td>
-                    <td className="py-3 px-2 text-right text-xs text-gray-400">{p.timing}</td>
+                    <td className="py-3 px-2 text-right text-xs text-muted-foreground">{p.timing}</td>
                   </tr>
                 ))}
               </tbody>
@@ -149,27 +149,27 @@ export default function AllIslamicPrayersPage() {
 
         {/* ── 2. Sunnah Mu'akkadah ───────────────────────────────────────── */}
         <Section title="Sunnah Mu'akkadah" accent="emerald">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             Strongly emphasized prayers the Prophet (peace be upon him) consistently performed and rarely missed.
           </p>
           <div className="space-y-3">
             {sunnahMuakkadah.map(p => (
-              <div key={p.key} className="rounded-xl border border-emerald-500/15 bg-gray-800/50 p-4 space-y-2">
+              <div key={p.key} className="rounded-xl border border-emerald-500/15 bg-secondary/50 p-4 space-y-2">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#f9fafb]">{p.label}</p>
+                    <p className="text-sm font-semibold text-foreground">{p.label}</p>
                     <p className="font-arabic text-lg text-emerald-300 mt-0.5">{p.arabic}</p>
                   </div>
                   <div className="flex flex-col items-center gap-1 shrink-0">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-sm font-bold text-emerald-400">
                       {p.rakat}
                     </span>
-                    <span className="text-[10px] text-gray-500">rakat</span>
+                    <span className="text-[10px] text-muted-foreground/80">rakat</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Clock className="h-3 w-3 text-gray-500 shrink-0" />
-                  <p className="text-xs text-gray-400">{p.timing}</p>
+                  <Clock className="h-3 w-3 text-muted-foreground/80 shrink-0" />
+                  <p className="text-xs text-muted-foreground">{p.timing}</p>
                 </div>
                 {p.importance === 'highest' && (
                   <div className="flex items-center gap-1.5">
@@ -177,7 +177,7 @@ export default function AllIslamicPrayersPage() {
                     <p className="text-[10px] font-semibold text-yellow-400 uppercase tracking-wider">Highest importance</p>
                   </div>
                 )}
-                <p className="text-xs text-gray-500 italic leading-relaxed">{p.reward}</p>
+                <p className="text-xs text-muted-foreground/80 italic leading-relaxed">{p.reward}</p>
               </div>
             ))}
           </div>
@@ -194,20 +194,20 @@ export default function AllIslamicPrayersPage() {
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-lg font-bold text-[#f9fafb]">{witrPrayer.label}</p>
+                  <p className="text-lg font-bold text-foreground">{witrPrayer.label}</p>
                   <p className="font-arabic text-2xl text-amber-300 mt-1">{witrPrayer.arabic}</p>
                 </div>
                 <div className="flex flex-col items-center gap-1 shrink-0">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-lg font-bold text-amber-400">
                     {witrPrayer.rakat}
                   </span>
-                  <span className="text-[10px] text-gray-500">rakat</span>
+                  <span className="text-[10px] text-muted-foreground/80">rakat</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-gray-500 shrink-0" />
-                <p className="text-sm text-gray-300">{witrPrayer.timing}</p>
+                <Clock className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+                <p className="text-sm text-muted-foreground">{witrPrayer.timing}</p>
               </div>
 
               <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3">
@@ -218,40 +218,40 @@ export default function AllIslamicPrayersPage() {
                 </p>
               </div>
 
-              <p className="text-xs text-gray-500 italic leading-relaxed">{witrPrayer.reward}</p>
+              <p className="text-xs text-muted-foreground/80 italic leading-relaxed">{witrPrayer.reward}</p>
             </div>
           </Section>
         )}
 
         {/* ── 4. Special Nawafil ─────────────────────────────────────────── */}
         <Section title="Special Nawafil" accent="indigo">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             Voluntary prayers that carry immense reward. These are ways to draw closer to Allah beyond the obligatory acts.
           </p>
           <div className="space-y-3">
             {specialNawafil.map(p => (
-              <div key={p.key} className="rounded-xl border border-indigo-500/15 bg-gray-800/50 p-4 space-y-2">
+              <div key={p.key} className="rounded-xl border border-indigo-500/15 bg-secondary/50 p-4 space-y-2">
                 <div className="flex items-start gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-xl">
                     {p.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#f9fafb]">{p.label}</p>
+                    <p className="text-sm font-semibold text-foreground">{p.label}</p>
                     <p className="font-arabic text-lg text-indigo-300 mt-0.5">{p.arabic}</p>
                   </div>
                   <div className="flex flex-col items-center gap-1 shrink-0">
                     <span className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg bg-indigo-500/15 px-2 text-sm font-bold text-indigo-400">
                       {p.rakat}
                     </span>
-                    <span className="text-[10px] text-gray-500">rakat</span>
+                    <span className="text-[10px] text-muted-foreground/80">rakat</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Clock className="h-3 w-3 text-gray-500 shrink-0" />
-                  <p className="text-xs text-gray-400">{p.timing}</p>
+                  <Clock className="h-3 w-3 text-muted-foreground/80 shrink-0" />
+                  <p className="text-xs text-muted-foreground">{p.timing}</p>
                 </div>
-                <p className="text-xs text-gray-500 italic leading-relaxed">{p.reward}</p>
-                <p className="text-[10px] text-gray-600">Source: {p.source}</p>
+                <p className="text-xs text-muted-foreground/80 italic leading-relaxed">{p.reward}</p>
+                <p className="text-[10px] text-muted-foreground/60">Source: {p.source}</p>
               </div>
             ))}
           </div>
@@ -260,30 +260,30 @@ export default function AllIslamicPrayersPage() {
         {/* ── 5. Ramadan Nawafil ─────────────────────────────────────────── */}
         <Section title="Ramadan Nawafil" accent="indigo">
           {ramadanNawafil.map(p => (
-            <div key={p.key} className="rounded-xl border border-indigo-500/15 bg-gray-800/50 p-4 space-y-3">
+            <div key={p.key} className="rounded-xl border border-indigo-500/15 bg-secondary/50 p-4 space-y-3">
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-xl">
                   {p.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-lg font-bold text-[#f9fafb]">{p.label}</p>
+                  <p className="text-lg font-bold text-foreground">{p.label}</p>
                   <p className="font-arabic text-xl text-indigo-300 mt-0.5">{p.arabic}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5">
                 <Moon className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-                <p className="text-sm text-gray-300">{p.timing}</p>
+                <p className="text-sm text-muted-foreground">{p.timing}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-3 py-2 text-center">
                   <p className="text-lg font-bold text-indigo-400">8</p>
-                  <p className="text-[10px] text-gray-400">rakat (Sunnah)</p>
+                  <p className="text-[10px] text-muted-foreground">rakat (Sunnah)</p>
                 </div>
                 <div className="rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-3 py-2 text-center">
                   <p className="text-lg font-bold text-indigo-400">20</p>
-                  <p className="text-[10px] text-gray-400">rakat (Hanafi)</p>
+                  <p className="text-[10px] text-muted-foreground">rakat (Hanafi)</p>
                 </div>
               </div>
 
@@ -301,71 +301,71 @@ export default function AllIslamicPrayersPage() {
                 </p>
               </div>
 
-              <p className="text-xs text-gray-500 italic leading-relaxed">{p.reward}</p>
-              <p className="text-[10px] text-gray-600">Source: {p.source}</p>
+              <p className="text-xs text-muted-foreground/80 italic leading-relaxed">{p.reward}</p>
+              <p className="text-[10px] text-muted-foreground/60">Source: {p.source}</p>
             </div>
           ))}
         </Section>
 
         {/* ── 6. Quick Reference Card ────────────────────────────────────── */}
         <Section title="Quick Reference Card" accent="gray">
-          <p className="text-xs text-gray-400 mb-2">
+          <p className="text-xs text-muted-foreground mb-2">
             A compact overview of every prayer — Fard, Wajib, Sunnah, and Nafl — at a glance.
           </p>
           <div className="overflow-x-auto -mx-1">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="py-2 px-2 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Prayer</th>
-                  <th className="py-2 px-2 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Rakat</th>
-                  <th className="py-2 px-2 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Category</th>
-                  <th className="py-2 px-2 text-right text-[10px] font-bold uppercase tracking-wider text-gray-400">Timing</th>
+                <tr className="border-b border-border">
+                  <th className="py-2 px-2 text-left text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prayer</th>
+                  <th className="py-2 px-2 text-center text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Rakat</th>
+                  <th className="py-2 px-2 text-center text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Category</th>
+                  <th className="py-2 px-2 text-right text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Timing</th>
                 </tr>
               </thead>
               <tbody>
                 {/* Fard prayers */}
                 {FARD_PRAYERS.map(p => (
-                  <tr key={`fard-${p.name}`} className="border-b border-gray-800/40">
-                    <td className="py-2 px-2 text-xs font-semibold text-[#f9fafb]">{p.name}</td>
-                    <td className="py-2 px-2 text-center text-xs text-gray-300">{p.rakat}</td>
+                  <tr key={`fard-${p.name}`} className="border-b border-border/40">
+                    <td className="py-2 px-2 text-xs font-semibold text-foreground">{p.name}</td>
+                    <td className="py-2 px-2 text-center text-xs text-muted-foreground">{p.rakat}</td>
                     <td className="py-2 px-2 text-center"><CategoryBadge category="Fard" /></td>
-                    <td className="py-2 px-2 text-right text-[10px] text-gray-500">{p.timing}</td>
+                    <td className="py-2 px-2 text-right text-[10px] text-muted-foreground/80">{p.timing}</td>
                   </tr>
                 ))}
                 {/* Witr (wajib) */}
                 {witrPrayer && (
-                  <tr className="border-b border-gray-800/40">
-                    <td className="py-2 px-2 text-xs font-semibold text-[#f9fafb]">{witrPrayer.label}</td>
-                    <td className="py-2 px-2 text-center text-xs text-gray-300">{witrPrayer.rakat}</td>
+                  <tr className="border-b border-border/40">
+                    <td className="py-2 px-2 text-xs font-semibold text-foreground">{witrPrayer.label}</td>
+                    <td className="py-2 px-2 text-center text-xs text-muted-foreground">{witrPrayer.rakat}</td>
                     <td className="py-2 px-2 text-center"><CategoryBadge category="Wajib" /></td>
-                    <td className="py-2 px-2 text-right text-[10px] text-gray-500">{witrPrayer.timing}</td>
+                    <td className="py-2 px-2 text-right text-[10px] text-muted-foreground/80">{witrPrayer.timing}</td>
                   </tr>
                 )}
                 {/* Sunnah mu'akkadah */}
                 {sunnahMuakkadah.map(p => (
-                  <tr key={`sunnah-${p.key}`} className="border-b border-gray-800/40">
-                    <td className="py-2 px-2 text-xs font-semibold text-[#f9fafb]">{p.label}</td>
-                    <td className="py-2 px-2 text-center text-xs text-gray-300">{p.rakat}</td>
+                  <tr key={`sunnah-${p.key}`} className="border-b border-border/40">
+                    <td className="py-2 px-2 text-xs font-semibold text-foreground">{p.label}</td>
+                    <td className="py-2 px-2 text-center text-xs text-muted-foreground">{p.rakat}</td>
                     <td className="py-2 px-2 text-center"><CategoryBadge category="Sunnah" /></td>
-                    <td className="py-2 px-2 text-right text-[10px] text-gray-500">{p.timing}</td>
+                    <td className="py-2 px-2 text-right text-[10px] text-muted-foreground/80">{p.timing}</td>
                   </tr>
                 ))}
                 {/* Nawafil (non-Ramadan) */}
                 {specialNawafil.map(p => (
-                  <tr key={`nafl-${p.key}`} className="border-b border-gray-800/40">
-                    <td className="py-2 px-2 text-xs font-semibold text-[#f9fafb]">{p.label}</td>
-                    <td className="py-2 px-2 text-center text-xs text-gray-300">{p.rakat}</td>
+                  <tr key={`nafl-${p.key}`} className="border-b border-border/40">
+                    <td className="py-2 px-2 text-xs font-semibold text-foreground">{p.label}</td>
+                    <td className="py-2 px-2 text-center text-xs text-muted-foreground">{p.rakat}</td>
                     <td className="py-2 px-2 text-center"><CategoryBadge category="Nafl" /></td>
-                    <td className="py-2 px-2 text-right text-[10px] text-gray-500">{p.timing}</td>
+                    <td className="py-2 px-2 text-right text-[10px] text-muted-foreground/80">{p.timing}</td>
                   </tr>
                 ))}
                 {/* Ramadan nawafil */}
                 {ramadanNawafil.map(p => (
-                  <tr key={`ramadan-${p.key}`} className="border-b border-gray-800/40 last:border-0">
-                    <td className="py-2 px-2 text-xs font-semibold text-[#f9fafb]">{p.label}</td>
-                    <td className="py-2 px-2 text-center text-xs text-gray-300">{p.rakat}</td>
+                  <tr key={`ramadan-${p.key}`} className="border-b border-border/40 last:border-0">
+                    <td className="py-2 px-2 text-xs font-semibold text-foreground">{p.label}</td>
+                    <td className="py-2 px-2 text-center text-xs text-muted-foreground">{p.rakat}</td>
                     <td className="py-2 px-2 text-center"><CategoryBadge category="Nafl" /></td>
-                    <td className="py-2 px-2 text-right text-[10px] text-gray-500">{p.timing}</td>
+                    <td className="py-2 px-2 text-right text-[10px] text-muted-foreground/80">{p.timing}</td>
                   </tr>
                 ))}
               </tbody>

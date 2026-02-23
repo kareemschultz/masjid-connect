@@ -328,12 +328,12 @@ export default function SettingsPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[#f9fafb] truncate">{session.user.name || 'User'}</p>
-                  <p className="text-xs text-gray-400 truncate">{session.user.email}</p>
+                  <p className="text-sm font-semibold text-foreground truncate">{session.user.name || 'User'}</p>
+                  <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="flex h-9 items-center gap-1.5 rounded-xl bg-gray-800 px-3 text-xs font-medium text-gray-300 active:bg-gray-700"
+                  className="flex h-9 items-center gap-1.5 rounded-xl bg-secondary px-3 text-xs font-medium text-muted-foreground active:bg-muted"
                 >
                   <LogOut className="h-3.5 w-3.5" /> Sign Out
                 </button>
@@ -341,11 +341,11 @@ export default function SettingsPage() {
             </div>
           ) : (
             <div className="p-4">
-              <p className="mb-3 text-xs text-gray-400">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
+              <p className="mb-3 text-xs text-muted-foreground">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
               <button
                 onClick={handleGoogleSignIn}
                 disabled={signingIn}
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-700 bg-gray-800 py-3 text-sm font-semibold text-gray-200 transition-all active:bg-gray-700 disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-border bg-secondary py-3 text-sm font-semibold text-foreground/80 transition-all active:bg-muted disabled:opacity-50"
               >
                 <GoogleIcon />
                 {signingIn ? 'Signing in...' : 'Sign in with Google'}
@@ -358,7 +358,7 @@ export default function SettingsPage() {
         {session?.user && (
           <SettingGroup label="Your Profile Handle" accentColor="bg-blue-500">
             <div className="p-4 space-y-3">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-muted-foreground">
                 Set a @username so Faith Buddies can find you without needing your email.
               </p>
               <div className="flex gap-2">
@@ -370,13 +370,13 @@ export default function SettingsPage() {
                     onChange={(e) => setUsernameInput(e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())}
                     placeholder="your_username"
                     maxLength={30}
-                    className="w-full rounded-xl border border-gray-700 bg-gray-800 pl-7 pr-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                    className="w-full rounded-xl border border-border bg-secondary pl-7 pr-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
                   />
                 </div>
                 <button
                   onClick={saveUsername}
                   disabled={usernameSaving || !usernameInput.trim() || usernameInput === username}
-                  className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white disabled:opacity-40"
+                  className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
                 >
                   {usernameSaving ? '...' : 'Save'}
                 </button>
@@ -387,14 +387,14 @@ export default function SettingsPage() {
                 </p>
               )}
               {username && (
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-muted-foreground/80">
                   Others can find you by searching <span className="text-blue-400 font-medium">@{username}</span> in the buddy search.
                 </p>
               )}
 
               {/* Phone number */}
-              <div className="border-t border-gray-800 pt-3 space-y-2">
-                <p className="text-xs text-gray-400">
+              <div className="border-t border-border pt-3 space-y-2">
+                <p className="text-xs text-muted-foreground">
                   Add your phone number so buddies can find you by WhatsApp number (e.g. +5926123456).
                 </p>
                 <div className="flex gap-2">
@@ -403,12 +403,12 @@ export default function SettingsPage() {
                     value={phoneInput}
                     onChange={(e) => setPhoneInput(e.target.value)}
                     placeholder="+5926123456"
-                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                    className="flex-1 rounded-xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
                   />
                   <button
                     onClick={savePhone}
                     disabled={phoneSaving || !phoneInput.trim() || phoneInput === phone}
-                    className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white disabled:opacity-40"
+                    className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
                   >
                     {phoneSaving ? '...' : 'Save'}
                   </button>
@@ -419,7 +419,7 @@ export default function SettingsPage() {
                   </p>
                 )}
                 {phone && (
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-muted-foreground/80">
                     Buddies can find you by searching <span className="text-blue-400 font-medium">{phone}</span>.
                   </p>
                 )}
@@ -429,7 +429,7 @@ export default function SettingsPage() {
         )}
 
         {/* Location */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-emerald-400" />
             <h3 className="text-sm font-semibold text-foreground">Your Location</h3>
@@ -442,13 +442,13 @@ export default function SettingsPage() {
               <p className="text-sm font-semibold text-foreground">
                 {userCity || 'Georgetown'}
               </p>
-              <p className="text-xs text-gray-400">{userCountry || 'Guyana (default)'}</p>
+              <p className="text-xs text-muted-foreground">{userCountry || 'Guyana (default)'}</p>
             </div>
           </div>
           <button
             onClick={handleDetectLocation}
             disabled={locationLoading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-opacity disabled:opacity-60 active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-foreground transition-opacity disabled:opacity-60 active:scale-[0.98]"
           >
             {locationLoading ? (
               <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />Detecting...</>
@@ -463,7 +463,7 @@ export default function SettingsPage() {
           )}
           <button
             onClick={handleResetLocation}
-            className="mt-2 w-full text-center text-[10px] text-gray-600 underline active:text-gray-400"
+            className="mt-2 w-full text-center text-[10px] text-muted-foreground/60 underline active:text-muted-foreground"
           >
             Reset to Georgetown, Guyana
           </button>
@@ -478,24 +478,24 @@ export default function SettingsPage() {
         </SettingGroup>
 
         {/* Per-Prayer Time Adjustment */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-600">
-              <Clock className="h-4 w-4 text-white" />
+              <Clock className="h-4 w-4 text-foreground" />
             </div>
             <div>
               <p className="text-sm font-semibold text-foreground">Prayer Time Adjustment</p>
-              <p className="text-[10px] text-gray-500">Fine-tune each prayer time individually</p>
+              <p className="text-[10px] text-muted-foreground/80">Fine-tune each prayer time individually</p>
             </div>
           </div>
-          <div className="divide-y divide-gray-800/60">
+          <div className="divide-y divide-border/60">
             {(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const).map((prayer) => (
               <div key={prayer} className="flex items-center justify-between px-4 py-3">
                 <span className="text-sm font-medium text-foreground w-16">{prayer}</span>
                 <select
                   value={prayerOffsets[prayer] ?? 0}
                   onChange={(e) => updatePrayerOffset(prayer, Number(e.target.value))}
-                  className="rounded-xl border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-foreground focus:outline-none focus:border-teal-500"
+                  className="rounded-xl border border-border bg-secondary px-3 py-2 text-xs text-foreground focus:outline-none focus:border-teal-500"
                 >
                   {OFFSET_OPTIONS.map((min) => (
                     <option key={min} value={min}>{offsetLabel(min)}</option>
@@ -519,7 +519,7 @@ export default function SettingsPage() {
               {PRAYER_NOTIF_CONFIG.map((p, i) => (
                 <div key={p.key}>
                   {i === 8 && (
-                    <div className="border-t border-gray-800 px-4 py-2.5">
+                    <div className="border-t border-border px-4 py-2.5">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Nawafil & Reminders</p>
                     </div>
                   )}
@@ -532,7 +532,7 @@ export default function SettingsPage() {
                   />
                 </div>
               ))}
-              <button onClick={disableAllNotifs} className="w-full border-t border-gray-800 px-4 py-3 text-center text-xs font-semibold text-red-400 active:bg-gray-800/50">Disable All Notifications</button>
+              <button onClick={disableAllNotifs} className="w-full border-t border-border px-4 py-3 text-center text-xs font-semibold text-red-400 active:bg-secondary/50">Disable All Notifications</button>
             </>
           )}
         </SettingGroup>
@@ -578,18 +578,18 @@ export default function SettingsPage() {
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-xl">🤲</div>
             <div>
-              <p className="text-sm font-semibold text-white">Support the App</p>
-              <p className="text-xs text-gray-400">Built fisabilillah — donate to help</p>
+              <p className="text-sm font-semibold text-foreground">Support the App</p>
+              <p className="text-xs text-muted-foreground">Built fisabilillah — donate to help</p>
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-gray-500" />
+          <ChevronRight className="h-4 w-4 text-muted-foreground/80" />
         </Link>
 
         <div className="pb-4 text-center">
           <button onClick={handleVersionTap} className="inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
             v1.0.0
           </button>
-          <p className="mt-1.5 text-[10px] text-gray-600">No ads. No data collection. Community first.</p>
+          <p className="mt-1.5 text-[10px] text-muted-foreground/60">No ads. No data collection. Community first.</p>
         </div>
       </div>
 
@@ -655,15 +655,15 @@ export default function SettingsPage() {
       {resetConfirm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setResetConfirm(false)} />
-          <div className="relative w-full max-w-sm rounded-3xl border border-gray-800 bg-gray-900 p-6 text-center">
+          <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/15">
               <RotateCcw className="h-7 w-7 text-red-400" />
             </div>
             <h3 className="text-lg font-bold text-foreground">Reset All Data?</h3>
-            <p className="mt-2 text-sm text-gray-400">This will erase all your prayer logs, bookmarks, streaks, and settings. This action cannot be undone.</p>
+            <p className="mt-2 text-sm text-muted-foreground">This will erase all your prayer logs, bookmarks, streaks, and settings. This action cannot be undone.</p>
             <div className="mt-6 flex gap-3">
-              <button onClick={() => setResetConfirm(false)} className="flex-1 rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300 active:bg-gray-700">Cancel</button>
-              <button onClick={resetAllData} className="flex-1 rounded-xl bg-red-500 py-3 text-sm font-medium text-white active:bg-red-600">Reset</button>
+              <button onClick={() => setResetConfirm(false)} className="flex-1 rounded-xl bg-secondary py-3 text-sm font-medium text-muted-foreground active:bg-muted">Cancel</button>
+              <button onClick={resetAllData} className="flex-1 rounded-xl bg-red-500 py-3 text-sm font-medium text-foreground active:bg-red-600">Reset</button>
             </div>
           </div>
         </div>

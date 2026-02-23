@@ -115,9 +115,9 @@ export default function MapViewComponent({ submissions }) {
   }, [latestByMasjid])
 
   return (
-    <div className="rounded-2xl overflow-hidden relative border border-gray-800">
+    <div className="rounded-2xl overflow-hidden relative border border-border">
       {loading && (
-        <div className="absolute inset-0 z-10 bg-[#0a0b14]/80 flex items-center justify-center">
+        <div className="absolute inset-0 z-10 bg-background/80 flex items-center justify-center">
           <div className="animate-spin w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full" />
         </div>
       )}

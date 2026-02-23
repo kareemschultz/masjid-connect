@@ -12,7 +12,7 @@ export default function MapPage() {
   const { submissions } = useSubmissions()
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Map}
         title="Map View"

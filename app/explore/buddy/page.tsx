@@ -55,7 +55,7 @@ interface Challenge {
 
 function getLevelStyle(levelNum: number) {
   const styles: Record<number, { bg: string; text: string; border: string; icon: string }> = {
-    1: { bg: 'bg-gray-500/20', text: 'text-gray-400', border: 'border-gray-500/30', icon: '\uD83C\uDF31' },
+    1: { bg: 'bg-gray-500/20', text: 'text-muted-foreground', border: 'border-gray-500/30', icon: '\uD83C\uDF31' },
     2: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', icon: '\uD83D\uDCFF' },
     3: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', icon: '\u2B50' },
     4: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', icon: '\u2728' },
@@ -347,7 +347,7 @@ export default function BuddyPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Users}
         title="Faith Buddies"
@@ -368,9 +368,9 @@ export default function BuddyPage() {
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-foreground">How the Buddy System Works</h3>
-            <p className="text-[11px] text-gray-400">Learn how to earn rewards and compete in good deeds</p>
+            <p className="text-[11px] text-muted-foreground">Learn how to earn rewards and compete in good deeds</p>
           </div>
-          <ChevronRight className="h-4 w-4 text-gray-500" />
+          <ChevronRight className="h-4 w-4 text-muted-foreground/80" />
         </Link>
       </div>
 
@@ -383,7 +383,7 @@ export default function BuddyPage() {
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-2.5 text-xs font-bold transition-all duration-300 ${
               tab === t.key
                 ? 'bg-blue-500/12 text-blue-400 shadow-sm shadow-blue-500/10'
-                : 'glass text-gray-500 active:bg-white/[0.03]'
+                : 'glass text-muted-foreground/80 active:bg-white/[0.03]'
             }`}
           >
             <t.icon className="h-3.5 w-3.5" />
@@ -398,10 +398,10 @@ export default function BuddyPage() {
           <>
             {/* My Stats Card */}
             {myStats && (
-              <div className="rounded-2xl border border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800 p-4">
-                <p className="text-xs text-gray-400 mb-3 font-semibold uppercase tracking-wide">Your Standing</p>
+              <div className="rounded-2xl border border-border bg-gradient-to-r from-gray-900 to-gray-800 p-4">
+                <p className="text-xs text-muted-foreground mb-3 font-semibold uppercase tracking-wide">Your Standing</p>
                 <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-xl font-bold text-white">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-xl font-bold text-foreground">
                     {getItem(KEYS.USERNAME, '?')[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
@@ -418,15 +418,15 @@ export default function BuddyPage() {
                     <div className="flex gap-4">
                       <div>
                         <p className="text-lg font-bold text-foreground">{myStats.totalPoints.toLocaleString()}</p>
-                        <p className="text-[10px] text-gray-500">Total Points</p>
+                        <p className="text-[10px] text-muted-foreground/80">Total Points</p>
                       </div>
                       {nextLevel && (
                         <div className="flex-1">
-                          <div className="flex justify-between text-[10px] text-gray-500 mb-1">
+                          <div className="flex justify-between text-[10px] text-muted-foreground/80 mb-1">
                             <span>Next: {nextLevel.label}</span>
                             <span>{(nextLevel.min - myStats.totalPoints).toLocaleString()} pts away</span>
                           </div>
-                          <div className="h-1.5 rounded-full bg-gray-800">
+                          <div className="h-1.5 rounded-full bg-secondary">
                             <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
                               style={{ width: `${Math.min(100, ((myStats.totalPoints - myLevel.min) / (nextLevel.min - myLevel.min)) * 100)}%` }} />
                           </div>
@@ -442,11 +442,11 @@ export default function BuddyPage() {
               <button
                 onClick={copyInviteLink}
                 className={`flex flex-col items-center gap-2 rounded-2xl border p-4 transition-all active:scale-[0.97] ${
-                  copied ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-gray-800 bg-gray-900'
+                  copied ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-border bg-card'
                 }`}
               >
                 {copied ? <Check className="h-5 w-5 text-emerald-400" /> : <Copy className="h-5 w-5 text-blue-400" />}
-                <span className={`text-xs font-medium ${copied ? 'text-emerald-400' : 'text-gray-300'}`}>
+                <span className={`text-xs font-medium ${copied ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                   {copied ? 'Link Copied!' : 'Copy Invite Link'}
                 </span>
               </button>
@@ -455,16 +455,16 @@ export default function BuddyPage() {
                   title: 'Join MasjidConnect GY',
                   text: `Join me on MasjidConnect GY — Faith Buddies! Let's grow together in faith.\n\n${myUsername ? `Add me: @${myUsername}\n\n` : ''}https://masjidconnectgy.com/explore/buddy`
                 })}
-                className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-all active:scale-[0.97]"
+                className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-4 transition-all active:scale-[0.97]"
               >
                 <Share2 className="h-5 w-5 text-purple-400" />
-                <span className="text-xs font-medium text-gray-300">Share App</span>
+                <span className="text-xs font-medium text-muted-foreground">Share App</span>
               </button>
             </div>
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-700 py-4 text-sm font-medium text-gray-400 transition-all active:border-blue-500 active:text-blue-400 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-4 text-sm font-medium text-muted-foreground transition-all active:border-blue-500 active:text-blue-400 active:scale-[0.98]"
             >
               <Plus className="h-4 w-4" />
               Add a Faith Buddy
@@ -473,21 +473,21 @@ export default function BuddyPage() {
             {/* Pending Requests */}
             {buddies.filter(b => b.status === 'pending' && b.direction === 'received').length > 0 && (
               <SettingGroup label="Friend Requests" accentColor="bg-orange-500">
-                <div className="divide-y divide-gray-800/50">
+                <div className="divide-y divide-border/50">
                   {buddies.filter(b => b.status === 'pending' && b.direction === 'received').map(b => (
                     <div key={b.id} className="flex items-center justify-between p-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-800 font-bold text-white">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary font-bold text-foreground">
                           {b.avatar}
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-foreground">{b.name}</p>
-                          <p className="text-xs text-gray-500">Wants to be your buddy</p>
+                          <p className="text-xs text-muted-foreground/80">Wants to be your buddy</p>
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => acceptBuddy(b.id)} className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white">Accept</button>
-                        <button onClick={() => removeBuddy(b.id)} className="rounded-lg bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-400">Ignore</button>
+                        <button onClick={() => acceptBuddy(b.id)} className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-foreground">Accept</button>
+                        <button onClick={() => removeBuddy(b.id)} className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground">Ignore</button>
                       </div>
                     </div>
                   ))}
@@ -497,7 +497,7 @@ export default function BuddyPage() {
 
             {buddies.filter(b => b.status === 'accepted').length > 0 && (
               <SettingGroup label={`Your Buddies (${buddies.filter(b => b.status === 'accepted').length})`} accentColor="bg-blue-500">
-                <div className="divide-y divide-gray-800/50">
+                <div className="divide-y divide-border/50">
                   {buddies.filter(b => b.status === 'accepted').map((buddy) => {
                     const ls = getLevelStyle(buddy.level?.level || 1)
                     return (
@@ -507,7 +507,7 @@ export default function BuddyPage() {
                         className="flex w-full items-center gap-3 p-4 text-left transition-all active:bg-white/5"
                       >
                         <div className="relative">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-foreground">
                             {buddy.avatar}
                           </div>
                           <div className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full ${ls.bg} border ${ls.border} text-xs`}>
@@ -525,15 +525,15 @@ export default function BuddyPage() {
                             )}
                           </div>
                           <div className="flex items-center gap-3 mt-0.5">
-                            <span className={`text-[11px] ${buddy.lastActive?.includes('Active') ? 'text-emerald-400' : 'text-gray-500'}`}>
+                            <span className={`text-[11px] ${buddy.lastActive?.includes('Active') ? 'text-emerald-400' : 'text-muted-foreground/80'}`}>
                               {buddy.lastActive || 'Offline'}
                             </span>
-                            <span className="flex items-center gap-0.5 text-[11px] text-gray-500">
+                            <span className="flex items-center gap-0.5 text-[11px] text-muted-foreground/80">
                               <Star className="h-2.5 w-2.5 text-amber-400/60" /> {buddy.totalPoints} pts
                             </span>
                           </div>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-gray-600" />
+                        <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
                       </button>
                     )
                   })}
@@ -552,23 +552,23 @@ export default function BuddyPage() {
               const CIcon = CHALLENGE_ICONS[c.category] || Target
               const gradient = CHALLENGE_COLORS[c.category] || 'from-gray-500 to-gray-600'
               return (
-                <div key={c.id} className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+                <div key={c.id} className="overflow-hidden rounded-2xl border border-border bg-card">
                   <div className={`flex items-center gap-3 bg-gradient-to-r ${gradient} p-4`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                      <CIcon className="h-5 w-5 text-white" />
+                      <CIcon className="h-5 w-5 text-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-sm font-bold text-white">{c.title}</h3>
-                      <span className="text-[11px] text-white/70">{c.deadline}</span>
+                      <h3 className="text-sm font-bold text-foreground">{c.title}</h3>
+                      <span className="text-[11px] text-foreground/70">{c.deadline}</span>
                     </div>
                     <div className="flex flex-col items-end gap-0.5">
-                      <span className="flex items-center gap-0.5 rounded-lg bg-white/15 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+                      <span className="flex items-center gap-0.5 rounded-lg bg-white/15 px-2 py-0.5 text-[10px] font-medium text-foreground backdrop-blur-sm">
                         <Star className="h-2.5 w-2.5" /> +{c.reward}
                       </span>
                     </div>
                   </div>
                   <div className="p-4 space-y-3">
-                    <p className="text-xs leading-relaxed text-gray-400">{c.description}</p>
+                    <p className="text-xs leading-relaxed text-muted-foreground">{c.description}</p>
                     <div>
                       <div className="mb-1.5 flex items-center justify-between">
                         {isCompleted ? (
@@ -576,14 +576,14 @@ export default function BuddyPage() {
                             <div className="flex h-6 items-center rounded-lg bg-emerald-500/20 px-2 text-[10px] font-bold text-emerald-400">
                               \u2713 COMPLETED
                             </div>
-                            <span className="text-[11px] text-gray-400">{c.current}/{c.target} {c.unit}</span>
+                            <span className="text-[11px] text-muted-foreground">{c.current}/{c.target} {c.unit}</span>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-gray-500">{c.current} / {c.target} {c.unit}</span>
+                          <span className="text-[11px] text-muted-foreground/80">{c.current} / {c.target} {c.unit}</span>
                         )}
                         <span className={`text-[11px] font-semibold ${isCompleted ? 'text-emerald-400' : 'text-emerald-400'}`}>{Math.min(pct, 100)}%</span>
                       </div>
-                      <div className="h-2.5 overflow-hidden rounded-full bg-gray-800">
+                      <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
                         <div className={`h-full rounded-full bg-gradient-to-r ${isCompleted ? 'from-emerald-400 to-emerald-500' : gradient}`} style={{ width: `${Math.min(pct, 100)}%` }} />
                       </div>
                     </div>
@@ -591,7 +591,7 @@ export default function BuddyPage() {
                 </div>
               )
             })}
-            <button onClick={() => setShowChallengeModal(true)} className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-700 py-4 text-sm font-medium text-gray-400">
+            <button onClick={() => setShowChallengeModal(true)} className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-4 text-sm font-medium text-muted-foreground">
               <Plus className="h-4 w-4" /> Create New Challenge
             </button>
           </>
@@ -603,38 +603,38 @@ export default function BuddyPage() {
             {leaderboard.length >= 3 && (
               <div className="flex items-end justify-center gap-3 py-4">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-400 to-gray-500 text-lg font-bold text-white">
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-400 to-gray-500 text-lg font-bold text-foreground">
                     {leaderboard[1].avatar}
                     <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-400/20 border border-gray-400/40">
-                      <span className="text-[10px] font-bold text-gray-300">2</span>
+                      <span className="text-[10px] font-bold text-muted-foreground">2</span>
                     </div>
                   </div>
-                  <span className="text-xs font-medium text-gray-400 truncate max-w-[64px]">{leaderboard[1].name}</span>
-                  <span className="text-[11px] font-bold text-gray-300">{leaderboard[1].totalPoints}</span>
+                  <span className="text-xs font-medium text-muted-foreground truncate max-w-[64px]">{leaderboard[1].name}</span>
+                  <span className="text-[11px] font-bold text-muted-foreground">{leaderboard[1].totalPoints}</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 -mt-4">
                   <Crown className="h-5 w-5 text-amber-400 animate-bounce" />
-                  <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-xl font-bold text-white ring-2 ring-amber-400/30 ring-offset-2 ring-offset-background">
+                  <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-xl font-bold text-foreground ring-2 ring-amber-400/30 ring-offset-2 ring-offset-background">
                     {leaderboard[0].avatar}
                   </div>
                   <span className="text-sm font-semibold text-foreground truncate max-w-[72px]">{leaderboard[0].name}</span>
                   <span className="text-xs font-bold text-amber-400">{leaderboard[0].totalPoints}</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 mt-2">
-                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-600 to-orange-700 text-lg font-bold text-white">
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-600 to-orange-700 text-lg font-bold text-foreground">
                     {leaderboard[2].avatar}
                     <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600/20 border border-orange-600/40">
                       <span className="text-[10px] font-bold text-orange-400">3</span>
                     </div>
                   </div>
-                  <span className="text-xs font-medium text-gray-400 truncate max-w-[64px]">{leaderboard[2].name}</span>
+                  <span className="text-xs font-medium text-muted-foreground truncate max-w-[64px]">{leaderboard[2].name}</span>
                   <span className="text-[11px] font-bold text-orange-400">{leaderboard[2].totalPoints}</span>
                 </div>
               </div>
             )}
 
             <SettingGroup label="Full Rankings" accentColor="bg-amber-500">
-              <div className="divide-y divide-gray-800/50">
+              <div className="divide-y divide-border/50">
                 {leaderboard.map((user, i) => {
                   const isYou = user.isMe
                   const levelLabel = user.level?.label || 'Seeker'
@@ -642,13 +642,13 @@ export default function BuddyPage() {
                     <div key={user.userId} className={`flex items-center gap-3 p-4 ${isYou ? 'bg-emerald-500/5' : ''}`}>
                       <div className={`flex h-8 w-8 items-center justify-center rounded-full font-bold text-xs ${
                         i === 0 ? 'bg-amber-500/20 text-amber-400'
-                        : i === 1 ? 'bg-gray-400/20 text-gray-300'
+                        : i === 1 ? 'bg-gray-400/20 text-muted-foreground'
                         : i === 2 ? 'bg-orange-600/20 text-orange-400'
-                        : 'bg-gray-800 text-gray-500'
+                        : 'bg-secondary text-muted-foreground/80'
                       }`}>
                         {i + 1}
                       </div>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-foreground">
                         {user.avatar}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -656,11 +656,11 @@ export default function BuddyPage() {
                           <span className={`text-sm font-semibold truncate ${isYou ? 'text-emerald-400' : 'text-foreground'}`}>
                             {isYou ? `${user.name} (You)` : user.name}
                           </span>
-                          <span className="rounded-md bg-gray-800 px-1.5 py-0.5 text-[9px] font-medium text-gray-400 uppercase">
+                          <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground uppercase">
                             {levelLabel}
                           </span>
                         </div>
-                        <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
                           <Flame className="h-2.5 w-2.5 text-amber-400/60" /> {user.streak} day streak
                         </span>
                       </div>
@@ -682,23 +682,23 @@ export default function BuddyPage() {
         {showAddModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowAddModal(false)} />
-            <div className="relative w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+            <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-2xl">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/15">
                 <Users className="h-7 w-7 text-blue-400" />
               </div>
               <h3 className="text-center text-lg font-bold text-foreground">Add a Faith Buddy</h3>
-              <p className="mt-1 text-center text-sm text-gray-400">Find them by email, @username, or phone</p>
+              <p className="mt-1 text-center text-sm text-muted-foreground">Find them by email, @username, or phone</p>
 
               {/* Mode selector */}
-              <div className="mt-4 flex gap-1 rounded-xl bg-gray-800 p-1">
+              <div className="mt-4 flex gap-1 rounded-xl bg-secondary p-1">
                 {(['email', 'username', 'phone'] as const).map(mode => (
                   <button
                     key={mode}
                     onClick={() => { setAddMode(mode); setNewBuddyInput('') }}
                     className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
                       addMode === mode
-                        ? 'bg-blue-500 text-white shadow-sm'
-                        : 'text-gray-400 active:bg-gray-700'
+                        ? 'bg-blue-500 text-foreground shadow-sm'
+                        : 'text-muted-foreground active:bg-muted'
                     }`}
                   >
                     {mode === 'email' ? 'Email' : mode === 'username' ? '@Username' : 'Phone'}
@@ -716,27 +716,27 @@ export default function BuddyPage() {
                   : addMode === 'username' ? '@their_username'
                   : '+592 XXX XXXX'
                 }
-                className="mt-4 w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-3.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                className="mt-4 w-full rounded-xl border border-border bg-secondary px-4 py-3.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
               />
 
               {addMode === 'username' && (
-                <p className="mt-2 text-[11px] text-gray-500 text-center">
+                <p className="mt-2 text-[11px] text-muted-foreground/80 text-center">
                   Ask your buddy to set their @username in Settings
                 </p>
               )}
               {addMode === 'phone' && (
-                <p className="mt-2 text-[11px] text-gray-500 text-center">
+                <p className="mt-2 text-[11px] text-muted-foreground/80 text-center">
                   Include country code, e.g. +592 for Guyana
                 </p>
               )}
 
               <div className="mt-4 flex gap-3">
                 <button onClick={() => { setShowAddModal(false); setNewBuddyInput(''); setAddMode('email') }}
-                  className="flex-1 rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                  className="flex-1 rounded-xl bg-secondary py-3 text-sm font-medium text-muted-foreground">
                   Cancel
                 </button>
                 <button onClick={addBuddy} disabled={!newBuddyInput.trim()}
-                  className="flex-1 rounded-xl bg-blue-500 py-3 text-sm font-medium text-white disabled:opacity-50">
+                  className="flex-1 rounded-xl bg-blue-500 py-3 text-sm font-medium text-foreground disabled:opacity-50">
                   Send Request
                 </button>
               </div>
@@ -748,9 +748,9 @@ export default function BuddyPage() {
         {showBuddyDetail && (
           <div className="fixed inset-0 z-[100] flex items-end justify-center">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowBuddyDetail(null)} />
-            <div className="relative w-full max-w-sm rounded-t-3xl border-t border-gray-700 bg-gray-900 p-6 pb-10 shadow-2xl">
-              <button onClick={() => setShowBuddyDetail(null)} className="absolute right-4 top-4 rounded-lg bg-gray-800 p-1.5">
-                <X className="h-4 w-4 text-gray-400" />
+            <div className="relative w-full max-w-sm rounded-t-3xl border-t border-border bg-card p-6 pb-10 shadow-2xl">
+              <button onClick={() => setShowBuddyDetail(null)} className="absolute right-4 top-4 rounded-lg bg-secondary p-1.5">
+                <X className="h-4 w-4 text-muted-foreground" />
               </button>
               <div className="flex flex-col items-center">
                 {(() => {
@@ -758,7 +758,7 @@ export default function BuddyPage() {
                   return (
                     <>
                       <div className="relative">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-2xl font-bold text-white">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-2xl font-bold text-foreground">
                           {showBuddyDetail.avatar}
                         </div>
                         <div className={`absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full ${ls.bg} border ${ls.border} text-sm`}>
@@ -774,18 +774,18 @@ export default function BuddyPage() {
 
               {/* Stats comparison */}
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-gray-800 p-3 text-center">
+                <div className="rounded-xl bg-secondary p-3 text-center">
                   <p className="text-lg font-bold text-emerald-400">{myStats?.totalPoints?.toLocaleString() || 0}</p>
-                  <p className="text-[10px] text-gray-500">Your Points</p>
+                  <p className="text-[10px] text-muted-foreground/80">Your Points</p>
                 </div>
-                <div className="rounded-xl bg-gray-800 p-3 text-center">
+                <div className="rounded-xl bg-secondary p-3 text-center">
                   <p className="text-lg font-bold text-blue-400">{showBuddyDetail.totalPoints?.toLocaleString() || 0}</p>
-                  <p className="text-[10px] text-gray-500">Their Points</p>
+                  <p className="text-[10px] text-muted-foreground/80">Their Points</p>
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center justify-between rounded-xl bg-gray-800/60 px-4 py-3">
-                <span className="flex items-center gap-1 text-xs text-gray-400">
+              <div className="mt-3 flex items-center justify-between rounded-xl bg-secondary/60 px-4 py-3">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Flame className="h-3.5 w-3.5 text-amber-400" /> Streak
                 </span>
                 <span className="text-sm font-bold text-foreground">{showBuddyDetail.streak} days</span>
@@ -794,13 +794,13 @@ export default function BuddyPage() {
               <div className="mt-4 flex gap-3">
                 <button
                   onClick={() => { setShowBuddyDetail(null); setShowNudgeModal(showBuddyDetail.id) }}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-500 py-3 text-sm font-medium text-white"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-500 py-3 text-sm font-medium text-foreground"
                 >
                   <Bell className="h-4 w-4" /> Nudge
                 </button>
                 <button
                   onClick={() => removeBuddy(showBuddyDetail.id)}
-                  className="rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-red-400"
+                  className="rounded-xl bg-secondary px-4 py-3 text-sm font-medium text-red-400"
                 >
                   Remove
                 </button>
@@ -813,22 +813,22 @@ export default function BuddyPage() {
         {showNudgeModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowNudgeModal(null)} />
-            <div className="relative w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+            <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-2xl">
               <h3 className="mb-4 text-center text-lg font-bold text-foreground">Send a Nudge</h3>
               <div className="space-y-2 max-h-[50vh] overflow-y-auto">
                 {NUDGE_MESSAGES.map((nudge, i) => (
                   <button
                     key={i}
                     onClick={() => sendNudge(showNudgeModal)}
-                    className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-left transition-all active:bg-gray-700"
+                    className="flex w-full items-start gap-3 rounded-xl border border-border bg-secondary/50 p-3 text-left transition-all active:bg-muted"
                   >
                     <nudge.icon className={`mt-0.5 h-4 w-4 shrink-0 ${nudge.color}`} />
-                    <span className="text-xs leading-relaxed text-gray-300">{nudge.text}</span>
+                    <span className="text-xs leading-relaxed text-muted-foreground">{nudge.text}</span>
                   </button>
                 ))}
               </div>
               <button onClick={() => setShowNudgeModal(null)}
-                className="mt-4 w-full rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                className="mt-4 w-full rounded-xl bg-secondary py-3 text-sm font-medium text-muted-foreground">
                 Cancel
               </button>
             </div>
@@ -839,7 +839,7 @@ export default function BuddyPage() {
         {showChallengeModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowChallengeModal(false)} />
-            <div className="relative w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+            <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-2xl">
               <h3 className="mb-4 text-center text-lg font-bold text-foreground">Choose a Challenge</h3>
               <div className="space-y-2 max-h-[50vh] overflow-y-auto">
                 {NEW_CHALLENGE_TEMPLATES.map((t, i) => {
@@ -849,16 +849,16 @@ export default function BuddyPage() {
                     <button
                       key={i}
                       onClick={() => addChallenge(t)}
-                      className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-left transition-all active:bg-gray-700"
+                      className="flex w-full items-start gap-3 rounded-xl border border-border bg-secondary/50 p-3 text-left transition-all active:bg-muted"
                     >
                       <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradient}`}>
-                        <CIcon className="h-4 w-4 text-white" />
+                        <CIcon className="h-4 w-4 text-foreground" />
                       </div>
                       <div className="flex-1">
                         <p className="text-xs font-semibold text-foreground">{t.title}</p>
-                        <p className="text-[10px] text-gray-500">{t.description}</p>
+                        <p className="text-[10px] text-muted-foreground/80">{t.description}</p>
                         <div className="mt-1 flex items-center gap-2">
-                          <span className="text-[10px] text-gray-600">{t.target} {t.unit}</span>
+                          <span className="text-[10px] text-muted-foreground/60">{t.target} {t.unit}</span>
                           <span className="flex items-center gap-0.5 text-[10px] text-amber-400">
                             <Star className="h-2 w-2" /> +{t.reward}
                           </span>
@@ -869,7 +869,7 @@ export default function BuddyPage() {
                 })}
               </div>
               <button onClick={() => setShowChallengeModal(false)}
-                className="mt-4 w-full rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                className="mt-4 w-full rounded-xl bg-secondary py-3 text-sm font-medium text-muted-foreground">
                 Cancel
               </button>
             </div>
@@ -878,7 +878,7 @@ export default function BuddyPage() {
 
         {/* Toast */}
         {toastMsg && (
-          <div className="fixed bottom-24 left-1/2 z-[200] -translate-x-1/2 rounded-2xl bg-gray-800 px-5 py-3 text-xs font-medium text-white shadow-xl border border-gray-700">
+          <div className="fixed bottom-24 left-1/2 z-[200] -translate-x-1/2 rounded-2xl bg-secondary px-5 py-3 text-xs font-medium text-foreground shadow-xl border border-border">
             {toastMsg}
           </div>
         )}

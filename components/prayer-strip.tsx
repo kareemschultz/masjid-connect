@@ -64,12 +64,12 @@ export function PrayerStrip({ prayers }: PrayerStripProps) {
             <div className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-300 ${
               isNext ? 'bg-emerald-500/15' : 'bg-white/[0.03]'
             }`}>
-              <Icon className={`h-4 w-4 transition-colors duration-300 ${isNext ? 'text-emerald-400' : 'text-gray-500'}`} />
+              <Icon className={`h-4 w-4 transition-colors duration-300 ${isNext ? 'text-emerald-400' : 'text-muted-foreground/80'}`} />
             </div>
-            <span className={`text-[11px] font-bold transition-colors duration-300 ${isNext ? 'text-emerald-400' : 'text-gray-500'}`}>
+            <span className={`text-[11px] font-bold transition-colors duration-300 ${isNext ? 'text-emerald-400' : 'text-muted-foreground/80'}`}>
               {prayer.name}
             </span>
-            <span className={`text-xs font-extrabold tabular-nums transition-colors duration-300 ${isNext ? 'text-white' : 'text-gray-400'}`}>
+            <span className={`text-xs font-extrabold tabular-nums transition-colors duration-300 ${isNext ? 'text-foreground' : 'text-muted-foreground'}`}>
               {offset !== 0
                 ? new Date(prayer.date.getTime() + offset * 60000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
                 : prayer.time

@@ -48,7 +48,7 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Heart}
         title="Support the App"
@@ -61,7 +61,7 @@ export default function SupportPage() {
       <div className="space-y-5 px-4 pt-5">
         {/* Mission card */}
         <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
-          <p className="text-sm leading-relaxed text-gray-300">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             MasjidConnect GY is a free community app built for the Guyanese Muslim community.
             There are no ads, no subscriptions, no paywalls. Your donation helps cover server
             hosting and keeps the app free for everyone.
@@ -70,7 +70,7 @@ export default function SupportPage() {
 
         {/* Amount selector */}
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground/80">
             Select Amount
           </p>
           <div className="grid grid-cols-3 gap-2.5">
@@ -81,7 +81,7 @@ export default function SupportPage() {
                 className={`rounded-2xl border py-4 text-center text-sm font-bold transition-all active:scale-95 ${
                   selected === amt
                     ? 'border-emerald-500 bg-emerald-500/15 text-emerald-400'
-                    : 'border-gray-800 bg-gray-900 text-gray-400 hover:border-gray-700'
+                    : 'border-border bg-card text-muted-foreground hover:border-border'
                 }`}
               >
                 ${amt}
@@ -92,7 +92,7 @@ export default function SupportPage() {
               className={`rounded-2xl border py-4 text-center text-sm font-bold transition-all active:scale-95 ${
                 isCustom
                   ? 'border-emerald-500 bg-emerald-500/15 text-emerald-400'
-                  : 'border-gray-800 bg-gray-900 text-gray-400 hover:border-gray-700'
+                  : 'border-border bg-card text-muted-foreground hover:border-border'
               }`}
             >
               Custom
@@ -112,7 +112,7 @@ export default function SupportPage() {
                 onChange={e => { setCustom(e.target.value); setError(null) }}
                 placeholder="Enter amount"
                 autoFocus
-                className="w-full rounded-2xl border border-gray-700 bg-gray-900 py-4 pl-10 pr-4 text-lg font-bold text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                className="w-full rounded-2xl border border-border bg-card py-4 pl-10 pr-4 text-lg font-bold text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
               />
             </div>
           )}
@@ -129,7 +129,7 @@ export default function SupportPage() {
         <button
           onClick={handleDonate}
           disabled={loading || amountCents < 100}
-          className="w-full rounded-2xl bg-emerald-500 py-4 text-base font-bold text-white transition-all active:scale-[0.98] disabled:opacity-40"
+          className="w-full rounded-2xl bg-emerald-500 py-4 text-base font-bold text-foreground transition-all active:scale-[0.98] disabled:opacity-40"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
@@ -142,13 +142,13 @@ export default function SupportPage() {
         </button>
 
         {/* Stripe note */}
-        <div className="flex items-center justify-center gap-2 text-gray-500">
+        <div className="flex items-center justify-center gap-2 text-muted-foreground/80">
           <Shield className="h-3.5 w-3.5" />
           <span className="text-xs">Secure payment by Stripe</span>
         </div>
 
         {/* Transparency */}
-        <p className="text-center text-[11px] leading-relaxed text-gray-600">
+        <p className="text-center text-[11px] leading-relaxed text-muted-foreground/60">
           100% of donations go toward server hosting costs. MasjidConnect GY is a non-profit
           community project. No salaries are paid from donations.
         </p>
@@ -158,7 +158,7 @@ export default function SupportPage() {
           <p className="text-2xl leading-loose text-amber-400/80" dir="rtl">
             بارك الله فيك
           </p>
-          <p className="mt-1 text-xs text-gray-500 italic">
+          <p className="mt-1 text-xs text-muted-foreground/80 italic">
             &ldquo;May Allah bless you.&rdquo;
           </p>
         </div>

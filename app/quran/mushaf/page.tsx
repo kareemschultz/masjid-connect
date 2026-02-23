@@ -212,7 +212,7 @@ export default function MushafPage() {
     return (
       <div className="flex flex-col gap-0">
         {/* Page meta */}
-        <div className="flex items-center justify-between px-4 py-2 text-[10px] text-gray-500">
+        <div className="flex items-center justify-between px-4 py-2 text-[10px] text-muted-foreground/80">
           <span>Juz {juz}</span>
           <span>Page {currentPage}</span>
         </div>
@@ -240,7 +240,7 @@ export default function MushafPage() {
           {sortedLines.map((words, li) => (
             <p
               key={li}
-              className="text-center leading-[2.2] text-white"
+              className="text-center leading-[2.2] text-foreground"
               style={{ fontFamily: '"Amiri Quran", "Amiri", serif', fontSize: '1.25rem' }}
             >
               {words.map((w, wi) => {
@@ -286,7 +286,7 @@ export default function MushafPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0a0b14] pb-28"
+      className="min-h-screen bg-background pb-28"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -301,18 +301,18 @@ export default function MushafPage() {
       />
 
       {/* Controls */}
-      <div className="sticky top-0 z-20 flex items-center justify-between bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5">
+      <div className="sticky top-0 z-20 flex items-center justify-between bg-background/95 backdrop-blur border-b border-border/50 px-4 py-2.5">
         <button
           onClick={() => goTo(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 text-gray-300 disabled:opacity-30 active:bg-gray-700"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-muted-foreground disabled:opacity-30 active:bg-muted"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
 
         {/* Page indicator + jump */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-400">Page</span>
+          <span className="text-xs text-muted-foreground">Page</span>
           <input
             type="number"
             value={jumpTo || currentPage}
@@ -323,18 +323,18 @@ export default function MushafPage() {
                 if (!isNaN(p)) { goTo(p); setJumpTo('') }
               }
             }}
-            className="w-14 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1 text-center text-sm text-white outline-none focus:border-amber-500/50"
+            className="w-14 rounded-lg border border-border bg-card px-2 py-1 text-center text-sm text-foreground outline-none focus:border-amber-500/50"
             min={1}
             max={604}
           />
-          <span className="text-xs text-gray-500">/ 604</span>
+          <span className="text-xs text-muted-foreground/80">/ 604</span>
         </div>
 
         <div className="flex gap-2">
           {/* Surah Nav */}
           <button
             onClick={() => setShowNav(!showNav)}
-            className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all ${showNav ? 'bg-amber-500 text-white' : 'bg-gray-800 text-gray-300 active:bg-gray-700'}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all ${showNav ? 'bg-amber-500 text-foreground' : 'bg-secondary text-muted-foreground active:bg-muted'}`}
           >
             {showNav ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -342,7 +342,7 @@ export default function MushafPage() {
           <button
             onClick={() => goTo(currentPage + 1)}
             disabled={currentPage >= 604}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 text-gray-300 disabled:opacity-30 active:bg-gray-700"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-muted-foreground disabled:opacity-30 active:bg-muted"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -351,7 +351,7 @@ export default function MushafPage() {
 
       {/* Surah Navigation Drawer */}
       {showNav && (
-        <div className="absolute left-0 right-0 z-30 border-b border-gray-800 bg-gray-950 shadow-2xl">
+        <div className="absolute left-0 right-0 z-30 border-b border-border bg-background shadow-2xl">
           <div className="px-4 pt-3 pb-2">
             <input
               type="text"
@@ -359,7 +359,7 @@ export default function MushafPage() {
               value={surahFilter}
               onChange={e => setSurahFilter(e.target.value)}
               autoFocus
-              className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-amber-500/50"
+              className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-amber-500/50"
             />
           </div>
           <div className="max-h-64 overflow-y-auto">
@@ -371,13 +371,13 @@ export default function MushafPage() {
                   setShowNav(false)
                   setSurahFilter('')
                 }}
-                className="flex w-full items-center gap-3 border-b border-gray-800/30 px-4 py-2.5 text-left active:bg-white/5"
+                className="flex w-full items-center gap-3 border-b border-border/30 px-4 py-2.5 text-left active:bg-white/5"
               >
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-[11px] font-bold text-amber-400">
                   {num}
                 </span>
-                <span className="text-sm text-gray-300">{name}</span>
-                <span className="ml-auto text-xs text-gray-600">p. {SURAH_PAGES[parseInt(num)]}</span>
+                <span className="text-sm text-muted-foreground">{name}</span>
+                <span className="ml-auto text-xs text-muted-foreground/60">p. {SURAH_PAGES[parseInt(num)]}</span>
               </button>
             ))}
           </div>
@@ -385,14 +385,14 @@ export default function MushafPage() {
       )}
 
       {/* ── Page Content ─────────────────────────────────── */}
-      <div className="mx-4 mt-4 min-h-[60vh] rounded-2xl border border-gray-800 bg-gray-900/60">
+      <div className="mx-4 mt-4 min-h-[60vh] rounded-2xl border border-border bg-card/60">
         {loading ? (
           <div className="flex h-64 items-center justify-center">
             <Loader2 className="h-7 w-7 animate-spin text-amber-400" />
           </div>
         ) : pageData === null ? (
           <div className="flex h-64 flex-col items-center justify-center gap-2 text-center px-8">
-            <p className="text-gray-500 text-sm">Could not load page. Check your connection.</p>
+            <p className="text-muted-foreground/80 text-sm">Could not load page. Check your connection.</p>
             <button onClick={() => loadPage(currentPage)} className="text-xs text-amber-400 underline underline-offset-4">
               Retry
             </button>
@@ -404,7 +404,7 @@ export default function MushafPage() {
       <p className="mt-3 text-center text-[10px] text-gray-700">Swipe left/right to turn pages</p>
 
       {/* Page progress bar */}
-      <div className="mx-4 mt-3 h-1 rounded-full bg-gray-800">
+      <div className="mx-4 mt-3 h-1 rounded-full bg-secondary">
         <div
           className="h-full rounded-full bg-amber-500/50"
           style={{ width: `${(currentPage / 604) * 100}%` }}
@@ -416,15 +416,15 @@ export default function MushafPage() {
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setSelectedVerse(null)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
           <div
-            className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-5 pb-8 pt-5 animate-slide-up"
+            className="relative w-full max-w-lg rounded-t-3xl border-t border-border bg-card px-5 pb-8 pt-5 animate-slide-up"
             onClick={e => e.stopPropagation()}
           >
             {/* Handle */}
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-700" />
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted" />
 
             {/* Arabic text */}
             <p
-              className="mb-3 text-center text-xl leading-[2.2] text-white"
+              className="mb-3 text-center text-xl leading-[2.2] text-foreground"
               dir="rtl"
               style={{ fontFamily: '"Amiri Quran", "Amiri", serif' }}
             >
@@ -433,7 +433,7 @@ export default function MushafPage() {
 
             {/* Translation (if available) */}
             {VERSE_TRANSLATIONS[selectedVerse.verseKey] && (
-              <p className="mb-3 text-center text-sm italic text-gray-300">
+              <p className="mb-3 text-center text-sm italic text-muted-foreground">
                 &ldquo;{VERSE_TRANSLATIONS[selectedVerse.verseKey]}&rdquo;
               </p>
             )}
@@ -491,7 +491,7 @@ export default function MushafPage() {
             {/* Close */}
             <button
               onClick={() => setSelectedVerse(null)}
-              className="mt-4 w-full rounded-2xl border border-gray-800 bg-gray-800/50 py-3 text-sm font-medium text-gray-400 active:bg-gray-700"
+              className="mt-4 w-full rounded-2xl border border-border bg-secondary/50 py-3 text-sm font-medium text-muted-foreground active:bg-muted"
             >
               Close
             </button>

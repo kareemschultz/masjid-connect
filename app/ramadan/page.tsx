@@ -123,14 +123,14 @@ export default function RamadanPage() {
   const todayFasted = fastingLog[todayKey] === 'fasted'
 
   return (
-    <div className={`min-h-screen bg-[#0a0b14] pb-nav ${mounted ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
+    <div className={`min-h-screen bg-background pb-nav ${mounted ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
       {/* Hero */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-950 to-violet-900" />
         <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-purple-500/15 blur-3xl" />
         <div className="absolute bottom-0 -left-10 h-40 w-40 rounded-full bg-indigo-500/20 blur-3xl" />
         <div className="islamic-pattern absolute inset-0 opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0b14]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
 
         {/* Floating crescent + stars */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
@@ -144,14 +144,14 @@ export default function RamadanPage() {
 
         <div className="relative px-5 pt-12 pb-8">
           {/* Back button */}
-          <button onClick={() => router.back()} className="glass mb-6 flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Go back">
+          <button onClick={() => router.back()} className="glass mb-6 flex h-10 w-10 items-center justify-center rounded-2xl text-foreground/80 transition-transform active:scale-90" aria-label="Go back">
             <ArrowLeft className="h-5 w-5" />
           </button>
 
           <div className="animate-fade-up">
             <span className="rounded-full bg-amber-500/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-300">Ramadan Mubarak</span>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white">Ramadan Hub</h1>
-            <p className="mt-1 text-sm text-white/40">Your blessed month companion</p>
+            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground">Ramadan Hub</h1>
+            <p className="mt-1 text-sm text-foreground/40">Your blessed month companion</p>
           </div>
 
           {/* Suhoor & Iftaar times */}
@@ -159,12 +159,12 @@ export default function RamadanPage() {
             <div className="glass rounded-2xl p-4 text-center">
               <Sunrise className="mx-auto mb-2 h-5 w-5 text-blue-400" />
               <p className="text-[10px] font-bold uppercase tracking-wider text-blue-400/70">Suhoor Ends</p>
-              <p className="mt-1 text-lg font-extrabold text-white">{fajr?.time || '--:--'}</p>
+              <p className="mt-1 text-lg font-extrabold text-foreground">{fajr?.time || '--:--'}</p>
             </div>
             <div className="glass rounded-2xl p-4 text-center">
               <UtensilsCrossed className="mx-auto mb-2 h-5 w-5 text-amber-400" />
               <p className="text-[10px] font-bold uppercase tracking-wider text-amber-400/70">Iftaar</p>
-              <p className="mt-1 text-lg font-extrabold text-white">{maghrib?.time || '--:--'}</p>
+              <p className="mt-1 text-lg font-extrabold text-foreground">{maghrib?.time || '--:--'}</p>
             </div>
           </div>
         </div>
@@ -180,17 +180,17 @@ export default function RamadanPage() {
             </div>
             <div className="flex items-baseline justify-center gap-2">
               <div className="text-center">
-                <span className="text-5xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.hours).padStart(2, '0')}</span>
+                <span className="text-5xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.hours).padStart(2, '0')}</span>
                 <p className="mt-1 text-[10px] font-medium uppercase text-amber-400/50">Hours</p>
               </div>
               <span className="text-3xl font-bold text-amber-400/30 mb-4">:</span>
               <div className="text-center">
-                <span className="text-5xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.minutes).padStart(2, '0')}</span>
+                <span className="text-5xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.minutes).padStart(2, '0')}</span>
                 <p className="mt-1 text-[10px] font-medium uppercase text-amber-400/50">Minutes</p>
               </div>
               <span className="text-3xl font-bold text-amber-400/30 mb-4">:</span>
               <div className="text-center">
-                <span className="text-5xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.seconds).padStart(2, '0')}</span>
+                <span className="text-5xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.seconds).padStart(2, '0')}</span>
                 <p className="mt-1 text-[10px] font-medium uppercase text-amber-400/50">Seconds</p>
               </div>
             </div>
@@ -203,8 +203,8 @@ export default function RamadanPage() {
             </div>
             {IFTAAR_DUAS.map((dua, i) => (
               <div key={i} className={i > 0 ? 'mt-4 pt-4 border-t border-amber-500/10' : ''}>
-                <p className="text-right font-arabic text-lg leading-[2] text-white/90" dir="rtl">{dua.arabic}</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-300/90">{dua.translation}</p>
+                <p className="text-right font-arabic text-lg leading-[2] text-foreground/90" dir="rtl">{dua.arabic}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground/90">{dua.translation}</p>
                 <p className="mt-1 text-[10px] text-amber-400/50">{dua.source}</p>
               </div>
             ))}
@@ -216,24 +216,24 @@ export default function RamadanPage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="section-label mb-1">
-                <Calendar className="h-3.5 w-3.5 text-gray-500" />
+                <Calendar className="h-3.5 w-3.5 text-muted-foreground/80" />
                 {"Today's Fast"}
               </div>
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-foreground/50">
                 {todayFasted ? 'Alhamdulillah, fast logged!' : 'Did you fast today?'}
               </p>
             </div>
             <button onClick={markFasted} className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 active:scale-90 ${
               todayFasted ? 'bg-emerald-500 shadow-lg shadow-emerald-500/25' : 'glass'
             }`}>
-              {todayFasted ? <Check className="h-6 w-6 text-white" /> : <UtensilsCrossed className="h-6 w-6 text-gray-400" />}
+              {todayFasted ? <Check className="h-6 w-6 text-foreground" /> : <UtensilsCrossed className="h-6 w-6 text-muted-foreground" />}
             </button>
           </div>
           <div className="mt-4 flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Flame className="h-4 w-4 text-amber-400" />
-              <span className="text-sm font-bold text-white">{totalFasted}</span>
-              <span className="text-xs text-gray-500">fasts this month</span>
+              <span className="text-sm font-bold text-foreground">{totalFasted}</span>
+              <span className="text-xs text-muted-foreground/80">fasts this month</span>
             </div>
             <Link href="/tracker/fasting" className="ml-auto flex items-center gap-1 text-[11px] font-semibold text-emerald-400 active:text-emerald-300">
               View Calendar <ChevronRight className="h-3 w-3" />
@@ -250,7 +250,7 @@ export default function RamadanPage() {
               </div>
               <div className="flex-1">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-blue-400/70">Suhoor ends in</p>
-                <p className="text-lg font-extrabold tabular-nums text-white">
+                <p className="text-lg font-extrabold tabular-nums text-foreground">
                   {String(suhoorCountdown.hours).padStart(2, '0')}h {String(suhoorCountdown.minutes).padStart(2, '0')}m {String(suhoorCountdown.seconds).padStart(2, '0')}s
                 </p>
               </div>
@@ -268,7 +268,7 @@ export default function RamadanPage() {
             <span className="text-xs font-bold tabular-nums text-purple-400">{completedGoals}/{RAMADAN_GOALS.length}</span>
           </div>
 
-          <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-800/50">
+          <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-secondary/50">
             <div className="h-full rounded-full bg-gradient-to-r from-purple-500 to-indigo-400 transition-all duration-700 ease-out" style={{ width: `${(completedGoals / RAMADAN_GOALS.length) * 100}%` }} />
           </div>
 
@@ -280,7 +280,7 @@ export default function RamadanPage() {
                 <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${goal.bg} transition-transform duration-300 ${todayGoals[goal.key] ? 'scale-110' : ''}`}>
                   <goal.icon className={`h-4 w-4 ${goal.color}`} />
                 </div>
-                <span className={`text-sm font-medium transition-colors ${todayGoals[goal.key] ? 'text-purple-400 line-through decoration-purple-500/30' : 'text-white'}`}>
+                <span className={`text-sm font-medium transition-colors ${todayGoals[goal.key] ? 'text-purple-400 line-through decoration-purple-500/30' : 'text-foreground'}`}>
                   {goal.label}
                 </span>
                 {todayGoals[goal.key] && (
@@ -298,8 +298,8 @@ export default function RamadanPage() {
               <Star className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Tasbih</p>
-              <p className="text-[10px] text-gray-500">Night Dhikr</p>
+              <p className="text-xs font-bold text-foreground">Tasbih</p>
+              <p className="text-[10px] text-muted-foreground/80">Night Dhikr</p>
             </div>
           </Link>
           <Link href="/quran" className="glass flex items-center gap-3 rounded-2xl p-4 card-premium">
@@ -307,8 +307,8 @@ export default function RamadanPage() {
               <BookOpen className="h-5 w-5 text-purple-400" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Quran</p>
-              <p className="text-[10px] text-gray-500">Read a Juz</p>
+              <p className="text-xs font-bold text-foreground">Quran</p>
+              <p className="text-[10px] text-muted-foreground/80">Read a Juz</p>
             </div>
           </Link>
           <Link href="/explore/duas" className="glass flex items-center gap-3 rounded-2xl p-4 card-premium">
@@ -316,8 +316,8 @@ export default function RamadanPage() {
               <Target className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Duas</p>
-              <p className="text-[10px] text-gray-500">Supplications</p>
+              <p className="text-xs font-bold text-foreground">Duas</p>
+              <p className="text-[10px] text-muted-foreground/80">Supplications</p>
             </div>
           </Link>
           <Link href="/tracker/fasting" className="glass flex items-center gap-3 rounded-2xl p-4 card-premium">
@@ -325,8 +325,8 @@ export default function RamadanPage() {
               <Calendar className="h-5 w-5 text-amber-400" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Calendar</p>
-              <p className="text-[10px] text-gray-500">Fast Log</p>
+              <p className="text-xs font-bold text-foreground">Calendar</p>
+              <p className="text-[10px] text-muted-foreground/80">Fast Log</p>
             </div>
           </Link>
         </div>

@@ -85,7 +85,7 @@ export default function TasbihPage() {
               key={i}
               onClick={() => setPhraseIdx(i)}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                phraseIdx === i ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'
+                phraseIdx === i ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {p.transliteration}
@@ -95,7 +95,7 @@ export default function TasbihPage() {
 
         {/* Arabic phrase */}
         <p className="font-arabic text-3xl text-foreground">{phrase.arabic}</p>
-        <p className="mt-1 text-xs text-gray-400">{phrase.meaning}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{phrase.meaning}</p>
 
         {/* Circular counter */}
         <div className="relative mt-10 flex h-52 w-52 items-center justify-center">
@@ -113,15 +113,15 @@ export default function TasbihPage() {
           </svg>
           <button
             onClick={handleTap}
-            className={`flex h-40 w-40 items-center justify-center rounded-full bg-gray-900 border-2 text-5xl font-bold text-foreground transition-all active:scale-95 ${
-              pulse ? 'scale-105 border-emerald-500' : 'border-gray-800'
+            className={`flex h-40 w-40 items-center justify-center rounded-full bg-card border-2 text-5xl font-bold text-foreground transition-all active:scale-95 ${
+              pulse ? 'scale-105 border-emerald-500' : 'border-border'
             } ${milestoneReached ? 'ring-4 ring-emerald-500/40' : ''}`}
             aria-label="Count"
           >
             {count}
           </button>
           {milestoneReached && (
-            <div className="absolute -bottom-2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white animate-bounce">
+            <div className="absolute -bottom-2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-foreground animate-bounce">
               Target reached!
             </div>
           )}
@@ -134,7 +134,7 @@ export default function TasbihPage() {
               key={t}
               onClick={() => setTarget(t)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium ${
-                target === t ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gray-800 text-gray-400'
+                target === t ? 'bg-emerald-500/20 text-emerald-400' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {t}
@@ -146,7 +146,7 @@ export default function TasbihPage() {
         <div className="mt-6 flex gap-3">
           <button
             onClick={reset}
-            className="flex items-center gap-2 rounded-xl bg-gray-800 px-5 py-3 text-sm font-medium text-gray-300 transition-colors active:bg-gray-700"
+            className="flex items-center gap-2 rounded-xl bg-secondary px-5 py-3 text-sm font-medium text-muted-foreground transition-colors active:bg-muted"
           >
             <RotateCcw className="h-4 w-4" />
             Reset

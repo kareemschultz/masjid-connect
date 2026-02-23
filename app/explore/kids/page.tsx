@@ -20,7 +20,7 @@ const SECTIONS: KidsSection[] = [
     icon: '🕌',
     content: (
       <div className="space-y-3">
-        <p className="text-xs text-gray-400 italic">These are the 5 things every Muslim must do:</p>
+        <p className="text-xs text-muted-foreground italic">These are the 5 things every Muslim must do:</p>
         {[
           { icon: '☝️', name: 'Shahada', desc: 'Say "There is no god but Allah, and Muhammad is His Messenger" — this is how you become Muslim!' },
           { icon: '🤲', name: 'Salah (Prayer)', desc: 'Pray 5 times a day — Fajr, Dhuhr, Asr, Maghrib, and Isha. It\'s like having a special meeting with Allah!' },
@@ -28,11 +28,11 @@ const SECTIONS: KidsSection[] = [
           { icon: '🌙', name: 'Sawm (Fasting)', desc: 'In Ramadan, we don\'t eat or drink from sunrise to sunset. It teaches us patience and to be thankful!' },
           { icon: '🕋', name: 'Hajj (Pilgrimage)', desc: 'Visit the Ka\'bah in Makkah at least once in your life if you can. Millions of Muslims go together!' },
         ].map((pillar) => (
-          <div key={pillar.name} className="flex gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3">
+          <div key={pillar.name} className="flex gap-3 rounded-xl border border-border bg-secondary/50 p-3">
             <span className="text-xl shrink-0">{pillar.icon}</span>
             <div>
-              <p className="text-sm font-bold text-white">{pillar.name}</p>
-              <p className="text-xs text-gray-400 leading-relaxed mt-0.5">{pillar.desc}</p>
+              <p className="text-sm font-bold text-foreground">{pillar.name}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{pillar.desc}</p>
             </div>
           </div>
         ))}
@@ -45,7 +45,7 @@ const SECTIONS: KidsSection[] = [
     icon: '🤲',
     content: (
       <div className="space-y-3">
-        <p className="text-xs text-gray-400 italic">Short duas every Muslim child should know:</p>
+        <p className="text-xs text-muted-foreground italic">Short duas every Muslim child should know:</p>
         {[
           {
             when: 'Before Eating',
@@ -78,11 +78,11 @@ const SECTIONS: KidsSection[] = [
             meaning: 'My Lord, have mercy on them as they raised me when I was small',
           },
         ].map((dua) => (
-          <div key={dua.when} className="rounded-xl border border-gray-800 bg-gray-900 p-3 space-y-1.5">
+          <div key={dua.when} className="rounded-xl border border-border bg-card p-3 space-y-1.5">
             <p className="text-[10px] font-bold uppercase tracking-wider text-amber-400">{dua.when}</p>
             <p className="font-arabic text-sm text-teal-300 leading-loose" dir="rtl">{dua.arabic}</p>
             <p className="text-[11px] italic text-purple-400">{dua.trans}</p>
-            <p className="text-xs text-gray-300">{dua.meaning}</p>
+            <p className="text-xs text-muted-foreground">{dua.meaning}</p>
           </div>
         ))}
       </div>
@@ -94,7 +94,7 @@ const SECTIONS: KidsSection[] = [
     icon: '📖',
     content: (
       <div className="space-y-3">
-        <p className="text-xs text-gray-400 italic">Allah sent 25 prophets mentioned in the Quran. Here are some of their amazing stories:</p>
+        <p className="text-xs text-muted-foreground italic">Allah sent 25 prophets mentioned in the Quran. Here are some of their amazing stories:</p>
         {[
           { name: 'Adam (AS)', desc: 'The very first human! Allah made him from clay and taught him the names of everything.' },
           { name: 'Nuh (AS)', desc: 'He built a huge ark (boat) and saved the believers and animals from a great flood.' },
@@ -103,11 +103,11 @@ const SECTIONS: KidsSection[] = [
           { name: 'Isa (AS)', desc: 'He was born miraculously without a father. He could heal the sick and bring the dead back to life by Allah\'s permission.' },
           { name: 'Muhammad ﷺ', desc: 'The final prophet! He received the Quran and was sent as a mercy to all of creation.' },
         ].map((prophet) => (
-          <div key={prophet.name} className="flex gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3">
+          <div key={prophet.name} className="flex gap-3 rounded-xl border border-border bg-secondary/50 p-3">
             <span className="text-lg shrink-0">⭐</span>
             <div>
-              <p className="text-sm font-bold text-white">{prophet.name}</p>
-              <p className="text-xs text-gray-400 leading-relaxed mt-0.5">{prophet.desc}</p>
+              <p className="text-sm font-bold text-foreground">{prophet.name}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{prophet.desc}</p>
             </div>
           </div>
         ))}
@@ -126,7 +126,7 @@ const SECTIONS: KidsSection[] = [
     icon: '📝',
     content: (
       <div className="space-y-3">
-        <p className="text-xs text-gray-400 leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed">
           The Noorani Qaida is the first book every Muslim child uses to learn how to read the Quran. Start with the Arabic letters, then learn how they connect!
         </p>
         <Link
@@ -144,7 +144,7 @@ const SECTIONS: KidsSection[] = [
     icon: '💚',
     content: (
       <div className="space-y-3">
-        <p className="text-xs text-gray-400 italic">Iman means to believe in your heart. A Muslim believes in these 6 things:</p>
+        <p className="text-xs text-muted-foreground italic">Iman means to believe in your heart. A Muslim believes in these 6 things:</p>
         {[
           { icon: '☝️', name: 'Belief in Allah', desc: 'There is only ONE God — Allah. He created everything and knows everything!' },
           { icon: '👼', name: 'Belief in the Angels', desc: 'Angels are made of light. They obey Allah perfectly. Jibreel brought the Quran to Prophet Muhammad ﷺ.' },
@@ -153,11 +153,11 @@ const SECTIONS: KidsSection[] = [
           { icon: '⏳', name: 'Belief in the Last Day', desc: 'One day, this world will end. Everyone will be brought back to life and judged for their deeds.' },
           { icon: '🎯', name: 'Belief in Qadar (Destiny)', desc: 'Everything happens by Allah\'s will. Good and bad — we trust Allah\'s plan and do our best!' },
         ].map((pillar) => (
-          <div key={pillar.name} className="flex gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3">
+          <div key={pillar.name} className="flex gap-3 rounded-xl border border-border bg-secondary/50 p-3">
             <span className="text-xl shrink-0">{pillar.icon}</span>
             <div>
-              <p className="text-sm font-bold text-white">{pillar.name}</p>
-              <p className="text-xs text-gray-400 leading-relaxed mt-0.5">{pillar.desc}</p>
+              <p className="text-sm font-bold text-foreground">{pillar.name}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{pillar.desc}</p>
             </div>
           </div>
         ))}
@@ -170,7 +170,7 @@ export default function KidsPage() {
   const [openSection, setOpenSection] = useState<string | null>('pillars')
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Baby}
         title="Kids Corner"
@@ -187,20 +187,20 @@ export default function KidsPage() {
           return (
             <div
               key={section.id}
-              className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden"
+              className="rounded-2xl border border-border bg-card overflow-hidden"
             >
               <button
                 onClick={() => setOpenSection(isOpen ? null : section.id)}
-                className="flex w-full items-center gap-3 p-4 text-left active:bg-gray-800/50 transition-colors"
+                className="flex w-full items-center gap-3 p-4 text-left active:bg-secondary/50 transition-colors"
               >
                 <span className="text-lg">{section.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-[#f9fafb]">{section.title}</h3>
+                  <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
                 </div>
                 {isOpen ? (
-                  <ChevronUp className="h-4 w-4 shrink-0 text-gray-600" />
+                  <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                 ) : (
-                  <ChevronDown className="h-4 w-4 shrink-0 text-gray-600" />
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                 )}
               </button>
 

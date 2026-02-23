@@ -111,7 +111,7 @@ export default function HalalGuidePage() {
   })
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={ShieldCheck}
         title="Halal Guide"
@@ -132,17 +132,17 @@ export default function HalalGuidePage() {
               <div key={auth.name}>
                 <button
                   onClick={() => setExpandedAuth(expandedAuth === auth.name ? null : auth.name)}
-                  className="flex w-full items-center justify-between gap-2 rounded-xl bg-gray-900 px-4 py-3 text-left active:bg-gray-800"
+                  className="flex w-full items-center justify-between gap-2 rounded-xl bg-card px-4 py-3 text-left active:bg-secondary"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xl">{auth.logo}</span>
-                    <span className="text-sm font-semibold text-white">{auth.name}</span>
+                    <span className="text-sm font-semibold text-foreground">{auth.name}</span>
                   </div>
-                  {expandedAuth === auth.name ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
+                  {expandedAuth === auth.name ? <ChevronUp className="h-4 w-4 text-muted-foreground/80" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/80" />}
                 </button>
                 {expandedAuth === auth.name && (
-                  <div className="rounded-b-xl border border-t-0 border-gray-800 bg-gray-900/60 px-4 pb-3 pt-2">
-                    <p className="text-xs text-gray-400">{auth.description}</p>
+                  <div className="rounded-b-xl border border-t-0 border-border bg-card/60 px-4 pb-3 pt-2">
+                    <p className="text-xs text-muted-foreground">{auth.description}</p>
                     <p className="mt-1.5 text-xs text-emerald-400">{auth.contact}</p>
                   </div>
                 )}
@@ -156,20 +156,20 @@ export default function HalalGuidePage() {
           href="/explore/halal-directory"
           className="flex items-center justify-between gap-3 rounded-xl border-l-4 border-emerald-500 bg-emerald-950/30 px-4 py-3"
         >
-          <span className="text-xs text-gray-300">Looking for halal restaurants &amp; food outlets?</span>
-          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-semibold text-white">
+          <span className="text-xs text-muted-foreground">Looking for halal restaurants &amp; food outlets?</span>
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-3 py-1 text-[11px] font-semibold text-foreground">
             View Halal Directory <ArrowRight className="h-3 w-3" />
           </span>
         </Link>
 
         {/* Search */}
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-gray-500" />
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+          <Search className="h-4 w-4 shrink-0 text-muted-foreground/80" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search products, ingredients, E-numbers..."
-            className="w-full bg-transparent text-sm text-white placeholder-gray-500 outline-none"
+            className="w-full bg-transparent text-sm text-foreground placeholder-gray-500 outline-none"
           />
         </div>
 
@@ -181,8 +181,8 @@ export default function HalalGuidePage() {
               onClick={() => setActiveCategory(cat)}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
                 activeCategory === cat
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-800 text-gray-400 active:bg-gray-700'
+                  ? 'bg-emerald-600 text-foreground'
+                  : 'bg-secondary text-muted-foreground active:bg-muted'
               }`}
             >
               {cat}
@@ -200,28 +200,28 @@ export default function HalalGuidePage() {
         {/* Items list */}
         <div className="space-y-2">
           {filtered.length === 0 && (
-            <p className="text-center text-sm text-gray-500 py-8">No results found</p>
+            <p className="text-center text-sm text-muted-foreground/80 py-8">No results found</p>
           )}
           {filtered.map(item => (
-            <div key={item.name} className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
+            <div key={item.name} className="rounded-2xl border border-border bg-card overflow-hidden">
               <button
                 onClick={() => setExpandedItem(expandedItem === item.name ? null : item.name)}
-                className="flex w-full items-center justify-between gap-3 p-4 text-left active:bg-gray-800/50"
+                className="flex w-full items-center justify-between gap-3 p-4 text-left active:bg-secondary/50"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-semibold text-white">{item.name}</span>
-                    <span className="text-[10px] text-gray-600 bg-gray-800 rounded px-2 py-0.5">{item.category}</span>
+                    <span className="text-sm font-semibold text-foreground">{item.name}</span>
+                    <span className="text-[10px] text-muted-foreground/60 bg-secondary rounded px-2 py-0.5">{item.category}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <StatusBadge status={item.status} />
-                  {expandedItem === item.name ? <ChevronUp className="h-4 w-4 text-gray-600" /> : <ChevronDown className="h-4 w-4 text-gray-600" />}
+                  {expandedItem === item.name ? <ChevronUp className="h-4 w-4 text-muted-foreground/60" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60" />}
                 </div>
               </button>
               {expandedItem === item.name && (
-                <div className="border-t border-gray-800 px-4 pb-4 pt-3">
-                  <p className="text-xs text-gray-400 leading-relaxed">{item.detail}</p>
+                <div className="border-t border-border px-4 pb-4 pt-3">
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                   {item.authority && (
                     <p className="mt-2 text-[10px] text-emerald-500">Certification: {item.authority}</p>
                   )}
@@ -232,8 +232,8 @@ export default function HalalGuidePage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-4">
-          <p className="text-[11px] text-gray-500 leading-relaxed">
+        <div className="rounded-2xl border border-border bg-card/50 p-4">
+          <p className="text-[11px] text-muted-foreground/80 leading-relaxed">
             <span className="text-amber-400 font-semibold">Important:</span> This guide is for general reference and education. For specific rulings, always consult a qualified Islamic scholar. Halal status can vary by school of thought (madhab). When in doubt, leave it out.
           </p>
         </div>

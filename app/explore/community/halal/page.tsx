@@ -66,7 +66,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   Grocery: { bg: 'bg-emerald-500/15', text: 'text-emerald-400' },
   Meat: { bg: 'bg-red-500/15', text: 'text-red-400' },
   Bakery: { bg: 'bg-orange-500/15', text: 'text-orange-400' },
-  Other: { bg: 'bg-gray-500/15', text: 'text-gray-400' },
+  Other: { bg: 'bg-gray-500/15', text: 'text-muted-foreground' },
 }
 
 export default function HalalDirectoryPage() {
@@ -86,7 +86,7 @@ export default function HalalDirectoryPage() {
   }, [search, filter])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Store}
         title="Halal Directory"
@@ -99,13 +99,13 @@ export default function HalalDirectoryPage() {
       <div className="px-4 pt-5 -mt-2 space-y-4">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search businesses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-2xl border border-gray-800 bg-gray-900 py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 outline-none focus:border-amber-500/50"
+            className="w-full rounded-2xl border border-border bg-card py-3 pl-11 pr-4 text-sm text-foreground placeholder-gray-500 outline-none focus:border-amber-500/50"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function HalalDirectoryPage() {
               className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                 filter === f
                   ? 'bg-amber-500/15 text-amber-400'
-                  : 'bg-gray-900 text-gray-500 border border-gray-800'
+                  : 'bg-card text-muted-foreground/80 border border-border'
               }`}
             >
               {f === 'All' ? 'All' : f}
@@ -131,7 +131,7 @@ export default function HalalDirectoryPage() {
           {filtered.length === 0 && (
             <div className="py-12 text-center">
               <Store className="mx-auto h-10 w-10 text-gray-700" />
-              <p className="mt-3 text-sm text-gray-500">No businesses found</p>
+              <p className="mt-3 text-sm text-muted-foreground/80">No businesses found</p>
             </div>
           )}
 
@@ -140,12 +140,12 @@ export default function HalalDirectoryPage() {
             return (
               <div
                 key={biz.id}
-                className="rounded-2xl border border-gray-800 bg-gray-900 p-4"
+                className="rounded-2xl border border-border bg-card p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-white truncate">
+                      <h3 className="text-sm font-bold text-foreground truncate">
                         {biz.name}
                       </h3>
                       <span
@@ -154,11 +154,11 @@ export default function HalalDirectoryPage() {
                         {biz.category}
                       </span>
                     </div>
-                    <div className="mt-1.5 flex items-center gap-1.5 text-gray-500">
+                    <div className="mt-1.5 flex items-center gap-1.5 text-muted-foreground/80">
                       <MapPin className="h-3 w-3 shrink-0" />
                       <span className="text-xs">{biz.address}</span>
                     </div>
-                    <p className="mt-1.5 text-xs leading-relaxed text-gray-400">
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                       {biz.description}
                     </p>
                   </div>
@@ -171,13 +171,13 @@ export default function HalalDirectoryPage() {
         {/* Submit Business */}
         <Link
           href="/feedback"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-semibold text-white transition-all active:scale-[0.98]"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-semibold text-foreground transition-all active:scale-[0.98]"
         >
           <ExternalLink className="h-4 w-4" />
           Submit a Business
         </Link>
 
-        <p className="text-center text-[11px] leading-relaxed text-gray-600 px-4">
+        <p className="text-center text-[11px] leading-relaxed text-muted-foreground/60 px-4">
           This directory is community-curated. Submit a business to have it reviewed and added.
         </p>
       </div>

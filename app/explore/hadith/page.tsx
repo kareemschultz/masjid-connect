@@ -29,7 +29,7 @@ export default function HadithPage() {
   }, [filter, query])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="40 Hadith An-Nawawi"
@@ -41,21 +41,21 @@ export default function HadithPage() {
       />
 
       {/* ── Sticky filter bar ── */}
-      <div className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border/50 px-4 py-2.5 space-y-2">
         {/* Search */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
           <input
             type="search"
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search hadith..."
-            className="w-full rounded-xl border border-gray-800 bg-gray-900 py-2.5 pl-9 pr-9 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-gray-600"
+            className="w-full rounded-xl border border-border bg-card py-2.5 pl-9 pr-9 text-sm text-foreground/80 placeholder-gray-600 outline-none focus:border-gray-600"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/80 hover:text-muted-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -70,8 +70,8 @@ export default function HadithPage() {
               onClick={() => setFilter(cat.key)}
               className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                 filter === cat.key
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-gray-800 text-gray-500'
+                  ? 'bg-amber-600 text-foreground'
+                  : 'bg-secondary text-muted-foreground/80'
               }`}
             >
               {cat.label}
@@ -83,8 +83,8 @@ export default function HadithPage() {
       {/* ── Hadith list ── */}
       <div className="px-4 pt-4 space-y-2">
         {filtered.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-gray-800 py-12 text-center">
-            <p className="text-sm text-gray-500">No hadith match your search</p>
+          <div className="rounded-2xl border border-dashed border-border py-12 text-center">
+            <p className="text-sm text-muted-foreground/80">No hadith match your search</p>
           </div>
         )}
 
@@ -93,24 +93,24 @@ export default function HadithPage() {
           return (
             <div
               key={hadith.number}
-              className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden"
+              className="rounded-2xl border border-border bg-card overflow-hidden"
             >
               {/* Header */}
               <button
                 onClick={() => setOpenHadith(isOpen ? null : hadith.number)}
-                className="flex w-full items-center gap-3 p-4 text-left active:bg-gray-800/50 transition-colors"
+                className="flex w-full items-center gap-3 p-4 text-left active:bg-secondary/50 transition-colors"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-500/20 text-xs font-bold text-teal-400">
                   {hadith.number}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-[#f9fafb]">{hadith.title}</h3>
-                  <p className="text-[10px] text-gray-500 mt-0.5">{hadith.source}</p>
+                  <h3 className="text-sm font-semibold text-foreground">{hadith.title}</h3>
+                  <p className="text-[10px] text-muted-foreground/80 mt-0.5">{hadith.source}</p>
                 </div>
                 {isOpen ? (
-                  <ChevronUp className="h-4 w-4 shrink-0 text-gray-600" />
+                  <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                 ) : (
-                  <ChevronDown className="h-4 w-4 shrink-0 text-gray-600" />
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                 )}
               </button>
 
@@ -133,21 +133,21 @@ export default function HadithPage() {
                   </p>
 
                   {/* Translation */}
-                  <p className="text-xs text-gray-300 leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {hadith.translation}
                   </p>
 
                   {/* Commentary */}
-                  <div className="border-l-2 border-gray-700 pl-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">Commentary</p>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                  <div className="border-l-2 border-border pl-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 mb-1">Commentary</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {hadith.commentary}
                     </p>
                   </div>
 
                   {/* Source badge */}
                   <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-500">
+                    <span className="rounded-lg bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground/80">
                       {hadith.source}
                     </span>
                   </div>

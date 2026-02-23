@@ -34,7 +34,7 @@ const ORGANISATIONS = [
 
 export default function ScholarsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Users}
         title="Local Scholars"
@@ -48,21 +48,21 @@ export default function ScholarsPage() {
         {ORGANISATIONS.map((org) => (
           <div
             key={org.name}
-            className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3"
+            className="rounded-2xl border border-border bg-card p-4 space-y-3"
           >
             <div className="flex items-start gap-3">
               <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${org.color}`}>
                 <Users className={`h-5 w-5 ${org.iconColor}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold text-white">{org.name}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed mt-1">{org.description}</p>
+                <h3 className="text-sm font-bold text-foreground">{org.name}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-1">{org.description}</p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
               {org.address && (
-                <div className="flex items-center gap-1.5 rounded-lg bg-gray-800 px-2.5 py-1.5 text-[10px] text-gray-400">
+                <div className="flex items-center gap-1.5 rounded-lg bg-secondary px-2.5 py-1.5 text-[10px] text-muted-foreground">
                   <MapPin className="h-3 w-3" />
                   {org.address}
                 </div>
@@ -92,9 +92,9 @@ export default function ScholarsPage() {
         ))}
 
         {/* Suggest card */}
-        <div className="rounded-2xl border border-dashed border-gray-800 p-4 text-center">
-          <p className="text-xs text-gray-500">
-            To suggest a scholar or organisation for this page, use the <span className="text-gray-400 font-semibold">Feedback</span> button in Settings.
+        <div className="rounded-2xl border border-dashed border-border p-4 text-center">
+          <p className="text-xs text-muted-foreground/80">
+            To suggest a scholar or organisation for this page, use the <span className="text-muted-foreground font-semibold">Feedback</span> button in Settings.
           </p>
         </div>
       </div>

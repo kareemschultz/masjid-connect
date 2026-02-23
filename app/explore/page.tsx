@@ -63,7 +63,7 @@ const SECTIONS = [
       { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400' },
       { icon: ShieldCheck, label: 'Halal Directory',  description: 'CIOG & D.E.H.C. certified businesses', href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400' },
       { icon: ShieldCheck, label: 'Halal Guide',     description: 'Haram foods, E-numbers & rulings',  href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400' },
-      { icon: HeartHandshake, label: 'Janazah Guide', description: 'Islamic Funeral Rites',  href: '/explore/janazah',                color: 'from-gray-500/20 to-gray-600/10', iconColor: 'text-gray-400' },
+      { icon: HeartHandshake, label: 'Janazah Guide', description: 'Islamic Funeral Rites',  href: '/explore/janazah',                color: 'from-gray-500/20 to-gray-600/10', iconColor: 'text-muted-foreground' },
       { icon: GraduationCap, label: 'Local Scholars', description: 'Guyanese Islamic Scholars', href: '/explore/scholars',            color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
     ],
   },
@@ -142,25 +142,25 @@ export default function ExplorePage() {
   const isSearching = query.trim().length > 0
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" heroTheme="explore" />
 
       <div className="px-4 pt-4 space-y-3">
 
         {/* ── Search bar ── */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
           <input
             type="search"
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search features…"
-            className="w-full rounded-2xl border border-gray-800 bg-gray-900 py-3 pl-11 pr-11 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-gray-600 focus:ring-0"
+            className="w-full rounded-2xl border border-border bg-card py-3 pl-11 pr-11 text-sm text-foreground/80 placeholder-gray-600 outline-none focus:border-gray-600 focus:ring-0"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/80 hover:text-muted-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -177,7 +177,7 @@ export default function ExplorePage() {
                 className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
                   filter === f.key
                     ? 'bg-white text-gray-900'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+                    : 'bg-secondary text-muted-foreground hover:bg-muted hover:text-foreground/80'
                 }`}
               >
                 {f.label}
@@ -190,9 +190,9 @@ export default function ExplorePage() {
         {isSearching && (
           <div>
             {searchResults && searchResults.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-gray-800 py-12 text-center">
+              <div className="rounded-2xl border border-dashed border-border py-12 text-center">
                 <p className="text-3xl mb-2">🔍</p>
-                <p className="text-sm text-gray-500">No results for &ldquo;{query}&rdquo;</p>
+                <p className="text-sm text-muted-foreground/80">No results for &ldquo;{query}&rdquo;</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
@@ -206,9 +206,9 @@ export default function ExplorePage() {
                       <item.icon className={`h-5 w-5 ${item.iconColor}`} />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-bold text-white">{item.label}</p>
-                      <p className="mt-0.5 text-[10px] text-gray-500">{item.description}</p>
-                      <span className="mt-1 inline-block rounded-full bg-gray-800 px-2 py-0.5 text-[9px] text-gray-500">
+                      <p className="text-sm font-bold text-foreground">{item.label}</p>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground/80">{item.description}</p>
+                      <span className="mt-1 inline-block rounded-full bg-secondary px-2 py-0.5 text-[9px] text-muted-foreground/80">
                         {item.sectionLabel.replace(/^[^ ]+ /, '')}
                       </span>
                     </div>
@@ -236,8 +236,8 @@ export default function ExplorePage() {
                   <Moon className={`h-6 w-6 ${isRamadan ? 'text-emerald-400' : 'text-violet-400'}`} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Ramadan</p>
-                  <p className="mt-0.5 text-[11px] text-gray-500">
+                  <p className="text-sm font-bold text-foreground">Ramadan</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground/80">
                     {isRamadan ? `Ramadan ${hijriYear} AH — Active` : 'Outside Ramadan'}
                   </p>
                 </div>
@@ -251,7 +251,7 @@ export default function ExplorePage() {
 
             {visibleSections.map((section) => (
               <div key={section.key}>
-                <h2 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 mt-4 mb-2 px-1">
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/80 mt-4 mb-2 px-1">
                   {section.label}
                 </h2>
                 <div className="grid grid-cols-2 gap-3 animate-stagger">
@@ -265,8 +265,8 @@ export default function ExplorePage() {
                         <item.icon className={`h-6 w-6 ${item.iconColor}`} />
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-bold text-white">{item.label}</p>
-                        <p className="mt-0.5 text-[11px] text-gray-500">{item.description}</p>
+                        <p className="text-sm font-bold text-foreground">{item.label}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground/80">{item.description}</p>
                       </div>
                     </Link>
                   ))}

@@ -76,7 +76,7 @@ export default function WomensDuasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="Women&apos;s Duas"
@@ -89,22 +89,22 @@ export default function WomensDuasPage() {
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">
         {/* Intro */}
-        <p className="text-sm text-gray-400 leading-relaxed px-1">
+        <p className="text-sm text-muted-foreground leading-relaxed px-1">
           These are selected supplications from the Quran and Sunnah that hold special meaning for Muslim women &mdash; as mothers, wives, daughters, and servants of Allah.
         </p>
 
         {/* Dua Cards */}
         {DUAS.map((dua, i) => (
-          <div key={i} className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5 space-y-3">
+          <div key={i} className="rounded-2xl border border-border bg-card/50 p-5 space-y-3">
             <p className="text-xs font-bold uppercase tracking-widest text-teal-400">{dua.title}</p>
             <p className="font-arabic text-2xl text-center text-teal-300 leading-relaxed py-2">{dua.arabic}</p>
-            <p className="text-sm italic text-gray-300 text-center">{dua.transliteration}</p>
-            <p className="text-sm text-[#f9fafb] text-center">{dua.meaning}</p>
-            <p className="text-xs text-gray-500 text-center">{dua.source}</p>
+            <p className="text-sm italic text-muted-foreground text-center">{dua.transliteration}</p>
+            <p className="text-sm text-foreground text-center">{dua.meaning}</p>
+            <p className="text-xs text-muted-foreground/80 text-center">{dua.source}</p>
             <div className="flex justify-end">
               <button
                 onClick={() => handleCopy(dua, i)}
-                className="flex items-center gap-1.5 rounded-lg bg-gray-800/60 px-3 py-1.5 text-xs text-gray-400 hover:text-teal-400 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg bg-secondary/60 px-3 py-1.5 text-xs text-muted-foreground hover:text-teal-400 transition-colors"
               >
                 {copiedIndex === i ? (
                   <>

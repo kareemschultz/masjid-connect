@@ -49,15 +49,15 @@ export default function FeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-nav">
+      <div className="min-h-screen bg-background pb-nav">
         <PageHero icon={MessageSquarePlus} title="Feedback" subtitle="Your Voice Matters" gradient="from-rose-900 to-pink-900" showBack heroTheme="community" />
         <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20">
             <CheckCircle2 className="h-8 w-8 text-emerald-400" />
           </div>
-          <h2 className="text-xl font-bold text-[#f9fafb]">Jazakallahu Khairan!</h2>
-          <p className="mt-2 text-sm text-gray-400">Your feedback has been recorded. May Allah reward you for helping improve the app for the community.</p>
-          <button onClick={() => { setSubmitted(false); setMessage(''); setMasjidName(''); setWhichMasjid(''); setCorrection('') }} className="mt-6 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white active:scale-95 transition-transform">
+          <h2 className="text-xl font-bold text-foreground">Jazakallahu Khairan!</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Your feedback has been recorded. May Allah reward you for helping improve the app for the community.</p>
+          <button onClick={() => { setSubmitted(false); setMessage(''); setMasjidName(''); setWhichMasjid(''); setCorrection('') }} className="mt-6 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-foreground active:scale-95 transition-transform">
             Send More Feedback
           </button>
         </div>
@@ -67,13 +67,13 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={MessageSquarePlus} title="Send Feedback" subtitle="Your Voice Matters" gradient="from-rose-900 to-pink-900" showBack heroTheme="community" />
 
       <div className="space-y-4 px-4 -mt-2">
         {/* Rating */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-          <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Rate the App</div>
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Rate the App</div>
           <div className="flex items-center justify-center gap-2">
             {[1, 2, 3, 4, 5].map((s) => (
               <button key={s} onClick={() => handleRating(s)} className="transition-transform active:scale-90" aria-label={`Rate ${s} stars`}>
@@ -89,65 +89,65 @@ export default function FeedbackPage() {
         </div>
 
         {/* Form */}
-        <div className="space-y-3 rounded-2xl border border-gray-800 bg-gray-900 p-4">
+        <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
           <div>
-            <label className="mb-1 block text-xs text-gray-400">Name (optional)</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+            <label className="mb-1 block text-xs text-muted-foreground">Name (optional)</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-gray-400">Email (optional)</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+            <label className="mb-1 block text-xs text-muted-foreground">Email (optional)</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-gray-400">Category</label>
+            <label className="mb-1 block text-xs text-muted-foreground">Category</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((c) => (
-                <button key={c} onClick={() => setCategory(c)} className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${category === c ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'}`}>{c}</button>
+                <button key={c} onClick={() => setCategory(c)} className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${category === c ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'}`}>{c}</button>
               ))}
             </div>
           </div>
 
           {/* Request New Masjid fields */}
           {category === 'Request New Masjid' && (
-            <div className="space-y-3 rounded-xl border border-gray-800 bg-gray-800/30 p-3">
+            <div className="space-y-3 rounded-xl border border-border bg-secondary/30 p-3">
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Masjid Name *</label>
-                <input value={masjidName} onChange={(e) => setMasjidName(e.target.value)} placeholder="Name of the masjid" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+                <label className="mb-1 block text-xs text-muted-foreground">Masjid Name *</label>
+                <input value={masjidName} onChange={(e) => setMasjidName(e.target.value)} placeholder="Name of the masjid" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Approximate Location / Area</label>
-                <input value={masjidLocation} onChange={(e) => setMasjidLocation(e.target.value)} placeholder="e.g. Queenstown, Georgetown" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+                <label className="mb-1 block text-xs text-muted-foreground">Approximate Location / Area</label>
+                <input value={masjidLocation} onChange={(e) => setMasjidLocation(e.target.value)} placeholder="e.g. Queenstown, Georgetown" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Contact (optional)</label>
-                <input value={masjidContact} onChange={(e) => setMasjidContact(e.target.value)} placeholder="Phone or email" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+                <label className="mb-1 block text-xs text-muted-foreground">Contact (optional)</label>
+                <input value={masjidContact} onChange={(e) => setMasjidContact(e.target.value)} placeholder="Phone or email" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
               </div>
             </div>
           )}
 
           {/* Report Masjid Error fields */}
           {category === 'Report Masjid Error' && (
-            <div className="space-y-3 rounded-xl border border-gray-800 bg-gray-800/30 p-3">
+            <div className="space-y-3 rounded-xl border border-border bg-secondary/30 p-3">
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Which Masjid? *</label>
-                <input value={whichMasjid} onChange={(e) => setWhichMasjid(e.target.value)} placeholder="Name of the masjid" className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50" />
+                <label className="mb-1 block text-xs text-muted-foreground">Which Masjid? *</label>
+                <input value={whichMasjid} onChange={(e) => setWhichMasjid(e.target.value)} placeholder="Name of the masjid" className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50" />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-gray-400">What needs correcting? *</label>
-                <textarea value={correction} onChange={(e) => setCorrection(e.target.value)} placeholder="Describe the error..." rows={3} className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
+                <label className="mb-1 block text-xs text-muted-foreground">What needs correcting? *</label>
+                <textarea value={correction} onChange={(e) => setCorrection(e.target.value)} placeholder="Describe the error..." rows={3} className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
               </div>
             </div>
           )}
 
           <div>
-            <label className="mb-1 block text-xs text-gray-400">
+            <label className="mb-1 block text-xs text-muted-foreground">
               {category === 'Request New Masjid' || category === 'Report Masjid Error' ? 'Additional Notes (optional)' : 'Message *'}
             </label>
-            <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us what you think..." rows={4} className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5 text-sm text-[#f9fafb] placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us what you think..." rows={4} className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none" />
           </div>
         </div>
 
-        <button onClick={handleSubmit} disabled={isDisabled} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100">
+        <button onClick={handleSubmit} disabled={isDisabled} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-foreground transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100">
           <Send className="h-4 w-4" /> Submit Feedback
         </button>
       </div>

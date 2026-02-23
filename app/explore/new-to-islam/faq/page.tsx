@@ -52,7 +52,7 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(-1)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={HelpCircle}
         title="Common Questions"
@@ -67,23 +67,23 @@ export default function FAQPage() {
         {faqs.map((faq, i) => (
           <div
             key={i}
-            className="rounded-2xl border border-gray-800 bg-gray-900/50 overflow-hidden cursor-pointer transition-all"
+            className="rounded-2xl border border-border bg-card/50 overflow-hidden cursor-pointer transition-all"
             onClick={() => setOpenIndex(openIndex === i ? -1 : i)}
           >
             <div className="flex items-center justify-between p-5">
               <span className="h-7 w-7 rounded-full bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center justify-center shrink-0">
                 {i + 1}
               </span>
-              <span className="text-sm font-semibold text-[#f9fafb] flex-1 ml-3">
+              <span className="text-sm font-semibold text-foreground flex-1 ml-3">
                 {faq.q}
               </span>
               <ChevronDown
-                className={`h-4 w-4 text-gray-500 transition-transform ${openIndex === i ? 'rotate-180' : ''}`}
+                className={`h-4 w-4 text-muted-foreground/80 transition-transform ${openIndex === i ? 'rotate-180' : ''}`}
               />
             </div>
             {openIndex === i && (
               <div className="px-5 pb-5 pt-0">
-                <p className="text-sm text-gray-400 leading-relaxed">{faq.a}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
               </div>
             )}
           </div>

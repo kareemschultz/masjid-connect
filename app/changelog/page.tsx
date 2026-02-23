@@ -145,7 +145,7 @@ const ACCENT_COLORS: Record<string, any> = {
 
 export default function ChangelogPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={GitCommit} title="Changelog" subtitle="What is New" gradient="from-blue-900 to-indigo-900" showBack heroTheme="hadith" />
 
       <div className="px-4 pt-5 space-y-5">
@@ -156,7 +156,7 @@ export default function ChangelogPage() {
               {/* Header */}
               <div className="flex items-center gap-2 mb-2 px-1">
                 <div className={`w-1 h-4 rounded-full ${accent.bar}`} />
-                <h3 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">{release.version}</h3>
+                <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">{release.version}</h3>
                 {release.label && (
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${accent.badge}`}>
                     {release.label}
@@ -168,12 +168,12 @@ export default function ChangelogPage() {
                     current
                   </span>
                 )}
-                <span className="text-[10px] text-gray-500 ml-auto">{release.date}</span>
+                <span className="text-[10px] text-muted-foreground/80 ml-auto">{release.date}</span>
               </div>
 
               {/* Card */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
-                <div className="divide-y divide-gray-800">
+              <div className="rounded-2xl border border-border bg-card overflow-hidden">
+                <div className="divide-y divide-border">
                   {release.sections.map((section) => (
                     <div key={section.heading} className="px-4 py-3.5">
                       <p className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${accent.heading}`}>
@@ -181,7 +181,7 @@ export default function ChangelogPage() {
                       </p>
                       <ul className="space-y-1.5">
                         {section.items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-xs text-gray-400">
+                          <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
                             <span className={`mt-0.5 shrink-0 ${accent.bullet}`}>•</span>
                             <span>{item}</span>
                           </li>

@@ -110,10 +110,10 @@ export default function ArabicTypingPage() {
       ? 'bg-emerald-500/20'
       : flash === 'wrong'
         ? 'bg-red-500/20'
-        : 'bg-gray-900'
+        : 'bg-card'
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Keyboard}
         title="Arabic Practice"
@@ -130,7 +130,7 @@ export default function ArabicTypingPage() {
           className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all ${
             mode === 'letters'
               ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-              : 'bg-gray-900 text-gray-400 border border-gray-800'
+              : 'bg-card text-muted-foreground border border-border'
           }`}
         >
           Letters
@@ -140,7 +140,7 @@ export default function ArabicTypingPage() {
           className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all ${
             mode === 'words'
               ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-              : 'bg-gray-900 text-gray-400 border border-gray-800'
+              : 'bg-card text-muted-foreground border border-border'
           }`}
         >
           Words
@@ -149,7 +149,7 @@ export default function ArabicTypingPage() {
 
       {/* ── Accuracy display ─────────────────────────────────────────── */}
       <div className="flex items-center justify-between px-4 pt-4">
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           {correct} / {total} correct
         </p>
         <p className="text-xs font-semibold text-emerald-400">
@@ -160,7 +160,7 @@ export default function ArabicTypingPage() {
       {/* ── Target display area ──────────────────────────────────────── */}
       <div className="px-4 pt-4">
         <div
-          className={`flex flex-col items-center justify-center rounded-2xl border border-gray-800 p-8 transition-colors duration-200 ${flashBg}`}
+          className={`flex flex-col items-center justify-center rounded-2xl border border-border p-8 transition-colors duration-200 ${flashBg}`}
         >
           {mode === 'letters' ? (
             <span className="text-6xl text-amber-400 font-arabic leading-none">
@@ -176,7 +176,7 @@ export default function ArabicTypingPage() {
                       ? 'text-amber-400'
                       : i < charIndex
                         ? 'text-emerald-400'
-                        : 'text-gray-600'
+                        : 'text-muted-foreground/60'
                   }`}
                 >
                   {char}
@@ -185,7 +185,7 @@ export default function ArabicTypingPage() {
             </div>
           )}
 
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="mt-2 text-xs text-muted-foreground/80">
             {mode === 'letters'
               ? `Letter ${(currentIndex % items.length) + 1} of ${items.length}`
               : `Word ${(currentIndex % items.length) + 1} of ${items.length}`}
@@ -196,9 +196,9 @@ export default function ArabicTypingPage() {
       {/* ── Typed display (Words mode) ───────────────────────────────── */}
       {mode === 'words' && (
         <div className="px-4 pt-3">
-          <div className="rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 min-h-[3rem] flex items-center justify-end">
-            <span className="text-xl font-arabic text-white" dir="rtl">
-              {typed || <span className="text-gray-600">...</span>}
+          <div className="rounded-xl border border-border bg-card px-4 py-3 min-h-[3rem] flex items-center justify-end">
+            <span className="text-xl font-arabic text-foreground" dir="rtl">
+              {typed || <span className="text-muted-foreground/60">...</span>}
             </span>
           </div>
         </div>
@@ -211,7 +211,7 @@ export default function ArabicTypingPage() {
             <button
               key={letter}
               onClick={() => handleKeyPress(letter)}
-              className="rounded-xl border border-gray-700 bg-gray-800 py-3 text-lg font-arabic text-white transition-all active:bg-gray-700 active:scale-95"
+              className="rounded-xl border border-border bg-secondary py-3 text-lg font-arabic text-foreground transition-all active:bg-muted active:scale-95"
             >
               {letter}
             </button>

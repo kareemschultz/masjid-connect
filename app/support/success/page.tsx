@@ -19,7 +19,7 @@ function SuccessContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Heart}
         title="JazakAllah Khayran!"
@@ -38,11 +38,11 @@ function SuccessContent() {
         </div>
 
         <div>
-          <h2 className="text-lg font-bold text-white">Your donation was received.</h2>
+          <h2 className="text-lg font-bold text-foreground">Your donation was received.</h2>
           <p className="mt-1 text-2xl text-amber-400/80" dir="rtl">بارك الله فيك</p>
         </div>
 
-        <p className="text-sm leading-relaxed text-gray-400">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Every dollar helps keep MasjidConnect GY free for the Guyanese Muslim community.
         </p>
 
@@ -50,7 +50,7 @@ function SuccessContent() {
         <div className="flex flex-col gap-3 pt-2">
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-4 text-sm font-bold text-white active:scale-[0.98] transition-transform"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-4 text-sm font-bold text-foreground active:scale-[0.98] transition-transform"
           >
             <Home className="h-4 w-4" />
             Return Home
@@ -58,7 +58,7 @@ function SuccessContent() {
 
           <button
             onClick={handleShare}
-            className="flex items-center justify-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 py-4 text-sm font-semibold text-gray-300 active:scale-[0.98] transition-transform"
+            className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card py-4 text-sm font-semibold text-muted-foreground active:scale-[0.98] transition-transform"
           >
             <Share2 className="h-4 w-4" />
             Tell a friend about MasjidConnect GY
@@ -67,7 +67,7 @@ function SuccessContent() {
 
         {/* Dua */}
         <div className="pb-4 pt-4">
-          <p className="text-xs text-gray-600 italic">
+          <p className="text-xs text-muted-foreground/60 italic">
             &ldquo;Whoever guides someone to goodness will have a reward like that of the one who does it.&rdquo;
           </p>
           <p className="mt-1 text-[10px] text-gray-700">— Sahih Muslim 1893</p>

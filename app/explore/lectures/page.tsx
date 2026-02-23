@@ -45,7 +45,7 @@ interface Scholar {
 // ─── Category Config ──────────────────────────────────────────────────────────
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  All:          'bg-gray-700 text-gray-200',
+  All:          'bg-muted text-foreground/80',
   Seerah:       'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   Eschatology:  'bg-purple-500/20 text-purple-300 border-purple-500/30',
   Prophets:     'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -56,13 +56,13 @@ const CATEGORY_COLORS: Record<Category, string> = {
 }
 
 const ACCENT: Record<string, { tab: string; ring: string; text: string; dot: string; bg: string }> = {
-  emerald: { tab: 'bg-emerald-500 text-white', ring: 'border-emerald-500/30', text: 'text-emerald-400', dot: 'bg-emerald-500', bg: 'bg-emerald-500/10' },
-  blue:    { tab: 'bg-blue-500 text-white',    ring: 'border-blue-500/30',    text: 'text-blue-400',    dot: 'bg-blue-500',    bg: 'bg-blue-500/10'    },
-  amber:   { tab: 'bg-amber-500 text-white',   ring: 'border-amber-500/30',   text: 'text-amber-400',   dot: 'bg-amber-500',   bg: 'bg-amber-500/10'   },
-  purple:  { tab: 'bg-purple-500 text-white',  ring: 'border-purple-500/30',  text: 'text-purple-400',  dot: 'bg-purple-500',  bg: 'bg-purple-500/10'  },
-  rose:    { tab: 'bg-rose-500 text-white',    ring: 'border-rose-500/30',    text: 'text-rose-400',    dot: 'bg-rose-500',    bg: 'bg-rose-500/10'    },
-  teal:    { tab: 'bg-teal-500 text-white',    ring: 'border-teal-500/30',    text: 'text-teal-400',    dot: 'bg-teal-500',    bg: 'bg-teal-500/10'    },
-  sky:     { tab: 'bg-sky-500 text-white',     ring: 'border-sky-500/30',     text: 'text-sky-400',     dot: 'bg-sky-500',     bg: 'bg-sky-500/10'     },
+  emerald: { tab: 'bg-emerald-500 text-foreground', ring: 'border-emerald-500/30', text: 'text-emerald-400', dot: 'bg-emerald-500', bg: 'bg-emerald-500/10' },
+  blue:    { tab: 'bg-blue-500 text-foreground',    ring: 'border-blue-500/30',    text: 'text-blue-400',    dot: 'bg-blue-500',    bg: 'bg-blue-500/10'    },
+  amber:   { tab: 'bg-amber-500 text-foreground',   ring: 'border-amber-500/30',   text: 'text-amber-400',   dot: 'bg-amber-500',   bg: 'bg-amber-500/10'   },
+  purple:  { tab: 'bg-purple-500 text-foreground',  ring: 'border-purple-500/30',  text: 'text-purple-400',  dot: 'bg-purple-500',  bg: 'bg-purple-500/10'  },
+  rose:    { tab: 'bg-rose-500 text-foreground',    ring: 'border-rose-500/30',    text: 'text-rose-400',    dot: 'bg-rose-500',    bg: 'bg-rose-500/10'    },
+  teal:    { tab: 'bg-teal-500 text-foreground',    ring: 'border-teal-500/30',    text: 'text-teal-400',    dot: 'bg-teal-500',    bg: 'bg-teal-500/10'    },
+  sky:     { tab: 'bg-sky-500 text-foreground',     ring: 'border-sky-500/30',     text: 'text-sky-400',     dot: 'bg-sky-500',     bg: 'bg-sky-500/10'     },
 }
 
 // ─── Scholars & Series Data ───────────────────────────────────────────────────
@@ -653,7 +653,7 @@ export default function LecturesPage() {
   const totalLectures = SCHOLARS.flatMap(s => s.series).reduce((n, s) => n + s.lectures.length, 0)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-44">
+    <div className="min-h-screen bg-background pb-44">
       <PageHero
         icon={Headphones}
         title="Islamic Lectures"
@@ -665,13 +665,13 @@ export default function LecturesPage() {
       />
 
       {/* ── Toolbar ──────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-30 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-3 space-y-3">
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border/50 px-4 py-3 space-y-3">
         {/* Scholar filter pills */}
         <div data-tour="lectures-scholars" className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
           <button
             onClick={() => setActiveScholar(null)}
             className={`flex-shrink-0 rounded-xl px-4 py-1.5 text-xs font-bold transition-all ${
-              !activeScholar ? 'bg-white text-gray-950' : 'bg-gray-800 text-gray-400'
+              !activeScholar ? 'bg-white text-gray-950' : 'bg-secondary text-muted-foreground'
             }`}
           >
             All Scholars
@@ -681,7 +681,7 @@ export default function LecturesPage() {
               key={sch.id}
               onClick={() => setActiveScholar(activeScholar === sch.id ? null : sch.id)}
               className={`flex-shrink-0 rounded-xl px-4 py-1.5 text-xs font-bold transition-all ${
-                activeScholar === sch.id ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'
+                activeScholar === sch.id ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {sch.avatar} {sch.shortName}
@@ -692,7 +692,7 @@ export default function LecturesPage() {
           <button
             onClick={() => { setShowSearch(!showSearch); if (showSearch) setSearch('') }}
             className={`ml-auto flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
-              showSearch ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'
+              showSearch ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'
             }`}
           >
             {showSearch ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
@@ -707,7 +707,7 @@ export default function LecturesPage() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search lectures or series..."
             autoFocus
-            className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+            className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
           />
         )}
 
@@ -720,7 +720,7 @@ export default function LecturesPage() {
               className={`flex-shrink-0 rounded-xl border px-3 py-1 text-[11px] font-bold transition-all ${
                 activeCategory === cat
                   ? (cat === 'All' ? 'bg-white text-gray-950 border-transparent' : CATEGORY_COLORS[cat])
-                  : 'border-gray-800 bg-transparent text-gray-500'
+                  : 'border-border bg-transparent text-muted-foreground/80'
               }`}
             >
               {cat}
@@ -734,7 +734,7 @@ export default function LecturesPage() {
         {filteredScholars.length === 0 && (
           <div className="pt-16 text-center">
             <p className="text-4xl mb-3">🔍</p>
-            <p className="text-gray-400 text-sm">No lectures found</p>
+            <p className="text-muted-foreground text-sm">No lectures found</p>
             <button
               onClick={() => { setSearch(''); setActiveCategory('All'); setActiveScholar(null) }}
               className="mt-3 text-xs text-emerald-400 underline underline-offset-4"
@@ -748,29 +748,29 @@ export default function LecturesPage() {
           <div key={scholar.id}>
             {/* Scholar Header — tap to expand bio */}
             {(!activeScholar || filteredScholars.length > 1) && (
-              <div className={`mb-3 rounded-2xl bg-gradient-to-r ${scholar.color} border border-gray-700/50 overflow-hidden`}>
+              <div className={`mb-3 rounded-2xl bg-gradient-to-r ${scholar.color} border border-border/50 overflow-hidden`}>
                 <button
                   className="w-full flex items-center gap-3 px-4 py-3 text-left"
                   onClick={() => setExpandedBioId(expandedBioId === scholar.id ? null : scholar.id)}
                 >
                   <span className="text-3xl shrink-0">{scholar.avatar}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-white leading-snug">{scholar.name}</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">{scholar.origin} · {scholar.specialty}</p>
-                    <p className="text-[11px] text-gray-300 mt-1 leading-snug line-clamp-2">{scholar.bio}</p>
+                    <p className="text-sm font-bold text-foreground leading-snug">{scholar.name}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{scholar.origin} · {scholar.specialty}</p>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-snug line-clamp-2">{scholar.bio}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1.5 shrink-0 ml-1">
-                    <span className="text-[10px] font-bold text-gray-400">
+                    <span className="text-[10px] font-bold text-muted-foreground">
                       {scholar.series.reduce((n, s) => n + s.lectures.length, 0)} lectures
                     </span>
                     {expandedBioId === scholar.id
-                      ? <ChevronUp className="h-3.5 w-3.5 text-gray-500" />
-                      : <ChevronDown className="h-3.5 w-3.5 text-gray-500" />}
+                      ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground/80" />
+                      : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/80" />}
                   </div>
                 </button>
                 {expandedBioId === scholar.id && (
-                  <div className="px-4 pb-4 pt-0 border-t border-gray-700/40">
-                    <p className="text-xs text-gray-300 leading-relaxed mt-3">{scholar.fullBio}</p>
+                  <div className="px-4 pb-4 pt-0 border-t border-border/40">
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-3">{scholar.fullBio}</p>
                   </div>
                 )}
               </div>
@@ -787,7 +787,7 @@ export default function LecturesPage() {
                   <div
                     key={series.id}
                     className={`rounded-2xl border overflow-hidden transition-all ${
-                      isThisPlaying ? `${acc.bg} ${acc.ring} border` : 'border-gray-800 bg-gray-900/50'
+                      isThisPlaying ? `${acc.bg} ${acc.ring} border` : 'border-border bg-card/50'
                     }`}
                   >
                     {/* Series Header Row */}
@@ -796,15 +796,15 @@ export default function LecturesPage() {
                       onClick={() => setExpandedSeries(isExpanded ? null : series.id)}
                     >
                       {/* Category badge */}
-                      <span className={`shrink-0 rounded-lg border px-2 py-0.5 text-[10px] font-bold ${CATEGORY_COLORS[series.category] ?? 'bg-gray-700 text-gray-300'}`}>
+                      <span className={`shrink-0 rounded-lg border px-2 py-0.5 text-[10px] font-bold ${CATEGORY_COLORS[series.category] ?? 'bg-muted text-muted-foreground'}`}>
                         {series.category}
                       </span>
 
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-bold truncate ${isThisPlaying ? acc.text : 'text-gray-200'}`}>
+                        <p className={`text-xs font-bold truncate ${isThisPlaying ? acc.text : 'text-foreground/80'}`}>
                           {series.title}
                         </p>
-                        <p className="text-[10px] text-gray-500">{series.subtitle ?? `${series.lectures.length} lectures`}</p>
+                        <p className="text-[10px] text-muted-foreground/80">{series.subtitle ?? `${series.lectures.length} lectures`}</p>
                       </div>
 
                       {/* Play first lecture shortcut */}
@@ -822,14 +822,14 @@ export default function LecturesPage() {
                       </button>
 
                       {isExpanded
-                        ? <ChevronUp className="h-4 w-4 shrink-0 text-gray-600" />
-                        : <ChevronDown className="h-4 w-4 shrink-0 text-gray-600" />
+                        ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground/60" />
+                        : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                       }
                     </button>
 
                     {/* Expanded lecture list */}
                     {isExpanded && (
-                      <div className="border-t border-gray-800/50 pb-1">
+                      <div className="border-t border-border/50 pb-1">
                         {series.lectures.map((lec, i) => {
                           const isCurrent = isThisPlaying && playingIdx === i
                           const doneKey = `lecture_done_${scholar.id}_${series.id}_${i}`
@@ -843,11 +843,11 @@ export default function LecturesPage() {
                                 isCurrent ? acc.bg : 'active:bg-white/5'
                               }`}
                             >
-                              <span className={`text-[11px] font-bold w-5 text-right shrink-0 ${isDone ? 'text-emerald-500' : isCurrent ? acc.text : 'text-gray-600'}`}>
+                              <span className={`text-[11px] font-bold w-5 text-right shrink-0 ${isDone ? 'text-emerald-500' : isCurrent ? acc.text : 'text-muted-foreground/60'}`}>
                                 {isDone ? <Check className="h-3.5 w-3.5 inline" /> : i + 1}
                               </span>
                               <div className="flex-1 min-w-0">
-                                <p className={`text-xs truncate ${isCurrent ? acc.text + ' font-semibold' : isDone ? 'text-gray-500' : 'text-gray-300'}`}>
+                                <p className={`text-xs truncate ${isCurrent ? acc.text + ' font-semibold' : isDone ? 'text-muted-foreground/80' : 'text-muted-foreground'}`}>
                                   {lec.title}
                                 </p>
                                 {savedPos && !isCurrent && (
@@ -876,12 +876,12 @@ export default function LecturesPage() {
       {/* ── Sticky Player ──────────────────────────────────────────── */}
       {playingLecture && (
         <div
-          className="fixed left-0 right-0 z-[55] bg-gray-950/98 backdrop-blur border-t border-gray-800 px-4 py-3"
+          className="fixed left-0 right-0 z-[55] bg-background/98 backdrop-blur border-t border-border px-4 py-3"
           style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 20px))' }}
         >
           {/* Seek bar */}
           <div
-            className="w-full h-1 bg-gray-800 rounded-full mb-3 cursor-pointer"
+            className="w-full h-1 bg-secondary rounded-full mb-3 cursor-pointer"
             onClick={e => {
               const rect = e.currentTarget.getBoundingClientRect()
               seekTo(((e.clientX - rect.left) / rect.width) * 100)
@@ -896,8 +896,8 @@ export default function LecturesPage() {
           <div className="flex items-center gap-3">
             {/* Track info */}
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold text-white truncate">{playingLecture.title}</p>
-              <p className="text-[10px] text-gray-500 truncate">
+              <p className="text-[11px] font-bold text-foreground truncate">{playingLecture.title}</p>
+              <p className="text-[10px] text-muted-foreground/80 truncate">
                 {playingScholar?.name} · {fmt(currentTime)} / {fmt(duration)}
               </p>
             </div>
@@ -906,14 +906,14 @@ export default function LecturesPage() {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={changeSpeed}
-                className="rounded-lg bg-gray-800 px-2 py-1 text-[10px] font-bold text-gray-400 min-w-[34px] text-center"
+                className="rounded-lg bg-secondary px-2 py-1 text-[10px] font-bold text-muted-foreground min-w-[34px] text-center"
               >
                 {speed}x
               </button>
               <button
                 onClick={() => playingIdx > 0 && playLecture(playingScholarId!, playingSeriesId!, playingIdx - 1)}
                 disabled={playingIdx === 0}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-400 disabled:opacity-30"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-muted-foreground disabled:opacity-30"
               >
                 <SkipBack className="h-4 w-4" />
               </button>
@@ -934,7 +934,7 @@ export default function LecturesPage() {
                     playLecture(playingScholarId!, playingSeriesId!, playingIdx + 1)
                 }}
                 disabled={!playingSeries || playingIdx === playingSeries.lectures.length - 1}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-400 disabled:opacity-30"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-muted-foreground disabled:opacity-30"
               >
                 <SkipForward className="h-4 w-4" />
               </button>
@@ -945,7 +945,7 @@ export default function LecturesPage() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[70] rounded-xl bg-emerald-600/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[70] rounded-xl bg-emerald-600/90 px-4 py-2 text-sm font-medium text-foreground shadow-lg">
           {toast}
         </div>
       )}

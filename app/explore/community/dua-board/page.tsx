@@ -122,22 +122,22 @@ export default function DuaBoardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Heart} title="Dua Board" subtitle="Ask, Share, Say Ameen" gradient="from-purple-900 to-violet-900" showBack heroTheme="duas" />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">
-          <input type="text" placeholder="Your name or Anonymous" value={name} onChange={(e) => setName(e.target.value)} disabled={anonymous} className="w-full rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-purple-500/50 disabled:opacity-40" />
+        <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+          <input type="text" placeholder="Your name or Anonymous" value={name} onChange={(e) => setName(e.target.value)} disabled={anonymous} className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-purple-500/50 disabled:opacity-40" />
           <div className="relative">
-            <textarea placeholder="Share your dua request..." value={text} onChange={(e) => setText(e.target.value.slice(0, 200))} rows={3} className="w-full resize-none rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-purple-500/50" />
-            <span className="absolute bottom-2 right-3 text-[10px] text-gray-600">{text.length}/200</span>
+            <textarea placeholder="Share your dua request..." value={text} onChange={(e) => setText(e.target.value.slice(0, 200))} rows={3} className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-purple-500/50" />
+            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground/60">{text.length}/200</span>
           </div>
           <div className="flex items-center justify-between">
-            <label className="flex items-center gap-2 text-sm text-gray-400">
-              <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="h-4 w-4 rounded border-gray-700 bg-gray-800 accent-purple-500" />
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="h-4 w-4 rounded border-border bg-secondary accent-purple-500" />
               Post anonymously
             </label>
-            <button onClick={submitDua} disabled={!text.trim()} className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-40">
+            <button onClick={submitDua} disabled={!text.trim()} className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-foreground transition-all active:scale-95 disabled:opacity-40">
               <Send className="h-4 w-4" />
               Submit
             </button>
@@ -146,19 +146,19 @@ export default function DuaBoardPage() {
 
         <div className="space-y-3 animate-stagger">
           {duas.map((dua) => (
-            <div key={dua.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <div key={dua.id} className="rounded-2xl border border-border bg-card p-4">
               <div className="flex gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-sm font-bold text-purple-400">{getInitials(dua)}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white">{dua.anonymous || !dua.name ? 'Anonymous' : dua.name}</span>
-                    <span className="text-[10px] text-gray-600">{timeAgo(dua.createdAt)}</span>
+                    <span className="text-sm font-semibold text-foreground">{dua.anonymous || !dua.name ? 'Anonymous' : dua.name}</span>
+                    <span className="text-[10px] text-muted-foreground/60">{timeAgo(dua.createdAt)}</span>
                   </div>
-                  <p className="mt-1.5 text-sm leading-relaxed text-gray-300">{dua.text}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{dua.text}</p>
                   <div className="mt-3 flex items-center">
-                    <button onClick={() => toggleAmeen(dua.id)} className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all active:scale-95 ${reactions[String(dua.id)] ? 'bg-purple-500/20 text-purple-400' : 'bg-gray-800 text-gray-400'}`}>
+                    <button onClick={() => toggleAmeen(dua.id)} className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all active:scale-95 ${reactions[String(dua.id)] ? 'bg-purple-500/20 text-purple-400' : 'bg-secondary text-muted-foreground'}`}>
                       <span className="text-base">{'\u0622\u0645\u064A\u0646'}</span>
-                      <span className="text-xs text-gray-500">{dua.ameen}</span>
+                      <span className="text-xs text-muted-foreground/80">{dua.ameen}</span>
                     </button>
                   </div>
                 </div>

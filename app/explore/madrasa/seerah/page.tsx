@@ -107,12 +107,12 @@ function accentClasses(accent: string) {
       }
     default:
       return {
-        circle: 'bg-gray-500/20 text-gray-400',
+        circle: 'bg-gray-500/20 text-muted-foreground',
         border: 'border-gray-500/30',
-        text: 'text-gray-400',
+        text: 'text-muted-foreground',
         timeline: 'border-gray-500/30',
         dot: 'bg-gray-400',
-        yearBg: 'bg-gray-500/10 text-gray-300',
+        yearBg: 'bg-gray-500/10 text-muted-foreground',
       }
   }
 }
@@ -131,11 +131,11 @@ function EraCard({
   const c = accentClasses(era.accent)
 
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
+    <div className="rounded-2xl border border-border bg-card overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-4 text-left transition-colors active:bg-gray-800/60"
+        className="w-full flex items-center gap-3 px-4 py-4 text-left transition-colors active:bg-secondary/60"
       >
         {/* Era number circle */}
         <div
@@ -146,7 +146,7 @@ function EraCard({
 
         {/* Title + year range */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-[#f9fafb]">{era.title}</p>
+          <p className="text-sm font-semibold text-foreground">{era.title}</p>
           {era.years && (
             <span className={`inline-block mt-0.5 rounded-md px-2 py-0.5 text-[10px] font-semibold ${c.yearBg}`}>
               {era.years}
@@ -158,14 +158,14 @@ function EraCard({
         {expanded ? (
           <ChevronUp className={`h-4 w-4 shrink-0 ${c.text}`} />
         ) : (
-          <ChevronDown className="h-4 w-4 shrink-0 text-gray-500" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground/80" />
         )}
       </button>
 
       {/* Expanded content — timeline-style bullet list */}
       {expanded && (
         <div className="px-4 pb-4">
-          <div className="border-t border-gray-800 pt-3" />
+          <div className="border-t border-border pt-3" />
           <div className={`ml-[18px] border-l-2 ${c.timeline} pl-5 space-y-3`}>
             {era.events.map((event, i) => (
               <div key={i} className="relative">
@@ -173,7 +173,7 @@ function EraCard({
                 <span
                   className={`absolute -left-[25px] top-[7px] h-2.5 w-2.5 rounded-full ${c.dot} ring-2 ring-gray-900`}
                 />
-                <p className="text-sm leading-relaxed text-gray-300">{event}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{event}</p>
               </div>
             ))}
           </div>
@@ -193,7 +193,7 @@ export default function SeerahPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Calendar}
         title="Seerah"

@@ -50,7 +50,7 @@ export default function SubmitHub({ onClose, onIftaar, onEvent }) {
       onClick={onClose}
     >
       <div
-        className="bg-gray-900 rounded-t-3xl sm:rounded-2xl w-full max-w-md shadow-2xl animate-slide-up"
+        className="bg-card rounded-t-3xl sm:rounded-2xl w-full max-w-md shadow-2xl animate-slide-up"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -59,13 +59,13 @@ export default function SubmitHub({ onClose, onIftaar, onEvent }) {
             <h3 className="font-bold text-gray-100 text-lg font-amiri">
               What would you like to submit?
             </h3>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Choose a category below
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-full text-muted-foreground hover:text-muted-foreground/60 hover:bg-secondary transition-colors"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -83,7 +83,7 @@ export default function SubmitHub({ onClose, onIftaar, onEvent }) {
               <span className="text-3xl shrink-0">{t.icon}</span>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm text-gray-100">{t.label}</p>
-                <p className="text-xs text-gray-500 mt-0.5 leading-snug">{t.desc}</p>
+                <p className="text-xs text-muted-foreground/80 mt-0.5 leading-snug">{t.desc}</p>
               </div>
             </button>
           ))}

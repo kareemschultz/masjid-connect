@@ -18,7 +18,7 @@ export function IconSquare({ icon: Icon, color, size = 'md' }: IconSquareProps) 
 
   return (
     <div className={`flex items-center justify-center ${sizes[size]} ${color}`}>
-      <Icon className={`${iconSizes[size]} text-white`} />
+      <Icon className={`${iconSizes[size]} text-foreground`} />
     </div>
   )
 }

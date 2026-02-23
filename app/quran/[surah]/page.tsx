@@ -360,27 +360,27 @@ export default function SurahReaderPage() {
       />
 
       {/* Surah info bar */}
-      <div className="flex items-center justify-between border-b border-gray-800 bg-gray-900/50 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border bg-card/50 px-4 py-2.5">
         <div className="flex items-center gap-3">
           <span className="font-arabic text-lg text-foreground">{surah.name}</span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-muted-foreground">
             {surah.numberOfAyahs} Ayahs
           </span>
         </div>
         <div className="flex items-center gap-2">
           {/* Font size controls */}
-          <div className="flex items-center gap-1 rounded-lg bg-gray-800 p-1">
+          <div className="flex items-center gap-1 rounded-lg bg-secondary p-1">
             <button
               onClick={() => adjustFontSize(-1)}
-              className="flex h-7 w-7 items-center justify-center rounded text-gray-400 active:text-white"
+              className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground active:text-foreground"
               aria-label="Decrease font size"
             >
               <Minus className="h-3 w-3" />
             </button>
-            <Type className="h-3.5 w-3.5 text-gray-500" />
+            <Type className="h-3.5 w-3.5 text-muted-foreground/80" />
             <button
               onClick={() => adjustFontSize(1)}
-              className="flex h-7 w-7 items-center justify-center rounded text-gray-400 active:text-white"
+              className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground active:text-foreground"
               aria-label="Increase font size"
             >
               <Plus className="h-3 w-3" />
@@ -398,7 +398,7 @@ export default function SurahReaderPage() {
             className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
               tajweedColors || displayScript === 'indopak'
                 ? 'bg-violet-500/15 text-violet-400'
-                : 'bg-gray-800 text-gray-400'
+                : 'bg-secondary text-muted-foreground'
             }`}
             aria-label="Display options"
           >
@@ -418,7 +418,7 @@ export default function SurahReaderPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center gap-3 py-20">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
-          <p className="text-sm text-gray-400">Loading surah...</p>
+          <p className="text-sm text-muted-foreground">Loading surah...</p>
         </div>
       ) : (
         <div className="px-4 pt-4 space-y-4">
@@ -428,7 +428,7 @@ export default function SurahReaderPage() {
               <p className="font-arabic text-2xl leading-loose text-amber-400">
                 {'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ'}
               </p>
-              <p className="mt-1 text-xs text-gray-400">In the name of Allah, the Most Gracious, the Most Merciful</p>
+              <p className="mt-1 text-xs text-muted-foreground">In the name of Allah, the Most Gracious, the Most Merciful</p>
             </div>
           )}
 
@@ -439,7 +439,7 @@ export default function SurahReaderPage() {
               className={`rounded-2xl border p-4 transition-all ${
                 currentAyah === i
                   ? 'border-emerald-500/30 bg-emerald-500/5 shadow-lg shadow-emerald-500/5'
-                  : 'border-gray-800 bg-gray-900'
+                  : 'border-border bg-card'
               }`}
             >
               {/* Ayah header */}
@@ -451,7 +451,7 @@ export default function SurahReaderPage() {
                   <button
                     onClick={() => playAyah(ayah.number, i)}
                     className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                      currentAyah === i && playing ? 'text-emerald-400' : 'text-gray-400 active:text-emerald-400'
+                      currentAyah === i && playing ? 'text-emerald-400' : 'text-muted-foreground active:text-emerald-400'
                     }`}
                     aria-label={`Play ayah ${ayah.numberInSurah}`}
                   >
@@ -460,7 +460,7 @@ export default function SurahReaderPage() {
                   <button
                     onClick={() => toggleBookmark(ayah.numberInSurah)}
                     className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                      isBookmarked(ayah.numberInSurah) ? 'text-amber-400' : 'text-gray-400'
+                      isBookmarked(ayah.numberInSurah) ? 'text-amber-400' : 'text-muted-foreground'
                     }`}
                     aria-label={`Bookmark ayah ${ayah.numberInSurah}`}
                   >
@@ -471,7 +471,7 @@ export default function SurahReaderPage() {
                       title: `${surah?.englishName} ${ayah.numberInSurah}`,
                       text: `${ayah.text}\n\n"${ayah.translation}"\n\n- ${surah?.englishName} (${surah?.englishNameTranslation}), Ayah ${ayah.numberInSurah}\n\nvia MasjidConnect GY`
                     })}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors active:text-emerald-400"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors active:text-emerald-400"
                     aria-label={`Share ayah ${ayah.numberInSurah}`}
                   >
                     <Share2 className="h-3.5 w-3.5" />
@@ -494,14 +494,14 @@ export default function SurahReaderPage() {
                   style={{ fontSize: `${fontSize}px` }}
                 >
                   {tajweedColors && tajweedLoading
-                    ? <span className="text-gray-500 text-sm">Loading tajweed...</span>
+                    ? <span className="text-muted-foreground/80 text-sm">Loading tajweed...</span>
                     : ayah.text
                   }
                 </p>
               )}
 
               {/* Translation */}
-              <p className="text-sm leading-relaxed text-gray-400">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {ayah.translation}
               </p>
 
@@ -520,8 +520,8 @@ export default function SurahReaderPage() {
                 <div className="mt-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
                   <p className="mb-1 text-[9px] font-bold uppercase tracking-wider text-amber-500">Tafsir Ibn Kathir</p>
                   {tafsirLoading
-                    ? <p className="text-xs text-gray-500">Loading...</p>
-                    : <p className="max-h-60 overflow-y-auto text-xs leading-relaxed text-gray-400">{tafsirText}</p>
+                    ? <p className="text-xs text-muted-foreground/80">Loading...</p>
+                    : <p className="max-h-60 overflow-y-auto text-xs leading-relaxed text-muted-foreground">{tafsirText}</p>
                   }
                 </div>
               )}
@@ -531,7 +531,7 @@ export default function SurahReaderPage() {
           {/* Reading progress */}
           {ayahs.length > 0 && (
             <div className="py-6 text-center">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground/80">
                 End of {surah.englishName} - {ayahs.length} Ayahs
               </p>
               {surahNum < 114 && (
@@ -552,7 +552,7 @@ export default function SurahReaderPage() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed right-4 z-[70] flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 shadow-lg transition-all active:scale-90" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 120px)' }}
+          className="fixed right-4 z-[70] flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground shadow-lg transition-all active:scale-90" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 120px)' }}
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-5 w-5" />
@@ -560,12 +560,12 @@ export default function SurahReaderPage() {
       )}
 
       {/* Playback controls */}
-      <div className="fixed left-0 right-0 z-[65] border-t border-gray-800 bg-gray-950/95 px-2 py-2 backdrop-blur-lg" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 52px)' }}>
+      <div className="fixed left-0 right-0 z-[65] border-t border-border bg-background/95 px-2 py-2 backdrop-blur-lg" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 52px)' }}>
         {/* Reciter button row */}
         <div className="mx-auto flex max-w-lg items-center justify-between px-2 pb-1.5">
           <button
             onClick={() => setShowReciterSheet(true)}
-            className="flex items-center gap-1.5 rounded-lg bg-gray-800 px-2.5 py-1 text-[10px] font-medium text-gray-300 active:bg-gray-700"
+            className="flex items-center gap-1.5 rounded-lg bg-secondary px-2.5 py-1 text-[10px] font-medium text-muted-foreground active:bg-muted"
           >
             <Mic className="h-3 w-3 text-purple-400" />
             {RECITERS.find((r) => r.id === reciter)?.name || 'Alafasy'}
@@ -573,12 +573,12 @@ export default function SurahReaderPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={cycleSpeed}
-              className="flex h-7 items-center rounded-lg bg-gray-800 px-2 text-[10px] font-semibold text-gray-300"
+              className="flex h-7 items-center rounded-lg bg-secondary px-2 text-[10px] font-semibold text-muted-foreground"
             >
               {speed}x
             </button>
             {currentAyah >= 0 && (
-              <span className="text-[10px] text-gray-500">
+              <span className="text-[10px] text-muted-foreground/80">
                 {currentAyah + 1}/{ayahs.length}
               </span>
             )}
@@ -590,7 +590,7 @@ export default function SurahReaderPage() {
           <button
             onClick={cycleRepeat}
             className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
-              repeatCount !== 1 ? 'bg-purple-500/20 text-purple-400' : 'text-gray-500'
+              repeatCount !== 1 ? 'bg-purple-500/20 text-purple-400' : 'text-muted-foreground/80'
             }`}
             aria-label={`Repeat ${getRepeatLabel()}`}
           >
@@ -601,7 +601,7 @@ export default function SurahReaderPage() {
           <button
             onClick={() => setContinuousPlay(!continuousPlay)}
             className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-              continuousPlay ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500'
+              continuousPlay ? 'bg-emerald-500/20 text-emerald-400' : 'text-muted-foreground/80'
             }`}
             aria-label={continuousPlay ? 'Continuous play on' : 'Continuous play off'}
           >
@@ -610,7 +610,7 @@ export default function SurahReaderPage() {
 
           <button
             onClick={togglePlay}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-foreground shadow-lg shadow-emerald-500/25"
             aria-label={playing ? 'Pause' : 'Play'}
           >
             {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
@@ -618,7 +618,7 @@ export default function SurahReaderPage() {
 
           <button
             onClick={skipNext}
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-gray-500"
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground/80"
             aria-label="Next ayah"
           >
             <SkipForward className="h-5 w-5" />
@@ -632,12 +632,12 @@ export default function SurahReaderPage() {
       {showReciterSheet && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowReciterSheet(false)} />
-          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-6 pt-4" style={{ maxHeight: '80dvh' }}>
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-border bg-card px-4 pb-6 pt-4" style={{ maxHeight: '80dvh' }}>
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-white">Choose Reciter</h3>
+              <h3 className="text-sm font-bold text-foreground">Choose Reciter</h3>
               <button
                 onClick={() => setShowReciterSheet(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground active:text-foreground"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -651,10 +651,10 @@ export default function SurahReaderPage() {
                   className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
                     reciter === r.id
                       ? 'bg-emerald-500/15 text-emerald-400'
-                      : 'text-gray-300 active:bg-gray-800'
+                      : 'text-muted-foreground active:bg-secondary'
                   }`}
                 >
-                  <Mic className={`h-4 w-4 shrink-0 ${reciter === r.id ? 'text-emerald-400' : 'text-gray-600'}`} />
+                  <Mic className={`h-4 w-4 shrink-0 ${reciter === r.id ? 'text-emerald-400' : 'text-muted-foreground/60'}`} />
                   <span className="text-sm font-medium">{r.name}</span>
                   {reciter === r.id && (
                     <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Active</span>
@@ -670,56 +670,56 @@ export default function SurahReaderPage() {
       {showDisplaySheet && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowDisplaySheet(false)} />
-          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pt-4 pb-6" style={{ maxHeight: '80dvh' }}>
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-border bg-card px-4 pt-4 pb-6" style={{ maxHeight: '80dvh' }}>
             <div className="mb-4 flex shrink-0 items-center justify-between">
-              <h3 className="text-sm font-bold text-white">Display Options</h3>
-              <button onClick={() => setShowDisplaySheet(false)} className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white" aria-label="Close">
+              <h3 className="text-sm font-bold text-foreground">Display Options</h3>
+              <button onClick={() => setShowDisplaySheet(false)} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground active:text-foreground" aria-label="Close">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Script section */}
-            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-500">Arabic Script</p>
+            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Arabic Script</p>
             <div className="mb-5 grid shrink-0 grid-cols-2 gap-2">
               <button
                 onClick={() => { setDisplayScript('uthmani'); setItem(KEYS.QURAN_SCRIPT, 'uthmani') }}
-                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'uthmani' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'uthmani' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-secondary'}`}
               >
-                <p className="font-arabic text-2xl text-white" style={{ lineHeight: '2' }}>بِسْمِ اللّٰهِ</p>
-                <p className="mt-2 text-[10px] font-medium text-gray-400">Uthmani (Hafs)</p>
+                <p className="font-arabic text-2xl text-foreground" style={{ lineHeight: '2' }}>بِسْمِ اللّٰهِ</p>
+                <p className="mt-2 text-[10px] font-medium text-muted-foreground">Uthmani (Hafs)</p>
                 {displayScript === 'uthmani' && <p className="mt-0.5 text-[9px] text-emerald-400">● Active</p>}
               </button>
               <button
                 onClick={() => { setDisplayScript('indopak'); setItem(KEYS.QURAN_SCRIPT, 'indopak') }}
-                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'indopak' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-gray-800'}`}
+                className={`rounded-xl px-3 py-4 text-center transition-colors ${displayScript === 'indopak' ? 'bg-emerald-500/20 ring-1 ring-emerald-500/50' : 'bg-secondary'}`}
               >
-                <p className="font-indopak text-2xl text-white" style={{ lineHeight: '2.5' }}>بِسۡمِ اللّٰہِ</p>
-                <p className="mt-2 text-[10px] font-medium text-gray-400">IndoPak Script</p>
+                <p className="font-indopak text-2xl text-foreground" style={{ lineHeight: '2.5' }}>بِسۡمِ اللّٰہِ</p>
+                <p className="mt-2 text-[10px] font-medium text-muted-foreground">IndoPak Script</p>
                 {displayScript === 'indopak' && <p className="mt-0.5 text-[9px] text-emerald-400">● Active</p>}
               </button>
             </div>
 
             {/* Tajweed section */}
-            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-500">Tajweed Coloring</p>
+            <p className="mb-2 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Tajweed Coloring</p>
             <button
               onClick={() => { const v = !tajweedColors; setTajweedColors(v); setItem(KEYS.QURAN_TAJWEED, v) }}
-              className={`flex shrink-0 items-center gap-3 rounded-xl p-3 transition-colors ${tajweedColors ? 'bg-violet-500/15' : 'bg-gray-800'}`}
+              className={`flex shrink-0 items-center gap-3 rounded-xl p-3 transition-colors ${tajweedColors ? 'bg-violet-500/15' : 'bg-secondary'}`}
             >
-              <Palette className={`h-5 w-5 ${tajweedColors ? 'text-violet-400' : 'text-gray-500'}`} />
+              <Palette className={`h-5 w-5 ${tajweedColors ? 'text-violet-400' : 'text-muted-foreground/80'}`} />
               <div className="flex-1 text-left">
-                <p className={`text-sm font-medium ${tajweedColors ? 'text-violet-300' : 'text-gray-300'}`}>
+                <p className={`text-sm font-medium ${tajweedColors ? 'text-violet-300' : 'text-muted-foreground'}`}>
                   Color-Coded Tajweed
                 </p>
-                <p className="text-[10px] text-gray-500">Highlight tajweed rules with colors</p>
+                <p className="text-[10px] text-muted-foreground/80">Highlight tajweed rules with colors</p>
               </div>
               {tajweedColors
                 ? <ToggleRight className="h-5 w-5 text-violet-400" />
-                : <ToggleLeft className="h-5 w-5 text-gray-600" />}
+                : <ToggleLeft className="h-5 w-5 text-muted-foreground/60" />}
             </button>
 
             {/* Color legend */}
             {tajweedColors && (
-              <div className="mt-3 grid grid-cols-2 gap-1.5 rounded-xl bg-gray-800/60 p-3">
+              <div className="mt-3 grid grid-cols-2 gap-1.5 rounded-xl bg-secondary/60 p-3">
                 {[
                   { color: '#FF7E1D', label: 'Ghunna (nasalization)' },
                   { color: '#DD0008', label: 'Qalqalah (echo)' },
@@ -730,7 +730,7 @@ export default function SurahReaderPage() {
                 ].map(r => (
                   <div key={r.label} className="flex items-center gap-2">
                     <div className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: r.color }} />
-                    <span className="text-[10px] text-gray-400">{r.label}</span>
+                    <span className="text-[10px] text-muted-foreground">{r.label}</span>
                   </div>
                 ))}
               </div>
@@ -743,12 +743,12 @@ export default function SurahReaderPage() {
       {showTranslationSheet && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowTranslationSheet(false)} />
-          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-6 pt-4" style={{maxHeight:'80dvh'}}>
+          <div className="relative flex w-full max-w-lg flex-col rounded-t-3xl border-t border-border bg-card px-4 pb-6 pt-4" style={{maxHeight:'80dvh'}}>
             <div className="mb-3 flex shrink-0 items-center justify-between">
-              <h3 className="text-sm font-bold text-white">Choose Translation</h3>
+              <h3 className="text-sm font-bold text-foreground">Choose Translation</h3>
               <button
                 onClick={() => setShowTranslationSheet(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground active:text-foreground"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -762,13 +762,13 @@ export default function SurahReaderPage() {
                   className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
                     translation === t.key
                       ? 'bg-emerald-500/15 text-emerald-400'
-                      : 'text-gray-300 active:bg-gray-800'
+                      : 'text-muted-foreground active:bg-secondary'
                   }`}
                 >
-                  <Languages className={`h-4 w-4 shrink-0 ${translation === t.key ? 'text-emerald-400' : 'text-gray-600'}`} />
+                  <Languages className={`h-4 w-4 shrink-0 ${translation === t.key ? 'text-emerald-400' : 'text-muted-foreground/60'}`} />
                   <div>
                     <span className="text-sm font-medium">{t.label}</span>
-                    <p className="text-[10px] text-gray-500">{t.note}</p>
+                    <p className="text-[10px] text-muted-foreground/80">{t.note}</p>
                   </div>
                   {translation === t.key && (
                     <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Active</span>

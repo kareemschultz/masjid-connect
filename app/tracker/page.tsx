@@ -501,18 +501,18 @@ export default function TrackerPage() {
       onClick={() => toggleSection(id)}
       className="flex w-full items-center justify-between p-4"
     >
-      <span className="flex items-center gap-2 text-sm font-semibold text-gray-200">
+      <span className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
         <span>{emoji}</span> {title}
       </span>
       <span className="flex items-center gap-2">
-        <span className="text-[11px] text-gray-400">{summary}</span>
-        {openSections[id] ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
+        <span className="text-[11px] text-muted-foreground">{summary}</span>
+        {openSections[id] ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
       </span>
     </button>
   )
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={CheckSquare}
         title="Prayer Tracker"
@@ -526,14 +526,14 @@ export default function TrackerPage() {
       <div className="mx-4 mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-emerald-400">Daily Sunnah Score</span>
-          <span className="text-xs text-gray-400">{sunnahCount}/{TOTAL_SUNNAH_COUNT}</span>
+          <span className="text-xs text-muted-foreground">{sunnahCount}/{TOTAL_SUNNAH_COUNT}</span>
         </div>
         <div className="mt-2 flex items-center gap-1.5">
           {SUNNAH_PRAYERS.map((p) => (
             <div
               key={p.key}
               className={`h-3 w-3 rounded-full transition-all ${
-                sunnahToday[p.key] ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50' : 'bg-gray-700'
+                sunnahToday[p.key] ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50' : 'bg-muted'
               }`}
               title={p.label}
             />
@@ -546,26 +546,26 @@ export default function TrackerPage() {
 
       {/* ── Points Breakdown ── */}
       <div className="mx-4 mt-3 flex gap-2">
-        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+        <div className="flex-1 rounded-xl border border-border bg-card px-3 py-2 text-center">
           <p className="text-sm font-bold text-blue-400">{fardPoints}</p>
-          <p className="text-[9px] text-gray-500">Fard pts</p>
+          <p className="text-[9px] text-muted-foreground/80">Fard pts</p>
         </div>
-        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+        <div className="flex-1 rounded-xl border border-border bg-card px-3 py-2 text-center">
           <p className="text-sm font-bold text-emerald-400">{sunnahPoints}</p>
-          <p className="text-[9px] text-gray-500">Sunnah + Nawafil pts</p>
+          <p className="text-[9px] text-muted-foreground/80">Sunnah + Nawafil pts</p>
         </div>
-        <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
+        <div className="flex-1 rounded-xl border border-border bg-card px-3 py-2 text-center">
           <p className="text-sm font-bold text-amber-400">{fardPoints + sunnahPoints + qaidaPoints}</p>
-          <p className="text-[9px] text-gray-500">Total today</p>
+          <p className="text-[9px] text-muted-foreground/80">Total today</p>
         </div>
       </div>
 
       <div className="space-y-5 px-4 pt-5">
         {/* ── Prayer Statistics ── */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+        <div className="rounded-2xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 mb-4">
             <BarChart2 className="h-4 w-4 text-emerald-400" />
-            <span className="text-sm font-bold text-white">Prayer Statistics</span>
+            <span className="text-sm font-bold text-foreground">Prayer Statistics</span>
           </div>
 
           {/* 7-day bar chart */}
@@ -573,7 +573,7 @@ export default function TrackerPage() {
             {weeklyStats.map((s, i) => {
               const height = s.count > 0 ? (s.count / 5) * 100 : 4
               const isToday = s.key === today
-              const barColor = s.count === 5 ? 'bg-emerald-500' : s.count >= 3 ? 'bg-amber-500' : s.count >= 1 ? 'bg-rose-500' : 'bg-gray-700'
+              const barColor = s.count === 5 ? 'bg-emerald-500' : s.count >= 3 ? 'bg-amber-500' : s.count >= 1 ? 'bg-rose-500' : 'bg-muted'
               return (
                 <div key={i} className="flex flex-1 flex-col items-center gap-1">
                   <div className={`w-full rounded-t-md transition-all ${barColor} ${isToday ? 'ring-2 ring-emerald-400/50' : ''}`} style={{ height: `${height}%`, minHeight: '2px' }} />
@@ -583,53 +583,53 @@ export default function TrackerPage() {
           </div>
           <div className="flex justify-between gap-1.5 mb-3">
             {DAY_LABELS.map((label, i) => (
-              <div key={i} className={`flex-1 text-center text-[10px] font-medium ${weeklyStats[i]?.key === today ? 'text-emerald-400' : 'text-gray-500'}`}>{label}</div>
+              <div key={i} className={`flex-1 text-center text-[10px] font-medium ${weeklyStats[i]?.key === today ? 'text-emerald-400' : 'text-muted-foreground/80'}`}>{label}</div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400">Week Average: <span className="font-bold text-white">{weekAverage.toFixed(1)}/5</span> prayers</p>
+          <p className="text-center text-xs text-muted-foreground">Week Average: <span className="font-bold text-foreground">{weekAverage.toFixed(1)}/5</span> prayers</p>
 
           {/* Stat cards */}
           <div className="grid grid-cols-3 gap-2 mt-4">
-            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+            <div className="rounded-xl border border-border bg-secondary/50 p-3 text-center">
               <p className="text-lg font-bold text-amber-400">{prayerStreak}</p>
-              <p className="text-[10px] text-gray-500">Day Streak</p>
+              <p className="text-[10px] text-muted-foreground/80">Day Streak</p>
             </div>
-            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+            <div className="rounded-xl border border-border bg-secondary/50 p-3 text-center">
               <p className="text-lg font-bold text-emerald-400">{bestDay.count > 0 ? `${bestDay.label}` : '-'}</p>
-              <p className="text-[10px] text-gray-500">Best Day</p>
+              <p className="text-[10px] text-muted-foreground/80">Best Day</p>
             </div>
-            <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
+            <div className="rounded-xl border border-border bg-secondary/50 p-3 text-center">
               <p className="text-lg font-bold text-blue-400">{fajrRate}%</p>
-              <p className="text-[10px] text-gray-500">Fajr Rate</p>
+              <p className="text-[10px] text-muted-foreground/80">Fajr Rate</p>
             </div>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="flex gap-3">
-          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
+          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20">
               <Flame className="h-5 w-5 text-amber-400" />
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{streak}</p>
-              <p className="text-[11px] text-gray-400">Day Streak</p>
+              <p className="text-[11px] text-muted-foreground">Day Streak</p>
             </div>
           </div>
-          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
+          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
               <TrendingUp className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{monthStats}%</p>
-              <p className="text-[11px] text-gray-400">This Month</p>
+              <p className="text-[11px] text-muted-foreground">This Month</p>
             </div>
           </div>
         </div>
 
         {/* Sync indicator */}
         {!synced && (
-          <p className="text-center text-[11px] text-gray-500 animate-pulse">Syncing with server...</p>
+          <p className="text-center text-[11px] text-muted-foreground/80 animate-pulse">Syncing with server...</p>
         )}
 
         {/* Share */}
@@ -645,25 +645,25 @@ export default function TrackerPage() {
 
         {/* Quick Links */}
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/tracker/fasting" className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98]">
+          <Link href="/tracker/fasting" className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition-all active:scale-[0.98]">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/20">
               <UtensilsCrossed className="h-4 w-4 text-orange-400" />
             </div>
             <div className="flex-1">
-              <div className="text-xs font-semibold text-[#f9fafb]">Fasting</div>
-              <div className="text-[10px] text-gray-500">Track fasts</div>
+              <div className="text-xs font-semibold text-foreground">Fasting</div>
+              <div className="text-[10px] text-muted-foreground/80">Track fasts</div>
             </div>
-            <ChevronRight className="h-3.5 w-3.5 text-gray-600" />
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
           </Link>
-          <Link href="/timetable" className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98]">
+          <Link href="/timetable" className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition-all active:scale-[0.98]">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/20">
               <Table2 className="h-4 w-4 text-cyan-400" />
             </div>
             <div className="flex-1">
-              <div className="text-xs font-semibold text-[#f9fafb]">Timetable</div>
-              <div className="text-[10px] text-gray-500">Monthly view</div>
+              <div className="text-xs font-semibold text-foreground">Timetable</div>
+              <div className="text-[10px] text-muted-foreground/80">Monthly view</div>
             </div>
-            <ChevronRight className="h-3.5 w-3.5 text-gray-600" />
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
           </Link>
         </div>
 
@@ -671,13 +671,13 @@ export default function TrackerPage() {
         <SettingGroup label="Fard (Obligatory) Prayers" accentColor="bg-blue-500">
           <div data-tour="tracker-prayer-buttons" className="p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs text-gray-400">{todayCount}/5 completed</span>
+              <span className="text-xs text-muted-foreground">{todayCount}/5 completed</span>
               <span className="text-xs font-medium text-emerald-400">
                 {todayCount === 5 ? 'All done! 🎉' : `${5 - todayCount} remaining`}
               </span>
             </div>
 
-            <div className="mb-5 h-1.5 overflow-hidden rounded-full bg-gray-800">
+            <div className="mb-5 h-1.5 overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-400 transition-all duration-500"
                 style={{ width: `${(todayCount / 5) * 100}%` }}
@@ -693,18 +693,18 @@ export default function TrackerPage() {
                     key={prayer}
                     onClick={() => togglePrayer(prayer)}
                     className={`flex flex-col items-center gap-2 rounded-2xl border-2 px-2 py-4 transition-all active:scale-95 ${
-                      prayed ? 'border-emerald-500/30 bg-emerald-500/10' : `border-gray-800 ${colors.bg}`
+                      prayed ? 'border-emerald-500/30 bg-emerald-500/10' : `border-border ${colors.bg}`
                     }`}
                   >
                     <div className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
-                      prayed ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'
+                      prayed ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'
                     }`}>
                       {prayed
                         ? <CheckSquare className="h-4 w-4" />
                         : <div className="h-3 w-3 rounded-full border-2 border-gray-500" />
                       }
                     </div>
-                    <span className={`text-[11px] font-semibold ${prayed ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    <span className={`text-[11px] font-semibold ${prayed ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                       {prayer}
                     </span>
                   </button>
@@ -723,7 +723,7 @@ export default function TrackerPage() {
             summary={`${sunnahCount + Object.values(nawafilToday).filter(v => v > 0).length}/${TOTAL_SUNNAH_COUNT + NAWAFIL_PRAYERS.length} today`}
           />
           {(openSections.sunnah !== false) && (
-            <div className="border-t border-gray-800 p-4 space-y-5">
+            <div className="border-t border-border p-4 space-y-5">
               {/* Sub-section 1: Sunnah Mu'akkadah & Wajib */}
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-3">Sunnah (Recommended) &amp; Wajib</h4>
@@ -747,26 +747,26 @@ export default function TrackerPage() {
                             ? 'border-emerald-500/30 bg-emerald-500/10'
                             : isWitr
                               ? 'border-amber-500/30 bg-amber-500/5'
-                              : 'border-gray-800 bg-gray-800/40'
+                              : 'border-border bg-secondary/40'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all ${
-                            done ? 'bg-emerald-500 text-white' : isWitr ? 'bg-amber-500/20 text-amber-400' : 'bg-gray-700 text-gray-400'
+                            done ? 'bg-emerald-500 text-foreground' : isWitr ? 'bg-amber-500/20 text-amber-400' : 'bg-muted text-muted-foreground'
                           }`}>
                             {done ? <CheckSquare className="h-4 w-4" /> : <div className="h-3 w-3 rounded-full border-2 border-current" />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-arabic text-sm text-gray-300">{prayer.arabic}</span>
+                              <span className="font-arabic text-sm text-muted-foreground">{prayer.arabic}</span>
                               {isFajrSunnah && <Star className="h-3 w-3 text-amber-400" />}
                               {isWitr && <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-400">WAJIB</span>}
                             </div>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className={`text-xs font-medium ${done ? 'text-emerald-400' : 'text-gray-300'}`}>{prayer.label}</span>
-                              <span className="text-[10px] text-gray-500">{prayer.rakat} rak&apos;at</span>
+                              <span className={`text-xs font-medium ${done ? 'text-emerald-400' : 'text-muted-foreground'}`}>{prayer.label}</span>
+                              <span className="text-[10px] text-muted-foreground/80">{prayer.rakat} rak&apos;at</span>
                             </div>
-                            <span className="text-[10px] text-gray-500">{prayer.timing}</span>
+                            <span className="text-[10px] text-muted-foreground/80">{prayer.timing}</span>
                           </div>
                         </div>
                       </button>
@@ -785,23 +785,23 @@ export default function TrackerPage() {
                       <div
                         key={prayer.key}
                         className={`rounded-xl border p-3 ${
-                          loggedRakat > 0 ? 'border-indigo-500/30 bg-indigo-500/5' : 'border-gray-800 bg-gray-800/40'
+                          loggedRakat > 0 ? 'border-indigo-500/30 bg-indigo-500/5' : 'border-border bg-secondary/40'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <span className="text-xl">{prayer.icon}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-arabic text-sm text-gray-300">{prayer.arabic}</span>
+                              <span className="font-arabic text-sm text-muted-foreground">{prayer.arabic}</span>
                               {prayer.ramadanOnly && (
                                 <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[9px] font-bold text-purple-400">Ramadan</span>
                               )}
                             </div>
-                            <span className="text-xs font-medium text-gray-300">{prayer.label}</span>
+                            <span className="text-xs font-medium text-muted-foreground">{prayer.label}</span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[10px] text-gray-500">{prayer.rakat} rak&apos;at</span>
-                              <span className="text-[10px] text-gray-600">·</span>
-                              <span className="text-[10px] text-gray-500">{prayer.timing}</span>
+                              <span className="text-[10px] text-muted-foreground/80">{prayer.rakat} rak&apos;at</span>
+                              <span className="text-[10px] text-muted-foreground/60">·</span>
+                              <span className="text-[10px] text-muted-foreground/80">{prayer.timing}</span>
                             </div>
                           </div>
                         </div>
@@ -810,14 +810,14 @@ export default function TrackerPage() {
                         <div className="mt-2 flex items-center gap-2">
                           <button
                             onClick={() => addNawafilRakat(prayer.key, 2)}
-                            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-indigo-400 transition-all active:scale-90 active:bg-indigo-500/20"
+                            className="rounded-lg border border-border bg-secondary px-3 py-1.5 text-[11px] font-medium text-indigo-400 transition-all active:scale-90 active:bg-indigo-500/20"
                           >
                             +2 Rak&apos;at
                           </button>
                           {loggedRakat > 0 && (
                             <button
                               onClick={() => addNawafilRakat(prayer.key, -loggedRakat)}
-                              className="rounded-lg border border-gray-700 bg-gray-800 px-2 py-1.5 text-[11px] text-red-400 transition-all active:scale-90"
+                              className="rounded-lg border border-border bg-secondary px-2 py-1.5 text-[11px] text-red-400 transition-all active:scale-90"
                             >
                               Reset
                             </button>
@@ -838,7 +838,7 @@ export default function TrackerPage() {
         {/* Reward toast */}
         {rewardToast && (
           <div className="fixed bottom-24 left-4 right-4 z-[70] animate-fade-in">
-            <div className="rounded-2xl border border-emerald-500/30 bg-gray-900/95 p-4 shadow-2xl backdrop-blur-md">
+            <div className="rounded-2xl border border-emerald-500/30 bg-card/95 p-4 shadow-2xl backdrop-blur-md">
               <p className="text-xs text-emerald-300 leading-relaxed">{rewardToast}</p>
             </div>
           </div>
@@ -849,7 +849,7 @@ export default function TrackerPage() {
           <div className="p-4">
             <div className="grid grid-cols-7 gap-1.5">
               {DAY_LABELS.map((label, i) => (
-                <div key={i} className="text-center text-[10px] font-medium text-gray-500">{label}</div>
+                <div key={i} className="text-center text-[10px] font-medium text-muted-foreground/80">{label}</div>
               ))}
               {weekDates.map((date, i) => {
                 const key = dateKey(date)
@@ -860,21 +860,21 @@ export default function TrackerPage() {
                 const future = date > new Date()
                 return (
                   <div key={i} className={`flex flex-col items-center gap-1 rounded-xl py-2 ${isToday ? 'bg-emerald-500/10 ring-1 ring-emerald-500/30' : ''}`}>
-                    <span className={`text-xs font-medium ${isToday ? 'text-emerald-400' : 'text-gray-300'}`}>{date.getDate()}</span>
+                    <span className={`text-xs font-medium ${isToday ? 'text-emerald-400' : 'text-muted-foreground'}`}>{date.getDate()}</span>
                     {future
-                      ? <div className="h-2 w-2 rounded-full bg-gray-700" />
+                      ? <div className="h-2 w-2 rounded-full bg-muted" />
                       : allDone
                         ? <div className="h-2 w-2 rounded-full bg-emerald-500" />
                         : count > 0
                           ? <div className="h-2 w-2 rounded-full bg-amber-500" />
                           : <div className="h-2 w-2 rounded-full bg-red-500/50" />
                     }
-                    <span className="text-[9px] text-gray-500">{count}/5</span>
+                    <span className="text-[9px] text-muted-foreground/80">{count}/5</span>
                   </div>
                 )
               })}
             </div>
-            <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-gray-500">
+            <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-muted-foreground/80">
               <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-emerald-500" /> All done</span>
               <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-amber-500" /> Partial</span>
               <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-red-500/50" /> Missed</span>
@@ -896,7 +896,7 @@ export default function TrackerPage() {
               <p className="text-sm font-semibold text-foreground">
                 {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
               </p>
-              <p className="mt-1 text-xs text-gray-400">Consistency is key to building a strong prayer habit.</p>
+              <p className="mt-1 text-xs text-muted-foreground">Consistency is key to building a strong prayer habit.</p>
             </div>
           </div>
         </SettingGroup>
@@ -914,21 +914,21 @@ export default function TrackerPage() {
             summary={`Total this month: ${monthPages(quranLog)} pages`}
           />
           {openSections.quran && (
-            <div className="border-t border-gray-800 p-4">
+            <div className="border-t border-border p-4">
               <div className="flex items-center justify-center gap-6">
                 <button
                   onClick={() => adjustQuran(-1)}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                 >
                   <Minus className="h-4 w-4" />
                 </button>
                 <div className="flex flex-col items-center">
                   <span className="text-3xl font-bold text-sky-400">{quranToday}</span>
-                  <span className="text-[11px] text-gray-500">pages today</span>
+                  <span className="text-[11px] text-muted-foreground/80">pages today</span>
                 </div>
                 <button
                   onClick={() => adjustQuran(1)}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -946,10 +946,10 @@ export default function TrackerPage() {
             summary={qaidaToday.completed ? `Lesson ${qaidaToday.lesson} done` : 'Not practiced today'}
           />
           {openSections.qaida && (
-            <div className="border-t border-gray-800 p-4 space-y-4">
+            <div className="border-t border-border p-4 space-y-4">
               <div className="flex flex-col items-center gap-3">
                 <div className="flex w-full items-center justify-between px-2">
-                  <label className="text-[11px] font-medium text-gray-400">Current Lesson</label>
+                  <label className="text-[11px] font-medium text-muted-foreground">Current Lesson</label>
                   <span className="text-xs font-bold text-purple-400">Lesson {qaidaLesson} of 17</span>
                 </div>
                 
@@ -957,7 +957,7 @@ export default function TrackerPage() {
                   <select
                     value={qaidaLesson}
                     onChange={(e) => setQaidaLesson(Number(e.target.value))}
-                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 outline-none focus:border-purple-500/50"
+                    className="flex-1 rounded-xl border border-border bg-secondary px-3 py-2.5 text-sm text-foreground/80 outline-none focus:border-purple-500/50"
                   >
                     {Array.from({ length: 17 }, (_, i) => (
                       <option key={i + 1} value={i + 1}>
@@ -971,7 +971,7 @@ export default function TrackerPage() {
                     className={`flex-1 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-all active:scale-95 ${
                       qaidaToday.completed
                         ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                        : 'border-gray-700 bg-gray-800/50 text-gray-400'
+                        : 'border-border bg-secondary/50 text-muted-foreground'
                     }`}
                   >
                     {qaidaToday.completed ? '✓ Completed' : 'Mark Done'}
@@ -986,7 +986,7 @@ export default function TrackerPage() {
                 <BookOpenIcon className="h-4 w-4" /> Go to Qaida Lesson
               </Link>
               
-              <p className="text-center text-[11px] text-gray-500">
+              <p className="text-center text-[11px] text-muted-foreground/80">
                 +10 points for daily lesson practice
               </p>
             </div>
@@ -1002,17 +1002,17 @@ export default function TrackerPage() {
             summary={sadaqahTodayTotal > 0 ? `GYD ${sadaqahTodayTotal.toLocaleString()} today` : 'None today'}
           />
           {openSections.sadaqah && (
-            <div className="border-t border-gray-800 p-4 space-y-4">
+            <div className="border-t border-border p-4 space-y-4">
               {/* Amount input */}
               <div>
-                <label className="mb-1.5 block text-[11px] font-medium text-gray-400">Amount (GYD)</label>
+                <label className="mb-1.5 block text-[11px] font-medium text-muted-foreground">Amount (GYD)</label>
                 <input
                   type="number"
                   inputMode="numeric"
                   value={sadaqahAmount}
                   onChange={e => setSadaqahAmount(e.target.value)}
                   placeholder="0"
-                  className="w-full rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30"
+                  className="w-full rounded-xl border border-border bg-secondary px-3 py-2.5 text-sm text-foreground/80 placeholder-gray-600 outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30"
                 />
               </div>
 
@@ -1025,7 +1025,7 @@ export default function TrackerPage() {
                     className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all ${
                       sadaqahType === t
                         ? 'border border-emerald-500/50 bg-emerald-500/20 text-emerald-400'
-                        : 'border border-gray-700 bg-gray-800 text-gray-400'
+                        : 'border border-border bg-secondary text-muted-foreground'
                     }`}
                   >
                     {t}
@@ -1045,10 +1045,10 @@ export default function TrackerPage() {
               {sadaqahToday.length > 0 && (
                 <div className="space-y-2">
                   {sadaqahToday.map((entry, idx) => (
-                    <div key={idx} className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-800/50 px-3 py-2.5">
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-border bg-secondary/50 px-3 py-2.5">
                       <div>
-                        <span className="text-sm font-medium text-gray-200">GYD {entry.amount.toLocaleString()}</span>
-                        <span className="ml-2 text-[11px] text-gray-500">{entry.type}</span>
+                        <span className="text-sm font-medium text-foreground/80">GYD {entry.amount.toLocaleString()}</span>
+                        <span className="ml-2 text-[11px] text-muted-foreground/80">{entry.type}</span>
                       </div>
                       <button onClick={() => removeSadaqah(idx)} className="text-red-400/70 transition-all hover:text-red-400">
                         <Trash2 className="h-4 w-4" />
@@ -1070,7 +1070,7 @@ export default function TrackerPage() {
             summary={`${deedsToday.length} today`}
           />
           {openSections.deeds && (
-            <div className="border-t border-gray-800 p-4 space-y-4">
+            <div className="border-t border-border p-4 space-y-4">
               {/* Preset deed chips */}
               <div className="flex flex-wrap gap-2">
                 {PRESET_DEEDS.map(deed => {
@@ -1082,7 +1082,7 @@ export default function TrackerPage() {
                       className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all ${
                         active
                           ? 'border border-emerald-500/50 bg-emerald-500/15 text-emerald-400'
-                          : 'border border-gray-700 bg-gray-800 text-gray-400'
+                          : 'border border-border bg-secondary text-muted-foreground'
                       }`}
                     >
                       {deed}
@@ -1099,7 +1099,7 @@ export default function TrackerPage() {
                   onChange={e => setCustomDeed(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && addCustomDeed()}
                   placeholder="Add a custom deed..."
-                  className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30"
+                  className="flex-1 rounded-xl border border-border bg-secondary px-3 py-2.5 text-sm text-foreground/80 placeholder-gray-600 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30"
                 />
                 <button
                   onClick={addCustomDeed}
@@ -1136,23 +1136,23 @@ export default function TrackerPage() {
             summary={`${sleepToday}h / ${waterToday} glasses`}
           />
           {openSections.sleepwater && (
-            <div className="border-t border-gray-800 p-4">
+            <div className="border-t border-border p-4">
               <div className="grid grid-cols-2 gap-4">
                 {/* Sleep stepper */}
-                <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 p-4">
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-secondary/40 p-4">
                   <MoonIcon className="h-5 w-5 text-violet-400" />
-                  <span className="text-[11px] font-medium text-gray-400">Sleep</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">Sleep</span>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => adjustSleep(-0.5)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
                     <span className="min-w-[3rem] text-center text-xl font-bold text-violet-400">{sleepToday}h</span>
                     <button
                       onClick={() => adjustSleep(0.5)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
@@ -1160,20 +1160,20 @@ export default function TrackerPage() {
                 </div>
 
                 {/* Water stepper */}
-                <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 p-4">
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-secondary/40 p-4">
                   <Droplets className="h-5 w-5 text-cyan-400" />
-                  <span className="text-[11px] font-medium text-gray-400">Water</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">Water</span>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => adjustWater(-1)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
                     <span className="min-w-[3rem] text-center text-xl font-bold text-cyan-400">{waterToday}</span>
                     <button
                       onClick={() => adjustWater(1)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
@@ -1193,7 +1193,7 @@ export default function TrackerPage() {
             summary={`${istighfarToday} / 100`}
           />
           {openSections.istighfar && (
-            <div className="border-t border-gray-800 p-4">
+            <div className="border-t border-border p-4">
               <div className="flex flex-col items-center gap-4">
                 {/* Large circular counter button */}
                 <button
@@ -1202,7 +1202,7 @@ export default function TrackerPage() {
                 >
                   <div className="flex flex-col items-center">
                     <span className="text-3xl font-bold text-amber-400">{istighfarToday}</span>
-                    <span className="text-[10px] text-gray-400">tap to count</span>
+                    <span className="text-[10px] text-muted-foreground">tap to count</span>
                   </div>
                   {/* Progress ring */}
                   <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 36 36">
@@ -1223,15 +1223,15 @@ export default function TrackerPage() {
                   </svg>
                 </button>
 
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-muted-foreground">
                   <span className="font-medium text-amber-400">{istighfarToday}</span> Astaghfirullah today
                 </p>
-                <p className="text-[11px] text-gray-500">Target: 100</p>
+                <p className="text-[11px] text-muted-foreground/80">Target: 100</p>
 
                 {/* Reset button */}
                 <button
                   onClick={resetIstighfar}
-                  className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-1.5 text-[11px] font-medium text-gray-400 transition-all active:scale-95"
+                  className="rounded-lg border border-border bg-secondary px-4 py-1.5 text-[11px] font-medium text-muted-foreground transition-all active:scale-95"
                 >
                   Reset today
                 </button>
@@ -1257,7 +1257,7 @@ export default function TrackerPage() {
             }
           />
           {openSections.adhkar && (
-            <div className="border-t border-gray-800 p-4 space-y-4">
+            <div className="border-t border-border p-4 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {/* Morning card */}
                 <button
@@ -1265,14 +1265,14 @@ export default function TrackerPage() {
                   className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all active:scale-95 ${
                     adhkarToday.morning
                       ? 'border-emerald-500/40 bg-emerald-500/10'
-                      : 'border-gray-700 bg-gray-800/50'
+                      : 'border-border bg-secondary/50'
                   }`}
                 >
                   <span className="text-2xl">🌅</span>
-                  <span className={`text-sm font-semibold ${adhkarToday.morning ? 'text-emerald-400' : 'text-gray-400'}`}>
+                  <span className={`text-sm font-semibold ${adhkarToday.morning ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                     Morning
                   </span>
-                  <span className={`text-[10px] ${adhkarToday.morning ? 'text-emerald-500/70' : 'text-gray-600'}`}>
+                  <span className={`text-[10px] ${adhkarToday.morning ? 'text-emerald-500/70' : 'text-muted-foreground/60'}`}>
                     {adhkarToday.morning ? 'Completed' : 'Tap to mark'}
                   </span>
                 </button>
@@ -1283,14 +1283,14 @@ export default function TrackerPage() {
                   className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all active:scale-95 ${
                     adhkarToday.evening
                       ? 'border-emerald-500/40 bg-emerald-500/10'
-                      : 'border-gray-700 bg-gray-800/50'
+                      : 'border-border bg-secondary/50'
                   }`}
                 >
                   <span className="text-2xl">🌙</span>
-                  <span className={`text-sm font-semibold ${adhkarToday.evening ? 'text-emerald-400' : 'text-gray-400'}`}>
+                  <span className={`text-sm font-semibold ${adhkarToday.evening ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                     Evening
                   </span>
-                  <span className={`text-[10px] ${adhkarToday.evening ? 'text-emerald-500/70' : 'text-gray-600'}`}>
+                  <span className={`text-[10px] ${adhkarToday.evening ? 'text-emerald-500/70' : 'text-muted-foreground/60'}`}>
                     {adhkarToday.evening ? 'Completed' : 'Tap to mark'}
                   </span>
                 </button>
@@ -1303,7 +1303,7 @@ export default function TrackerPage() {
                 <BookOpenIcon className="h-4 w-4" /> Open Adhkar Collection
               </Link>
 
-              <p className="text-center text-[11px] text-gray-500">
+              <p className="text-center text-[11px] text-muted-foreground/80">
                 Completing morning &amp; evening adhkar is Sunnah
               </p>
             </div>
@@ -1319,8 +1319,8 @@ export default function TrackerPage() {
             summary={`${khatamProgress.filter(Boolean).length}/30 Juz`}
           />
           {openSections.khatam && (
-            <div className="border-t border-gray-800 p-4">
-              <p className="text-xs text-gray-400 mb-4 text-center">Track your Quran completion — tap a Juz to mark it done</p>
+            <div className="border-t border-border p-4">
+              <p className="text-xs text-muted-foreground mb-4 text-center">Track your Quran completion — tap a Juz to mark it done</p>
 
               {/* 6x5 Juz grid */}
               <div className="grid grid-cols-6 gap-2 mb-4">
@@ -1338,7 +1338,7 @@ export default function TrackerPage() {
                       className={`flex h-11 w-full items-center justify-center rounded-xl text-xs font-bold transition-all active:scale-90 ${
                         done
                           ? 'border border-emerald-500/40 bg-emerald-500/20 text-emerald-400'
-                          : 'border border-gray-700 bg-gray-800 text-gray-500'
+                          : 'border border-border bg-secondary text-muted-foreground/80'
                       }`}
                     >
                       {i + 1}
@@ -1348,13 +1348,13 @@ export default function TrackerPage() {
               </div>
 
               {/* Progress text */}
-              <p className="text-center text-sm text-gray-300 mb-3">
+              <p className="text-center text-sm text-muted-foreground mb-3">
                 <span className="font-bold text-purple-400">{khatamProgress.filter(Boolean).length}</span>/30 Juz complete
                 {khatamProgress.every(Boolean) && <span className="ml-2 text-emerald-400">Alhamdulillah! 🎉</span>}
               </p>
 
               {/* Progress bar */}
-              <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-gray-800">
+              <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-secondary">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-purple-500 to-emerald-400 transition-all duration-500"
                   style={{ width: `${(khatamProgress.filter(Boolean).length / 30) * 100}%` }}
@@ -1377,7 +1377,7 @@ export default function TrackerPage() {
                   </button>
                   <button
                     onClick={() => setShowKhatamReset(false)}
-                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-xs font-medium text-gray-400 active:bg-gray-700"
+                    className="flex-1 rounded-xl border border-border bg-secondary py-2.5 text-xs font-medium text-muted-foreground active:bg-muted"
                   >
                     Cancel
                   </button>
@@ -1385,7 +1385,7 @@ export default function TrackerPage() {
               ) : (
                 <button
                   onClick={() => setShowKhatamReset(true)}
-                  className="w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-xs font-medium text-gray-400 transition-all active:bg-gray-700"
+                  className="w-full rounded-xl border border-border bg-secondary py-2.5 text-xs font-medium text-muted-foreground transition-all active:bg-muted"
                 >
                   Start New Khatam
                 </button>
@@ -1403,8 +1403,8 @@ export default function TrackerPage() {
             summary={qadaTotal > 0 ? `${qadaTotal} remaining` : 'All clear ✓'}
           />
           {openSections.qada && (
-            <div className="border-t border-gray-800 p-4 space-y-4">
-              <p className="text-xs text-gray-400 leading-relaxed">
+            <div className="border-t border-border p-4 space-y-4">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Making up missed prayers (Qada) is obligatory. Pray them in order if possible, or intersperse with current prayers.
               </p>
               <div className="space-y-2">
@@ -1412,8 +1412,8 @@ export default function TrackerPage() {
                   const entry = qadaLog.find(e => e.prayer === prayer)
                   const count = entry?.count || 0
                   return (
-                    <div key={prayer} className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 px-3 py-2.5">
-                      <span className="text-sm font-medium text-gray-300 w-20">{prayer}</span>
+                    <div key={prayer} className="flex items-center gap-3 rounded-xl border border-border bg-secondary/40 px-3 py-2.5">
+                      <span className="text-sm font-medium text-muted-foreground w-20">{prayer}</span>
                       <span className={`flex-1 text-xs font-semibold ${count === 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
                         {count === 0 ? '✓ Clear' : `${count} remaining`}
                       </span>
@@ -1421,14 +1421,14 @@ export default function TrackerPage() {
                         <button
                           onClick={() => adjustQada(prayer, -1)}
                           disabled={count === 0}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90 disabled:opacity-30"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90 disabled:opacity-30"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="min-w-[2rem] text-center text-sm font-bold text-gray-200">{count}</span>
+                        <span className="min-w-[2rem] text-center text-sm font-bold text-foreground/80">{count}</span>
                         <button
                           onClick={() => adjustQada(prayer, 1)}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all active:scale-90"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -1438,7 +1438,7 @@ export default function TrackerPage() {
                 })}
               </div>
               <div className={`rounded-xl p-3 text-center ${qadaTotal === 0 ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
-                <p className="text-xs text-gray-400">Total Qada Balance</p>
+                <p className="text-xs text-muted-foreground">Total Qada Balance</p>
                 <p className={`text-2xl font-bold ${qadaTotal === 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
                   {qadaTotal}
                 </p>

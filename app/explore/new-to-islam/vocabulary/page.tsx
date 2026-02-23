@@ -88,7 +88,7 @@ export default function VocabularyPage() {
   }, [filtered])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={MessageCircle}
         title="Islamic Vocabulary"
@@ -101,21 +101,21 @@ export default function VocabularyPage() {
 
       <div className="px-4 pt-5 space-y-4">
         {/* Search Bar */}
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900/50 px-4 py-3">
-          <Search className="h-5 w-5 shrink-0 text-gray-500" />
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-card/50 px-4 py-3">
+          <Search className="h-5 w-5 shrink-0 text-muted-foreground/80" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search terms..."
-            className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-500 outline-none"
+            className="w-full bg-transparent text-sm text-foreground placeholder-gray-500 outline-none"
           />
         </div>
 
         {/* Results */}
         {filtered.length === 0 && (
-          <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 text-center">
-            <p className="text-sm text-gray-400">No terms found for &quot;{search}&quot;</p>
+          <div className="rounded-2xl border border-border bg-card/50 p-6 text-center">
+            <p className="text-sm text-muted-foreground">No terms found for &quot;{search}&quot;</p>
           </div>
         )}
 
@@ -140,11 +140,11 @@ export default function VocabularyPage() {
                     onClick={() => setOpenGroup(isOpen ? null : group)}
                     className="flex w-full items-center justify-between mt-5 mb-2"
                   >
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                       {group} ({items.length})
                     </span>
                     <ChevronDown
-                      className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                      className={`h-4 w-4 text-muted-foreground/80 transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
                     />
@@ -171,11 +171,11 @@ export default function VocabularyPage() {
 
 function TermCard({ term }: { term: Term }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 mb-2">
+    <div className="rounded-xl border border-border bg-card/50 p-4 mb-2">
       <p className="font-arabic text-xl text-teal-300">{term.arabic}</p>
-      <p className="mt-1 text-sm font-medium text-[#f9fafb]">{term.transliteration}</p>
-      <p className="text-sm text-gray-400">{term.meaning}</p>
-      <p className="mt-1 text-xs text-gray-500 italic">{term.usage}</p>
+      <p className="mt-1 text-sm font-medium text-foreground">{term.transliteration}</p>
+      <p className="text-sm text-muted-foreground">{term.meaning}</p>
+      <p className="mt-1 text-xs text-muted-foreground/80 italic">{term.usage}</p>
     </div>
   )
 }

@@ -173,16 +173,16 @@ export default function HifzPage() {
         <div className="relative flex flex-col items-center justify-center px-6 pt-14 pb-8">
           <button
             onClick={() => phase === 'select' ? router.back() : setPhase('select')}
-            className="absolute top-14 left-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur-sm"
+            className="absolute top-14 left-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-foreground backdrop-blur-sm"
             aria-label="Go back"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md">
-            <Brain className="h-7 w-7 text-white" />
+            <Brain className="h-7 w-7 text-foreground" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white text-balance">Hifz Mode</h1>
-          <p className="mt-1 text-xs font-medium uppercase tracking-widest text-white/70">Memorization Practice</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground text-balance">Hifz Mode</h1>
+          <p className="mt-1 text-xs font-medium uppercase tracking-widest text-foreground/70">Memorization Practice</p>
         </div>
       </div>
 
@@ -197,7 +197,7 @@ export default function HifzPage() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">Test Your Memory</h3>
-                <p className="mt-1 text-xs leading-relaxed text-gray-400">
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   Verses are hidden for you to recite from memory. Reveal the text to check your accuracy, then mark whether you got it right. Build your memorization streak.
                 </p>
               </div>
@@ -205,8 +205,8 @@ export default function HifzPage() {
           </div>
 
           {/* Search */}
-          <div className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
-            <BookOpen className="h-4 w-4 text-gray-500" />
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+            <BookOpen className="h-4 w-4 text-muted-foreground/80" />
             <input
               type="text"
               placeholder="Search surah to memorize..."
@@ -233,7 +233,7 @@ export default function HifzPage() {
                     setEndAyah(Math.min(s.numberOfAyahs, 10))
                     setPhase('configure')
                   }}
-                  className="flex w-full items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 p-3.5 text-left transition-all active:scale-[0.98]"
+                  className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-3.5 text-left transition-all active:scale-[0.98]"
                 >
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15">
                     <span className="text-xs font-bold text-indigo-400">{s.number}</span>
@@ -247,10 +247,10 @@ export default function HifzPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-gray-500">{s.numberOfAyahs} ayahs</p>
+                    <p className="text-[11px] text-muted-foreground/80">{s.numberOfAyahs} ayahs</p>
                   </div>
-                  <span className="font-arabic text-base text-gray-400">{s.name}</span>
-                  <ChevronRight className="h-4 w-4 text-gray-600" />
+                  <span className="font-arabic text-base text-muted-foreground">{s.name}</span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
                 </button>
               )
             })}
@@ -261,49 +261,49 @@ export default function HifzPage() {
       {/* Phase: Configure */}
       {phase === 'configure' && surah && (
         <div className="px-4 pt-5 space-y-5">
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5 text-center">
+          <div className="rounded-2xl border border-border bg-card p-5 text-center">
             <p className="font-arabic text-2xl text-foreground">{surah.name}</p>
             <p className="mt-1 text-sm font-semibold text-foreground">{surah.englishName}</p>
-            <p className="text-xs text-gray-400">{surah.numberOfAyahs} ayahs</p>
+            <p className="text-xs text-muted-foreground">{surah.numberOfAyahs} ayahs</p>
           </div>
 
           {/* Ayah range */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-4">
+          <div className="rounded-2xl border border-border bg-card p-4 space-y-4">
             <div className="flex items-center gap-2">
-              <Settings2 className="h-4 w-4 text-gray-500" />
+              <Settings2 className="h-4 w-4 text-muted-foreground/80" />
               <h3 className="text-sm font-semibold text-foreground">Ayah Range</h3>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">From</label>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground/80">From</label>
                 <input
                   type="number"
                   min={1}
                   max={surah.numberOfAyahs}
                   value={startAyah}
                   onChange={(e) => setStartAyah(Math.max(1, Math.min(surah.numberOfAyahs, Number(e.target.value))))}
-                  className="w-full rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-indigo-500/50"
                 />
               </div>
-              <span className="pt-4 text-gray-600">to</span>
+              <span className="pt-4 text-muted-foreground/60">to</span>
               <div className="flex-1">
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">To</label>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground/80">To</label>
                 <input
                   type="number"
                   min={startAyah}
                   max={surah.numberOfAyahs}
                   value={endAyah}
                   onChange={(e) => setEndAyah(Math.max(startAyah, Math.min(surah.numberOfAyahs, Number(e.target.value))))}
-                  className="w-full rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-indigo-500/50"
                 />
               </div>
             </div>
           </div>
 
           {/* Hide mode */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">
+          <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <EyeOff className="h-4 w-4 text-gray-500" />
+              <EyeOff className="h-4 w-4 text-muted-foreground/80" />
               <h3 className="text-sm font-semibold text-foreground">Hide Mode</h3>
             </div>
             <div className="space-y-2">
@@ -318,20 +318,20 @@ export default function HifzPage() {
                   className={`w-full rounded-xl border-2 p-3 text-left transition-all ${
                     hideMode === m.key
                       ? 'border-indigo-500/30 bg-indigo-500/10'
-                      : 'border-gray-800 bg-gray-800/50'
+                      : 'border-border bg-secondary/50'
                   }`}
                 >
-                  <span className={`text-sm font-medium ${hideMode === m.key ? 'text-indigo-400' : 'text-gray-300'}`}>
+                  <span className={`text-sm font-medium ${hideMode === m.key ? 'text-indigo-400' : 'text-muted-foreground'}`}>
                     {m.label}
                   </span>
-                  <p className="mt-0.5 text-[11px] text-gray-500">{m.desc}</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground/80">{m.desc}</p>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Show translation toggle */}
-          <div className="flex items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
             <span className="text-sm text-foreground">Show Translation Hints</span>
             <button
               onClick={() => setShowTranslation(!showTranslation)}
@@ -350,7 +350,7 @@ export default function HifzPage() {
           {/* Start button */}
           <button
             onClick={startPractice}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 py-4 text-base font-semibold text-foreground shadow-lg shadow-indigo-500/25 transition-all active:scale-[0.98]"
           >
             <Brain className="h-5 w-5" />
             Start Memorization
@@ -363,8 +363,8 @@ export default function HifzPage() {
         <div className="px-4 pt-5 space-y-4">
           {/* Progress bar */}
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500">{currentIdx + 1}/{ayahs.length}</span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-800">
+            <span className="text-xs text-muted-foreground/80">{currentIdx + 1}/{ayahs.length}</span>
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-400 transition-all duration-300"
                 style={{ width: `${((currentIdx + 1) / ayahs.length) * 100}%` }}
@@ -373,7 +373,7 @@ export default function HifzPage() {
           </div>
 
           {/* Ayah card */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="rounded-2xl border border-border bg-card p-5">
             {/* Ayah number */}
             <div className="mb-4 flex items-center justify-between">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
@@ -382,7 +382,7 @@ export default function HifzPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={togglePlay}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 text-gray-400 active:text-emerald-400"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-muted-foreground active:text-emerald-400"
                   aria-label={playing ? 'Pause audio' : 'Play audio'}
                 >
                   {playing ? <Pause className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
@@ -398,11 +398,11 @@ export default function HifzPage() {
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
                       <EyeOff className="h-8 w-8 text-indigo-400" />
                     </div>
-                    <p className="text-center text-sm text-gray-400">
+                    <p className="text-center text-sm text-muted-foreground">
                       Recite Ayah {currentAyah.numberInSurah} from memory
                     </p>
                     {showTranslation && (
-                      <p className="mt-2 text-center text-xs leading-relaxed text-gray-500 italic">
+                      <p className="mt-2 text-center text-xs leading-relaxed text-muted-foreground/80 italic">
                         Hint: {currentAyah.translation.substring(0, 80)}...
                       </p>
                     )}
@@ -413,7 +413,7 @@ export default function HifzPage() {
                       {getHiddenText(currentAyah.text)}
                     </p>
                     {showTranslation && (
-                      <p className="mt-3 text-xs text-gray-500 italic">
+                      <p className="mt-3 text-xs text-muted-foreground/80 italic">
                         {currentAyah.translation.substring(0, 100)}...
                       </p>
                     )}
@@ -434,13 +434,13 @@ export default function HifzPage() {
                 <p className="text-right font-arabic text-2xl leading-[2.2] text-foreground" dir="rtl">
                   {currentAyah.text}
                 </p>
-                <p className="text-sm leading-relaxed text-gray-400">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {currentAyah.translation}
                 </p>
 
                 {/* Self-assessment */}
                 <div className="pt-2 space-y-2">
-                  <p className="text-center text-xs text-gray-500">How did you do?</p>
+                  <p className="text-center text-xs text-muted-foreground/80">How did you do?</p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => markResult(false)}
@@ -473,7 +473,7 @@ export default function HifzPage() {
       {/* Phase: Results */}
       {phase === 'results' && (
         <div className="px-4 pt-5 space-y-5">
-          <div className="flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-8">
+          <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-8">
             <div className={`mb-4 flex h-20 w-20 items-center justify-center rounded-3xl ${
               accuracy >= 80 ? 'bg-emerald-500/15' : accuracy >= 50 ? 'bg-amber-500/15' : 'bg-red-500/15'
             }`}>
@@ -488,7 +488,7 @@ export default function HifzPage() {
             <h2 className="text-2xl font-bold text-foreground">
               {accuracy >= 80 ? 'Excellent!' : accuracy >= 50 ? 'Good Effort!' : 'Keep Practicing'}
             </h2>
-            <p className="mt-1 text-sm text-gray-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               {surah?.englishName} - Ayahs {startAyah}-{endAyah}
             </p>
 
@@ -518,26 +518,26 @@ export default function HifzPage() {
             <div className="mt-4 flex gap-6">
               <div className="text-center">
                 <p className="text-lg font-bold text-emerald-400">{sessionCorrect}</p>
-                <p className="text-[10px] text-gray-500">Correct</p>
+                <p className="text-[10px] text-muted-foreground/80">Correct</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-red-400">{sessionTotal - sessionCorrect}</p>
-                <p className="text-[10px] text-gray-500">Need Practice</p>
+                <p className="text-[10px] text-muted-foreground/80">Need Practice</p>
               </div>
             </div>
           </div>
 
           {/* Ayah-by-ayah breakdown */}
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
-            <div className="border-b border-gray-800 px-4 py-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Breakdown</h3>
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="border-b border-border px-4 py-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Breakdown</h3>
             </div>
             {sessionResults.map((r, i) => (
-              <div key={i} className={`flex items-center gap-3 px-4 py-2.5 ${i < sessionResults.length - 1 ? 'border-b border-gray-800/50' : ''}`}>
+              <div key={i} className={`flex items-center gap-3 px-4 py-2.5 ${i < sessionResults.length - 1 ? 'border-b border-border/50' : ''}`}>
                 <div className={`flex h-6 w-6 items-center justify-center rounded-full ${r.correct ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
                   {r.correct ? <Check className="h-3 w-3 text-emerald-400" /> : <X className="h-3 w-3 text-red-400" />}
                 </div>
-                <span className="text-sm text-gray-300">Ayah {r.ayah}</span>
+                <span className="text-sm text-muted-foreground">Ayah {r.ayah}</span>
                 <span className={`ml-auto text-xs ${r.correct ? 'text-emerald-400' : 'text-red-400'}`}>
                   {r.correct ? 'Memorized' : 'Review'}
                 </span>
@@ -554,14 +554,14 @@ export default function HifzPage() {
                 setSessionResults([])
                 setPhase('practice')
               }}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-800 py-3.5 text-sm font-medium text-gray-300 active:bg-gray-700"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-secondary py-3.5 text-sm font-medium text-muted-foreground active:bg-muted"
             >
               <RotateCcw className="h-4 w-4" />
               Retry
             </button>
             <button
               onClick={() => setPhase('select')}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-500 py-3.5 text-sm font-medium text-white active:bg-indigo-600"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-500 py-3.5 text-sm font-medium text-foreground active:bg-indigo-600"
             >
               <Sparkles className="h-4 w-4" />
               New Session

@@ -419,7 +419,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#0a0b14] pb-nav ${mounted ? '' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
+    <div className={`min-h-screen bg-background pb-nav ${mounted ? '' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s ease' }}>
       {/* ========== HERO ========== */}
       <div className="relative overflow-hidden">
         {/* Background gradient */}
@@ -429,7 +429,7 @@ export default function HomePage() {
         <div className={`absolute -bottom-10 -left-10 h-40 w-40 rounded-full blur-3xl ${ramadan ? 'bg-indigo-500/20' : 'bg-teal-500/20'}`} />
         {/* Pattern overlay */}
         <div className="islamic-pattern absolute inset-0 opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0b14]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
         {/* Hero animation */}
         <HeroAnimation theme={ramadan ? 'ramadan' : 'prayer'} />
 
@@ -445,22 +445,22 @@ export default function HomePage() {
           <div className="mb-6 flex items-center justify-between animate-fade-down" style={{ animationDelay: '0.05s', animationFillMode: 'backwards' }}>
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Image src="/images/logo.jpg" alt="MasjidConnect GY" width={44} height={44} className="rounded-2xl ring-2 ring-white/10" />
+                <Image src="/images/logo.jpg" alt="MasjidConnect GY" width={44} height={44} className="rounded-2xl ring-2 ring-border" />
                 <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0a0b14] bg-emerald-400" />
               </div>
               <div>
-                <p className="text-[11px] font-medium tracking-wide text-white/50">{getIslamicGreeting()}</p>
-                <h1 className="text-lg font-bold text-white">{username || 'MasjidConnect GY'}</h1>
+                <p className="text-[11px] font-medium tracking-wide text-foreground/50">{getIslamicGreeting()}</p>
+                <h1 className="text-lg font-bold text-foreground">{username || 'MasjidConnect GY'}</h1>
               </div>
             </div>
             <div className="flex gap-2">
-              <Link href="/explore" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Explore">
+              <Link href="/explore" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-foreground/80 transition-transform active:scale-90" aria-label="Explore">
                 <Compass className="h-5 w-5" />
               </Link>
-              <Link href="/profile" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Profile">
+              <Link href="/profile" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-foreground/80 transition-transform active:scale-90" aria-label="Profile">
                 <User className="h-5 w-5" />
               </Link>
-              <Link href="/settings" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/80 transition-transform active:scale-90" aria-label="Settings">
+              <Link href="/settings" className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-foreground/80 transition-transform active:scale-90" aria-label="Settings">
                 <Settings className="h-5 w-5" />
               </Link>
             </div>
@@ -471,7 +471,7 @@ export default function HomePage() {
             <span className={`rounded-full px-3 py-1.5 text-[11px] font-semibold ${ramadan ? 'glass-amber text-amber-300' : 'glass-emerald text-emerald-300'}`}>
               {hijriDate || 'Loading...'}
             </span>
-            <span className="glass rounded-full px-3 py-1.5 text-[11px] font-medium text-white/50">
+            <span className="glass rounded-full px-3 py-1.5 text-[11px] font-medium text-foreground/50">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </span>
           </div>
@@ -483,7 +483,7 @@ export default function HomePage() {
                 <MapPin className="h-4 w-4 shrink-0 text-amber-400" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-amber-400">Using Georgetown, Guyana</p>
-                  <p className="text-[10px] text-white/40 truncate">Prayer times may be incorrect for your location</p>
+                  <p className="text-[10px] text-foreground/40 truncate">Prayer times may be incorrect for your location</p>
                 </div>
               </div>
               <Link href="/settings" className="ml-3 shrink-0 rounded-full bg-amber-500/15 px-3 py-1.5 text-[10px] font-semibold text-amber-400 active:scale-95 transition-transform">
@@ -512,13 +512,13 @@ export default function HomePage() {
                   <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{nextPrayerName}</span>
                 </div>
                 <div className="mt-1.5 flex items-baseline gap-0.5">
-                  <span className="text-4xl font-extrabold tabular-nums text-white tracking-tight">{String(countdown.hours).padStart(2, '0')}</span>
+                  <span className="text-4xl font-extrabold tabular-nums text-foreground tracking-tight">{String(countdown.hours).padStart(2, '0')}</span>
                   <span className="text-base font-medium text-emerald-400/50 mx-0.5">:</span>
-                  <span className="text-4xl font-extrabold tabular-nums text-white tracking-tight">{String(countdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-4xl font-extrabold tabular-nums text-foreground tracking-tight">{String(countdown.minutes).padStart(2, '0')}</span>
                   <span className="text-base font-medium text-emerald-400/50 mx-0.5">:</span>
-                  <span className="text-4xl font-extrabold tabular-nums text-white tracking-tight">{String(countdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-4xl font-extrabold tabular-nums text-foreground tracking-tight">{String(countdown.seconds).padStart(2, '0')}</span>
                 </div>
-                {nextPrayer && <p className="mt-1 text-[11px] text-white/30">{nextPrayer.time} &middot; {getTimeGreeting()}</p>}
+                {nextPrayer && <p className="mt-1 text-[11px] text-foreground/30">{nextPrayer.time} &middot; {getTimeGreeting()}</p>}
               </div>
             </div>
           </div>
@@ -537,11 +537,11 @@ export default function HomePage() {
                   {ramadan && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">Ramadan</span>}
                 </div>
                 <div className="mt-1 flex items-baseline gap-0.5">
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.hours).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.hours).padStart(2, '0')}</span>
                   <span className="text-sm text-amber-400/50">h</span>
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.minutes).padStart(2, '0')}</span>
                   <span className="text-sm text-amber-400/50">m</span>
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(iftaarCountdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(iftaarCountdown.seconds).padStart(2, '0')}</span>
                   <span className="text-sm text-amber-400/50">s</span>
                 </div>
               </div>
@@ -561,11 +561,11 @@ export default function HomePage() {
                   <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-bold text-blue-300">Fajr</span>
                 </div>
                 <div className="mt-1 flex items-baseline gap-0.5">
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.hours).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(suhoorCountdown.hours).padStart(2, '0')}</span>
                   <span className="text-sm text-blue-400/50">h</span>
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(suhoorCountdown.minutes).padStart(2, '0')}</span>
                   <span className="text-sm text-blue-400/50">m</span>
-                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-foreground">{String(suhoorCountdown.seconds).padStart(2, '0')}</span>
                   <span className="text-sm text-blue-400/50">s</span>
                 </div>
               </div>
@@ -579,23 +579,23 @@ export default function HomePage() {
       <div className="-mt-2 pt-2">
         <PrayerStrip prayers={prayers} />
         {homeMasjidName && (
-          <p className="mt-1 px-4 text-center text-[10px] text-gray-600">
-            ⭐ Prayer times for <span className="text-gray-500">{homeMasjidName}</span>
+          <p className="mt-1 px-4 text-center text-[10px] text-muted-foreground/60">
+            ⭐ Prayer times for <span className="text-muted-foreground/80">{homeMasjidName}</span>
           </p>
         )}
       </div>
 
       {/* ========== HADITH OF THE DAY ========== */}
-      <div data-tour="hadith-card" className="mx-4 mb-4 mt-3 rounded-xl bg-gray-900/70 border border-gray-800 p-4 backdrop-blur-sm">
+      <div data-tour="hadith-card" className="mx-4 mb-4 mt-3 rounded-xl bg-card/70 border border-border p-4 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-amber-400 text-sm">{'\uD83D\uDCDC'}</span>
           <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-amber-400/80">Hadith of the Day</span>
         </div>
-        <p className="font-arabic text-right text-lg leading-loose text-white mb-2">{hadith.arabic}</p>
-        <p className="text-xs text-gray-400 italic mb-2">&ldquo;{hadith.transliteration}&rdquo;</p>
-        <p className="text-sm text-gray-200 mb-3">&ldquo;{hadith.english}&rdquo;</p>
+        <p className="font-arabic text-right text-lg leading-loose text-foreground mb-2">{hadith.arabic}</p>
+        <p className="text-xs text-muted-foreground italic mb-2">&ldquo;{hadith.transliteration}&rdquo;</p>
+        <p className="text-sm text-foreground/80 mb-3">&ldquo;{hadith.english}&rdquo;</p>
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-gray-500">{hadith.narrator}</span>
+          <span className="text-[10px] text-muted-foreground/80">{hadith.narrator}</span>
           <span className="text-[10px] text-amber-500/70 bg-amber-500/10 px-2 py-0.5 rounded-full">{hadith.source}</span>
         </div>
       </div>
@@ -607,8 +607,8 @@ export default function HomePage() {
             <Flame className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <p className="text-xl font-extrabold tabular-nums text-white">{streak}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Day Streak</p>
+            <p className="text-xl font-extrabold tabular-nums text-foreground">{streak}</p>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">Day Streak</p>
           </div>
         </div>
         <div className="glass flex flex-1 items-center gap-3 rounded-2xl px-4 py-3.5">
@@ -616,8 +616,8 @@ export default function HomePage() {
             <Sparkles className="h-5 w-5 text-emerald-400" />
           </div>
           <div>
-            <p className="text-xl font-extrabold tabular-nums text-white">{points}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Points</p>
+            <p className="text-xl font-extrabold tabular-nums text-foreground">{points}</p>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">Points</p>
           </div>
         </div>
       </div>
@@ -635,8 +635,8 @@ export default function HomePage() {
             <BookMarked className="h-4 w-4 text-amber-400" />
             <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400/80">Verse of the Day</span>
           </div>
-          <p className="mb-3 text-right font-arabic text-xl leading-[2.2] text-white/90" dir="rtl">{dailyVerse.arabic}</p>
-          <p className="text-sm leading-relaxed text-gray-300/90">{dailyVerse.translation}</p>
+          <p className="mb-3 text-right font-arabic text-xl leading-[2.2] text-foreground/90" dir="rtl">{dailyVerse.arabic}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground/90">{dailyVerse.translation}</p>
           <div className="mt-4 flex items-center justify-between">
             <p className="text-[11px] font-medium text-amber-400/50">{dailyVerse.reference}</p>
             <Link href={`/quran/${dailyVerse.surah}`} className="flex items-center gap-1 rounded-full bg-amber-500/10 px-3 py-1.5 text-[11px] font-semibold text-amber-400 transition-all active:scale-95">
@@ -655,7 +655,7 @@ export default function HomePage() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-purple-400/60">Continue Reading</p>
-              <p className="text-sm font-bold text-white">{lastRead.name}</p>
+              <p className="text-sm font-bold text-foreground">{lastRead.name}</p>
             </div>
             <ChevronRight className="h-5 w-5 text-purple-400/30 shrink-0" />
           </Link>
@@ -673,13 +673,13 @@ export default function HomePage() {
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-amber-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-300">Ramadan Mubarak</span>
                 {ramadanStatus.ramadanDay && (
-                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold text-white/70">
+                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold text-foreground/70">
                     Day {ramadanStatus.ramadanDay}
                   </span>
                 )}
               </div>
-              <h3 className="mt-2 text-lg font-bold text-white">Ramadan Mode</h3>
-              <p className="mt-1 text-xs text-white/50">Quick access to your Ramadan essentials</p>
+              <h3 className="mt-2 text-lg font-bold text-foreground">Ramadan Mode</h3>
+              <p className="mt-1 text-xs text-foreground/50">Quick access to your Ramadan essentials</p>
 
               <div className="mt-4 grid grid-cols-5 gap-2">
                 {[
@@ -691,7 +691,7 @@ export default function HomePage() {
                 ].map((item) => (
                   <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1.5 rounded-xl bg-white/5 py-2.5 active:bg-white/10">
                     <item.icon className="h-4 w-4 text-amber-300" />
-                    <span className="text-[9px] font-medium text-white/70">{item.label}</span>
+                    <span className="text-[9px] font-medium text-foreground/70">{item.label}</span>
                   </Link>
                 ))}
               </div>
@@ -734,7 +734,7 @@ export default function HomePage() {
               <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${action.color}`}>
                 <action.icon className={`h-5 w-5 ${action.iconColor}`} />
               </div>
-              <span className="text-xs font-semibold text-gray-300">{action.label}</span>
+              <span className="text-xs font-semibold text-muted-foreground">{action.label}</span>
             </Link>
           ))}
         </div>
@@ -751,7 +751,7 @@ export default function HomePage() {
         </div>
 
         {/* Progress bar */}
-        <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-800/50">
+        <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-secondary/50">
           <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-700 ease-out" style={{ width: `${(completedCount / CHECKLIST_ITEMS.length) * 100}%` }} />
         </div>
 
@@ -762,9 +762,9 @@ export default function HomePage() {
                 checklist[item.key] ? 'border-emerald-500/20 bg-emerald-500/8' : ''
               }`}>
               <CheckCircle2 className={`h-5 w-5 shrink-0 transition-all duration-300 ${
-                checklist[item.key] ? 'fill-emerald-500 text-emerald-500 scale-110' : 'text-gray-600'
+                checklist[item.key] ? 'fill-emerald-500 text-emerald-500 scale-110' : 'text-muted-foreground/60'
               }`} />
-              <span className={`text-sm font-medium transition-colors ${checklist[item.key] ? 'text-emerald-400 line-through decoration-emerald-500/30' : 'text-white'}`}>
+              <span className={`text-sm font-medium transition-colors ${checklist[item.key] ? 'text-emerald-400 line-through decoration-emerald-500/30' : 'text-foreground'}`}>
                 {item.label}
               </span>
               {checklist[item.key] && (

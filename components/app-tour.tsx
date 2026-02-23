@@ -270,21 +270,21 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-3xl border border-gray-700/80 bg-gray-900 shadow-2xl">
+        <div className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-2xl">
           {/* Progress dots */}
           <div className="flex items-center justify-between px-4 pt-4">
             <div className="flex gap-1 flex-wrap max-w-[200px]">
               {STEPS.map((_, i) => (
                 <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === stepIdx ? 'w-4 bg-emerald-400' : i < stepIdx ? 'w-1.5 bg-emerald-700' : 'w-1.5 bg-gray-700'
+                  i === stepIdx ? 'w-4 bg-emerald-400' : i < stepIdx ? 'w-1.5 bg-emerald-700' : 'w-1.5 bg-muted'
                 }`} />
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-gray-600">{stepIdx + 1}/{STEPS.length}</span>
+              <span className="text-[11px] text-muted-foreground/60">{stepIdx + 1}/{STEPS.length}</span>
               <button
                 onClick={handleSkip}
-                className="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 active:text-gray-300"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground/80 active:text-muted-foreground"
                 aria-label="Skip tour"
               >
                 <X className="h-4 w-4" />
@@ -295,25 +295,25 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
           {/* Content */}
           <div className="px-5 py-4">
             <div className="mb-3 flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gray-800 text-2xl">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-2xl">
                 {step.emoji}
               </div>
-              <h3 className="text-base font-bold text-white leading-tight">{step.title}</h3>
+              <h3 className="text-base font-bold text-foreground leading-tight">{step.title}</h3>
             </div>
-            <p className="text-sm leading-relaxed text-gray-400">{step.description}</p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
             {step.hint && (
               <p className="mt-2 text-[11px] text-emerald-500/80 leading-relaxed">{step.hint}</p>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between border-t border-gray-800 px-5 py-3">
-            <button onClick={handleSkip} className="text-xs font-medium text-gray-500 active:text-gray-300">
+          <div className="flex items-center justify-between border-t border-border px-5 py-3">
+            <button onClick={handleSkip} className="text-xs font-medium text-muted-foreground/80 active:text-muted-foreground">
               Skip tour
             </button>
             <button
               onClick={handleNext}
-              className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 active:bg-emerald-600 active:scale-95 transition-transform"
+              className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-foreground shadow-lg shadow-emerald-500/25 active:bg-emerald-600 active:scale-95 transition-transform"
             >
               {isLast ? (
                 <><Sparkles className="h-4 w-4" /> Let&apos;s go!</>

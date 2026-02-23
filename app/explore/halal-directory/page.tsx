@@ -388,7 +388,7 @@ export default function HalalDirectoryPage() {
     areaFilter === 'All' ? b.locations : b.locations.filter(l => l.area === areaFilter)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={ShieldCheck}
         title="Halal Directory"
@@ -401,10 +401,10 @@ export default function HalalDirectoryPage() {
       <div className="px-4 pt-4 space-y-3">
 
         {/* ── Disclaimer ── */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 px-4 py-3 flex items-start gap-3">
+        <div className="rounded-2xl border border-border bg-card/50 px-4 py-3 flex items-start gap-3">
           <Info className="h-4 w-4 text-sky-400 mt-0.5 shrink-0" />
           <div>
-            <p className="text-[11px] text-gray-400 leading-relaxed">
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
               Updated regularly from publicly available information. Always verify certification directly with CIOG or D.E.H.C. before dining.
             </p>
             <button onClick={openModal} className="mt-1 text-[11px] text-sky-400 underline underline-offset-2">
@@ -415,16 +415,16 @@ export default function HalalDirectoryPage() {
 
         {/* ── Search ── */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
           <input
             type="search"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search restaurants, areas…"
-            className="w-full rounded-2xl border border-gray-800 bg-gray-900 py-3 pl-11 pr-10 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-gray-600"
+            className="w-full rounded-2xl border border-border bg-card py-3 pl-11 pr-10 text-sm text-foreground/80 placeholder-gray-600 outline-none focus:border-gray-600"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/80">
               <X className="h-4 w-4" />
             </button>
           )}
@@ -438,11 +438,11 @@ export default function HalalDirectoryPage() {
               onClick={() => setAuthFilter(f)}
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 authFilter === f
-                  ? f === 'CIOG' ? 'bg-emerald-500 text-white'
-                    : f === 'D.E.H.C.' ? 'bg-amber-500 text-white'
-                    : f === 'Both' ? 'bg-blue-500 text-white'
+                  ? f === 'CIOG' ? 'bg-emerald-500 text-foreground'
+                    : f === 'D.E.H.C.' ? 'bg-amber-500 text-foreground'
+                    : f === 'Both' ? 'bg-blue-500 text-foreground'
                     : 'bg-white text-gray-900'
-                  : 'bg-gray-800 text-gray-400'
+                  : 'bg-secondary text-muted-foreground'
               }`}
             >
               {f === 'All' ? '🔍 All' : f === 'Both' ? '✅ Dual Cert' : f}
@@ -457,7 +457,7 @@ export default function HalalDirectoryPage() {
               key={f}
               onClick={() => setCategoryFilter(f)}
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                categoryFilter === f ? 'bg-white text-gray-900' : 'bg-gray-800 text-gray-400'
+                categoryFilter === f ? 'bg-white text-gray-900' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {f}
@@ -472,7 +472,7 @@ export default function HalalDirectoryPage() {
               key={f}
               onClick={() => setAreaFilter(f)}
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                areaFilter === f ? 'bg-teal-500 text-white' : 'bg-gray-800 text-gray-400'
+                areaFilter === f ? 'bg-teal-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {f}
@@ -481,7 +481,7 @@ export default function HalalDirectoryPage() {
         </div>
 
         {/* ── Results count ── */}
-        <p className="text-[11px] text-gray-500 px-1">
+        <p className="text-[11px] text-muted-foreground/80 px-1">
           {filtered.length} {filtered.length === 1 ? 'business' : 'businesses'} found
           {authFilter !== 'All' && <span className="ml-1 text-emerald-500">· {authFilter} certified</span>}
           {areaFilter !== 'All' && <span className="ml-1 text-teal-500">· {areaFilter}</span>}
@@ -489,9 +489,9 @@ export default function HalalDirectoryPage() {
 
         {/* ── Business cards ── */}
         {filtered.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-gray-800 py-12 text-center">
+          <div className="rounded-2xl border border-dashed border-border py-12 text-center">
             <p className="text-3xl mb-2">🔍</p>
-            <p className="text-sm text-gray-500">No businesses match your filters</p>
+            <p className="text-sm text-muted-foreground/80">No businesses match your filters</p>
             <button onClick={() => { setSearch(''); setCategoryFilter('All'); setAreaFilter('All'); setAuthFilter('All') }}
               className="mt-3 text-xs text-emerald-400 underline underline-offset-4">
               Clear all filters
@@ -504,46 +504,46 @@ export default function HalalDirectoryPage() {
             const isExpanded = expandedId === biz.id
             const locs = filteredLocations(biz)
             return (
-              <div key={biz.id} className="rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden">
+              <div key={biz.id} className="rounded-2xl border border-border bg-card overflow-hidden">
                 <button
-                  className="w-full flex items-start gap-3 p-4 text-left active:bg-gray-800/40"
+                  className="w-full flex items-start gap-3 p-4 text-left active:bg-secondary/40"
                   onClick={() => setExpandedId(isExpanded ? null : biz.id)}
                 >
                   <span className="text-2xl mt-0.5 shrink-0">
                     <CategoryIcon cat={biz.category} />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-white leading-snug">{biz.name}</p>
+                    <p className="text-sm font-bold text-foreground leading-snug">{biz.name}</p>
                     <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                       {biz.authorities.map(a => <AuthBadge key={a} authority={a} />)}
-                      <span className="text-[10px] text-gray-600 bg-gray-800 rounded-full px-2 py-0.5">{biz.category}</span>
+                      <span className="text-[10px] text-muted-foreground/60 bg-secondary rounded-full px-2 py-0.5">{biz.category}</span>
                     </div>
-                    <p className="mt-1 text-[11px] text-gray-500">
+                    <p className="mt-1 text-[11px] text-muted-foreground/80">
                       {locs.length === 1 ? locs[0].address : `${locs.length} location${locs.length > 1 ? 's' : ''}`}
                     </p>
                   </div>
                   <div className="shrink-0 mt-1">
-                    {isExpanded ? <ChevronUp className="h-4 w-4 text-gray-600" /> : <ChevronDown className="h-4 w-4 text-gray-600" />}
+                    {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground/60" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60" />}
                   </div>
                 </button>
 
                 {isExpanded && (
-                  <div className="border-t border-gray-800 px-4 pb-4 pt-3 space-y-3">
+                  <div className="border-t border-border px-4 pb-4 pt-3 space-y-3">
                     {/* Locations list */}
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Locations</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-2">Locations</p>
                       <div className="space-y-1.5">
                         {locs.map((loc, i) => (
-                          <div key={i} className="flex items-start gap-2 text-xs text-gray-400">
+                          <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
                             <MapPin className="h-3 w-3 shrink-0 mt-0.5 text-teal-500" />
-                            <span>{loc.address} <span className="text-gray-600">· {loc.area}</span></span>
+                            <span>{loc.address} <span className="text-muted-foreground/60">· {loc.area}</span></span>
                           </div>
                         ))}
                       </div>
                     </div>
                     {/* Notes */}
                     {biz.notes && (
-                      <p className="text-xs text-gray-400 leading-relaxed bg-gray-800/50 rounded-xl px-3 py-2">{biz.notes}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed bg-secondary/50 rounded-xl px-3 py-2">{biz.notes}</p>
                     )}
                     {/* Contact */}
                     <div className="flex gap-2 flex-wrap">
@@ -582,20 +582,20 @@ export default function HalalDirectoryPage() {
             <AlertTriangle className="h-4 w-4 text-orange-400 shrink-0" />
             <div className="flex-1">
               <p className="text-xs font-bold text-orange-400">Revoked Certifications ({revokedBiz.length})</p>
-              <p className="text-[10px] text-gray-500">Businesses that had halal cert revoked</p>
+              <p className="text-[10px] text-muted-foreground/80">Businesses that had halal cert revoked</p>
             </div>
-            {showRevoked ? <ChevronUp className="h-4 w-4 text-gray-600" /> : <ChevronDown className="h-4 w-4 text-gray-600" />}
+            {showRevoked ? <ChevronUp className="h-4 w-4 text-muted-foreground/60" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60" />}
           </button>
           {showRevoked && (
             <div className="border-t border-orange-800/20 p-4 space-y-2">
               {revokedBiz.map(biz => (
-                <div key={biz.id} className="rounded-xl border border-orange-800/20 bg-gray-900 p-3">
+                <div key={biz.id} className="rounded-xl border border-orange-800/20 bg-card p-3">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="h-3.5 w-3.5 text-orange-400 shrink-0" />
                     <p className="text-sm font-bold text-orange-300">{biz.name}</p>
                   </div>
-                  <p className="mt-1.5 text-xs text-gray-400 leading-relaxed">{biz.notes}</p>
-                  <p className="mt-1 text-[10px] text-gray-600">
+                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{biz.notes}</p>
+                  <p className="mt-1 text-[10px] text-muted-foreground/60">
                     {biz.locations.map(l => l.address).join(' | ')}
                   </p>
                 </div>
@@ -605,10 +605,10 @@ export default function HalalDirectoryPage() {
         </div>
 
         {/* ── Certification bodies note ── */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-4 space-y-2 text-[11px] text-gray-500 leading-relaxed">
+        <div className="rounded-2xl border border-border bg-card/50 p-4 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed">
           <p><span className="font-semibold text-emerald-400">CIOG</span> — Central Islamic Organisation of Guyana. Woolford Ave, Thomas Lands. Tel: 225-6167 / 225-8654. Secretariat: 698-4123.</p>
           <p><span className="font-semibold text-amber-400">D.E.H.C.</span> — Darul Uloom East Street Halaal Committee. 310 East Street, Georgetown. Maulana Badrudeen Khan: 623-2780. Tel: 223-0579.</p>
-          <p className="text-gray-600">Always verify certification status directly with the authority before dining, especially if some time has passed since this listing was updated.</p>
+          <p className="text-muted-foreground/60">Always verify certification status directly with the authority before dining, especially if some time has passed since this listing was updated.</p>
         </div>
 
       </div>
@@ -617,14 +617,14 @@ export default function HalalDirectoryPage() {
       {showSubmitModal && (
         <div className="fixed inset-0 z-[100] flex flex-col justify-end">
           <div className="absolute inset-0 bg-black/70" onClick={() => setShowSubmitModal(false)} />
-          <div className="relative rounded-t-3xl border-t border-gray-800 bg-gray-900 p-5 max-h-[85vh] overflow-y-auto">
+          <div className="relative rounded-t-3xl border-t border-border bg-card p-5 max-h-[85vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-base font-bold text-white">Submit a Directory Update</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">Help us keep this directory accurate</p>
+                <p className="text-base font-bold text-foreground">Submit a Directory Update</p>
+                <p className="text-[11px] text-muted-foreground/80 mt-0.5">Help us keep this directory accurate</p>
               </div>
-              <button onClick={() => setShowSubmitModal(false)} className="rounded-full bg-gray-800 p-1.5 text-gray-400">
+              <button onClick={() => setShowSubmitModal(false)} className="rounded-full bg-secondary p-1.5 text-muted-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -632,22 +632,22 @@ export default function HalalDirectoryPage() {
             {submitDone ? (
               <div className="text-center py-8 space-y-3">
                 <p className="text-3xl">🤲</p>
-                <p className="text-sm font-bold text-white">JazakAllah Khair!</p>
-                <p className="text-xs text-gray-400 leading-relaxed px-4">Your submission has been received. We&apos;ll review it and update the directory accordingly.</p>
-                <button onClick={() => setShowSubmitModal(false)} className="mt-4 rounded-2xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white">Close</button>
+                <p className="text-sm font-bold text-foreground">JazakAllah Khair!</p>
+                <p className="text-xs text-muted-foreground leading-relaxed px-4">Your submission has been received. We&apos;ll review it and update the directory accordingly.</p>
+                <button onClick={() => setShowSubmitModal(false)} className="mt-4 rounded-2xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-foreground">Close</button>
               </div>
             ) : (
               <div className="space-y-4">
                 {/* Type selector */}
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-2">Type of update</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-2">Type of update</p>
                   <div className="flex gap-2 flex-wrap">
                     {(['new_business', 'revocation', 'correction'] as const).map(t => (
                       <button
                         key={t}
                         onClick={() => setSubmitType(t)}
                         className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                          submitType === t ? 'bg-emerald-600 text-white' : 'bg-gray-800 text-gray-400'
+                          submitType === t ? 'bg-emerald-600 text-foreground' : 'bg-secondary text-muted-foreground'
                         }`}
                       >
                         {t === 'new_business' ? '➕ New Business' : t === 'revocation' ? '⚠️ Revocation Report' : '✏️ Correction'}
@@ -658,45 +658,45 @@ export default function HalalDirectoryPage() {
 
                 {/* Business name */}
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Business name</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-1.5">Business name</p>
                   <input
                     value={submitBiz}
                     onChange={e => setSubmitBiz(e.target.value)}
                     placeholder="e.g. Church's Chicken"
-                    className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                    className="w-full rounded-2xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-600 outline-none focus:border-gray-600"
                   />
                 </div>
 
                 {/* Details */}
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Details</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-1.5">Details</p>
                   <textarea
                     rows={3}
                     value={submitMessage}
                     onChange={e => setSubmitMessage(e.target.value)}
                     placeholder={placeholderMap[submitType]}
-                    className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600 resize-none"
+                    className="w-full rounded-2xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-600 outline-none focus:border-gray-600 resize-none"
                   />
                 </div>
 
                 {/* Optional contact */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Your name <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-1.5">Your name <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
                     <input
                       value={submitName}
                       onChange={e => setSubmitName(e.target.value)}
                       placeholder="Anonymous"
-                      className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                      className="w-full rounded-2xl border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-gray-600"
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1.5">Contact <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80 mb-1.5">Contact <span className="text-gray-700 normal-case font-normal">(optional)</span></p>
                     <input
                       value={submitEmail}
                       onChange={e => setSubmitEmail(e.target.value)}
                       placeholder="Email or WhatsApp"
-                      className="w-full rounded-2xl border border-gray-800 bg-gray-800 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-gray-600"
+                      className="w-full rounded-2xl border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-gray-600"
                     />
                   </div>
                 </div>
@@ -704,7 +704,7 @@ export default function HalalDirectoryPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={submitLoading || !submitBiz.trim() || !submitMessage.trim()}
-                  className="w-full rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-white disabled:opacity-40 active:bg-emerald-700"
+                  className="w-full rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-foreground disabled:opacity-40 active:bg-emerald-700"
                 >
                   {submitLoading ? 'Submitting…' : 'Submit Update'}
                 </button>

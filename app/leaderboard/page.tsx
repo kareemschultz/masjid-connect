@@ -34,7 +34,7 @@ export default function LeaderboardPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Trophy}
         title="Leaderboard"
@@ -48,11 +48,11 @@ export default function LeaderboardPage() {
         {loading ? (
           // Skeleton loader
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="glass h-16 w-full rounded-2xl animate-pulse bg-gray-800/50" />
+            <div key={i} className="glass h-16 w-full rounded-2xl animate-pulse bg-secondary/50" />
           ))
         ) : entries.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-gray-500">No entries yet. Be the first!</p>
+            <p className="text-muted-foreground/80">No entries yet. Be the first!</p>
           </div>
         ) : (
           entries.map((entry, i) => (
@@ -63,19 +63,19 @@ export default function LeaderboardPage() {
               }`}
             >
               <div className="flex h-8 w-8 shrink-0 items-center justify-center font-bold text-lg">
-                {MEDALS[i] || <span className="text-gray-500 text-sm">#{entry.rank}</span>}
+                {MEDALS[i] || <span className="text-muted-foreground/80 text-sm">#{entry.rank}</span>}
               </div>
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className={`font-bold truncate ${entry.isMe ? 'text-emerald-400' : 'text-white'}`}>
+                  <p className={`font-bold truncate ${entry.isMe ? 'text-emerald-400' : 'text-foreground'}`}>
                     {entry.displayName || entry.name}
                     {entry.isMe && <span className="ml-2 text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300 font-normal">(You)</span>}
                   </p>
                   {i === 0 && <Crown className="h-3 w-3 text-amber-400 fill-amber-400/20" />}
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-gray-400">
-                  <span className="bg-gray-800/50 px-1.5 py-0.5 rounded text-gray-300">{entry.level.label}</span>
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                  <span className="bg-secondary/50 px-1.5 py-0.5 rounded text-muted-foreground">{entry.level.label}</span>
                   <span>•</span>
                   <span>{entry.streak} day streak</span>
                 </div>
@@ -83,7 +83,7 @@ export default function LeaderboardPage() {
 
               <div className="text-right">
                 <p className="font-bold text-emerald-400 text-sm">{entry.totalPoints.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-500">pts</p>
+                <p className="text-[10px] text-muted-foreground/80">pts</p>
               </div>
             </div>
           ))

@@ -77,7 +77,7 @@ export default function ProfilePage() {
   const getBadge = () => {
     if (totalPrayers >= 500) return { label: 'Diamond', color: 'text-cyan-400', bg: 'bg-cyan-500/15' }
     if (totalPrayers >= 200) return { label: 'Gold', color: 'text-amber-400', bg: 'bg-amber-500/15' }
-    if (totalPrayers >= 50) return { label: 'Silver', color: 'text-gray-300', bg: 'bg-gray-500/15' }
+    if (totalPrayers >= 50) return { label: 'Silver', color: 'text-muted-foreground', bg: 'bg-gray-500/15' }
     return { label: 'Bronze', color: 'text-orange-400', bg: 'bg-orange-500/15' }
   }
   const badge = getBadge()
@@ -114,8 +114,8 @@ export default function ProfilePage() {
       <div className="space-y-5 px-4 pt-5">
         {/* Google Sign-In */}
         {!session?.user && (
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-            <p className="mb-3 text-xs text-gray-400">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <p className="mb-3 text-xs text-muted-foreground">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
             <button
               onClick={async () => {
                 setSigningIn(true)
@@ -125,7 +125,7 @@ export default function ProfilePage() {
                 } catch { setSigningIn(false) }
               }}
               disabled={signingIn}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-700 bg-gray-800 py-3 text-sm font-semibold text-gray-200 transition-all active:bg-gray-700 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-border bg-secondary py-3 text-sm font-semibold text-foreground/80 transition-all active:bg-muted disabled:opacity-50"
             >
               <GoogleIcon />
               {signingIn ? 'Signing in...' : 'Sign in with Google'}
@@ -133,7 +133,7 @@ export default function ProfilePage() {
           </div>
         )}
         {session?.user && (
-          <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
             {session.user.image ? (
               <img src={session.user.image} alt="" className="h-10 w-10 rounded-full" />
             ) : (
@@ -142,8 +142,8 @@ export default function ProfilePage() {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[#f9fafb] truncate">{session.user.name}</p>
-              <p className="text-[11px] text-gray-400 truncate">{session.user.email}</p>
+              <p className="text-sm font-semibold text-foreground truncate">{session.user.name}</p>
+              <p className="text-[11px] text-muted-foreground truncate">{session.user.email}</p>
             </div>
             <button
               onClick={async () => {
@@ -151,7 +151,7 @@ export default function ProfilePage() {
                 await signOut()
                 setSession(null)
               }}
-              className="flex h-8 items-center gap-1 rounded-lg bg-gray-800 px-2.5 text-[11px] font-medium text-gray-400 active:bg-gray-700"
+              className="flex h-8 items-center gap-1 rounded-lg bg-secondary px-2.5 text-[11px] font-medium text-muted-foreground active:bg-muted"
             >
               <LogOut className="h-3 w-3" /> Sign Out
             </button>
@@ -159,7 +159,7 @@ export default function ProfilePage() {
         )}
 
         {/* Profile card */}
-        <div className="flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-6">
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-6">
           <div className="relative">
             <Image
               src="/images/logo.jpg"
@@ -179,12 +179,12 @@ export default function ProfilePage() {
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="rounded-xl border border-gray-700 bg-gray-800 px-4 py-2 text-center text-sm text-foreground outline-none focus:border-emerald-500/50"
+                className="rounded-xl border border-border bg-secondary px-4 py-2 text-center text-sm text-foreground outline-none focus:border-emerald-500/50"
                 autoFocus
               />
               <button
                 onClick={saveName}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-foreground"
                 aria-label="Save name"
               >
                 <Save className="h-4 w-4" />
@@ -198,7 +198,7 @@ export default function ProfilePage() {
               <span className="text-lg font-bold text-foreground">
                 {username || 'Set Your Name'}
               </span>
-              <Edit3 className="h-3.5 w-3.5 text-gray-500" />
+              <Edit3 className="h-3.5 w-3.5 text-muted-foreground/80" />
             </button>
           )}
 
@@ -211,16 +211,16 @@ export default function ProfilePage() {
           {/* Level progress */}
           <div className="mt-4 w-full max-w-xs">
             <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-xs text-gray-400">Level {level}</span>
+              <span className="text-xs text-muted-foreground">Level {level}</span>
               <span className="text-xs text-emerald-400">{points} pts</span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-gray-800">
+            <div className="h-2 overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all"
                 style={{ width: `${levelProgress}%` }}
               />
             </div>
-            <p className="mt-1 text-[10px] text-gray-500">
+            <p className="mt-1 text-[10px] text-muted-foreground/80">
               {100 - levelProgress} points to Level {level + 1}
             </p>
           </div>
@@ -228,15 +228,15 @@ export default function ProfilePage() {
 
         {/* Stats grid */}
         <SettingGroup label="Your Stats" accentColor="bg-amber-500">
-          <div className="grid grid-cols-2 gap-px bg-gray-800">
+          <div className="grid grid-cols-2 gap-px bg-secondary">
             {stats.map((stat, i) => (
-              <div key={i} className="flex items-center gap-3 bg-gray-900 p-4">
+              <div key={i} className="flex items-center gap-3 bg-card p-4">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
                   <stat.icon className={`h-5 w-5 ${stat.color}`} />
                 </div>
                 <div>
                   <p className="text-lg font-bold text-foreground">{stat.value}</p>
-                  <p className="text-[10px] text-gray-400">{stat.label}</p>
+                  <p className="text-[10px] text-muted-foreground">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -248,15 +248,15 @@ export default function ProfilePage() {
           <div className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Target className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-300">Days Tracked</span>
+                <Target className="h-4 w-4 text-muted-foreground/80" />
+                <span className="text-sm text-muted-foreground">Days Tracked</span>
               </div>
               <span className="text-sm font-semibold text-foreground">{daysTracked}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-300">Avg Prayers/Day</span>
+                <TrendingUp className="h-4 w-4 text-muted-foreground/80" />
+                <span className="text-sm text-muted-foreground">Avg Prayers/Day</span>
               </div>
               <span className="text-sm font-semibold text-foreground">
                 {daysTracked > 0 ? (totalPrayers / daysTracked).toFixed(1) : '0'}

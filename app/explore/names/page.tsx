@@ -68,8 +68,8 @@ export default function NamesOfAllahPage() {
 
       {/* Search */}
       <div className="px-4 pt-4">
-        <div className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
-          <Search className="h-4 w-4 text-gray-500" />
+        <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+          <Search className="h-4 w-4 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search by name or meaning..."
@@ -87,12 +87,12 @@ export default function NamesOfAllahPage() {
             <button
               key={name.number}
               onClick={() => setSelectedName(name)}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900 px-3 py-5 transition-all active:scale-95 active:bg-gray-800 w-full"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-3 py-5 transition-all active:scale-95 active:bg-secondary w-full"
             >
               <span className="text-[10px] font-medium text-amber-500/60">{name.number}</span>
               <p className="font-arabic text-2xl leading-tight text-amber-400">{name.arabic}</p>
               <p className="text-xs font-semibold text-foreground">{name.transliteration}</p>
-              <p className="text-center text-[11px] leading-snug text-gray-400">{name.meaning}</p>
+              <p className="text-center text-[11px] leading-snug text-muted-foreground">{name.meaning}</p>
               <span className="text-[9px] text-gray-700">tap for detail</span>
             </button>
           ))}
@@ -109,18 +109,18 @@ export default function NamesOfAllahPage() {
           />
 
           {/* Sheet */}
-          <div className="relative mt-auto flex max-h-[90vh] flex-col rounded-t-3xl bg-[#0a0b14] border-t border-gray-800">
+          <div className="relative mt-auto flex max-h-[90vh] flex-col rounded-t-3xl bg-background border-t border-border">
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-10 rounded-full bg-gray-700" />
+              <div className="h-1 w-10 rounded-full bg-muted" />
             </div>
 
             {/* Close button */}
             <button
               onClick={() => setSelectedName(null)}
-              className="absolute right-4 top-4 rounded-full bg-gray-800 p-1.5"
+              className="absolute right-4 top-4 rounded-full bg-secondary p-1.5"
             >
-              <X className="h-4 w-4 text-gray-400" />
+              <X className="h-4 w-4 text-muted-foreground" />
             </button>
 
             {/* Header */}
@@ -128,7 +128,7 @@ export default function NamesOfAllahPage() {
               <span className="text-xs font-medium text-amber-500/60">#{selectedName.number}</span>
               <p className="font-arabic text-4xl leading-tight text-amber-400">{selectedName.arabic}</p>
               <p className="text-base font-semibold text-foreground">{selectedName.transliteration}</p>
-              <p className="text-sm text-gray-400">{selectedName.meaning}</p>
+              <p className="text-sm text-muted-foreground">{selectedName.meaning}</p>
               <span className={`mt-1 rounded-full border px-3 py-0.5 text-[10px] font-medium capitalize ${CATEGORY_COLORS[selectedName.category]}`}>
                 {selectedName.category}
               </span>
@@ -137,8 +137,8 @@ export default function NamesOfAllahPage() {
             {/* Scrollable body */}
             <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-2 pb-10">
               {/* Root word */}
-              <p className="mb-4 text-center text-xs text-gray-500">
-                Root: <span className="font-arabic text-sm text-gray-400">{selectedName.rootWord}</span>
+              <p className="mb-4 text-center text-xs text-muted-foreground/80">
+                Root: <span className="font-arabic text-sm text-muted-foreground">{selectedName.rootWord}</span>
               </p>
 
               {/* ① What This Name Means */}
@@ -147,7 +147,7 @@ export default function NamesOfAllahPage() {
                   <span className="text-sm">&#9312;</span>
                   <h3 className="text-sm font-semibold text-foreground">What This Name Means</h3>
                 </div>
-                <p className="text-sm leading-relaxed text-gray-300">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {selectedName.explanation}
                 </p>
               </div>
@@ -163,7 +163,7 @@ export default function NamesOfAllahPage() {
                     <BookOpen className="h-3.5 w-3.5 text-teal-400" />
                     <span className="text-xs font-medium text-teal-400">{selectedName.quranRef}</span>
                   </div>
-                  <p className="text-sm italic leading-relaxed text-gray-300">
+                  <p className="text-sm italic leading-relaxed text-muted-foreground">
                     &ldquo;{selectedName.quranText}&rdquo;
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export default function NamesOfAllahPage() {
                 </div>
                 <div className="flex gap-3">
                   <Heart className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
-                  <p className="text-sm leading-relaxed text-gray-300">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {selectedName.benefit}
                   </p>
                 </div>

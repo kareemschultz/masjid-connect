@@ -43,7 +43,7 @@ const DOES_NOT_INVALIDATE = [
 
 export default function FactorsAffectingFastPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={ShieldAlert}
         title="Factors Affecting the Fast"
@@ -60,39 +60,39 @@ export default function FactorsAffectingFastPage() {
         </div>
 
         {/* Invalidates */}
-        <div className="rounded-2xl border border-red-800/30 bg-gray-900 overflow-hidden">
+        <div className="rounded-2xl border border-red-800/30 bg-card overflow-hidden">
           <div className="flex items-center gap-2 bg-red-950/40 px-5 py-3.5 border-b border-red-800/30">
             <XCircle className="h-4 w-4 text-red-400" />
             <h2 className="text-xs font-bold uppercase tracking-widest text-red-400">Invalidates the Fast</h2>
           </div>
-          <div className="divide-y divide-gray-800/60">
+          <div className="divide-y divide-border/60">
             {INVALIDATES.map((item, i) => (
               <div key={i} className="flex items-start gap-3 px-5 py-3">
                 <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-400" />
-                <p className="text-sm text-gray-300">{item}</p>
+                <p className="text-sm text-muted-foreground">{item}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Does NOT Invalidate */}
-        <div className="rounded-2xl border border-emerald-800/30 bg-gray-900 overflow-hidden">
+        <div className="rounded-2xl border border-emerald-800/30 bg-card overflow-hidden">
           <div className="flex items-center gap-2 bg-emerald-950/40 px-5 py-3.5 border-b border-emerald-800/30">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-400">Does NOT Invalidate the Fast</h2>
           </div>
-          <div className="divide-y divide-gray-800/60">
+          <div className="divide-y divide-border/60">
             {DOES_NOT_INVALIDATE.map((item, i) => (
               <div key={i} className="flex items-start gap-3 px-5 py-3">
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                <p className="text-sm text-gray-300">{item}</p>
+                <p className="text-sm text-muted-foreground">{item}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-4">
-          <p className="text-[11px] text-gray-500 leading-relaxed">
+        <div className="rounded-2xl border border-border bg-card/50 p-4">
+          <p className="text-[11px] text-muted-foreground/80 leading-relaxed">
             Source: Darul Uloom/Masjid Islamic & Academic Institute Inc., 310 East Street, Georgetown. Tel: (592) 223-0579 | darululoomgt@gmail.com. Always consult a qualified Aalim for personal rulings.
           </p>
         </div>

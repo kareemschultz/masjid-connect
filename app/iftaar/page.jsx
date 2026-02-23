@@ -57,13 +57,13 @@ function ArchiveView() {
   return (
     <div className="space-y-4">
       {/* Archive mode tabs */}
-      <div className="flex gap-1 bg-gray-800 rounded-xl p-1">
+      <div className="flex gap-1 bg-secondary rounded-xl p-1">
         <button
           onClick={() => setArchiveMode('by-masjid')}
           className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             archiveMode === 'by-masjid'
-              ? 'bg-gray-700 text-emerald-300 shadow-sm'
-              : 'text-gray-500'
+              ? 'bg-muted text-emerald-300 shadow-sm'
+              : 'text-muted-foreground/80'
           }`}
         >
           🕌 By Masjid
@@ -72,8 +72,8 @@ function ArchiveView() {
           onClick={() => setArchiveMode('by-date')}
           className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             archiveMode === 'by-date'
-              ? 'bg-gray-700 text-emerald-300 shadow-sm'
-              : 'text-gray-500'
+              ? 'bg-muted text-emerald-300 shadow-sm'
+              : 'text-muted-foreground/80'
           }`}
         >
           📅 By Date
@@ -84,16 +84,16 @@ function ArchiveView() {
       {archiveMode === 'by-masjid' && (
         <div className="space-y-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Filter masjids…"
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-9 pr-8 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+              className="w-full bg-secondary border border-border rounded-xl pl-9 pr-8 py-2.5 text-sm text-foreground/80 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground/60">
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
@@ -105,7 +105,7 @@ function ArchiveView() {
             const history = masjidHistory[m.id] || []
 
             return (
-              <div key={m.id} className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              <div key={m.id} className="bg-secondary rounded-2xl border border-border overflow-hidden">
                 <button
                   onClick={() => toggleMasjid(m.id)}
                   className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-emerald-900/10 transition-colors"
@@ -114,7 +114,7 @@ function ArchiveView() {
                     <span className="text-lg shrink-0">🕌</span>
                     <div className="min-w-0">
                       <p className="text-sm font-bold text-emerald-100 truncate">{m.name}</p>
-                      <p className="text-[10px] text-gray-400 truncate">{m.address}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{m.address}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
@@ -129,16 +129,16 @@ function ArchiveView() {
                     {isLoading ? (
                       <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      isExpanded ? <ChevronUp className="w-4 h-4 text-emerald-600" /> : <ChevronDown className="w-4 h-4 text-gray-400" />
+                      isExpanded ? <ChevronUp className="w-4 h-4 text-emerald-600" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />
                     )}
                   </div>
                 </button>
 
                 {isExpanded && !isLoading && (
-                  <div className="border-t border-gray-700 px-4 pb-3">
+                  <div className="border-t border-border px-4 pb-3">
                     {history.length === 0 ? (
                       <div className="py-4 text-center">
-                        <p className="text-gray-400 text-xs">No reports submitted yet for this masjid.</p>
+                        <p className="text-muted-foreground text-xs">No reports submitted yet for this masjid.</p>
                       </div>
                     ) : (
                       <div className="mt-3 space-y-2">
@@ -148,14 +148,14 @@ function ArchiveView() {
                             return acc
                           }, {})
                         ).sort(([a], [b]) => b.localeCompare(a)).map(([date, entries]) => (
-                          <div key={date} className="bg-gray-700/50 rounded-xl p-3">
+                          <div key={date} className="bg-muted/50 rounded-xl p-3">
                             <p className="text-[10px] font-semibold text-emerald-400 mb-1.5">
                               📅 {date}
                             </p>
                             {entries.map(s => (
                               <div key={s.id} className="mb-2 last:mb-0">
-                                <p className="text-xs text-gray-200 mb-1">🍽️ {s.menu}</p>
-                                <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                                <p className="text-xs text-foreground/80 mb-1">🍽️ {s.menu}</p>
+                                <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                                   <span>by <strong>{s.submittedBy}</strong></span>
                                   {s.servings && (
                                     <span className="flex items-center gap-1">
@@ -193,21 +193,21 @@ function ArchiveView() {
       {/* ── By Date: search form + results ── */}
       {archiveMode === 'by-date' && (
         <div className="space-y-3">
-          <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+          <div className="bg-secondary rounded-2xl p-4 border border-border">
             <h3 className="text-sm font-semibold text-emerald-100 mb-3">Filter by Date</h3>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
                 <select
                   value={selectedMasjid}
                   onChange={e => setSelectedMasjid(e.target.value)}
-                  className="w-full appearance-none bg-gray-700 border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-200 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                  className="w-full appearance-none bg-muted border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-foreground/80 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 >
                   <option value="">All Masjids</option>
                   {masjids.map(m => (
                     <option key={m.id} value={m.id}>{m.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               </div>
               <input
                 type="date"
@@ -215,12 +215,12 @@ function ArchiveView() {
                 min="2026-02-18"
                 max={guyanaDate()}
                 onChange={e => setSelectedDate(e.target.value)}
-                className="flex-1 bg-gray-700 border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                className="flex-1 bg-muted border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-foreground/80 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
               />
               <button
                 onClick={searchByDate}
                 disabled={searching}
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-foreground rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center gap-1.5"
               >
                 <Search className="w-3.5 h-3.5" />
                 {searching ? 'Searching…' : 'Search'}
@@ -229,26 +229,26 @@ function ArchiveView() {
           </div>
 
           {dateResults.length === 0 && !searching ? (
-            <div className="text-center py-10 bg-gray-800 rounded-2xl border border-dashed border-emerald-800/40">
+            <div className="text-center py-10 bg-secondary rounded-2xl border border-dashed border-emerald-800/40">
               <div className="text-4xl mb-2">📅</div>
-              <p className="text-gray-500 text-sm">Pick a date and tap Search to view past reports.</p>
+              <p className="text-muted-foreground/80 text-sm">Pick a date and tap Search to view past reports.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {dateResults.map(s => {
                 const masjid = masjids.find(m => m.id === s.masjidId)
                 return (
-                  <div key={s.id} className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  <div key={s.id} className="bg-secondary rounded-2xl p-4 border border-border">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <h4 className="font-bold text-emerald-100 text-sm">🕌 {masjid?.name || s.masjidId}</h4>
-                        <p className="text-[10px] text-gray-400">{s.date} · by {s.submittedBy}</p>
+                        <p className="text-[10px] text-muted-foreground">{s.date} · by {s.submittedBy}</p>
                       </div>
                     </div>
-                    <div className="bg-gray-700/50 rounded-xl px-3 py-2 mb-2">
-                      <p className="text-sm text-gray-200">🍽️ {s.menu}</p>
+                    <div className="bg-muted/50 rounded-xl px-3 py-2 mb-2">
+                      <p className="text-sm text-foreground/80">🍽️ {s.menu}</p>
                     </div>
-                    <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                       {s.servings && <span className="flex items-center gap-1"><Users className="w-3 h-3" />{s.servings} servings</span>}
                       {(s.attending || 0) > 0 && <span className="flex items-center gap-1 text-emerald-600"><UserCheck className="w-3 h-3" />{s.attending} going</span>}
                       {(s.likes || 0) > 0 && <span className="flex items-center gap-1 text-red-500"><Heart className="w-3 h-3" />{s.likes} likes</span>}
@@ -273,26 +273,26 @@ function SilentMasjids({ submissions, onSubmit }) {
   const silent = masjids.filter(m => !reportedIds.has(m.id))
   if (silent.length === 0) return null
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+    <div className="bg-secondary rounded-2xl border border-border overflow-hidden">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-700/50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-muted/50 transition-colors"
       >
-        <span className="text-xs font-semibold text-gray-500">
+        <span className="text-xs font-semibold text-muted-foreground/80">
           {silent.length} masjid{silent.length !== 1 ? 's' : ''} — no update submitted yet
         </span>
         {open
-          ? <ChevronUp className="w-4 h-4 text-gray-400 shrink-0" />
-          : <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />}
+          ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />
+          : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
       </button>
       {open && (
-        <div className="border-t border-gray-700 divide-y divide-gray-50">
+        <div className="border-t border-border divide-y divide-gray-50">
           {silent.map(m => (
             <div key={m.id} className="flex items-center gap-3 px-4 py-2.5">
               <span className="text-base shrink-0">🕌</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-300 truncate">{m.name}</p>
-                <p className="text-[10px] text-gray-400 truncate">{m.address}</p>
+                <p className="text-xs font-medium text-muted-foreground truncate">{m.name}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{m.address}</p>
               </div>
               {onSubmit && (
                 <button
@@ -411,7 +411,7 @@ export default function IftaarPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0b14] pb-nav">
+      <div className="min-h-screen bg-background pb-nav">
         <PageHero
           icon={UtensilsCrossed}
           title="Iftaar Reports"
@@ -420,7 +420,7 @@ export default function IftaarPage() {
         />
         <div className="px-4 py-5 max-w-2xl mx-auto space-y-3">
           {[1,2,3].map(i => (
-            <div key={i} className="bg-gray-800 rounded-2xl p-4 animate-pulse h-32" />
+            <div key={i} className="bg-secondary rounded-2xl p-4 animate-pulse h-32" />
           ))}
         </div>
         <BottomNav />
@@ -429,7 +429,7 @@ export default function IftaarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <Toaster position="top-center" richColors />
       <PageHero
         icon={UtensilsCrossed}
@@ -441,13 +441,13 @@ export default function IftaarPage() {
       <div className="px-4 max-w-2xl mx-auto space-y-4 pt-4">
         <div className="flex items-center justify-between mb-2">
           {/* View toggle: Today / Archive */}
-          <div className="inline-flex p-1 rounded-xl bg-gray-800 gap-1 border border-gray-700">
+          <div className="inline-flex p-1 rounded-xl bg-secondary gap-1 border border-border">
             <button
               onClick={() => setView('today')}
               className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 view === 'today'
-                  ? 'bg-gray-700 text-emerald-300 shadow-sm'
-                  : 'text-gray-400 hover:text-gray-200'
+                  ? 'bg-muted text-emerald-300 shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground/80'
               }`}
             >
               <LayoutList className="w-3.5 h-3.5" /> Today
@@ -459,8 +459,8 @@ export default function IftaarPage() {
               onClick={() => setView('archive')}
               className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 view === 'archive'
-                  ? 'bg-gray-700 text-emerald-300 shadow-sm'
-                  : 'text-gray-400 hover:text-gray-200'
+                  ? 'bg-muted text-emerald-300 shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground/80'
               }`}
             >
               <History className="w-3.5 h-3.5" /> Archive
@@ -477,7 +477,7 @@ export default function IftaarPage() {
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all disabled:opacity-60 border ${
                   notifsOn
                     ? 'bg-emerald-900/30 text-emerald-300 border-emerald-800'
-                    : 'bg-gray-800 text-gray-400 border-gray-700'
+                    : 'bg-secondary text-muted-foreground border-border'
                 }`}
               >
                 {notifsLoading
@@ -490,7 +490,7 @@ export default function IftaarPage() {
             {/* Submit button */}
             <button
               onClick={() => handleOpenSubmit('')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-full text-xs font-semibold transition-all shadow-sm active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-foreground rounded-full text-xs font-semibold transition-all shadow-sm active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
               Submit
@@ -517,8 +517,8 @@ export default function IftaarPage() {
                 aria-pressed={sortBy === s.key}
                 className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all border ${
                   sortBy === s.key
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                    : 'bg-gray-800 text-gray-300 border-gray-700 hover:border-emerald-300'
+                    ? 'bg-emerald-600 text-foreground border-emerald-600 shadow-sm'
+                    : 'bg-secondary text-muted-foreground border-border hover:border-emerald-300'
                 }`}
               >
                 {s.label}
@@ -528,10 +528,10 @@ export default function IftaarPage() {
         )}
 
         {submissions.length === 0 ? (
-          <div className="text-center py-12 bg-gray-900 rounded-2xl border border-dashed border-gray-700">
+          <div className="text-center py-12 bg-card rounded-2xl border border-dashed border-border">
             <div className="text-4xl mb-3 opacity-50">🍽️</div>
-            <p className="text-sm font-medium text-white">No updates yet tonight</p>
-            <p className="text-xs text-gray-400 mt-1">Be the first to share what your masjid is serving!</p>
+            <p className="text-sm font-medium text-foreground">No updates yet tonight</p>
+            <p className="text-xs text-muted-foreground mt-1">Be the first to share what your masjid is serving!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
@@ -543,7 +543,7 @@ export default function IftaarPage() {
               return (
                 <div
                   key={s.id}
-                  className="bg-gray-900 border border-gray-800 rounded-2xl p-4 animate-fade-in"
+                  className="bg-card border border-border rounded-2xl p-4 animate-fade-in"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   {/* Header row */}
@@ -553,14 +553,14 @@ export default function IftaarPage() {
                         🕌 {masjid?.name || s.masjidId}
                       </h3>
                       {masjid?.address && (
-                        <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                           <MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{masjid.address}</span>
                         </p>
                       )}
                     </div>
                     <div className="flex items-center gap-1 ml-2 shrink-0">
                       <ShareMenu masjidName={masjid?.name || s.masjidId} menu={s.menu} maghrib={today?.maghrib} />
-                      <span className="text-[10px] text-gray-500 flex items-center gap-0.5 bg-gray-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-muted-foreground/80 flex items-center gap-0.5 bg-secondary px-1.5 py-0.5 rounded">
                         <Clock className="w-3 h-3" />{getTimeAgo(s.submittedAt)}
                       </span>
                     </div>
@@ -574,10 +574,10 @@ export default function IftaarPage() {
                   </div>
 
                   {/* Meta row */}
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                     <span>by <strong className="text-emerald-400">{s.submittedBy}</strong></span>
                     {s.servings && (
-                      <span className="flex items-center gap-1 bg-gray-800 text-gray-300 px-2 py-0.5 rounded-full border border-gray-700">
+                      <span className="flex items-center gap-1 bg-secondary text-muted-foreground px-2 py-0.5 rounded-full border border-border">
                         <Users className="w-3 h-3" />{s.servings} servings
                       </span>
                     )}
@@ -592,7 +592,7 @@ export default function IftaarPage() {
                   )}
 
                   {/* Action buttons */}
-                  <div className="flex items-center gap-2 pt-3 border-t border-gray-800">
+                  <div className="flex items-center gap-2 pt-3 border-t border-border">
                     <button
                       onClick={() => toggleLike(s.id)}
                       aria-label={likes[s.id] ? 'Unlike' : 'Like'}
@@ -600,7 +600,7 @@ export default function IftaarPage() {
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         likes[s.id]
                           ? 'bg-red-900/20 text-red-400 border border-red-800'
-                          : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
+                          : 'bg-secondary border border-border text-muted-foreground hover:bg-muted'
                       }`}
                     >
                       <Heart className={`w-3.5 h-3.5 ${likes[s.id] ? 'fill-current' : ''}`} />
@@ -614,7 +614,7 @@ export default function IftaarPage() {
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         attending[s.id]
                           ? 'bg-emerald-900/20 text-emerald-400 border border-emerald-800'
-                          : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
+                          : 'bg-secondary border border-border text-muted-foreground hover:bg-muted'
                       }`}
                     >
                       <UserCheck className={`w-3.5 h-3.5 ${attending[s.id] ? 'fill-current' : ''}`} />
@@ -627,7 +627,7 @@ export default function IftaarPage() {
                         href={`https://www.google.com/maps/dir/?api=1&destination=${masjid.lat},${masjid.lng}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-xl bg-gray-800 text-blue-400 hover:bg-blue-900/20 border border-gray-700 transition-all"
+                        className="p-2 rounded-xl bg-secondary text-blue-400 hover:bg-blue-900/20 border border-border transition-all"
                         title="Directions"
                       >
                         <Navigation className="w-4 h-4" />

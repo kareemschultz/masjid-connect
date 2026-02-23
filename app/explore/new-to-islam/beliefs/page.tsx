@@ -85,7 +85,7 @@ export default function BeliefsPage() {
   const [openIndex, setOpenIndex] = useState(-1)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Heart}
         title="Articles of Faith"
@@ -99,7 +99,7 @@ export default function BeliefsPage() {
       <div className="space-y-3 px-4 pt-5 animate-stagger">
         {/* Intro */}
         <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
-          <p className="text-sm leading-relaxed text-gray-400">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             Every Muslim believes in these six core articles of faith. They form the foundation of Islamic belief.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function BeliefsPage() {
             <div
               key={article.number}
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
-              className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5 cursor-pointer transition-all"
+              className="rounded-2xl border border-border bg-card/50 p-5 cursor-pointer transition-all"
             >
               {/* Header */}
               <div className="flex items-center gap-3">
@@ -123,12 +123,12 @@ export default function BeliefsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <IconComp className={`h-4 w-4 shrink-0 ${article.iconColor}`} />
-                    <h3 className="text-sm font-bold text-[#f9fafb]">{article.title}</h3>
+                    <h3 className="text-sm font-bold text-foreground">{article.title}</h3>
                   </div>
-                  <p className="font-arabic text-lg text-gray-400 mt-0.5">{article.arabic}</p>
+                  <p className="font-arabic text-lg text-muted-foreground mt-0.5">{article.arabic}</p>
                 </div>
                 <ChevronDown
-                  className={`h-5 w-5 shrink-0 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                  className={`h-5 w-5 shrink-0 text-muted-foreground/80 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
                 />
               </div>
 
@@ -137,10 +137,10 @@ export default function BeliefsPage() {
                 className={`grid transition-all duration-300 ${isOpen ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'}`}
               >
                 <div className="overflow-hidden">
-                  <p className="text-sm leading-relaxed text-gray-400">{article.explanation}</p>
-                  <div className="mt-3 rounded-xl border border-gray-800 bg-gray-900/80 p-4">
+                  <p className="text-sm leading-relaxed text-muted-foreground">{article.explanation}</p>
+                  <div className="mt-3 rounded-xl border border-border bg-card/80 p-4">
                     <p className="text-sm italic text-blue-300">{article.reference}</p>
-                    <p className="mt-1 text-xs text-gray-500">— {article.source}</p>
+                    <p className="mt-1 text-xs text-muted-foreground/80">— {article.source}</p>
                   </div>
                 </div>
               </div>

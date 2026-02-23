@@ -44,25 +44,25 @@ export default function EventsPage() {
       />
 
       <div className="px-4 pt-5 space-y-3">
-        <button className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-700 py-4 text-sm font-medium text-gray-400 transition-colors active:border-emerald-500 active:text-emerald-400">
+        <button className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-4 text-sm font-medium text-muted-foreground transition-colors active:border-emerald-500 active:text-emerald-400">
           <Plus className="h-4 w-4" />
           Submit an Event
         </button>
 
         <div className="animate-stagger space-y-3">
           {EVENTS.map((event, i) => (
-            <div key={i} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <div key={i} className="rounded-2xl border border-border bg-card p-4">
               <div className="flex items-start justify-between">
                 <h3 className="text-sm font-semibold text-foreground">{event.title}</h3>
                 <span className="rounded-lg bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
                   {event.type}
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
+              <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <MapPin className="h-3 w-3" />
                 {event.location}
               </div>
-              <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
+              <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" />
                 {event.time}
               </div>

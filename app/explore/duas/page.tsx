@@ -777,10 +777,10 @@ export default function DuasPage() {
     const isBookmarked = bookmarks.has(key)
     const isCopied = copiedIdx === key
     return (
-      <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+      <div className="rounded-2xl border border-border bg-card p-4">
         {/* Arabic */}
         <p
-          className="text-right leading-[2.4] text-white"
+          className="text-right leading-[2.4] text-foreground"
           style={{ fontFamily: '"Amiri Quran", "Amiri", serif', fontSize: '1.15rem' }}
           dir="rtl"
         >
@@ -791,12 +791,12 @@ export default function DuasPage() {
         <p className="mt-3 text-xs font-semibold italic text-purple-400">{dua.transliteration}</p>
 
         {/* Meaning */}
-        <p className="mt-1.5 text-xs leading-relaxed text-gray-300">{dua.meaning}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{dua.meaning}</p>
 
         {/* Source + Note */}
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {dua.source && (
-            <span className="rounded-lg bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-500">
+            <span className="rounded-lg bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground/80">
               {dua.source}
             </span>
           )}
@@ -814,7 +814,7 @@ export default function DuasPage() {
               title: dua.meaning,
               text: `${dua.arabic}\n\n${dua.transliteration}\n\n"${dua.meaning}"\n\n${dua.source ? `— ${dua.source}` : ''}\n\n— via MasjidConnect GY`,
             })}
-            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold bg-gray-800 text-gray-500 active:bg-gray-700 transition-all"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold bg-secondary text-muted-foreground/80 active:bg-muted transition-all"
           >
             <Share2 className="h-3 w-3" />
             Share
@@ -822,7 +822,7 @@ export default function DuasPage() {
           <button
             onClick={() => copy(`${dua.arabic}\n\n${dua.transliteration}\n\n${dua.meaning}`, key)}
             className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold transition-all ${
-              isCopied ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gray-800 text-gray-500 active:bg-gray-700'
+              isCopied ? 'bg-emerald-500/20 text-emerald-400' : 'bg-secondary text-muted-foreground/80 active:bg-muted'
             }`}
           >
             {isCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
@@ -831,7 +831,7 @@ export default function DuasPage() {
           <button
             onClick={() => toggleBookmark(key)}
             className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
-              isBookmarked ? 'bg-rose-500/20 text-rose-400' : 'bg-gray-800 text-gray-500 active:bg-gray-700'
+              isBookmarked ? 'bg-rose-500/20 text-rose-400' : 'bg-secondary text-muted-foreground/80 active:bg-muted'
             }`}
           >
             <Heart className={`h-3.5 w-3.5 ${isBookmarked ? 'fill-rose-400' : ''}`} />
@@ -842,7 +842,7 @@ export default function DuasPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0a0b14] pb-28">
+    <div className="relative min-h-screen bg-background pb-28">
       {/* Arabesque pattern */}
       <div className="pointer-events-none absolute top-0 right-0 h-48 w-48 overflow-hidden" aria-hidden>
         <svg viewBox="0 0 200 200" style={{animation:'arabesque-drift 6s ease-in-out infinite',opacity:0.08}} className="text-purple-300" fill="currentColor">
@@ -867,23 +867,23 @@ export default function DuasPage() {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-bold text-white">Post-Salah Adhkar</p>
+            <p className="text-sm font-bold text-foreground">Post-Salah Adhkar</p>
             <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-bold text-emerald-400">SUNNAH</span>
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">Complete guide to dhikr after every prayer</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Complete guide to dhikr after every prayer</p>
         </div>
         <ChevronRight className="h-5 w-5 text-emerald-400/30 shrink-0" />
       </Link>
 
       {/* ── Toolbar ─────────────────────────────────── */}
-      <div data-tour="duas-categories" className="sticky top-0 z-20 bg-[#0a0b14]/95 backdrop-blur border-b border-gray-800/50 px-4 py-2.5 space-y-2">
+      <div data-tour="duas-categories" className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border/50 px-4 py-2.5 space-y-2">
         {/* Actions row */}
         <div className="flex items-center gap-2">
           {/* Bookmarks toggle */}
           <button
             onClick={() => setShowBookmarks(!showBookmarks)}
             className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
-              showBookmarks ? 'bg-rose-500/20 text-rose-400' : 'bg-gray-800 text-gray-400'
+              showBookmarks ? 'bg-rose-500/20 text-rose-400' : 'bg-secondary text-muted-foreground'
             }`}
           >
             <Heart className={`h-3.5 w-3.5 ${showBookmarks ? 'fill-rose-400' : ''}`} />
@@ -896,7 +896,7 @@ export default function DuasPage() {
               <button
                 onClick={() => setActiveGroup(null)}
                 className={`flex-shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition-all ${
-                  !activeGroup ? 'bg-purple-500 text-white' : 'bg-gray-800 text-gray-500'
+                  !activeGroup ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
                 }`}
               >
                 All
@@ -906,7 +906,7 @@ export default function DuasPage() {
                   key={g}
                   onClick={() => setActiveGroup(activeGroup === g ? null : g)}
                   className={`flex-shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition-all ${
-                    activeGroup === g ? 'bg-purple-500 text-white' : 'bg-gray-800 text-gray-500'
+                    activeGroup === g ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
                   }`}
                 >
                   {g}
@@ -919,7 +919,7 @@ export default function DuasPage() {
           <button
             onClick={() => { setShowSearch(!showSearch); if (showSearch) setSearch('') }}
             className={`shrink-0 flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
-              showSearch ? 'bg-purple-500 text-white' : 'bg-gray-800 text-gray-400'
+              showSearch ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground'
             }`}
           >
             {showSearch ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
@@ -934,7 +934,7 @@ export default function DuasPage() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by meaning or transliteration..."
             autoFocus
-            className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-purple-500/50"
+            className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-purple-500/50"
           />
         )}
 
@@ -947,8 +947,8 @@ export default function DuasPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`shrink-0 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all ${
                   activeCategory === cat.id
-                    ? 'bg-purple-500 text-white'
-                    : 'bg-gray-800 text-gray-400'
+                    ? 'bg-purple-500 text-foreground'
+                    : 'bg-secondary text-muted-foreground'
                 }`}
               >
                 <span>{cat.icon}</span>
@@ -964,15 +964,15 @@ export default function DuasPage() {
         {/* Search results */}
         {search && (
           <>
-            <p className="text-[11px] text-gray-500">{searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{search}"</p>
+            <p className="text-[11px] text-muted-foreground/80">{searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{search}"</p>
             {searchResults.length === 0 && (
               <div className="pt-8 text-center">
-                <p className="text-gray-500 text-sm">No duas found.</p>
+                <p className="text-muted-foreground/80 text-sm">No duas found.</p>
               </div>
             )}
             {searchResults.map(({ cat, dua, duaIdx }) => (
               <div key={`${cat.id}-${duaIdx}`}>
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
                   {cat.icon} {cat.label}
                 </p>
                 <DuaCard dua={dua} catId={cat.id} idx={duaIdx} />
@@ -987,12 +987,12 @@ export default function DuasPage() {
             {bookmarkedDuas.length === 0 ? (
               <div className="pt-16 text-center">
                 <p className="text-3xl mb-2">🤍</p>
-                <p className="text-gray-500 text-sm">No saved duas yet</p>
-                <p className="text-gray-600 text-xs mt-1">Tap the heart icon on any dua to save it</p>
+                <p className="text-muted-foreground/80 text-sm">No saved duas yet</p>
+                <p className="text-muted-foreground/60 text-xs mt-1">Tap the heart icon on any dua to save it</p>
               </div>
             ) : bookmarkedDuas.map(({ cat, dua, duaIdx }) => (
               <div key={`${cat.id}-${duaIdx}`}>
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
                   {cat.icon} {cat.label}
                 </p>
                 <DuaCard dua={dua} catId={cat.id} idx={duaIdx} />
@@ -1006,8 +1006,8 @@ export default function DuasPage() {
           <>
             <div className="flex items-center gap-2 pb-1">
               <span className="text-lg">{activeCat.icon}</span>
-              <h2 className="text-sm font-bold text-white">{activeCat.label}</h2>
-              <span className="rounded-lg bg-gray-800 px-2 py-0.5 text-[10px] text-gray-500">
+              <h2 className="text-sm font-bold text-foreground">{activeCat.label}</h2>
+              <span className="rounded-lg bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground/80">
                 {activeCat.duas.length} duas
               </span>
             </div>

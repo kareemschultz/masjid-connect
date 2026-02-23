@@ -108,39 +108,39 @@ export default function TimetablePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Table2} title="Prayer Timetable" subtitle="Monthly Schedule" gradient="from-cyan-900 to-teal-900" showBack heroTheme="prayer" />
 
       {userCity && (
         <div className="mx-4 mt-3 flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5 text-emerald-500" />
-          <span className="text-xs text-gray-400">{userCity}</span>
+          <span className="text-xs text-muted-foreground">{userCity}</span>
           <Link href="/settings" className="ml-auto text-[10px] text-emerald-500 underline">Change</Link>
         </div>
       )}
 
       <div className="space-y-4 px-4 -mt-2">
         {/* Month Navigator */}
-        <div className="flex items-center justify-between rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
-          <button onClick={() => setCurrentMonth(new Date(year, month - 1))} className="rounded-lg p-2 active:bg-gray-800" aria-label="Previous month">
-            <ChevronLeft className="h-5 w-5 text-gray-400" />
+        <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
+          <button onClick={() => setCurrentMonth(new Date(year, month - 1))} className="rounded-lg p-2 active:bg-secondary" aria-label="Previous month">
+            <ChevronLeft className="h-5 w-5 text-muted-foreground" />
           </button>
-          <h2 className="text-sm font-bold text-[#f9fafb]">{monthLabel}</h2>
+          <h2 className="text-sm font-bold text-foreground">{monthLabel}</h2>
           <div className="flex items-center gap-1">
-            <button onClick={shareTimetable} className="rounded-lg p-2 active:bg-gray-800" aria-label="Share timetable">
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Share2 className="h-4 w-4 text-gray-400" />}
+            <button onClick={shareTimetable} className="rounded-lg p-2 active:bg-secondary" aria-label="Share timetable">
+              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Share2 className="h-4 w-4 text-muted-foreground" />}
             </button>
-            <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="rounded-lg p-2 active:bg-gray-800" aria-label="Next month">
-              <ChevronRight className="h-5 w-5 text-gray-400" />
+            <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="rounded-lg p-2 active:bg-secondary" aria-label="Next month">
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </button>
           </div>
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card">
           <table className="w-full min-w-[500px] text-[11px]">
             <thead>
-              <tr className="border-b border-gray-800 text-gray-400">
+              <tr className="border-b border-border text-muted-foreground">
                 <th className="px-2 py-2.5 text-left font-semibold">Day</th>
                 <th className="px-2 py-2.5 text-center font-semibold text-blue-400">Fajr</th>
                 <th className="px-2 py-2.5 text-center font-semibold text-amber-400">Dhuhr</th>
@@ -153,16 +153,16 @@ export default function TimetablePage() {
               {rows.map((r) => (
                 <tr
                   key={r.date}
-                  className={`border-b border-gray-800/50 transition-colors ${r.date === today ? 'bg-emerald-500/10' : ''} ${r.dayName === 'Fri' ? 'bg-amber-500/5' : ''}`}
+                  className={`border-b border-border/50 transition-colors ${r.date === today ? 'bg-emerald-500/10' : ''} ${r.dayName === 'Fri' ? 'bg-amber-500/5' : ''}`}
                 >
-                  <td className={`px-2 py-2 font-medium ${r.date === today ? 'text-emerald-400' : 'text-gray-300'}`}>
-                    <span className="text-gray-500">{r.dayName}</span> {r.dayNum}
+                  <td className={`px-2 py-2 font-medium ${r.date === today ? 'text-emerald-400' : 'text-muted-foreground'}`}>
+                    <span className="text-muted-foreground/80">{r.dayName}</span> {r.dayNum}
                   </td>
-                  <td className="px-2 py-2 text-center text-gray-300">{r.fajr}</td>
-                  <td className="px-2 py-2 text-center text-gray-300">{r.dhuhr}</td>
-                  <td className="px-2 py-2 text-center text-gray-300">{r.asr}</td>
-                  <td className="px-2 py-2 text-center text-gray-300">{r.maghrib}</td>
-                  <td className="px-2 py-2 text-center text-gray-300">{r.isha}</td>
+                  <td className="px-2 py-2 text-center text-muted-foreground">{r.fajr}</td>
+                  <td className="px-2 py-2 text-center text-muted-foreground">{r.dhuhr}</td>
+                  <td className="px-2 py-2 text-center text-muted-foreground">{r.asr}</td>
+                  <td className="px-2 py-2 text-center text-muted-foreground">{r.maghrib}</td>
+                  <td className="px-2 py-2 text-center text-muted-foreground">{r.isha}</td>
                 </tr>
               ))}
             </tbody>

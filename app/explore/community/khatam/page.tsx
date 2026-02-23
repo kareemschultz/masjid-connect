@@ -108,29 +108,29 @@ export default function KhatamPage() {
   const offset = circumference - (stats.pct / 100) * circumference
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={BookOpen} title="Khatam Collective" subtitle="Complete the Quran Together" gradient="from-emerald-900 to-teal-900" showBack heroTheme="quran" />
 
       <div className="px-4 pt-5 -mt-2 space-y-5">
         {!userInitials ? (
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">
-            <p className="text-sm font-semibold text-white">Enter your name to get started</p>
-            <p className="text-xs text-gray-400">Your initials will appear on the Juz you claim.</p>
+          <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+            <p className="text-sm font-semibold text-foreground">Enter your name to get started</p>
+            <p className="text-xs text-muted-foreground">Your initials will appear on the Juz you claim.</p>
             <div className="flex gap-3">
-              <input type="text" placeholder="Your name or initials" value={nameInput} onChange={(e) => setNameInput(e.target.value)} className="flex-1 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-emerald-500/50" />
-              <button onClick={saveName} disabled={!nameInput.trim()} className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-40">
+              <input type="text" placeholder="Your name or initials" value={nameInput} onChange={(e) => setNameInput(e.target.value)} className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-emerald-500/50" />
+              <button onClick={saveName} disabled={!nameInput.trim()} className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-foreground transition-all active:scale-95 disabled:opacity-40">
                 Save
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15 text-sm font-bold text-emerald-400">{userInitials}</div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-white">Your initials: {userInitials}</p>
-              <p className="text-[11px] text-gray-500">Claim a Juz below to begin</p>
+              <p className="text-sm font-semibold text-foreground">Your initials: {userInitials}</p>
+              <p className="text-[11px] text-muted-foreground/80">Claim a Juz below to begin</p>
             </div>
-            <button onClick={() => { setUserInitials(''); setItem('khatam_user_initials', '') }} className="text-xs text-gray-500 underline">Change</button>
+            <button onClick={() => { setUserInitials(''); setItem('khatam_user_initials', '') }} className="text-xs text-muted-foreground/80 underline">Change</button>
           </div>
         )}
 
@@ -141,18 +141,18 @@ export default function KhatamPage() {
               <circle cx="60" cy="60" r={radius} fill="none" stroke="#10b981" strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} className="transition-all duration-700" />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-white">{stats.pct}%</span>
-              <span className="text-[10px] text-gray-500">Claimed</span>
+              <span className="text-2xl font-bold text-foreground">{stats.pct}%</span>
+              <span className="text-[10px] text-muted-foreground/80">Claimed</span>
             </div>
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-2xl font-bold text-white">{stats.claimed}</p>
-              <p className="text-xs text-gray-500">Juz claimed</p>
+              <p className="text-2xl font-bold text-foreground">{stats.claimed}</p>
+              <p className="text-xs text-muted-foreground/80">Juz claimed</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-emerald-400">{stats.completed}</p>
-              <p className="text-xs text-gray-500">Juz completed</p>
+              <p className="text-xs text-muted-foreground/80">Juz completed</p>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function KhatamPage() {
           ) : synced === 'offline' ? (
             <span className="flex items-center gap-1.5 text-[10px] text-amber-400"><CloudOff className="h-3 w-3" /> Offline — using local data</span>
           ) : (
-            <span className="text-[10px] text-gray-500 animate-pulse">Syncing...</span>
+            <span className="text-[10px] text-muted-foreground/80 animate-pulse">Syncing...</span>
           )}
         </div>
 
@@ -172,7 +172,7 @@ export default function KhatamPage() {
         {!isSignedIn && synced !== 'loading' && (
           <Link href="/settings" className="block rounded-xl border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-center">
             <p className="text-xs font-medium text-blue-400">Sign in to sync your Khatam progress</p>
-            <p className="text-[10px] text-gray-500 mt-0.5">Your progress is saved locally for now</p>
+            <p className="text-[10px] text-muted-foreground/80 mt-0.5">Your progress is saved locally for now</p>
           </Link>
         )}
 
@@ -198,25 +198,25 @@ export default function KhatamPage() {
                     : isMine
                     ? 'border border-teal-500/40 bg-teal-500/10'
                     : isClaimed
-                    ? 'border border-gray-700 bg-gray-800/60 opacity-60'
-                    : 'border border-gray-800 bg-gray-900'
+                    ? 'border border-border bg-secondary/60 opacity-60'
+                    : 'border border-border bg-card'
                 }`}
               >
                 {isCompleted && (
                   <div className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500">
-                    <Check className="h-2.5 w-2.5 text-white" />
+                    <Check className="h-2.5 w-2.5 text-foreground" />
                   </div>
                 )}
-                <span className={`text-xs font-bold ${isCompleted ? 'text-emerald-400' : isMine ? 'text-teal-400' : isClaimed ? 'text-gray-500' : 'text-gray-300'}`}>
+                <span className={`text-xs font-bold ${isCompleted ? 'text-emerald-400' : isMine ? 'text-teal-400' : isClaimed ? 'text-muted-foreground/80' : 'text-muted-foreground'}`}>
                   {juz}
                 </span>
-                <span className="mt-0.5 text-[8px] text-gray-600">Juz {juz}</span>
+                <span className="mt-0.5 text-[8px] text-muted-foreground/60">Juz {juz}</span>
                 {isClaimed && (
-                  <span className={`mt-1 text-[9px] font-semibold ${isCompleted ? 'text-emerald-400' : isMine ? 'text-teal-400' : 'text-gray-500'}`}>
+                  <span className={`mt-1 text-[9px] font-semibold ${isCompleted ? 'text-emerald-400' : isMine ? 'text-teal-400' : 'text-muted-foreground/80'}`}>
                     {claim.initials}
                   </span>
                 )}
-                {!isClaimed && userInitials && <span className="mt-1 text-[8px] text-gray-600">Claim</span>}
+                {!isClaimed && userInitials && <span className="mt-1 text-[8px] text-muted-foreground/60">Claim</span>}
                 {isMine && !isCompleted && <span className="mt-0.5 text-[7px] text-teal-500">Complete</span>}
               </button>
             )

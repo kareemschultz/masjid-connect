@@ -49,7 +49,7 @@ export default function GlossaryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="Islamic Glossary"
@@ -62,23 +62,23 @@ export default function GlossaryPage() {
       <div className="px-4 pt-4 space-y-4">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search terms, Arabic, or definitions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl bg-gray-900 border border-gray-800 py-3 pl-10 pr-10 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+            className="w-full rounded-xl bg-card border border-border py-3 pl-10 pr-10 text-sm text-foreground placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/80">
               <X className="h-4 w-4" />
             </button>
           )}
         </div>
 
         {/* Term count */}
-        <p className="text-xs text-gray-500">{filtered.length} term{filtered.length !== 1 ? 's' : ''}</p>
+        <p className="text-xs text-muted-foreground/80">{filtered.length} term{filtered.length !== 1 ? 's' : ''}</p>
 
         {/* Category pills */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -89,7 +89,7 @@ export default function GlossaryPage() {
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 category === c
                   ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                  : 'bg-gray-800 text-gray-400 border border-gray-700'
+                  : 'bg-secondary text-muted-foreground border border-border'
               }`}
             >
               {c === 'all' ? 'All' : CATEGORY_LABELS[c].label}
@@ -108,8 +108,8 @@ export default function GlossaryPage() {
                 disabled={!has}
                 className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold transition-colors ${
                   has
-                    ? 'bg-gray-800 text-white active:bg-blue-500/30'
-                    : 'bg-gray-900/50 text-gray-700 cursor-default'
+                    ? 'bg-secondary text-foreground active:bg-blue-500/30'
+                    : 'bg-card/50 text-gray-700 cursor-default'
                 }`}
               >
                 {letter}
@@ -121,20 +121,20 @@ export default function GlossaryPage() {
         {/* Terms grouped by letter */}
         {filtered.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-sm text-gray-500">No terms found. Try a different search or category.</p>
+            <p className="text-sm text-muted-foreground/80">No terms found. Try a different search or category.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {Object.keys(grouped).sort().map(letter => (
               <div key={letter} ref={el => { sectionRefs.current[letter] = el }}>
                 {/* Sticky letter header */}
-                <div className="sticky top-0 z-10 bg-[#0a0b14] py-2">
+                <div className="sticky top-0 z-10 bg-background py-2">
                   <div className="flex items-center gap-2">
                     <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/15 text-sm font-bold text-blue-400">
                       {letter}
                     </span>
-                    <div className="h-px flex-1 bg-gray-800" />
-                    <span className="text-[10px] text-gray-600">{grouped[letter].length}</span>
+                    <div className="h-px flex-1 bg-secondary" />
+                    <span className="text-[10px] text-muted-foreground/60">{grouped[letter].length}</span>
                   </div>
                 </div>
 
@@ -143,12 +143,12 @@ export default function GlossaryPage() {
                   {grouped[letter].map(term => {
                     const catStyle = CATEGORY_LABELS[term.category]
                     return (
-                      <div key={term.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+                      <div key={term.id} className="rounded-2xl border border-border bg-card p-4">
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <div>
-                            <h3 className="text-base font-bold text-white">{term.term}</h3>
+                            <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                             {term.plural && (
-                              <p className="text-[11px] text-gray-500">Plural: {term.plural}</p>
+                              <p className="text-[11px] text-muted-foreground/80">Plural: {term.plural}</p>
                             )}
                           </div>
                           <p className="font-arabic text-lg text-blue-300/80 shrink-0" dir="rtl">{term.arabic}</p>
@@ -156,9 +156,9 @@ export default function GlossaryPage() {
                         <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-2 ${catStyle.color}`}>
                           {catStyle.label}
                         </span>
-                        <p className="text-sm text-gray-300 leading-relaxed">{term.definition}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{term.definition}</p>
                         {term.usage && (
-                          <p className="mt-2 text-xs italic text-gray-500">{term.usage}</p>
+                          <p className="mt-2 text-xs italic text-muted-foreground/80">{term.usage}</p>
                         )}
                       </div>
                     )

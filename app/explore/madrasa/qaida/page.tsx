@@ -87,7 +87,7 @@ export default function QaidaPage() {
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
           isPlaying
             ? 'bg-emerald-500/20 text-emerald-400 animate-pulse'
-            : 'bg-gray-800 text-gray-400 active:bg-gray-700 active:text-white'
+            : 'bg-secondary text-muted-foreground active:bg-muted active:text-foreground'
         }`}
         aria-label={isPlaying ? 'Stop' : 'Play pronunciation'}
       >
@@ -148,7 +148,7 @@ export default function QaidaPage() {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={BookOpen}
         title="Noorani Qaida"
@@ -160,11 +160,11 @@ export default function QaidaPage() {
 
       {/* ── Progress bar ─────────────────────────────────────────────── */}
       <div className="px-4 pt-5 pb-2">
-        <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
           <span>{started.length} of {total} lessons started</span>
           <span className="text-emerald-400 font-semibold">{progressPct}%</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-800">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
           <div
             className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
             style={{ width: `${progressPct}%` }}
@@ -180,7 +180,7 @@ export default function QaidaPage() {
             <button
               key={lesson.id}
               onClick={() => openLesson(lesson)}
-              className="flex w-full items-center gap-3.5 rounded-2xl border border-gray-800 bg-gray-900 p-4 text-left transition-transform active:scale-[0.98]"
+              className="flex w-full items-center gap-3.5 rounded-2xl border border-border bg-card p-4 text-left transition-transform active:scale-[0.98]"
             >
               {/* Lesson number circle */}
               <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-teal-500/15 text-sm font-bold text-teal-400">
@@ -195,19 +195,19 @@ export default function QaidaPage() {
 
               {/* Text */}
               <div className="flex-1 min-w-0">
-                <p className="font-arabic text-lg text-[#f9fafb] leading-relaxed truncate">
+                <p className="font-arabic text-lg text-foreground leading-relaxed truncate">
                   {lesson.arabicTitle}
                 </p>
-                <p className="text-sm font-semibold text-[#f9fafb] truncate">{lesson.title}</p>
-                <p className="text-xs text-gray-400 truncate">{lesson.description}</p>
+                <p className="text-sm font-semibold text-foreground truncate">{lesson.title}</p>
+                <p className="text-xs text-muted-foreground truncate">{lesson.description}</p>
               </div>
 
               {/* Content count pill + chevron */}
               <div className="flex shrink-0 items-center gap-2">
-                <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-400">
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
                   {contentCount(lesson)}
                 </span>
-                <ChevronRight className="h-4 w-4 text-gray-600" />
+                <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
               </div>
             </button>
           )
@@ -225,28 +225,28 @@ export default function QaidaPage() {
 
           {/* Sheet */}
           <div
-            className="relative flex flex-col rounded-t-3xl border-t border-gray-800 bg-[#0a0b14] animate-scale-in"
+            className="relative flex flex-col rounded-t-3xl border-t border-border bg-background animate-scale-in"
             style={{ maxHeight: '90dvh', height: '90dvh' }}
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1 shrink-0">
-              <div className="h-1 w-10 rounded-full bg-gray-700" />
+              <div className="h-1 w-10 rounded-full bg-muted" />
             </div>
 
             {/* Header — fixed inside sheet, doesn't scroll */}
-            <div className="shrink-0 flex items-center justify-between bg-[#0a0b14] px-5 pt-2 pb-3 border-b border-gray-800/60">
+            <div className="shrink-0 flex items-center justify-between bg-background px-5 pt-2 pb-3 border-b border-border/60">
               <div className="flex-1 min-w-0">
                 <p className="font-arabic text-xl text-teal-300 leading-relaxed truncate">
                   {activeLesson.arabicTitle}
                 </p>
-                <h2 className="text-lg font-bold text-[#f9fafb] truncate">
+                <h2 className="text-lg font-bold text-foreground truncate">
                   {activeLesson.title}
                 </h2>
-                <p className="text-xs text-gray-400">{activeLesson.subtitle}</p>
+                <p className="text-xs text-muted-foreground">{activeLesson.subtitle}</p>
               </div>
               <button
                 onClick={closeLesson}
-                className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition-transform active:scale-90"
+                className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-transform active:scale-90"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />
@@ -255,8 +255,8 @@ export default function QaidaPage() {
 
             {/* Audio not supported notice */}
             {!speechSupported && (
-              <div className="mx-4 mb-3 rounded-xl border border-gray-800 bg-gray-900/50 p-3 text-center shrink-0">
-                <p className="text-xs text-gray-500">Audio not supported on this device</p>
+              <div className="mx-4 mb-3 rounded-xl border border-border bg-card/50 p-3 text-center shrink-0">
+                <p className="text-xs text-muted-foreground/80">Audio not supported on this device</p>
               </div>
             )}
 
@@ -348,14 +348,14 @@ function AlphabetView({
                   ? 'border-teal-500/50 bg-teal-500/10'
                   : isSpeaking
                     ? 'border-emerald-500/50 bg-emerald-500/10'
-                    : 'border-gray-800 bg-gray-900'
+                    : 'border-border bg-card'
               }`}
             >
-              <span className="font-arabic text-4xl text-[#f9fafb] leading-none">
+              <span className="font-arabic text-4xl text-foreground leading-none">
                 {letter.arabic}
               </span>
               <span className="mt-1.5 text-xs text-teal-400">{letter.trans}</span>
-              <span className="text-[10px] text-gray-500">{letter.name}</span>
+              <span className="text-[10px] text-muted-foreground/80">{letter.name}</span>
               <div className="absolute top-1 right-1 scale-75">
                 <SpeakerBtn text={letter.arabic} id={`letter-${letter.name}`} />
               </div>
@@ -370,7 +370,7 @@ function AlphabetView({
           <div className="flex items-center gap-2 mb-3">
             <button
               onClick={() => onSelect(null)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-800 text-gray-400"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-muted-foreground"
               aria-label="Deselect letter"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
@@ -383,7 +383,7 @@ function AlphabetView({
 
           {/* Large letter display with pronunciation */}
           <div className="mb-4 flex items-center justify-center gap-4">
-            <span className="font-arabic text-6xl text-[#f9fafb] leading-none">
+            <span className="font-arabic text-6xl text-foreground leading-none">
               {selectedLetter.arabic}
             </span>
           </div>
@@ -393,12 +393,12 @@ function AlphabetView({
             {(['initial', 'medial', 'final'] as const).map((pos) => (
               <div
                 key={pos}
-                className="flex flex-col items-center rounded-xl border border-gray-800 bg-gray-900 p-3"
+                className="flex flex-col items-center rounded-xl border border-border bg-card p-3"
               >
-                <span className="font-arabic text-3xl text-[#f9fafb] leading-none">
+                <span className="font-arabic text-3xl text-foreground leading-none">
                   {forms[pos]}
                 </span>
-                <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
                   {pos}
                 </span>
                 <div className="mt-1 scale-75">
@@ -409,11 +409,11 @@ function AlphabetView({
           </div>
 
           {/* Makhraj */}
-          <div className="mt-3 rounded-xl bg-gray-900 border border-gray-800 px-3 py-2">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-0.5">
+          <div className="mt-3 rounded-xl bg-card border border-border px-3 py-2">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 mb-0.5">
               Makhraj (Articulation Point)
             </p>
-            <p className="text-xs text-gray-300">{selectedLetter.makhraj}</p>
+            <p className="text-xs text-muted-foreground">{selectedLetter.makhraj}</p>
           </div>
         </div>
       )}
@@ -433,13 +433,13 @@ function CompoundsView({
       {content.map((pair, i) => (
         <div
           key={i}
-          className="relative flex flex-col items-center rounded-2xl border border-gray-800 bg-gray-900 p-4"
+          className="relative flex flex-col items-center rounded-2xl border border-border bg-card p-4"
         >
-          <span className="font-arabic text-3xl text-[#f9fafb] leading-none">
+          <span className="font-arabic text-3xl text-foreground leading-none">
             {pair.arabic}
           </span>
           <span className="mt-2 text-xs font-semibold text-teal-400">{pair.name}</span>
-          <span className="mt-0.5 text-[10px] text-gray-500 text-center">{pair.note}</span>
+          <span className="mt-0.5 text-[10px] text-muted-foreground/80 text-center">{pair.note}</span>
           <div className="mt-1.5 scale-75">
             <SpeakerBtn text={pair.arabic} id={`compound-${i}`} />
           </div>
@@ -461,18 +461,18 @@ function HarakatView({
       {content.map((section, si) => (
         <div key={si}>
           <h3 className="text-sm font-bold text-teal-300 mb-1">{section.section}</h3>
-          <p className="text-xs text-gray-400 mb-3">{section.desc}</p>
+          <p className="text-xs text-muted-foreground mb-3">{section.desc}</p>
 
           <div className="grid grid-cols-4 gap-2.5" dir="rtl">
             {section.examples.map((ex, ei) => (
               <div
                 key={ei}
-                className="flex flex-col items-center rounded-xl border border-gray-800 bg-gray-900 px-2 py-3"
+                className="flex flex-col items-center rounded-xl border border-border bg-card px-2 py-3"
               >
-                <span className="font-arabic text-2xl text-[#f9fafb] leading-none">
+                <span className="font-arabic text-2xl text-foreground leading-none">
                   {ex.arabic}
                 </span>
-                <span className="mt-1.5 text-[10px] text-gray-400">{ex.trans}</span>
+                <span className="mt-1.5 text-[10px] text-muted-foreground">{ex.trans}</span>
                 <div className="mt-1 scale-75">
                   <SpeakerBtn text={ex.arabic} id={`harakat-${si}-${ei}`} />
                 </div>
@@ -497,19 +497,19 @@ function TajweedView({
       {content.map((section, si) => (
         <div key={si}>
           <h3 className="text-sm font-bold text-teal-300 mb-1">{section.section}</h3>
-          <p className="text-xs text-gray-400 mb-3">{section.desc}</p>
+          <p className="text-xs text-muted-foreground mb-3">{section.desc}</p>
 
           <div className="space-y-2">
             {section.examples.map((ex, ei) => (
               <div
                 key={ei}
-                className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3"
               >
                 {/* Transliteration on the left (LTR English) */}
-                <span className="text-xs text-gray-400 flex-1">{ex.trans}</span>
+                <span className="text-xs text-muted-foreground flex-1">{ex.trans}</span>
                 {/* Arabic + speaker on the right */}
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-arabic text-xl text-[#f9fafb] leading-none">
+                  <span className="font-arabic text-xl text-foreground leading-none">
                     {ex.arabic}
                   </span>
                   <SpeakerBtn text={ex.arabic} id={`tajweed-${si}-${ei}`} />

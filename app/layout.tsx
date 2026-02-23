@@ -60,7 +60,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased bg-[#0a0b14] text-[#f9fafb]">
+      <body className="font-sans antialiased bg-background text-foreground">
         <ThemeProvider />
         <OfflineBadge />
         {children}

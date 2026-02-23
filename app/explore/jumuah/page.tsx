@@ -100,23 +100,23 @@ export default function JumuahPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#0a0b14]">
+      <div className="min-h-screen bg-background">
         <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack  heroTheme="prayer" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={Sun} title="Jumu'ah" subtitle="Friday Prayer Preparation" gradient="from-emerald-900 to-teal-900" showBack  heroTheme="prayer" />
 
       <div className="mx-auto max-w-lg space-y-6 px-4 py-6">
 
         {/* ── SECTION 1: Preparation Checklist ── */}
         <section>
-          <h2 className="mb-4 text-lg font-bold text-white">Preparation Checklist</h2>
+          <h2 className="mb-4 text-lg font-bold text-foreground">Preparation Checklist</h2>
 
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="rounded-2xl border border-border bg-card p-5">
             {/* Progress ring */}
             <div className="mb-5 flex flex-col items-center">
               <div className="relative h-24 w-24">
@@ -144,10 +144,10 @@ export default function JumuahPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xl font-bold text-white">{completedCount}<span className="text-sm text-gray-400">/7</span></span>
+                  <span className="text-xl font-bold text-foreground">{completedCount}<span className="text-sm text-muted-foreground">/7</span></span>
                 </div>
               </div>
-              <p className="mt-2 text-xs text-gray-400">
+              <p className="mt-2 text-xs text-muted-foreground">
                 {completedCount === 7 ? 'All done! May Allah accept.' : 'Tap to mark completed'}
               </p>
             </div>
@@ -161,17 +161,17 @@ export default function JumuahPage() {
                   className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all duration-200 ${
                     checklist[i]
                       ? 'bg-emerald-500/10 border border-emerald-500/30'
-                      : 'bg-gray-800/50 border border-gray-700/50 active:scale-[0.98]'
+                      : 'bg-secondary/50 border border-border/50 active:scale-[0.98]'
                   }`}
                 >
                   <div
                     className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${
-                      checklist[i] ? 'bg-emerald-500 text-white' : 'border-2 border-gray-600'
+                      checklist[i] ? 'bg-emerald-500 text-foreground' : 'border-2 border-gray-600'
                     }`}
                   >
                     {checklist[i] && <Check className="h-3.5 w-3.5" />}
                   </div>
-                  <span className={`text-sm ${checklist[i] ? 'text-emerald-300 line-through' : 'text-gray-200'}`}>
+                  <span className={`text-sm ${checklist[i] ? 'text-emerald-300 line-through' : 'text-foreground/80'}`}>
                     {item}
                   </span>
                 </button>
@@ -182,9 +182,9 @@ export default function JumuahPage() {
 
         {/* ── SECTION 2: Surah Al-Kahf ── */}
         <section>
-          <h2 className="mb-4 text-lg font-bold text-white">Surah Al-Kahf</h2>
+          <h2 className="mb-4 text-lg font-bold text-foreground">Surah Al-Kahf</h2>
 
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="rounded-2xl border border-border bg-card p-5">
             <div className="mb-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4">
               <p className="text-sm leading-relaxed text-emerald-200/90">
                 &ldquo;Whoever reads Surah Al-Kahf on Friday will have a light between the two Fridays.&rdquo;
@@ -194,16 +194,16 @@ export default function JumuahPage() {
 
             <Link
               href="/quran/18"
-              className="mb-5 flex items-center justify-between rounded-xl bg-gray-800/50 border border-gray-700/50 px-4 py-3 transition-colors hover:bg-gray-800"
+              className="mb-5 flex items-center justify-between rounded-xl bg-secondary/50 border border-border/50 px-4 py-3 transition-colors hover:bg-secondary"
             >
               <div className="flex items-center gap-3">
                 <BookOpen className="h-5 w-5 text-emerald-400" />
-                <span className="text-sm font-medium text-white">Open in Quran</span>
+                <span className="text-sm font-medium text-foreground">Open in Quran</span>
               </div>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </Link>
 
-            <div className="rounded-xl bg-gray-800/50 border border-gray-700/50 p-4">
+            <div className="rounded-xl bg-secondary/50 border border-border/50 p-4">
               <p className="font-arabic text-right text-lg leading-[2] text-gray-100" dir="rtl">
                 {'\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u064E\u0647\u0650 \u0627\u0644\u0631\u0651\u064E\u062D\u0652\u0645\u064E\u0670\u0646\u0650 \u0627\u0644\u0631\u0651\u064E\u062D\u0650\u064A\u0645\u0650'}
               </p>
@@ -225,20 +225,20 @@ export default function JumuahPage() {
 
         {/* ── SECTION 3: Khutbah Log ── */}
         <section>
-          <h2 className="mb-4 text-lg font-bold text-white">Khutbah Log</h2>
+          <h2 className="mb-4 text-lg font-bold text-foreground">Khutbah Log</h2>
 
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+          <div className="rounded-2xl border border-border bg-card p-5">
             <textarea
               value={khutbahText}
               onChange={(e) => setKhutbahText(e.target.value)}
               placeholder="What was today's khutbah about?"
               rows={3}
-              className="w-full resize-none rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-3 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-colors"
+              className="w-full resize-none rounded-xl border border-border/50 bg-secondary/50 px-4 py-3 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-colors"
             />
             <button
               onClick={saveNote}
               disabled={!khutbahText.trim()}
-              className="mt-3 w-full rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
+              className="mt-3 w-full rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-foreground transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
             >
               Save Note
             </button>
@@ -246,20 +246,20 @@ export default function JumuahPage() {
             {/* Past notes */}
             {notes.length > 0 && (
               <div className="mt-5 space-y-3">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Past Notes</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Notes</h3>
                 {notes.slice(0, 4).map((entry, i) => (
                   <div
                     key={`${entry.date}-${i}`}
-                    className="rounded-xl bg-gray-800/50 border border-gray-700/50 p-4"
+                    className="rounded-xl bg-secondary/50 border border-border/50 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <p className="text-xs font-medium text-emerald-400/70">{entry.date}</p>
-                        <p className="mt-1 text-sm leading-relaxed text-gray-300">{entry.note}</p>
+                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{entry.note}</p>
                       </div>
                       <button
                         onClick={() => deleteNote(i)}
-                        className="shrink-0 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                        className="shrink-0 rounded-lg p-1.5 text-muted-foreground/80 transition-colors hover:bg-red-500/10 hover:text-red-400"
                         aria-label="Delete note"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -274,16 +274,16 @@ export default function JumuahPage() {
 
         {/* ── SECTION 4: Friday Duas ── */}
         <section>
-          <h2 className="mb-4 text-lg font-bold text-white">Friday Duas</h2>
+          <h2 className="mb-4 text-lg font-bold text-foreground">Friday Duas</h2>
 
           <div className="space-y-4">
             {FRIDAY_DUAS.map((dua, i) => (
-              <div key={i} className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
+              <div key={i} className="rounded-2xl border border-border bg-card p-5">
                 <p className="font-arabic text-right text-lg leading-[2] text-gray-100" dir="rtl">
                   {dua.arabic}
                 </p>
                 <p className="mt-3 text-sm italic text-emerald-300/80">{dua.transliteration}</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-400">{dua.meaning}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{dua.meaning}</p>
               </div>
             ))}
           </div>

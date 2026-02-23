@@ -21,7 +21,7 @@ const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   Reminder: { bg: 'bg-amber-500/15', text: 'text-amber-400' },
   Question: { bg: 'bg-blue-500/15', text: 'text-blue-400' },
   Announcement: { bg: 'bg-emerald-500/15', text: 'text-emerald-400' },
-  General: { bg: 'bg-gray-500/15', text: 'text-gray-400' },
+  General: { bg: 'bg-gray-500/15', text: 'text-muted-foreground' },
 }
 
 const SAMPLE_POSTS: FeedPost[] = [
@@ -126,29 +126,29 @@ export default function CommunityFeedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero icon={MessageCircle} title="Community Feed" subtitle="Muslims in GY" gradient="from-blue-900 to-indigo-900" showBack heroTheme="community" />
 
       <div className="px-4 pt-5 -mt-2 space-y-4">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-3">
-          <input type="text" placeholder="Your name (optional)" value={name} onChange={(e) => setName(e.target.value)} className="w-full rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50" />
+        <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+          <input type="text" placeholder="Your name (optional)" value={name} onChange={(e) => setName(e.target.value)} className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50" />
           <div className="relative">
-            <textarea placeholder="Share something with the community..." value={message} onChange={(e) => setMessage(e.target.value.slice(0, 300))} rows={3} className="w-full resize-none rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-500/50" />
-            <span className="absolute bottom-2 right-3 text-[10px] text-gray-600">{message.length}/300</span>
+            <textarea placeholder="Share something with the community..." value={message} onChange={(e) => setMessage(e.target.value.slice(0, 300))} rows={3} className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50" />
+            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground/60">{message.length}/300</span>
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {POST_TYPES.map((t) => {
               const colors = TYPE_COLORS[t]
               return (
-                <button key={t} onClick={() => setPostType(t)} className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${postType === t ? `${colors.bg} ${colors.text}` : 'bg-gray-800/50 text-gray-500'}`}>
+                <button key={t} onClick={() => setPostType(t)} className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${postType === t ? `${colors.bg} ${colors.text}` : 'bg-secondary/50 text-muted-foreground/80'}`}>
                   {t}
                 </button>
               )
             })}
           </div>
 
-          <button onClick={submitPost} disabled={!message.trim()} className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-40">
+          <button onClick={submitPost} disabled={!message.trim()} className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-foreground transition-all active:scale-95 disabled:opacity-40">
             <Send className="h-4 w-4" />
             Post
           </button>
@@ -160,18 +160,18 @@ export default function CommunityFeedPage() {
             const initial = post.name === 'Anonymous' ? '?' : post.name[0].toUpperCase()
 
             return (
-              <div key={post.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+              <div key={post.id} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-sm font-bold text-blue-400">{initial}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`rounded-lg px-2 py-0.5 text-[10px] font-semibold ${colors.bg} ${colors.text}`}>{post.type}</span>
-                      <span className="text-sm font-semibold text-white">{post.name}</span>
-                      <span className="text-[10px] text-gray-600">{timeAgo(post.createdAt)}</span>
+                      <span className="text-sm font-semibold text-foreground">{post.name}</span>
+                      <span className="text-[10px] text-muted-foreground/60">{timeAgo(post.createdAt)}</span>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-300">{post.message}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{post.message}</p>
                     <div className="mt-3">
-                      <button onClick={() => toggleLike(post.id)} className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all active:scale-95 ${likes[String(post.id)] ? 'bg-red-500/15 text-red-400' : 'bg-gray-800 text-gray-400'}`}>
+                      <button onClick={() => toggleLike(post.id)} className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all active:scale-95 ${likes[String(post.id)] ? 'bg-red-500/15 text-red-400' : 'bg-secondary text-muted-foreground'}`}>
                         <Heart className={`h-4 w-4 ${likes[String(post.id)] ? 'fill-red-400' : ''}`} />
                         <span className="text-xs">{post.likes}</span>
                       </button>

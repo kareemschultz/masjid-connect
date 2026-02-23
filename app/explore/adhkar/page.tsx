@@ -61,8 +61,8 @@ export default function AdhkarPage() {
             onClick={() => { setCategory(cat); setCounts({}) }}
             className={`flex-1 rounded-xl py-2.5 text-xs font-semibold transition-all ${
               category === cat
-                ? 'bg-amber-500 text-white'
-                : 'bg-gray-800 text-gray-400'
+                ? 'bg-amber-500 text-foreground'
+                : 'bg-secondary text-muted-foreground'
             }`}
           >
             {cat}
@@ -72,12 +72,12 @@ export default function AdhkarPage() {
 
       {/* Reset & Progress */}
       <div className="flex items-center justify-between px-4 pt-3">
-        <div className="text-xs text-gray-400">
+        <div className="text-xs text-muted-foreground">
           {ADHKAR[category].filter((_, i) => (counts[`${category}-${i}`] || 0) >= ADHKAR[category][i].repeat).length}/{ADHKAR[category].length} complete
         </div>
         <button
           onClick={() => setCounts({})}
-          className="rounded-lg bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-gray-400 active:bg-gray-700 transition-all"
+          className="rounded-lg bg-secondary px-3 py-1.5 text-[11px] font-medium text-muted-foreground active:bg-muted transition-all"
         >
           Reset All
         </button>
@@ -98,19 +98,19 @@ export default function AdhkarPage() {
               className={`w-full rounded-2xl border p-4 text-left transition-all active:scale-[0.98] ${
                 done
                   ? 'border-emerald-500/30 bg-emerald-500/5'
-                  : 'border-gray-800 bg-gray-900'
+                  : 'border-border bg-card'
               }`}
             >
               <p className="text-right font-arabic text-xl leading-loose text-foreground" dir="rtl">
                 {dhikr.arabic}
               </p>
               <p className="mt-2 text-xs font-medium text-amber-400">{dhikr.transliteration}</p>
-              <p className="mt-1 text-xs text-gray-400">{dhikr.meaning}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{dhikr.meaning}</p>
               <div className="mt-3 flex items-center justify-between">
-                <span className={`text-xs font-bold ${done ? 'text-emerald-400' : 'text-gray-500'}`}>
+                <span className={`text-xs font-bold ${done ? 'text-emerald-400' : 'text-muted-foreground/80'}`}>
                   {done ? '✓ ' : ''}{current} / {dhikr.repeat}
                 </span>
-                <div className="h-1 w-24 overflow-hidden rounded-full bg-gray-800">
+                <div className="h-1 w-24 overflow-hidden rounded-full bg-secondary">
                   <div
                     className="h-full rounded-full bg-amber-500 transition-all duration-200"
                     style={{ width: `${(current / dhikr.repeat) * 100}%` }}

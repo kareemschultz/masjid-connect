@@ -89,7 +89,7 @@ const RIGHTS = [
 
 export default function RightsOfWomenPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Scale}
         title="Rights of Women"
@@ -102,8 +102,8 @@ export default function RightsOfWomenPage() {
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">
         {/* Intro */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5">
-          <p className="text-sm text-gray-400 leading-relaxed">
+        <div className="rounded-2xl border border-border bg-card/50 p-5">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Islam granted women rights over 1,400 years ago that the modern world only began recognizing in recent centuries. These are not favours &mdash; they are divine obligations.
           </p>
         </div>
@@ -112,22 +112,22 @@ export default function RightsOfWomenPage() {
         {RIGHTS.map((right, i) => {
           const Icon = right.icon
           return (
-            <div key={i} className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5">
+            <div key={i} className="rounded-2xl border border-border bg-card/50 p-5">
               <div className="flex items-center gap-3">
                 <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${right.bg}`}>
                   <Icon className={`h-5 w-5 ${right.color}`} />
                 </div>
-                <h2 className="text-base font-bold text-[#f9fafb]">{right.title}</h2>
+                <h2 className="text-base font-bold text-foreground">{right.title}</h2>
               </div>
-              <p className="text-sm text-gray-400 leading-relaxed mt-3">{right.text}</p>
-              <p className="text-xs text-gray-500 mt-2">{right.ref}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-3">{right.text}</p>
+              <p className="text-xs text-muted-foreground/80 mt-2">{right.ref}</p>
             </div>
           )
         })}
 
         {/* Footer */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400 italic px-4">
+          <p className="text-sm text-muted-foreground italic px-4">
             These rights are from the Quran and Sunnah &mdash; they are not favours, they are obligations upon others and entitlements for you.
           </p>
         </div>

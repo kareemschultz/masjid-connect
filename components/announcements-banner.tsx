@@ -49,10 +49,10 @@ export function AnnouncementsBanner() {
           <div key={a.id} className={`flex items-start gap-3 rounded-2xl border p-3.5 ${cfg.bg}`}>
             <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${cfg.iconColor}`} />
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-[#f9fafb]">{a.title}</div>
-              <div className="mt-0.5 text-[11px] text-gray-400 leading-relaxed">{a.body}</div>
+              <div className="text-xs font-bold text-foreground">{a.title}</div>
+              <div className="mt-0.5 text-[11px] text-muted-foreground leading-relaxed">{a.body}</div>
             </div>
-            <button onClick={() => dismiss(a.id)} className="shrink-0 rounded-lg p-1 text-gray-500 active:text-gray-300" aria-label="Dismiss">
+            <button onClick={() => dismiss(a.id)} className="shrink-0 rounded-lg p-1 text-muted-foreground/80 active:text-muted-foreground" aria-label="Dismiss">
               <X className="h-3.5 w-3.5" />
             </button>
           </div>

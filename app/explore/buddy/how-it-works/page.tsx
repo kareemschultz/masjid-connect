@@ -78,7 +78,7 @@ const STREAK_MULTIPLIERS = [
 const LEVEL_STYLES: Record<number, { gradient: string; text: string; border: string; description: string }> = {
   1: {
     gradient: 'from-gray-500 to-gray-600',
-    text: 'text-gray-400',
+    text: 'text-muted-foreground',
     border: 'border-gray-500/40',
     description: 'Every journey starts here. Begin your daily ibadah and earn your first points.',
   },
@@ -196,7 +196,7 @@ export default function HowItWorksPage() {
       <div className="space-y-6 px-4 pt-6">
         {/* Intro */}
         <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
-          <p className="text-sm leading-relaxed text-gray-300">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             The Faith Buddy system pairs you with an accountability partner to help you stay consistent in your ibadah (worship). Compete in good deeds, encourage each other, and earn rewards as you grow together on your spiritual journey.
           </p>
         </div>
@@ -211,18 +211,18 @@ export default function HowItWorksPage() {
 
         {/* Steps */}
         <SettingGroup label="Getting Started" accentColor="bg-blue-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {STEPS.map((step) => (
               <div key={step.step} className="flex items-start gap-4 p-4">
                 <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.color}`}>
-                  <step.icon className="h-5 w-5 text-white" />
+                  <step.icon className="h-5 w-5 text-foreground" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-gray-400">{step.step}</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-muted-foreground">{step.step}</span>
                     <h3 className="text-sm font-bold text-foreground">{step.title}</h3>
                   </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-gray-400">{step.description}</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -231,14 +231,14 @@ export default function HowItWorksPage() {
 
         {/* Daily Point System */}
         <SettingGroup label="Daily Points" accentColor="bg-amber-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {DAILY_POINTS.map((item, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
                 <item.icon className={`h-4 w-4 shrink-0 ${item.color}`} />
                 <div className="flex-1">
-                  <span className="text-xs text-gray-300">{item.action}</span>
+                  <span className="text-xs text-muted-foreground">{item.action}</span>
                   {item.bonus && (
-                    <span className="ml-1.5 text-[10px] text-gray-500">({item.bonus})</span>
+                    <span className="ml-1.5 text-[10px] text-muted-foreground/80">({item.bonus})</span>
                   )}
                 </div>
                 <span className="flex items-center gap-0.5 rounded-lg bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-400">
@@ -251,12 +251,12 @@ export default function HowItWorksPage() {
 
         {/* Sunnah Prayer Points */}
         <SettingGroup label="Sunnah Prayer Points" accentColor="bg-indigo-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {SUNNAH_POINTS.map((s, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3">
                 <div>
-                  <p className="text-xs font-medium text-gray-300">{s.label}</p>
-                  {s.note && <p className="text-[10px] text-gray-500">{s.note}</p>}
+                  <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
+                  {s.note && <p className="text-[10px] text-muted-foreground/80">{s.note}</p>}
                 </div>
                 <span className="flex items-center gap-0.5 rounded-lg bg-indigo-500/10 px-2 py-0.5 text-[11px] font-bold text-indigo-400">
                   <Star className="h-2.5 w-2.5" /> +{s.pts}
@@ -268,14 +268,14 @@ export default function HowItWorksPage() {
 
         {/* Nawafil Points */}
         <SettingGroup label="Nawafil Points" accentColor="bg-violet-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {NAWAFIL_POINTS.map((n, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2">
                   <span className="text-sm">{n.icon}</span>
                   <div>
-                    <p className="text-xs font-medium text-gray-300">{n.label}</p>
-                    {n.note && <p className="text-[10px] text-gray-500">{n.note}</p>}
+                    <p className="text-xs font-medium text-muted-foreground">{n.label}</p>
+                    {n.note && <p className="text-[10px] text-muted-foreground/80">{n.note}</p>}
                   </div>
                 </div>
                 <span className="flex items-center gap-0.5 rounded-lg bg-violet-500/10 px-2 py-0.5 text-[11px] font-bold text-violet-400">
@@ -289,19 +289,19 @@ export default function HowItWorksPage() {
         {/* Streak Multipliers */}
         <SettingGroup label="Streak Multipliers" accentColor="bg-orange-500">
           <div className="p-4">
-            <p className="mb-3 text-xs leading-relaxed text-gray-400">
+            <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
               Maintain consecutive active days (3+ tracked items) to multiply all your daily points. The multiplier applies to your base score before the Perfect Day bonus.
             </p>
             <div className="grid grid-cols-2 gap-2">
               {STREAK_MULTIPLIERS.map((s, i) => (
-                <div key={i} className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 p-3">
+                <div key={i} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/10">
                     <TrendingUp className="h-4 w-4 text-orange-400" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-orange-400">{s.mult}</p>
-                    <p className="text-[10px] text-gray-500">{s.days}</p>
-                    <p className="text-[10px] text-gray-600">{s.label}</p>
+                    <p className="text-[10px] text-muted-foreground/80">{s.days}</p>
+                    <p className="text-[10px] text-muted-foreground/60">{s.label}</p>
                   </div>
                 </div>
               ))}
@@ -319,17 +319,17 @@ export default function HowItWorksPage() {
                 <div key={level.level} className={`rounded-xl border ${style.border} p-4`}>
                   <div className="flex items-center gap-3">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${style.gradient}`}>
-                      <LevelIcon className="h-5 w-5 text-white" />
+                      <LevelIcon className="h-5 w-5 text-foreground" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h4 className={`text-sm font-bold ${style.text}`}>{level.label}</h4>
-                        <span className="text-[10px] text-gray-600">{level.arabic}</span>
+                        <span className="text-[10px] text-muted-foreground/60">{level.arabic}</span>
                       </div>
-                      <span className="text-[11px] text-gray-500">{getLevelRange(level)}</span>
+                      <span className="text-[11px] text-muted-foreground/80">{getLevelRange(level)}</span>
                     </div>
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-gray-400">{style.description}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{style.description}</p>
                 </div>
               )
             })}
@@ -338,21 +338,21 @@ export default function HowItWorksPage() {
 
         {/* Challenge Types */}
         <SettingGroup label="Challenge Categories" accentColor="bg-emerald-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {CHALLENGE_TYPES.map((cat) => (
               <div key={cat.title} className="p-4">
                 <div className="flex items-center gap-3">
                   <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${cat.color}`}>
-                    <cat.icon className="h-5 w-5 text-white" />
+                    <cat.icon className="h-5 w-5 text-foreground" />
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-foreground">{cat.title}</h4>
-                    <p className="mt-0.5 text-xs leading-relaxed text-gray-400">{cat.description}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{cat.description}</p>
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1.5 pl-[52px]">
                   {cat.examples.map((ex) => (
-                    <span key={ex} className="rounded-lg bg-gray-800 px-2.5 py-1 text-[10px] font-medium text-gray-400">
+                    <span key={ex} className="rounded-lg bg-secondary px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
                       {ex}
                     </span>
                   ))}
@@ -364,13 +364,13 @@ export default function HowItWorksPage() {
 
         {/* More Hadiths */}
         <SettingGroup label="Inspiration from the Sunnah" accentColor="bg-amber-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {HADITHS.slice(1).map((h, i) => (
               <div key={i} className="p-4">
                 <div className="flex items-start gap-3">
                   <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/60" />
                   <div>
-                    <p className="text-sm italic leading-relaxed text-gray-300">{h.text}</p>
+                    <p className="text-sm italic leading-relaxed text-muted-foreground">{h.text}</p>
                     <p className="mt-1.5 text-[11px] text-amber-400/50">- {h.source}</p>
                   </div>
                 </div>
@@ -381,7 +381,7 @@ export default function HowItWorksPage() {
 
         {/* Tips */}
         <SettingGroup label="Tips for Success" accentColor="bg-cyan-500">
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {[
               { icon: ShieldCheck, text: 'Choose a buddy who shares your spiritual goals and level of commitment' },
               { icon: Bell, text: 'Use the nudge feature before prayer times as a gentle reminder' },
@@ -392,7 +392,7 @@ export default function HowItWorksPage() {
             ].map((tip, i) => (
               <div key={i} className="flex items-start gap-3 px-4 py-3.5">
                 <tip.icon className="mt-0.5 h-4 w-4 shrink-0 text-cyan-400" />
-                <span className="text-xs leading-relaxed text-gray-300">{tip.text}</span>
+                <span className="text-xs leading-relaxed text-muted-foreground">{tip.text}</span>
               </div>
             ))}
           </div>
@@ -401,7 +401,7 @@ export default function HowItWorksPage() {
         {/* CTA */}
         <Link
           href="/explore/buddy"
-          className="flex items-center justify-center gap-2 rounded-2xl bg-blue-500 py-4 text-sm font-semibold text-white transition-all active:bg-blue-600 active:scale-[0.98]"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-blue-500 py-4 text-sm font-semibold text-foreground transition-all active:bg-blue-600 active:scale-[0.98]"
         >
           Get Started <ArrowRight className="h-4 w-4" />
         </Link>

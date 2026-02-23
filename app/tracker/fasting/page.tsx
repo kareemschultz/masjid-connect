@@ -9,10 +9,11 @@ import { shareOrCopy } from '@/lib/share'
 
 type FastStatus = 'fasted' | 'missed' | 'intended' | null
 
-type FastType = 'ramadan' | 'shawwal' | 'monthu' | 'ayyam' | 'voluntary'
+type FastType = 'ramadan' | 'qada' | 'shawwal' | 'monthu' | 'ayyam' | 'voluntary'
 
 const FAST_TYPES: { key: FastType; label: string }[] = [
   { key: 'ramadan', label: 'Ramadan' },
+  { key: 'qada', label: 'Qada (Make up)' },
   { key: 'shawwal', label: 'Shawwal' },
   { key: 'monthu', label: 'Mon & Thu' },
   { key: 'ayyam', label: 'Ayyam al-Bayd' },
@@ -21,6 +22,7 @@ const FAST_TYPES: { key: FastType; label: string }[] = [
 
 const STORAGE_KEYS: Record<FastType, string> = {
   ramadan: KEYS.FASTING_LOG_RAMADAN,
+  qada: 'fasting_log_qada',
   shawwal: KEYS.FASTING_LOG_SHAWWAL,
   monthu: KEYS.FASTING_LOG_MONTHU,
   ayyam: KEYS.FASTING_LOG_AYYAM,
@@ -128,10 +130,10 @@ export default function FastingTrackerPage() {
 
   const statusStyle = (s: FastStatus, isToday: boolean) => {
     const base = isToday ? 'ring-2 ring-emerald-400/40 ring-offset-1 ring-offset-[#0a0b14]' : ''
-    if (s === 'fasted') return `bg-emerald-500/80 text-white ${base}`
-    if (s === 'missed') return `bg-red-500/60 text-white ${base}`
-    if (s === 'intended') return `bg-amber-500/60 text-white ${base}`
-    return `bg-white/[0.03] text-gray-500 hover:bg-white/[0.06] ${base}`
+    if (s === 'fasted') return `bg-emerald-500/80 text-foreground ${base}`
+    if (s === 'missed') return `bg-red-500/60 text-foreground ${base}`
+    if (s === 'intended') return `bg-amber-500/60 text-foreground ${base}`
+    return `bg-white/[0.03] text-muted-foreground/80 hover:bg-white/[0.06] ${base}`
   }
 
   const statusIcon = (s: FastStatus) => {
@@ -187,14 +189,14 @@ export default function FastingTrackerPage() {
     if (status === 'fasted') return <Check className="h-5 w-5 text-emerald-400" />
     if (status === 'missed') return <X className="h-5 w-5 text-red-400" />
     if (status === 'intended') return <Target className="h-5 w-5 text-amber-400" />
-    return <Moon className="h-5 w-5 text-gray-600" />
+    return <Moon className="h-5 w-5 text-muted-foreground/60" />
   }
 
   const renderCardBg = (status: FastStatus) => {
     if (status === 'fasted') return 'bg-emerald-500/10 border-emerald-500/30'
     if (status === 'missed') return 'bg-red-500/10 border-red-500/30'
     if (status === 'intended') return 'bg-amber-500/10 border-amber-500/30'
-    return 'bg-gray-900 border-gray-800'
+    return 'bg-card border-border'
   }
 
   const renderCardLabel = (status: FastStatus) => {
@@ -205,7 +207,7 @@ export default function FastingTrackerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={UtensilsCrossed}
         title="Fasting Tracker"
@@ -214,7 +216,7 @@ export default function FastingTrackerPage() {
         showBack
         heroTheme="ramadan"
         action={
-          <button onClick={handleShare} className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-white/60 transition-transform active:scale-90" aria-label="Share">
+          <button onClick={handleShare} className="glass flex h-10 w-10 items-center justify-center rounded-2xl text-foreground/60 transition-transform active:scale-90" aria-label="Share">
             <Share2 className="h-4 w-4" />
           </button>
         }
@@ -225,17 +227,17 @@ export default function FastingTrackerPage() {
         <div className="grid grid-cols-3 gap-3 animate-stagger">
           <div className="glass rounded-2xl p-3.5 text-center">
             <div className="text-2xl font-extrabold tabular-nums text-emerald-400">{stats.fasted}</div>
-            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">Fasted</div>
+            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Fasted</div>
           </div>
           <div className="glass rounded-2xl p-3.5 text-center">
             <div className="text-2xl font-extrabold tabular-nums text-red-400">{stats.missed}</div>
-            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">Missed</div>
+            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Missed</div>
           </div>
           <div className="glass rounded-2xl p-3.5 text-center">
             <div className="flex items-center justify-center gap-1.5 text-2xl font-extrabold tabular-nums text-amber-400">
               <Flame className="h-5 w-5" />{streak}
             </div>
-            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">Streak</div>
+            <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Streak</div>
           </div>
         </div>
 
@@ -248,8 +250,8 @@ export default function FastingTrackerPage() {
                 onClick={() => handleTypeChange(key)}
                 className={`rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all active:scale-95 ${
                   fastType === key
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-800 text-gray-400'
+                    ? 'bg-emerald-500 text-foreground'
+                    : 'bg-secondary text-muted-foreground'
                 }`}
               >
                 {label}
@@ -264,16 +266,16 @@ export default function FastingTrackerPage() {
             {/* Month nav */}
             <div className="glass flex items-center justify-between rounded-2xl px-4 py-3">
               <button onClick={() => setCurrentMonth(new Date(year, month - 1))} className="rounded-xl p-2 transition-all active:scale-90 active:bg-white/5" aria-label="Previous month">
-                <ChevronLeft className="h-5 w-5 text-gray-400" />
+                <ChevronLeft className="h-5 w-5 text-muted-foreground" />
               </button>
               <div className="text-center">
-                <h2 className="text-sm font-bold text-white">{currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
+                <h2 className="text-sm font-bold text-foreground">{currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
                 {fastType === 'voluntary' && (
-                  <p className="text-[10px] text-gray-500 mt-0.5">Voluntary Fasts</p>
+                  <p className="text-[10px] text-muted-foreground/80 mt-0.5">Voluntary Fasts</p>
                 )}
               </div>
               <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="rounded-xl p-2 transition-all active:scale-90 active:bg-white/5" aria-label="Next month">
-                <ChevronRight className="h-5 w-5 text-gray-400" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </button>
             </div>
 
@@ -281,7 +283,7 @@ export default function FastingTrackerPage() {
             <div className="glass rounded-3xl p-4 animate-scale-in" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
               <div className="mb-3 grid grid-cols-7 gap-1">
                 {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-                  <div key={d} className="text-center text-[10px] font-bold uppercase tracking-wider text-gray-600">{d}</div>
+                  <div key={d} className="text-center text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">{d}</div>
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-1.5">
@@ -304,7 +306,7 @@ export default function FastingTrackerPage() {
               </div>
 
               {/* Legend */}
-              <div className="mt-4 flex items-center justify-center gap-5 text-[10px] font-medium text-gray-500">
+              <div className="mt-4 flex items-center justify-center gap-5 text-[10px] font-medium text-muted-foreground/80">
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Fasted</span>
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-red-500" /> Missed</span>
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Intended</span>
@@ -318,9 +320,9 @@ export default function FastingTrackerPage() {
           <div className="space-y-4 animate-scale-in" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
             {/* Progress */}
             <div className="glass rounded-2xl p-4 text-center">
-              <div className="text-3xl font-extrabold text-emerald-400">{shawwalCompleted}<span className="text-base text-gray-500 font-medium">/6</span></div>
-              <p className="text-xs text-gray-400 mt-1">6 Fasts of Shawwal completed</p>
-              <div className="mt-3 h-2 rounded-full bg-gray-800 overflow-hidden">
+              <div className="text-3xl font-extrabold text-emerald-400">{shawwalCompleted}<span className="text-base text-muted-foreground/80 font-medium">/6</span></div>
+              <p className="text-xs text-muted-foreground mt-1">6 Fasts of Shawwal completed</p>
+              <div className="mt-3 h-2 rounded-full bg-secondary overflow-hidden">
                 <div
                   className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                   style={{ width: `${(shawwalCompleted / 6) * 100}%` }}
@@ -329,7 +331,7 @@ export default function FastingTrackerPage() {
             </div>
 
             {/* Info */}
-            <p className="text-xs text-gray-500 text-center px-2">
+            <p className="text-xs text-muted-foreground/80 text-center px-2">
               Whoever fasts Ramadan then follows it with six days of Shawwal, it is as if he fasted for a lifetime.
               <span className="block text-[10px] text-amber-400/50 mt-1">Sahih Muslim 1164</span>
             </p>
@@ -344,16 +346,16 @@ export default function FastingTrackerPage() {
                     onClick={() => toggleDay(key)}
                     className={`flex flex-col items-center gap-2 rounded-2xl border p-4 transition-all active:scale-95 ${renderCardBg(status)} ${showTick === key ? 'animate-count-tick' : ''}`}
                   >
-                    <div className="text-lg font-bold text-[#f9fafb]">{i + 1}</div>
+                    <div className="text-lg font-bold text-foreground">{i + 1}</div>
                     {renderCardStatus(status)}
-                    <div className="text-[10px] font-medium text-gray-400">{renderCardLabel(status)}</div>
+                    <div className="text-[10px] font-medium text-muted-foreground">{renderCardLabel(status)}</div>
                   </button>
                 )
               })}
             </div>
 
             {/* Legend */}
-            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-gray-500">
+            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-muted-foreground/80">
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Fasted</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-red-500" /> Missed</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Intended</span>
@@ -368,9 +370,9 @@ export default function FastingTrackerPage() {
             <div className="glass rounded-2xl p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Calendar className="h-4 w-4 text-emerald-400" />
-                <p className="text-sm font-bold text-white">This Week</p>
+                <p className="text-sm font-bold text-foreground">This Week</p>
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-muted-foreground">
                 The Prophet (PBUH) used to fast on Mondays and Thursdays.
               </p>
               <span className="block text-[10px] text-amber-400/50 mt-1">Sunan al-Tirmidhi 745</span>
@@ -387,19 +389,19 @@ export default function FastingTrackerPage() {
                     onClick={() => toggleDay(key)}
                     className={`flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all active:scale-95 ${renderCardBg(status)} ${isToday ? 'ring-2 ring-emerald-400/40 ring-offset-1 ring-offset-[#0a0b14]' : ''} ${showTick === key ? 'animate-count-tick' : ''}`}
                   >
-                    <div className="text-sm font-bold text-[#f9fafb]">{label}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm font-bold text-foreground">{label}</div>
+                    <div className="text-xs text-muted-foreground/80">
                       {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                     {renderCardStatus(status)}
-                    <div className="text-[10px] font-medium text-gray-400">{renderCardLabel(status)}</div>
+                    <div className="text-[10px] font-medium text-muted-foreground">{renderCardLabel(status)}</div>
                   </button>
                 )
               })}
             </div>
 
             {/* Legend */}
-            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-gray-500">
+            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-muted-foreground/80">
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Fasted</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-red-500" /> Missed</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Intended</span>
@@ -412,15 +414,15 @@ export default function FastingTrackerPage() {
           <div className="space-y-4 animate-scale-in" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
             {/* Progress & Info */}
             <div className="glass rounded-2xl p-4 text-center">
-              <div className="text-3xl font-extrabold text-emerald-400">{ayyamCompleted}<span className="text-base text-gray-500 font-medium">/3</span></div>
-              <p className="text-xs text-gray-400 mt-1">The White Days of {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-              <div className="mt-3 h-2 rounded-full bg-gray-800 overflow-hidden">
+              <div className="text-3xl font-extrabold text-emerald-400">{ayyamCompleted}<span className="text-base text-muted-foreground/80 font-medium">/3</span></div>
+              <p className="text-xs text-muted-foreground mt-1">The White Days of {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+              <div className="mt-3 h-2 rounded-full bg-secondary overflow-hidden">
                 <div
                   className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                   style={{ width: `${(ayyamCompleted / 3) * 100}%` }}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-3">
+              <p className="text-xs text-muted-foreground/80 mt-3">
                 The white days of each month (13th, 14th, 15th) when the moon is full.
               </p>
               <span className="block text-[10px] text-amber-400/50 mt-1">Sahih al-Bukhari 1981</span>
@@ -437,19 +439,19 @@ export default function FastingTrackerPage() {
                     onClick={() => toggleDay(key)}
                     className={`flex flex-col items-center gap-2 rounded-2xl border p-4 transition-all active:scale-95 ${renderCardBg(status)} ${isToday ? 'ring-2 ring-emerald-400/40 ring-offset-1 ring-offset-[#0a0b14]' : ''} ${showTick === key ? 'animate-count-tick' : ''}`}
                   >
-                    <div className="text-2xl font-bold text-[#f9fafb]">{day}</div>
-                    <div className="text-[10px] text-gray-500">
+                    <div className="text-2xl font-bold text-foreground">{day}</div>
+                    <div className="text-[10px] text-muted-foreground/80">
                       {date.toLocaleDateString('en-US', { month: 'short' })}
                     </div>
                     {renderCardStatus(status)}
-                    <div className="text-[10px] font-medium text-gray-400">{renderCardLabel(status)}</div>
+                    <div className="text-[10px] font-medium text-muted-foreground">{renderCardLabel(status)}</div>
                   </button>
                 )
               })}
             </div>
 
             {/* Legend */}
-            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-gray-500">
+            <div className="flex items-center justify-center gap-5 text-[10px] font-medium text-muted-foreground/80">
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Fasted</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-red-500" /> Missed</span>
               <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Intended</span>
@@ -459,10 +461,10 @@ export default function FastingTrackerPage() {
 
         {/* Motivation */}
         <div className="glass-amber rounded-2xl p-4 text-center animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-          <p className="font-arabic text-base leading-[2] text-white/80" dir="rtl">
+          <p className="font-arabic text-base leading-[2] text-foreground/80" dir="rtl">
             {'كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ'}
           </p>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-muted-foreground">
             Fasting has been prescribed for you as it was prescribed for those before you.
           </p>
           <p className="mt-1 text-[10px] text-amber-400/50">Al-Baqarah 2:183</p>

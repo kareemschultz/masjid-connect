@@ -73,7 +73,7 @@ const ACTIONS = [
 
 export default function SistersRamadanPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Heart}
         title="Ramadan for Sisters"
@@ -94,26 +94,26 @@ export default function SistersRamadanPage() {
         {ACTIONS.map((action) => {
           const Icon = action.icon
           return (
-            <div key={action.num} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <div key={action.num} className="rounded-2xl border border-border bg-card p-4">
               <div className="flex items-center gap-3 mb-2.5">
                 <div className={`flex h-8 w-8 items-center justify-center rounded-full ${action.bg}`}>
                   <Icon className={`h-4 w-4 ${action.color}`} />
                 </div>
                 <div>
-                  <span className="text-[10px] text-gray-500">Action {action.num}</span>
+                  <span className="text-[10px] text-muted-foreground/80">Action {action.num}</span>
                   <h3 className={`text-sm font-bold ${action.color}`}>{action.title}</h3>
                 </div>
               </div>
-              <p className="text-sm text-gray-400 leading-relaxed pl-11">{action.text}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed pl-11">{action.text}</p>
             </div>
           )
         })}
 
         <div className="rounded-2xl border border-rose-800/20 bg-rose-950/10 p-4">
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             Even though menstruation prevents certain acts of worship, a woman can still engage in immense devotion and earn rewards through these acts. The key is to connect with Allah Ta&apos;ala sincerely and seek His mercy and guidance.
           </p>
-          <p className="mt-2 text-[10px] text-gray-600">
+          <p className="mt-2 text-[10px] text-muted-foreground/60">
             Source: Darul Uloom/Masjid Islamic & Academic Institute Inc., East Street, Georgetown.
           </p>
         </div>

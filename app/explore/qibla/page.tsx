@@ -68,7 +68,7 @@ export default function QiblaPage() {
   const rotation = QIBLA_BEARING - heading
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Navigation2}
         title="Qibla"
@@ -79,7 +79,7 @@ export default function QiblaPage() {
       />
 
       <div className="flex flex-col items-center px-4 pt-10">
-        <p className="mb-2 text-xs uppercase tracking-widest text-gray-400">Georgetown, Guyana</p>
+        <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Georgetown, Guyana</p>
         <p className="mb-8 text-sm text-emerald-400">Qibla bearing: {QIBLA_BEARING}° NE</p>
 
         {/* iOS permission tap gate */}
@@ -90,15 +90,15 @@ export default function QiblaPage() {
             </div>
             <div className="text-center">
               <p className="text-base font-semibold text-foreground">Enable Compass</p>
-              <p className="mt-1 text-sm text-gray-400">Tap below to allow motion &amp; orientation access</p>
+              <p className="mt-1 text-sm text-muted-foreground">Tap below to allow motion &amp; orientation access</p>
             </div>
             <button
               onClick={requestIOSPermission}
-              className="rounded-2xl bg-blue-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-500/25 active:scale-[0.97] transition-all"
+              className="rounded-2xl bg-blue-500 px-8 py-4 text-sm font-bold text-foreground shadow-lg shadow-blue-500/25 active:scale-[0.97] transition-all"
             >
               Enable Compass
             </button>
-            <p className="text-[11px] text-gray-500 text-center max-w-[260px]">
+            <p className="text-[11px] text-muted-foreground/80 text-center max-w-[260px]">
               iOS requires your permission to use the device compass. Your location is never sent anywhere.
             </p>
           </div>
@@ -107,16 +107,16 @@ export default function QiblaPage() {
         {/* Compass (shown when granted or unknown/Android) */}
         {(permState === 'granted' || permState === 'unknown') && (
           <div className="relative flex h-64 w-64 items-center justify-center">
-            <div className="absolute h-full w-full rounded-full border-2 border-gray-800" />
+            <div className="absolute h-full w-full rounded-full border-2 border-border" />
             {/* Cardinal directions — rotate opposite to phone heading */}
             <div
               className="absolute h-full w-full transition-transform duration-200"
               style={{ transform: `rotate(${-heading}deg)` }}
             >
               <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-bold text-red-400">N</span>
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-500">E</span>
-              <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-500">S</span>
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-500">W</span>
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground/80">E</span>
+              <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-bold text-muted-foreground/80">S</span>
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground/80">W</span>
             </div>
             {/* Qibla needle — always points toward Mecca */}
             <div
@@ -125,13 +125,13 @@ export default function QiblaPage() {
             >
               <div className="absolute top-4 left-1/2 flex -translate-x-1/2 flex-col items-center">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/40">
-                  <span className="text-xs font-bold text-white">Ka</span>
+                  <span className="text-xs font-bold text-foreground">Ka</span>
                 </div>
                 <div className="h-24 w-0.5 bg-gradient-to-b from-emerald-500 to-transparent" />
               </div>
             </div>
             {/* Center */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-card border-2 border-border">
               <Navigation2 className="h-6 w-6 text-emerald-400" />
             </div>
           </div>
@@ -147,8 +147,8 @@ export default function QiblaPage() {
           </div>
         )}
 
-        <div className="mt-8 rounded-2xl border border-gray-800 bg-gray-900 p-4 text-center mx-4 w-full max-w-sm">
-          <p className="text-xs text-gray-400">
+        <div className="mt-8 rounded-2xl border border-border bg-card p-4 text-center mx-4 w-full max-w-sm">
+          <p className="text-xs text-muted-foreground">
             Point your phone towards the green marker to face the Qibla direction.
             Hold your phone flat and calibrate by moving it in a figure-8 pattern.
           </p>

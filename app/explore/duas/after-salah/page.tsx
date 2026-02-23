@@ -63,9 +63,9 @@ function CounterMode({ adhkar, onExit }: { adhkar: (PostSalahDhikr & { displayCo
   const completed = isLast && count >= current.displayCount
 
   return (
-    <div className="fixed inset-0 z-[70] bg-[#0a0b14] flex flex-col">
+    <div className="fixed inset-0 z-[70] bg-background flex flex-col">
       {/* Progress bar */}
-      <div className="h-1 bg-gray-800">
+      <div className="h-1 bg-secondary">
         <div
           className="h-full bg-emerald-500 transition-all duration-500"
           style={{ width: `${completed ? 100 : progress + (count / current.displayCount) * (100 / totalAdhkar)}%` }}
@@ -74,11 +74,11 @@ function CounterMode({ adhkar, onExit }: { adhkar: (PostSalahDhikr & { displayCo
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-4 pb-2" style={{ paddingTop: 'max(1rem, calc(env(safe-area-inset-top) + 0.5rem))' }}>
-        <button onClick={onExit} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-800 text-gray-400 active:scale-90 transition-transform">
+        <button onClick={onExit} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary text-muted-foreground active:scale-90 transition-transform">
           <X className="h-5 w-5" />
         </button>
-        <span className="text-xs text-gray-500 font-medium">{currentIdx + 1} / {totalAdhkar}</span>
-        <button onClick={handleReset} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-800 text-gray-400 active:scale-90 transition-transform">
+        <span className="text-xs text-muted-foreground/80 font-medium">{currentIdx + 1} / {totalAdhkar}</span>
+        <button onClick={handleReset} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary text-muted-foreground active:scale-90 transition-transform">
           <RotateCcw className="h-4 w-4" />
         </button>
       </div>
@@ -87,37 +87,37 @@ function CounterMode({ adhkar, onExit }: { adhkar: (PostSalahDhikr & { displayCo
       {completed ? (
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
           <div className="text-6xl mb-4">✅</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Alhamdulillah!</h2>
-          <p className="text-sm text-gray-400 mb-8">You have completed the post-salah adhkar. May Allah accept your worship.</p>
-          <button onClick={onExit} className="rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-bold text-white active:scale-95 transition-transform">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Alhamdulillah!</h2>
+          <p className="text-sm text-muted-foreground mb-8">You have completed the post-salah adhkar. May Allah accept your worship.</p>
+          <button onClick={onExit} className="rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-bold text-foreground active:scale-95 transition-transform">
             Done
           </button>
         </div>
       ) : (
-        <button onClick={handleTap} className="flex-1 flex flex-col items-center justify-center px-6 text-center active:bg-gray-900/50 transition-colors select-none">
+        <button onClick={handleTap} className="flex-1 flex flex-col items-center justify-center px-6 text-center active:bg-card/50 transition-colors select-none">
           {/* Arabic */}
-          <p className="font-arabic text-2xl leading-[2] text-white mb-4 max-w-sm" dir="rtl">{current.arabic}</p>
+          <p className="font-arabic text-2xl leading-[2] text-foreground mb-4 max-w-sm" dir="rtl">{current.arabic}</p>
 
           {/* Transliteration */}
-          <p className="text-sm italic text-gray-400 mb-2 max-w-sm">{current.transliteration}</p>
+          <p className="text-sm italic text-muted-foreground mb-2 max-w-sm">{current.transliteration}</p>
 
           {/* Translation */}
-          <p className="text-xs text-gray-500 mb-6 max-w-sm">{current.translation}</p>
+          <p className="text-xs text-muted-foreground/80 mb-6 max-w-sm">{current.translation}</p>
 
           {/* Count display */}
           <div className="relative mb-2">
             <div className="flex items-baseline gap-1">
               <span className="text-6xl font-extrabold tabular-nums text-emerald-400">{count}</span>
-              <span className="text-2xl font-bold text-gray-600">/ {current.displayCount}</span>
+              <span className="text-2xl font-bold text-muted-foreground/60">/ {current.displayCount}</span>
             </div>
           </div>
 
-          <p className="text-[10px] uppercase tracking-widest text-gray-600 mb-4">Tap anywhere to count</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-4">Tap anywhere to count</p>
 
           {!isLast && (
             <button
               onClick={(e) => { e.stopPropagation(); handleSkip() }}
-              className="flex items-center gap-1 rounded-full bg-gray-800 px-4 py-2 text-xs text-gray-400 active:scale-95 transition-transform"
+              className="flex items-center gap-1 rounded-full bg-secondary px-4 py-2 text-xs text-muted-foreground active:scale-95 transition-transform"
             >
               Skip <ChevronRight className="h-3 w-3" />
             </button>
@@ -147,7 +147,7 @@ export default function AfterSalahPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={HandHeart}
         title="After Prayer Adhkar"
@@ -161,7 +161,7 @@ export default function AfterSalahPage() {
         {/* Start Counter Button */}
         <button
           onClick={() => setCounterMode(true)}
-          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-transform"
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-foreground shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-transform"
         >
           <Play className="h-4 w-4" /> Start Guided Counter
         </button>
@@ -175,7 +175,7 @@ export default function AfterSalahPage() {
               className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                 filter === f.key
                   ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                  : 'bg-gray-800 text-gray-400 border border-gray-700'
+                  : 'bg-secondary text-muted-foreground border border-border'
               }`}
             >
               {f.label}
@@ -196,7 +196,7 @@ export default function AfterSalahPage() {
         {/* Adhkar list */}
         <div className="space-y-3">
           {adhkar.map((dhikr, idx) => (
-            <div key={dhikr.id} className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <div key={dhikr.id} className="rounded-2xl border border-border bg-card p-4">
               <div className="flex items-start gap-3 mb-3">
                 {/* Step number */}
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-xs font-bold text-emerald-400">
@@ -218,15 +218,15 @@ export default function AfterSalahPage() {
               </div>
 
               {/* Arabic */}
-              <p className="font-arabic text-xl leading-[2.2] text-white mb-3 whitespace-pre-line" dir="rtl">
+              <p className="font-arabic text-xl leading-[2.2] text-foreground mb-3 whitespace-pre-line" dir="rtl">
                 {dhikr.arabic}
               </p>
 
               {/* Transliteration */}
-              <p className="text-xs italic text-gray-400 mb-2">{dhikr.transliteration}</p>
+              <p className="text-xs italic text-muted-foreground mb-2">{dhikr.transliteration}</p>
 
               {/* Translation */}
-              <p className="text-sm text-gray-300 mb-3">{dhikr.translation}</p>
+              <p className="text-sm text-muted-foreground mb-3">{dhikr.translation}</p>
 
               {/* Notes */}
               {dhikr.notes && (
@@ -237,7 +237,7 @@ export default function AfterSalahPage() {
               )}
 
               {/* Reference */}
-              <p className="text-[10px] text-gray-600">{dhikr.reference}</p>
+              <p className="text-[10px] text-muted-foreground/60">{dhikr.reference}</p>
             </div>
           ))}
         </div>

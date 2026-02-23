@@ -18,9 +18,9 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[60]">
       {/* Gradient fade — sits above nav, outside the opaque area */}
-      <div className="pointer-events-none absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-[#0a0b14] to-transparent" />
+      <div className="pointer-events-none absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent" />
 
-      <div className="border-t border-white/[0.06] bg-[#0a0b14]" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}>
+      <div className="border-t border-border bg-background" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}>
         <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1.5">
           {tabs.map((tab) => {
             const isActive = tab.href === '/'
@@ -39,7 +39,7 @@ export function BottomNav() {
                 href={tab.href}
                 data-tour={tourId}
                 className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-1.5 transition-all duration-300 ${
-                  isActive ? 'text-emerald-400' : 'text-gray-600 active:scale-90'
+                  isActive ? 'text-emerald-400' : 'text-muted-foreground/60 active:scale-90'
                 }`}
               >
                 {isActive && (

@@ -115,7 +115,7 @@ export default function MasjidsPage() {
   }, [search, area, facility, isFriday, homeMasjidId, userLoc])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={MapPin}
         title="Masjid Directory"
@@ -143,20 +143,20 @@ export default function MasjidsPage() {
             <Map className="h-3.5 w-3.5" />
             View Map
           </Link>
-          <div className="flex items-center justify-center rounded-xl bg-gray-800/50 px-4 py-2.5">
-            <span className="text-xs font-medium text-gray-400">{filtered.length} masjids listed</span>
+          <div className="flex items-center justify-center rounded-xl bg-secondary/50 px-4 py-2.5">
+            <span className="text-xs font-medium text-muted-foreground">{filtered.length} masjids listed</span>
           </div>
         </div>
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search by name or area..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 outline-none focus:border-teal-500/50"
+            className="w-full rounded-xl border border-border bg-card py-3 pl-11 pr-4 text-sm text-foreground placeholder-gray-500 outline-none focus:border-teal-500/50"
           />
         </div>
 
@@ -168,8 +168,8 @@ export default function MasjidsPage() {
               onClick={() => setArea(a)}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
                 area === a
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-800 text-gray-400 active:bg-gray-700'
+                  ? 'bg-emerald-500 text-foreground'
+                  : 'bg-secondary text-muted-foreground active:bg-muted'
               }`}
             >
               {a}
@@ -185,8 +185,8 @@ export default function MasjidsPage() {
               onClick={() => setFacility(f)}
               className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
                 facility === f
-                  ? 'bg-teal-500 text-white'
-                  : 'bg-gray-800 text-gray-400 active:bg-gray-700'
+                  ? 'bg-teal-500 text-foreground'
+                  : 'bg-secondary text-muted-foreground active:bg-muted'
               }`}
             >
               {f}
@@ -203,7 +203,7 @@ export default function MasjidsPage() {
             return (
               <div
                 key={masjid.id}
-                className={`overflow-hidden rounded-2xl border bg-gray-900 ${masjid.id === homeMasjidId ? 'border-emerald-600/40 ring-1 ring-emerald-600/20' : 'border-gray-800'}`}
+                className={`overflow-hidden rounded-2xl border bg-card ${masjid.id === homeMasjidId ? 'border-emerald-600/40 ring-1 ring-emerald-600/20' : 'border-border'}`}
               >
                 {masjid.id === homeMasjidId && (
                   <div className="bg-emerald-600/20 border-b border-emerald-600/20 px-4 py-1.5 flex items-center gap-1.5">
@@ -214,8 +214,8 @@ export default function MasjidsPage() {
                 <div className="p-4">
                   <div className="flex items-start justify-between">
                     <Link href={`/masjids/${masjid.id}`} className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-[#f9fafb]">{masjid.name}</h3>
-                      <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
+                      <h3 className="text-sm font-semibold text-foreground">{masjid.name}</h3>
+                      <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                         <MapPin className="h-3 w-3 shrink-0" />
                         {masjid.address}
                       </div>
@@ -235,14 +235,14 @@ export default function MasjidsPage() {
                   {/* Facility pills */}
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {masjid.facilities.map((f) => (
-                      <span key={f} className="rounded-lg bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400">
+                      <span key={f} className="rounded-lg bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
                         {FACILITY_ICONS[f] || ''} {f}
                       </span>
                     ))}
                   </div>
 
                   {masjid.prayerTimes && (
-                    <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
+                    <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3 text-amber-400 shrink-0" />
                       {masjid.prayerTimes}
                     </div>
@@ -292,7 +292,7 @@ export default function MasjidsPage() {
                   <div className="mt-2 flex justify-end">
                     <Link
                       href={`/feedback?category=Report+Masjid+Error&masjid=${encodeURIComponent(masjid.name)}`}
-                      className="flex items-center gap-1 text-[10px] text-gray-600 transition-colors hover:text-gray-400"
+                      className="flex items-center gap-1 text-[10px] text-muted-foreground/60 transition-colors hover:text-muted-foreground"
                     >
                       <AlertTriangle className="h-2.5 w-2.5" />
                       Report Error
@@ -307,7 +307,7 @@ export default function MasjidsPage() {
         {/* Request a Masjid */}
         <Link
           href="/feedback?category=Request+New+Masjid"
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-gray-700 py-3 text-xs font-medium text-gray-400 transition-colors active:bg-gray-800/50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-xs font-medium text-muted-foreground transition-colors active:bg-secondary/50"
         >
           <Star className="h-3.5 w-3.5" />
           Request a Masjid

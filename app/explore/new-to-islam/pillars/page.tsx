@@ -94,7 +94,7 @@ export default function PillarsPage() {
   const [openIndex, setOpenIndex] = useState(-1)
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Columns}
         title="The Five Pillars"
@@ -108,7 +108,7 @@ export default function PillarsPage() {
       <div className="space-y-3 px-4 pt-5">
         {/* Intro Card */}
         <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5">
-          <p className="text-sm leading-relaxed text-gray-400">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             The Five Pillars are the core practices that every Muslim follows. They are the framework of a Muslim&apos;s life.
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function PillarsPage() {
           return (
             <div
               key={pillar.number}
-              className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5 cursor-pointer"
+              className="rounded-2xl border border-border bg-card/50 p-5 cursor-pointer"
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
             >
               <div className="flex items-center gap-3">
@@ -136,16 +136,16 @@ export default function PillarsPage() {
                 {/* Name & Arabic */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-[#f9fafb]">{pillar.name}</p>
-                    <span className="font-arabic text-base text-gray-400">{pillar.arabic}</span>
+                    <p className="text-sm font-bold text-foreground">{pillar.name}</p>
+                    <span className="font-arabic text-base text-muted-foreground">{pillar.arabic}</span>
                   </div>
-                  <p className="text-xs text-gray-500">{pillar.english}</p>
+                  <p className="text-xs text-muted-foreground/80">{pillar.english}</p>
                 </div>
 
                 {/* Icon & Chevron */}
                 <Icon className={`h-5 w-5 shrink-0 ${colors.text}`} />
                 <ChevronDown
-                  className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-200 ${
+                  className={`h-4 w-4 shrink-0 text-muted-foreground/80 transition-transform duration-200 ${
                     isOpen ? 'rotate-180' : ''
                   }`}
                 />
@@ -154,7 +154,7 @@ export default function PillarsPage() {
               {/* Expanded Content */}
               {isOpen && (
                 <div className="mt-4 space-y-3">
-                  <p className="text-sm leading-relaxed text-gray-400">{pillar.description}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{pillar.description}</p>
                   {pillar.link && (
                     <Link
                       href={pillar.link.href}

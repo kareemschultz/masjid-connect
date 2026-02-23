@@ -153,7 +153,7 @@ function StepDots({ step, total }: { step: number; total: number }) {
               ? 'w-1.5 bg-emerald-600'
               : i === step
               ? 'w-5 bg-emerald-400'
-              : 'w-1.5 bg-gray-700'
+              : 'w-1.5 bg-muted'
           }`}
         />
       ))}
@@ -312,9 +312,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const progress = ((step + 1) / totalSteps) * 100
 
   return (
-    <div className="fixed inset-0 z-[200] flex flex-col bg-[#0a0b14]">
+    <div className="fixed inset-0 z-[200] flex flex-col bg-background">
       {/* Progress bar */}
-      <div className="h-0.5 w-full bg-gray-800">
+      <div className="h-0.5 w-full bg-secondary">
         <div
           className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -324,7 +324,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       {/* Step dots */}
       <div className="flex items-center justify-between px-6 pt-4">
         <StepDots step={step} total={totalSteps} />
-        <span className="text-xs text-gray-600">{step + 1}/{totalSteps}</span>
+        <span className="text-xs text-muted-foreground/60">{step + 1}/{totalSteps}</span>
       </div>
 
       {/* Content area */}
@@ -357,7 +357,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <div className="mb-1 text-center">
               <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">بِسْمِ اللَّهِ</p>
             </div>
-            <h1 className="mb-1 text-center text-3xl font-bold text-white">Assalamu Alaikum</h1>
+            <h1 className="mb-1 text-center text-3xl font-bold text-foreground">Assalamu Alaikum</h1>
             <p className="mb-1 text-center text-base font-medium text-emerald-400">Welcome to MasjidConnect GY</p>
 
             {/* Community Card */}
@@ -366,14 +366,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <Heart className="h-4 w-4 text-emerald-400" />
                 <span className="text-xs font-bold uppercase tracking-wide text-emerald-400">Community-Built</span>
               </div>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 This app was built by and for the Guyanese Muslim community — completely free, no ads, no tracking, no subscriptions. Just a tool for the ummah.
               </p>
             </div>
 
             {/* Community stats hint */}
-            <div className="mt-3 w-full rounded-2xl border border-gray-800 bg-gray-900/60 px-5 py-3">
-              <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className="mt-3 w-full rounded-2xl border border-border bg-card/60 px-5 py-3">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5 text-teal-400" />
                   <span>Georgetown, Guyana</span>
@@ -388,7 +388,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             {/* Share */}
             <button
               onClick={handleShare}
-              className="mt-4 flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-5 py-2.5 text-xs font-medium text-gray-300 transition-all active:bg-gray-800"
+              className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-xs font-medium text-muted-foreground transition-all active:bg-secondary"
             >
               <Share2 className="h-3.5 w-3.5" />
               Share with a fellow Muslim
@@ -402,8 +402,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <div className="mb-1 text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-teal-400">Everything in one place</p>
             </div>
-            <h2 className="mb-1 text-center text-2xl font-bold text-white">How It Works</h2>
-            <p className="mb-5 text-center text-sm text-gray-400">
+            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">How It Works</h2>
+            <p className="mb-5 text-center text-sm text-muted-foreground">
               Eight powerful tools to strengthen your daily practice
             </p>
 
@@ -417,15 +417,15 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                     {f.emoji}
                   </div>
                   <p className={`text-xs font-bold ${f.iconColor}`}>{f.label}</p>
-                  <p className="text-[10px] leading-relaxed text-gray-400">{f.desc}</p>
+                  <p className="text-[10px] leading-relaxed text-muted-foreground">{f.desc}</p>
                 </div>
               ))}
             </div>
 
             {/* Community call-to-action */}
-            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 text-center">
-              <p className="text-xs text-gray-400">
-                🌙 <span className="font-semibold text-gray-300">Community-powered</span> — Dua requests, Khatam drives, and Iftaar reports are submitted live by fellow Muslims.
+            <div className="mt-4 rounded-2xl border border-border bg-card/60 px-4 py-3 text-center">
+              <p className="text-xs text-muted-foreground">
+                🌙 <span className="font-semibold text-muted-foreground">Community-powered</span> — Dua requests, Khatam drives, and Iftaar reports are submitted live by fellow Muslims.
               </p>
             </div>
           </div>
@@ -440,29 +440,29 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   <span className="text-xl">👤</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Your Profile</h2>
-                  <p className="text-xs text-gray-500">Help your Faith Buddies find you</p>
+                  <h2 className="text-lg font-bold text-foreground">Your Profile</h2>
+                  <p className="text-xs text-muted-foreground/80">Help your Faith Buddies find you</p>
                 </div>
               </div>
             </div>
 
             {/* Display Name */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Your Name</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">Your Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Abdullah, Sister Fatima..."
                 maxLength={40}
-                className="w-full rounded-2xl border border-gray-700 bg-gray-900 px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
               />
-              <p className="text-[11px] text-gray-600">Shown in the community and Faith Buddies leaderboard</p>
+              <p className="text-[11px] text-muted-foreground/60">Shown in the community and Faith Buddies leaderboard</p>
             </div>
 
             {/* @Username */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">@Username <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">@Username <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-emerald-400">@</span>
                 <input
@@ -474,37 +474,37 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   }}
                   placeholder="your_username"
                   maxLength={30}
-                  className="w-full rounded-2xl border border-gray-700 bg-gray-900 py-3.5 pl-9 pr-4 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-2xl border border-border bg-card py-3.5 pl-9 pr-4 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
                 />
               </div>
               {usernameError && <p className="text-[11px] text-red-400">{usernameError}</p>}
-              <p className="text-[11px] text-gray-600">Buddies can search you by @username — no email needed</p>
+              <p className="text-[11px] text-muted-foreground/60">Buddies can search you by @username — no email needed</p>
             </div>
 
             {/* Phone */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Phone / WhatsApp <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">Phone / WhatsApp <span className="text-gray-700 normal-case font-normal">(optional)</span></label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+5926123456"
-                className="w-full rounded-2xl border border-gray-700 bg-gray-900 px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
               />
-              <p className="text-[11px] text-gray-600">Let buddies find you via your WhatsApp number</p>
+              <p className="text-[11px] text-muted-foreground/60">Let buddies find you via your WhatsApp number</p>
             </div>
 
             {/* Google sign-in */}
             <div className="w-full">
               <div className="flex items-center gap-3 mb-3">
-                <div className="h-px flex-1 bg-gray-800" />
-                <span className="text-xs text-gray-600">or</span>
-                <div className="h-px flex-1 bg-gray-800" />
+                <div className="h-px flex-1 bg-secondary" />
+                <span className="text-xs text-muted-foreground/60">or</span>
+                <div className="h-px flex-1 bg-secondary" />
               </div>
               <button
                 onClick={handleGoogleSignIn}
                 disabled={signingIn}
-                className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white transition-all active:bg-gray-800 disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-card px-5 py-3.5 text-sm font-semibold text-foreground transition-all active:bg-secondary disabled:opacity-50"
               >
                 {signingIn ? (
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-gray-600 border-t-white" />
@@ -513,7 +513,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 )}
                 {signingIn ? 'Redirecting to Google...' : 'Continue with Google'}
               </button>
-              <p className="mt-1.5 text-center text-[10px] text-gray-600">
+              <p className="mt-1.5 text-center text-[10px] text-muted-foreground/60">
                 Sign in to sync your tracker and streaks across devices
               </p>
             </div>
@@ -542,14 +542,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <Clock className="h-6 w-6 text-emerald-400" />
               </div>
             </div>
-            <h2 className="mb-1 text-center text-2xl font-bold text-white">Prayer Settings</h2>
-            <p className="mb-5 text-center text-sm text-gray-400">Choose the method used in your community</p>
+            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">Prayer Settings</h2>
+            <p className="mb-5 text-center text-sm text-muted-foreground">Choose the method used in your community</p>
 
             {/* Location Detection */}
-            <div className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/50 p-4">
+            <div className="mb-4 rounded-2xl border border-border bg-card/50 p-4">
               {locationStatus === 'idle' && (
                 <>
-                  <p className="text-xs text-gray-400 mb-3">Let us recommend the best prayer settings for your location.</p>
+                  <p className="text-xs text-muted-foreground mb-3">Let us recommend the best prayer settings for your location.</p>
                   <button
                     onClick={handleDetectLocation}
                     className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 py-2.5 text-sm font-semibold text-emerald-400 active:scale-95 transition-transform"
@@ -561,57 +561,57 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               {locationStatus === 'detecting' && (
                 <div className="flex items-center gap-3 py-1">
                   <div className="h-4 w-4 shrink-0 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin" />
-                  <p className="text-xs text-gray-400">Detecting your location...</p>
+                  <p className="text-xs text-muted-foreground">Detecting your location...</p>
                 </div>
               )}
               {locationStatus === 'detected' && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <p className="text-sm font-bold text-white">{detectedCity}, {detectedCountry}</p>
+                    <p className="text-sm font-bold text-foreground">{detectedCity}, {detectedCountry}</p>
                   </div>
                   <p className="text-xs text-emerald-400 font-medium">✓ Recommended: {recommendedMethodLabel}</p>
-                  <p className="text-[11px] text-gray-500">{recommendedMethodReason}. Pre-selected below — you can still change it.</p>
+                  <p className="text-[11px] text-muted-foreground/80">{recommendedMethodReason}. Pre-selected below — you can still change it.</p>
                 </div>
               )}
               {locationStatus === 'error' && (
-                <p className="text-xs text-gray-500">⚠️ Location unavailable. Please select your calculation method manually below.</p>
+                <p className="text-xs text-muted-foreground/80">⚠️ Location unavailable. Please select your calculation method manually below.</p>
               )}
             </div>
 
             {/* Method */}
-            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
               Calculation Method
             </label>
-            <p className="mb-2 text-[11px] text-gray-500">
+            <p className="mb-2 text-[11px] text-muted-foreground/80">
               {locationStatus === 'detected'
                 ? `We recommend ${recommendedMethodLabel} for your area. Change if needed.`
                 : 'Most Guyanese Masjids use Standard (MWL) — already selected for you.'}
             </p>
-            <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900">
+            <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-border bg-card">
               {CALCULATION_METHODS.map((m) => (
                 <button
                   key={m.key}
                   onClick={() => setMethod(m.key)}
-                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-all first:rounded-t-2xl last:rounded-b-2xl not-last:border-b not-last:border-gray-800/50 ${
-                    method === m.key ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300 active:bg-white/5'
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-all first:rounded-t-2xl last:rounded-b-2xl not-last:border-b not-last:border-border/50 ${
+                    method === m.key ? 'bg-emerald-500/10 text-emerald-400' : 'text-muted-foreground active:bg-white/5'
                   }`}
                 >
                   {method === m.key && <Check className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
                   {method !== m.key && <span className="h-3.5 w-3.5 shrink-0" />}
                   <div className="min-w-0">
                     <span className="block text-sm">{m.label}</span>
-                    {m.note && <span className="block text-[10px] text-gray-500 mt-0.5">{m.note}</span>}
+                    {m.note && <span className="block text-[10px] text-muted-foreground/80 mt-0.5">{m.note}</span>}
                   </div>
                 </button>
               ))}
             </div>
 
             {/* Asr Calculation */}
-            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
               Asr Prayer Time
             </label>
-            <p className="mb-3 text-[11px] text-gray-500">Different communities pray Asr at slightly different times. Choose what your local masjid follows.</p>
+            <p className="mb-3 text-[11px] text-muted-foreground/80">Different communities pray Asr at slightly different times. Choose what your local masjid follows.</p>
             <div className="flex gap-3">
               {MADHABS.map((m) => (
                 <button
@@ -620,18 +620,18 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   className={`flex-1 rounded-xl border-2 px-4 py-3 text-left transition-all ${
                     madhab === m.key
                       ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                      : 'border-gray-800 bg-gray-900 text-gray-400 active:bg-gray-800'
+                      : 'border-border bg-card text-muted-foreground active:bg-secondary'
                   }`}
                 >
                   <span className="block text-sm font-semibold">{m.label}</span>
-                  <span className="block mt-0.5 text-[10px] text-gray-500">
+                  <span className="block mt-0.5 text-[10px] text-muted-foreground/80">
                     {m.key === 'Hanafi' ? 'Later Asr' : 'Standard Asr (earlier)'}
                   </span>
                 </button>
               ))}
             </div>
 
-            <p className="mt-3 text-center text-[11px] text-gray-600">
+            <p className="mt-3 text-center text-[11px] text-muted-foreground/60">
               You can change these anytime in Settings
             </p>
           </div>
@@ -656,8 +656,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <Moon className="h-6 w-6 text-orange-400" />
               </div>
             </div>
-            <h2 className="mb-1 text-center text-2xl font-bold text-white">Ramadan Mubarak 🌙</h2>
-            <p className="mb-5 text-center text-sm text-gray-400">
+            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">Ramadan Mubarak 🌙</h2>
+            <p className="mb-5 text-center text-sm text-muted-foreground">
               Which moon sighting do you follow for Ramadan?
             </p>
 
@@ -669,7 +669,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   className={`w-full flex items-start gap-3 rounded-2xl border-2 px-4 py-4 text-left transition-all ${
                     ramadanStart === opt.moonKey
                       ? 'border-orange-500/40 bg-orange-500/10'
-                      : 'border-gray-800 bg-gray-900 active:bg-gray-800'
+                      : 'border-border bg-card active:bg-secondary'
                   }`}
                 >
                   <span
@@ -682,20 +682,20 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                     )}
                   </span>
                   <div>
-                    <p className={`text-sm font-semibold ${ramadanStart === opt.moonKey ? 'text-orange-300' : 'text-gray-200'}`}>
+                    <p className={`text-sm font-semibold ${ramadanStart === opt.moonKey ? 'text-orange-300' : 'text-foreground/80'}`}>
                       {opt.label}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-gray-500">{opt.note}</p>
+                    <p className="mt-0.5 text-[11px] text-muted-foreground/80">{opt.note}</p>
                   </div>
                 </button>
               ))}
             </div>
 
-            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 space-y-2">
-              <p className="text-[11px] leading-relaxed text-gray-500">
+            <div className="mt-4 rounded-2xl border border-border bg-card/60 px-4 py-3 space-y-2">
+              <p className="text-[11px] leading-relaxed text-muted-foreground/80">
                 GIT (Guyana Islamic Trust), CIOG, and the Central Moon Sighting Committee are separate organisations. All three follow the local Guyanese regional moon sighting and typically announce the same start date.
               </p>
-              <p className="text-[11px] leading-relaxed text-gray-500">
+              <p className="text-[11px] leading-relaxed text-muted-foreground/80">
                 This setting affects Iftaar times, Ramadan day count, and fasting tracker. You can change it anytime under Settings.
               </p>
             </div>
@@ -713,8 +713,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">Never Miss Salah</h2>
-              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+              <h2 className="text-2xl font-bold text-foreground">Never Miss Salah</h2>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                 Get notified at each of the 5 prayer times — Fajr, Dhuhr, Asr, Maghrib, and Isha.
                 {showRamadanStep ? ' Plus Suhoor and Iftaar reminders during Ramadan.' : ''}
               </p>
@@ -727,11 +727,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 { prayer: 'Dhuhr', time: '12:08 PM', icon: '☀️' },
                 { prayer: 'Maghrib', time: '6:21 PM', icon: '🌇' },
               ].map(p => (
-                <div key={p.prayer} className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3">
+                <div key={p.prayer} className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
                   <span className="text-lg">{p.icon}</span>
                   <div className="flex-1">
-                    <p className="text-xs font-semibold text-white">{p.prayer} · {p.time}</p>
-                    <p className="text-[10px] text-gray-500">Time to pray</p>
+                    <p className="text-xs font-semibold text-foreground">{p.prayer} · {p.time}</p>
+                    <p className="text-[10px] text-muted-foreground/80">Time to pray</p>
                   </div>
                   <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
                 </div>
@@ -746,23 +746,23 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   className={`w-full rounded-2xl py-4 text-sm font-bold transition-all active:scale-95 ${
                     notifGranted
                       ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                      : 'bg-amber-500 text-foreground shadow-lg shadow-amber-500/20'
                   }`}
                 >
                   {notifGranted ? '✓ Notifications Enabled' : '🔔 Enable Prayer Notifications'}
                 </button>
                 {!notifGranted && (
-                  <button onClick={next} className="w-full py-2 text-xs text-gray-600 underline underline-offset-2">
+                  <button onClick={next} className="w-full py-2 text-xs text-muted-foreground/60 underline underline-offset-2">
                     Skip for now
                   </button>
                 )}
                 {notifGranted && (
-                  <p className="text-xs text-gray-500">You can customise which prayers in Settings → Notifications</p>
+                  <p className="text-xs text-muted-foreground/80">You can customise which prayers in Settings → Notifications</p>
                 )}
               </div>
             ) : (
-              <div className="w-full rounded-2xl border border-gray-800 bg-gray-900 p-4 text-center">
-                <p className="text-xs text-gray-500">Notifications not available in this browser. Use the installed app for prayer reminders.</p>
+              <div className="w-full rounded-2xl border border-border bg-card p-4 text-center">
+                <p className="text-xs text-muted-foreground/80">Notifications not available in this browser. Use the installed app for prayer reminders.</p>
               </div>
             )}
           </div>
@@ -779,8 +779,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">Add to Home Screen</h2>
-              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+              <h2 className="text-2xl font-bold text-foreground">Add to Home Screen</h2>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                 Install MasjidConnect GY as an app for instant access — no App Store needed.
                 Works offline, loads faster, feels native.
               </p>
@@ -790,7 +790,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             {isStandalone() ? (
               <div className="w-full rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
                 <p className="text-sm font-bold text-emerald-400">✓ Already installed!</p>
-                <p className="text-xs text-gray-500 mt-0.5">You are running the installed app.</p>
+                <p className="text-xs text-muted-foreground/80 mt-0.5">You are running the installed app.</p>
               </div>
             ) : isIOS() ? (
               /* iOS instructions */
@@ -801,14 +801,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   { n: '3', icon: '✅', text: 'Tap "Add" to confirm', sub: 'The app will appear on your Home Screen' },
                 ].map(s => (
                   <div key={s.n} className="flex items-start gap-2.5">
-                    <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-white text-[10px] font-bold mt-0.5">{s.n}</span>
+                    <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-foreground text-[10px] font-bold mt-0.5">{s.n}</span>
                     <div>
-                      <p className="text-xs font-semibold text-white">{s.icon} {s.text}</p>
+                      <p className="text-xs font-semibold text-foreground">{s.icon} {s.text}</p>
                       <p className="text-[10px] text-teal-400/60">{s.sub}</p>
                     </div>
                   </div>
                 ))}
-                <p className="text-[10px] text-gray-600 pt-1">⚠️ Must be opened in <strong className="text-gray-500">Safari</strong> — Chrome on iPhone cannot install apps.</p>
+                <p className="text-[10px] text-muted-foreground/60 pt-1">⚠️ Must be opened in <strong className="text-muted-foreground/80">Safari</strong> — Chrome on iPhone cannot install apps.</p>
               </div>
             ) : deferredPrompt ? (
               /* Android / Desktop install */
@@ -819,19 +819,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   className={`w-full rounded-2xl py-4 text-sm font-bold transition-all active:scale-95 ${
                     pwaInstalled
                       ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-teal-500 text-white shadow-lg shadow-teal-500/20'
+                      : 'bg-teal-500 text-foreground shadow-lg shadow-teal-500/20'
                   }`}
                 >
                   {pwaInstalled ? '✓ App Installed' : '📲 Install App Now'}
                 </button>
                 {pwaInstalled && (
-                  <p className="text-xs text-gray-500">Open it from your Home Screen for the best experience.</p>
+                  <p className="text-xs text-muted-foreground/80">Open it from your Home Screen for the best experience.</p>
                 )}
               </div>
             ) : (
               /* No prompt available */
-              <div className="w-full rounded-2xl border border-gray-800 bg-gray-900 p-4 text-center">
-                <p className="text-xs text-gray-500">Install prompt not available right now. You can install later from your browser menu.</p>
+              <div className="w-full rounded-2xl border border-border bg-card p-4 text-center">
+                <p className="text-xs text-muted-foreground/80">Install prompt not available right now. You can install later from your browser menu.</p>
               </div>
             )}
           </div>
@@ -845,8 +845,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <Sparkles className="h-6 w-6 text-purple-400" />
               </div>
             </div>
-            <h2 className="mb-1 text-center text-2xl font-bold text-white">Choose Your Theme</h2>
-            <p className="mb-6 text-center text-sm text-gray-400">Pick the look that feels right for you. You can change this anytime in Settings.</p>
+            <h2 className="mb-1 text-center text-2xl font-bold text-foreground">Choose Your Theme</h2>
+            <p className="mb-6 text-center text-sm text-muted-foreground">Pick the look that feels right for you. You can change this anytime in Settings.</p>
 
             <div className="space-y-3">
               {/* Dark theme option */}
@@ -855,32 +855,32 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 className={`w-full rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
                   selectedTheme === 'dark'
                     ? 'border-emerald-500/60 bg-emerald-500/10'
-                    : 'border-gray-800 bg-gray-900'
+                    : 'border-border bg-card'
                 }`}
               >
                 <div className="flex items-center gap-4">
                   {/* Dark preview */}
-                  <div className="flex h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-[#0a0b14] border border-gray-700">
+                  <div className="flex h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-background border border-border">
                     <div className="flex flex-col justify-between p-2 w-full">
                       <div className="h-1.5 w-10 rounded-full bg-emerald-500/60" />
                       <div className="space-y-1">
-                        <div className="h-1 w-full rounded-full bg-gray-700" />
-                        <div className="h-1 w-3/4 rounded-full bg-gray-700" />
+                        <div className="h-1 w-full rounded-full bg-muted" />
+                        <div className="h-1 w-3/4 rounded-full bg-muted" />
                       </div>
                       <div className="flex gap-1">
-                        {[1,2,3].map(i => <div key={i} className="h-3 flex-1 rounded bg-gray-800" />)}
+                        {[1,2,3].map(i => <div key={i} className="h-3 flex-1 rounded bg-secondary" />)}
                       </div>
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-white">Dark</p>
-                      <span className="rounded-full bg-gray-700 px-2 py-0.5 text-[10px] text-gray-300">Default</span>
+                      <p className="font-bold text-foreground">Dark</p>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">Default</span>
                     </div>
-                    <p className="mt-0.5 text-xs text-gray-400">Easy on the eyes at night. Ideal for night prayers and late Quran reading.</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Easy on the eyes at night. Ideal for night prayers and late Quran reading.</p>
                   </div>
                   <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${selectedTheme === 'dark' ? 'border-emerald-500 bg-emerald-500' : 'border-gray-600'}`}>
-                    {selectedTheme === 'dark' && <Check className="h-3 w-3 text-white" />}
+                    {selectedTheme === 'dark' && <Check className="h-3 w-3 text-foreground" />}
                   </div>
                 </div>
               </button>
@@ -891,7 +891,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 className={`w-full rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
                   selectedTheme === 'light'
                     ? 'border-emerald-500/60 bg-emerald-500/10'
-                    : 'border-gray-800 bg-gray-900'
+                    : 'border-border bg-card'
                 }`}
               >
                 <div className="flex items-center gap-4">
@@ -910,13 +910,13 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-white">Light</p>
+                      <p className="font-bold text-foreground">Light</p>
                       <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] text-amber-400">New</span>
                     </div>
-                    <p className="mt-0.5 text-xs text-gray-400">Clean and bright. Great for daytime use and outdoor reading.</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Clean and bright. Great for daytime use and outdoor reading.</p>
                   </div>
                   <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${selectedTheme === 'light' ? 'border-emerald-500 bg-emerald-500' : 'border-gray-600'}`}>
-                    {selectedTheme === 'light' && <Check className="h-3 w-3 text-white" />}
+                    {selectedTheme === 'light' && <Check className="h-3 w-3 text-foreground" />}
                   </div>
                 </div>
               </button>
@@ -950,10 +950,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <div className="relative mb-4">
                 <div className="absolute -inset-4 rounded-full bg-emerald-500/10 blur-2xl" />
                 <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500">
-                  <Sparkles className="h-8 w-8 text-white" />
+                  <Sparkles className="h-8 w-8 text-foreground" />
                 </div>
               </div>
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 {name ? `Bismillah, ${name}!` : "Bismillah — Let's Begin!"}
               </h2>
               <div className="mt-4 w-full max-w-xs space-y-1.5 text-left">
@@ -966,7 +966,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-2">
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                    <span className="text-xs text-gray-400">{item}</span>
+                    <span className="text-xs text-muted-foreground">{item}</span>
                   </div>
                 ))}
               </div>
@@ -979,25 +979,25 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   { label: '\uD83E\uDD32 Duas', href: '/explore/duas' },
                 ].map(item => (
                   <button key={item.href} onClick={() => { finish(); router.push(item.href) }}
-                    className="rounded-xl border border-gray-800 bg-gray-900/60 py-2.5 text-xs font-medium text-gray-300 active:bg-gray-800">
+                    className="rounded-xl border border-border bg-card/60 py-2.5 text-xs font-medium text-muted-foreground active:bg-secondary">
                     {item.label}
                   </button>
                 ))}
               </div>
-              <p className="text-center text-[10px] text-gray-600 mb-3">Jump straight to what matters</p>
+              <p className="text-center text-[10px] text-muted-foreground/60 mb-3">Jump straight to what matters</p>
 
               <button
                 onClick={() => {
                   setItem(KEYS.TOUR_PENDING, true)
                   finish()
                 }}
-                className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
+                className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-foreground shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
               >
                 Take the App Tour 🧭
               </button>
               <button
                 onClick={finish}
-                className="mt-2 text-xs text-gray-500 active:text-gray-300"
+                className="mt-2 text-xs text-muted-foreground/80 active:text-muted-foreground"
               >
                 Skip — go straight in
               </button>
@@ -1013,7 +1013,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             onClick={prev}
             disabled={step === 0}
             className={`flex h-11 w-11 items-center justify-center rounded-xl transition-all ${
-              step === 0 ? 'opacity-0 pointer-events-none' : 'bg-gray-800 text-gray-300 active:bg-gray-700'
+              step === 0 ? 'opacity-0 pointer-events-none' : 'bg-secondary text-muted-foreground active:bg-muted'
             }`}
             aria-label="Back"
           >
@@ -1022,7 +1022,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
           <button
             onClick={next}
-            className="flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition-all active:scale-95 active:bg-emerald-600"
+            className="flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-3.5 text-sm font-bold text-foreground shadow-lg shadow-emerald-500/20 transition-all active:scale-95 active:bg-emerald-600"
           >
             {step === 0 ? 'Get Started' : 'Continue'}
             <ChevronRight className="h-4 w-4" />

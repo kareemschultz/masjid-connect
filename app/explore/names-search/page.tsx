@@ -28,7 +28,7 @@ export default function NamesSearchPage() {
   }, [search, gender, origin])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Heart}
         title="Islamic Names"
@@ -40,14 +40,14 @@ export default function NamesSearchPage() {
 
       <div className="px-4 pt-4 space-y-3">
         {/* Search */}
-        <div className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
-          <Search className="h-4 w-4 text-gray-500" />
+        <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+          <Search className="h-4 w-4 text-muted-foreground/80" />
           <input
             type="text"
             placeholder="Search by name or meaning..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent text-sm text-white placeholder-gray-500 outline-none"
+            className="w-full bg-transparent text-sm text-foreground placeholder-gray-500 outline-none"
           />
         </div>
 
@@ -58,7 +58,7 @@ export default function NamesSearchPage() {
               key={g}
               onClick={() => setGender(g)}
               className={`rounded-xl px-4 py-1.5 text-xs font-bold transition-all ${
-                gender === g ? 'bg-rose-500 text-white' : 'bg-gray-800 text-gray-400'
+                gender === g ? 'bg-rose-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {g}
@@ -73,7 +73,7 @@ export default function NamesSearchPage() {
               key={o}
               onClick={() => setOrigin(o)}
               className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
-                origin === o ? 'bg-amber-500 text-white' : 'bg-gray-800 text-gray-400'
+                origin === o ? 'bg-amber-500 text-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
               {o}
@@ -82,7 +82,7 @@ export default function NamesSearchPage() {
         </div>
 
         {/* Results count */}
-        <p className="text-[11px] text-gray-500">{filtered.length} names found</p>
+        <p className="text-[11px] text-muted-foreground/80">{filtered.length} names found</p>
 
         {/* Names list */}
         <div className="space-y-2">
@@ -92,7 +92,7 @@ export default function NamesSearchPage() {
               <button
                 key={name.name}
                 onClick={() => setExpanded(isExpanded ? null : name.name)}
-                className="w-full rounded-2xl border border-gray-800 bg-gray-900 p-4 text-left transition-all active:bg-gray-800"
+                className="w-full rounded-2xl border border-border bg-card p-4 text-left transition-all active:bg-secondary"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/15">
@@ -102,31 +102,31 @@ export default function NamesSearchPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-white">{name.name}</span>
-                      <span className="rounded-md bg-gray-800 px-1.5 py-0.5 text-[9px] font-medium text-gray-400">{name.origin}</span>
+                      <span className="text-sm font-bold text-foreground">{name.name}</span>
+                      <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">{name.origin}</span>
                     </div>
-                    <p className="text-xs text-gray-400 truncate">{name.meaning}</p>
+                    <p className="text-xs text-muted-foreground truncate">{name.meaning}</p>
                   </div>
-                  <span className="font-arabic text-lg text-white/80">{name.arabic}</span>
-                  {isExpanded ? <ChevronUp className="h-4 w-4 text-gray-600 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-600 shrink-0" />}
+                  <span className="font-arabic text-lg text-foreground/80">{name.arabic}</span>
+                  {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground/60 shrink-0" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60 shrink-0" />}
                 </div>
                 {isExpanded && (
-                  <div className="mt-3 border-t border-gray-800 pt-3 space-y-2">
+                  <div className="mt-3 border-t border-border pt-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">Meaning</span>
-                      <span className="text-xs text-gray-300">{name.meaning}</span>
+                      <span className="text-[11px] text-muted-foreground/80">Meaning</span>
+                      <span className="text-xs text-muted-foreground">{name.meaning}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">Origin</span>
-                      <span className="text-xs text-gray-300">{name.origin}</span>
+                      <span className="text-[11px] text-muted-foreground/80">Origin</span>
+                      <span className="text-xs text-muted-foreground">{name.origin}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-gray-500">Gender</span>
-                      <span className="text-xs text-gray-300">{name.gender}</span>
+                      <span className="text-[11px] text-muted-foreground/80">Gender</span>
+                      <span className="text-xs text-muted-foreground">{name.gender}</span>
                     </div>
                     {name.root && (
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-gray-500">Arabic Root</span>
+                        <span className="text-[11px] text-muted-foreground/80">Arabic Root</span>
                         <span className="font-arabic text-sm text-amber-400">{name.root}</span>
                       </div>
                     )}

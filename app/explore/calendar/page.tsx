@@ -215,7 +215,7 @@ export default function CalendarPage() {
   }, [sortedEvents])
 
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Calendar}
         title="Islamic Calendar"
@@ -229,8 +229,8 @@ export default function CalendarPage() {
         {/* Current date */}
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-center">
           <p className="text-xs uppercase tracking-widest text-emerald-400">Today</p>
-          <p className="mt-1 text-lg font-bold text-[#f9fafb]">{hijri}</p>
-          <p className="mt-0.5 text-xs text-gray-400">
+          <p className="mt-1 text-lg font-bold text-foreground">{hijri}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
@@ -238,7 +238,7 @@ export default function CalendarPage() {
         {/* Submit an Event */}
         <button
           onClick={() => { setShowSubmit(true); setSubmitMsg(null) }}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-700 bg-gray-900/50 py-3.5 text-sm font-semibold text-emerald-400 transition-all active:bg-gray-800"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-card/50 py-3.5 text-sm font-semibold text-emerald-400 transition-all active:bg-secondary"
         >
           <Plus className="h-4 w-4" />
           Submit an Event
@@ -260,9 +260,9 @@ export default function CalendarPage() {
                       <Star className="h-5 w-5 text-amber-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-base font-bold text-[#f9fafb]">{event.name}</h3>
+                      <h3 className="text-base font-bold text-foreground">{event.name}</h3>
                       <p className="mt-0.5 text-xs text-emerald-400">{event.hijriDate}</p>
-                      <p className="mt-1 text-xs text-gray-400">{event.description}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{event.description}</p>
                     </div>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function CalendarPage() {
         {/* Upcoming events */}
         {upcomingEvents.length > 0 && (
           <div className="space-y-2">
-            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400">
+            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               <div className="h-4 w-1 rounded-full bg-rose-500" />
               Upcoming Events
             </h2>
@@ -287,7 +287,7 @@ export default function CalendarPage() {
                 return (
                   <div
                     key={i}
-                    className={`rounded-xl border border-gray-800 bg-gray-900 p-4 ${
+                    className={`rounded-xl border border-border bg-card p-4 ${
                       isNear ? 'ring-1 ring-amber-500/20' : ''
                     }`}
                   >
@@ -297,7 +297,7 @@ export default function CalendarPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-sm font-semibold text-[#f9fafb]">{event.name}</h3>
+                          <h3 className="text-sm font-semibold text-foreground">{event.name}</h3>
                           <span className={`rounded-lg px-2 py-0.5 text-[9px] font-bold ${style.bg} ${style.text}`}>
                             {event.importance}
                           </span>
@@ -305,12 +305,12 @@ export default function CalendarPage() {
                         <div className="mt-1 flex items-center gap-2">
                           <span className="text-xs text-emerald-400">{event.hijriDate}</span>
                           <span className="text-gray-700">|</span>
-                          <span className="text-xs text-gray-500">{formatDate(event.date)}</span>
+                          <span className="text-xs text-muted-foreground/80">{formatDate(event.date)}</span>
                         </div>
-                        <p className="mt-1 text-xs text-gray-400">{event.description}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{event.description}</p>
                         <div className="mt-2 flex items-center gap-3">
                           <span className={`text-[11px] font-semibold ${
-                            daysUntil === 0 ? 'text-amber-400' : daysUntil <= 7 ? 'text-emerald-400' : 'text-gray-500'
+                            daysUntil === 0 ? 'text-amber-400' : daysUntil <= 7 ? 'text-emerald-400' : 'text-muted-foreground/80'
                           }`}>
                             {getRelativeLabel(daysUntil)}
                           </span>
@@ -336,27 +336,27 @@ export default function CalendarPage() {
         {/* Past events */}
         {pastEvents.length > 0 && (
           <div className="space-y-2">
-            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
-              <div className="h-4 w-1 rounded-full bg-gray-700" />
+            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground/80">
+              <div className="h-4 w-1 rounded-full bg-muted" />
               Past Events
             </h2>
             <div className="space-y-2">
               {pastEvents.map((event, i) => {
                 const daysUntil = getDaysUntil(event.date)
                 return (
-                  <div key={i} className="rounded-xl border border-gray-800/50 bg-gray-900/50 p-4 opacity-60">
+                  <div key={i} className="rounded-xl border border-border/50 bg-card/50 p-4 opacity-60">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-800">
-                        <Calendar className="h-4 w-4 text-gray-500" />
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary">
+                        <Calendar className="h-4 w-4 text-muted-foreground/80" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-gray-400">{event.name}</h3>
+                        <h3 className="text-sm font-semibold text-muted-foreground">{event.name}</h3>
                         <div className="mt-0.5 flex items-center gap-2">
-                          <span className="text-xs text-gray-500">{event.hijriDate}</span>
+                          <span className="text-xs text-muted-foreground/80">{event.hijriDate}</span>
                           <span className="text-gray-700">|</span>
-                          <span className="text-xs text-gray-600">{formatDate(event.date)}</span>
+                          <span className="text-xs text-muted-foreground/60">{formatDate(event.date)}</span>
                         </div>
-                        <span className="text-[11px] text-gray-600">{getRelativeLabel(daysUntil)}</span>
+                        <span className="text-[11px] text-muted-foreground/60">{getRelativeLabel(daysUntil)}</span>
                       </div>
                     </div>
                   </div>
@@ -367,8 +367,8 @@ export default function CalendarPage() {
         )}
 
         {/* Note */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-4 text-center">
-          <p className="text-[11px] text-gray-500">
+        <div className="rounded-2xl border border-border bg-card/50 p-4 text-center">
+          <p className="text-[11px] text-muted-foreground/80">
             Dates are approximate and based on astronomical calculations. Actual dates depend on local moon sighting by CIOG for Guyana.
           </p>
         </div>
@@ -378,32 +378,32 @@ export default function CalendarPage() {
       {showSubmit && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubmit(false)} />
-          <div className="relative w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-gray-800 bg-gray-900 p-5 max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-white">Submit an Event</h3>
-              <button onClick={() => setShowSubmit(false)} className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-800 text-gray-400">
+              <h3 className="text-base font-bold text-foreground">Submit an Event</h3>
+              <button onClick={() => setShowSubmit(false)} className="flex h-8 w-8 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Event Name *</label>
+                <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Event Name *</label>
                 <input
                   type="text"
                   value={submitForm.name}
                   onChange={e => setSubmitForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="e.g. Jumu'ah Khutbah"
-                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Event Type</label>
+                <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Event Type</label>
                 <select
                   value={submitForm.type}
                   onChange={e => setSubmitForm(f => ({ ...f, type: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground outline-none focus:border-emerald-500/50"
                 >
                   {EVENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
@@ -411,56 +411,56 @@ export default function CalendarPage() {
 
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label className="text-[11px] font-medium text-gray-400 mb-1 block">Date *</label>
+                  <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Date *</label>
                   <input
                     type="date"
                     value={submitForm.date}
                     onChange={e => setSubmitForm(f => ({ ...f, date: e.target.value }))}
-                    className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                    className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground outline-none focus:border-emerald-500/50"
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="text-[11px] font-medium text-gray-400 mb-1 block">Time</label>
+                  <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Time</label>
                   <input
                     type="time"
                     value={submitForm.time}
                     onChange={e => setSubmitForm(f => ({ ...f, time: e.target.value }))}
-                    className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-emerald-500/50"
+                    className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground outline-none focus:border-emerald-500/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Location / Masjid</label>
+                <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Location / Masjid</label>
                 <input
                   type="text"
                   value={submitForm.location}
                   onChange={e => setSubmitForm(f => ({ ...f, location: e.target.value }))}
                   placeholder="e.g. Queenstown Masjid"
-                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Description <span className="text-gray-600">(max 500 chars)</span></label>
+                <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Description <span className="text-muted-foreground/60">(max 500 chars)</span></label>
                 <textarea
                   value={submitForm.description}
                   onChange={e => setSubmitForm(f => ({ ...f, description: e.target.value.slice(0, 500) }))}
                   placeholder="Brief description of the event..."
                   rows={3}
-                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50 resize-none"
                 />
-                <p className="text-right text-[10px] text-gray-600 mt-0.5">{submitForm.description.length}/500</p>
+                <p className="text-right text-[10px] text-muted-foreground/60 mt-0.5">{submitForm.description.length}/500</p>
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-gray-400 mb-1 block">Submitted By</label>
+                <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Submitted By</label>
                 <input
                   type="text"
                   value={submitForm.submittedBy}
                   onChange={e => setSubmitForm(f => ({ ...f, submittedBy: e.target.value }))}
                   placeholder="Your name or masjid name"
-                  className="w-full rounded-xl border border-gray-800 bg-gray-800/50 px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
                 />
               </div>
 
@@ -473,7 +473,7 @@ export default function CalendarPage() {
               <button
                 onClick={handleSubmitEvent}
                 disabled={submitLoading || !submitForm.name.trim() || !submitForm.date}
-                className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition-all active:bg-emerald-600 disabled:opacity-40"
+                className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-foreground transition-all active:bg-emerald-600 disabled:opacity-40"
               >
                 {submitLoading ? 'Submitting...' : 'Submit Event'}
               </button>

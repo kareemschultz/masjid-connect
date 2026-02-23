@@ -45,7 +45,7 @@ const duas = [
 
 export default function NewMuslimDuasPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={Moon}
         title="Duas for New Muslims"
@@ -58,7 +58,7 @@ export default function NewMuslimDuasPage() {
 
       <div className="space-y-4 px-4 pt-5">
         {/* Intro */}
-        <p className="text-sm text-gray-400 leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           These are selected duas (supplications) that are especially meaningful for those beginning
           their journey in Islam. Memorize them gradually &mdash; even one dua said with sincerity is
           powerful.
@@ -68,21 +68,21 @@ export default function NewMuslimDuasPage() {
         {duas.map((dua, i) => (
           <div
             key={i}
-            className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5 space-y-3"
+            className="rounded-2xl border border-border bg-card/50 p-5 space-y-3"
           >
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80">
               {dua.title}
             </p>
             <p className="font-arabic text-2xl text-center text-indigo-300 leading-relaxed py-2" dir="rtl">
               {dua.arabic}
             </p>
-            <p className="text-sm italic text-gray-300 text-center">
+            <p className="text-sm italic text-muted-foreground text-center">
               {dua.transliteration}
             </p>
-            <p className="text-sm text-[#f9fafb] text-center">
+            <p className="text-sm text-foreground text-center">
               {dua.meaning}
             </p>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-muted-foreground/80 text-center">
               {dua.source}
             </p>
           </div>

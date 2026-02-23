@@ -31,7 +31,7 @@ export function SettingRow({
     <Comp
       onClick={onClick}
       className={`flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left transition-colors active:bg-white/5 ${
-        !isLast ? 'border-b border-gray-800/50' : ''
+        !isLast ? 'border-b border-border/50' : ''
       }`}
     >
       <IconSquare icon={icon} color={iconColor} />
@@ -42,7 +42,7 @@ export function SettingRow({
         <span className="text-sm text-emerald-400">{value}</span>
       )}
       {onClick && !rightElement && (
-        <ChevronRight className="h-4 w-4 text-gray-600" />
+        <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
       )}
     </Comp>
   )

@@ -70,7 +70,7 @@ const SCHOLARS = [
 
 export default function ScholarsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0b14] pb-nav">
+    <div className="min-h-screen bg-background pb-nav">
       <PageHero
         icon={GraduationCap}
         title="Inspiring Sisters"
@@ -84,7 +84,7 @@ export default function ScholarsPage() {
       <div className="space-y-3 px-4 pt-5">
         {/* Intro */}
         <div className="rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4">
-          <p className="text-sm leading-relaxed text-gray-400">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             Islam has a rich history of remarkable women &mdash; scholars, leaders, and mothers of the Ummah. Their legacy continues to inspire Muslim women across the world.
           </p>
         </div>
@@ -93,11 +93,11 @@ export default function ScholarsPage() {
         {SCHOLARS.map((scholar) => (
           <div
             key={scholar.name}
-            className="rounded-2xl border border-gray-800 bg-gray-900/50 p-5 space-y-3"
+            className="rounded-2xl border border-border bg-card/50 p-5 space-y-3"
           >
             {/* Name + Honorific */}
             <div>
-              <span className="text-lg font-bold text-[#f9fafb]">{scholar.name}</span>
+              <span className="text-lg font-bold text-foreground">{scholar.name}</span>
               {scholar.honorific && (
                 <span className="font-arabic text-sm text-violet-400 ml-2">{scholar.honorific}</span>
               )}
@@ -111,12 +111,12 @@ export default function ScholarsPage() {
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-400 leading-relaxed mt-2">{scholar.description}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed mt-2">{scholar.description}</p>
 
             {/* Quote */}
             {scholar.quote && (
               <div className="mt-3 border-l-2 border-violet-500/30 pl-3">
-                <p className="text-sm italic text-gray-300">{scholar.quote}</p>
+                <p className="text-sm italic text-muted-foreground">{scholar.quote}</p>
               </div>
             )}
           </div>
