@@ -251,10 +251,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const steps = [
     'welcome',
     'features',
+    'install',
     'profile',
     'prayer',
     ...(showRamadanStep ? ['ramadan'] : []),
-    'install',
     'notifications',
     'done',
   ]
