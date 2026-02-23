@@ -88,7 +88,7 @@ export default function NewToIslamPage() {
         subtitle="Your Journey Begins Here"
         gradient="from-emerald-950 to-teal-900"
         showBack
-        stars
+        compact
       />
 
       <div className="space-y-4 px-4 pt-5 animate-stagger">

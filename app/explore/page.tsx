@@ -142,7 +142,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
-      <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" stars />
+      <PageHero icon={Compass} title="Explore" subtitle="Islamic Tools & Resources" gradient="from-rose-950 to-pink-900" compact />
 
       <div className="px-4 pt-4 space-y-3">
 
