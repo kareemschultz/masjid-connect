@@ -29,6 +29,7 @@ type WaterLog = Record<string, number>
 type AdhkarLog = Record<string, { morning: boolean; evening: boolean }>
 type SunnahLog = Record<string, Record<string, boolean>>
 type NawafilLog = Record<string, Record<string, number>>
+type QadaEntry = { prayer: 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha'; count: number }
 type IstighfarLog = Record<string, number>
 
 /* ─── helpers ─── */
@@ -114,6 +115,7 @@ export default function TrackerPage() {
   const [showKhatamReset, setShowKhatamReset] = useState(false)
   const [sunnahLog, setSunnahLog] = useState<SunnahLog>({})
   const [nawafilLog, setNawafilLog] = useState<NawafilLog>({})
+  const [qadaLog, setQadaLog] = useState<QadaEntry[]>([])
   const [rewardToast, setRewardToast] = useState<string | null>(null)
 
   /* ── toggle section helper ── */
@@ -166,6 +168,7 @@ export default function TrackerPage() {
     setKhatamProgress(getItem<KhatamProgress>('khatam_personal_progress', Array(30).fill(false)))
     setSunnahLog(getItem<SunnahLog>(KEYS.SUNNAH_LOG, {}))
     setNawafilLog(getItem<NawafilLog>(KEYS.NAWAFIL_LOG, {}))
+    setQadaLog(getItem<QadaEntry[]>('qada_log', []))
   }, [])
 
   /* ── prayer toggle ── */
@@ -344,6 +347,26 @@ export default function TrackerPage() {
     return pts
   }, [sunnahToday, nawafilToday])
 
+  /* ── Qada helpers ── */
+  const adjustQada = useCallback((prayer: string, delta: number) => {
+    setQadaLog(prev => {
+      const existing = prev.find(e => e.prayer === prayer)
+      let updated: QadaEntry[]
+      if (existing) {
+        updated = prev.map(e =>
+          e.prayer === prayer ? { ...e, count: Math.max(0, e.count + delta) } : e
+        )
+      } else if (delta > 0) {
+        updated = [...prev, { prayer: prayer as QadaEntry['prayer'], count: delta }]
+      } else {
+        return prev
+      }
+      setItem('qada_log', updated)
+      return updated
+    })
+  }, [])
+
+  const qadaTotal = useMemo(() => qadaLog.reduce((sum, e) => sum + e.count, 0), [qadaLog])
 
   /* ── weekly prayer stats for chart ── */
   const weeklyStats = useMemo(() => {
@@ -616,7 +639,7 @@ export default function TrackerPage() {
         </div>
 
         {/* Today's Prayers */}
-        <SettingGroup label="Today's Prayers" accentColor="bg-blue-500">
+        <SettingGroup label="Fard (Obligatory) Prayers" accentColor="bg-blue-500">
           <div className="p-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs text-gray-400">{todayCount}/5 completed</span>
@@ -674,7 +697,7 @@ export default function TrackerPage() {
             <div className="border-t border-gray-800 p-4 space-y-5">
               {/* Sub-section 1: Sunnah Mu'akkadah & Wajib */}
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-3">Sunnah Mu&apos;akkadah &amp; Wajib</h4>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-3">Sunnah (Recommended) &amp; Wajib</h4>
                 <div className="space-y-2">
                   {SUNNAH_PRAYERS.map((prayer) => {
                     const done = sunnahToday[prayer.key] ?? false
@@ -1285,6 +1308,60 @@ export default function TrackerPage() {
                   Start New Khatam
                 </button>
               )}
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* ── Qada Prayers ── */}
+        <SettingGroup label="Qada Prayers" accentColor="bg-red-500">
+          <SectionHeader
+            id="qada"
+            emoji="⏳"
+            title="Qada (Missed Prayers)"
+            summary={qadaTotal > 0 ? `${qadaTotal} remaining` : 'All clear ✓'}
+          />
+          {openSections.qada && (
+            <div className="border-t border-gray-800 p-4 space-y-4">
+              <p className="text-xs text-gray-400 leading-relaxed">
+                Making up missed prayers (Qada) is obligatory. Pray them in order if possible, or intersperse with current prayers.
+              </p>
+              <div className="space-y-2">
+                {(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const).map(prayer => {
+                  const entry = qadaLog.find(e => e.prayer === prayer)
+                  const count = entry?.count || 0
+                  return (
+                    <div key={prayer} className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-800/40 px-3 py-2.5">
+                      <span className="text-sm font-medium text-gray-300 w-20">{prayer}</span>
+                      <span className={`flex-1 text-xs font-semibold ${count === 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                        {count === 0 ? '✓ Clear' : `${count} remaining`}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => adjustQada(prayer, -1)}
+                          disabled={count === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90 disabled:opacity-30"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </button>
+                        <span className="min-w-[2rem] text-center text-sm font-bold text-gray-200">{count}</span>
+                        <button
+                          onClick={() => adjustQada(prayer, 1)}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-all active:scale-90"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className={`rounded-xl p-3 text-center ${qadaTotal === 0 ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
+                <p className="text-xs text-gray-400">Total Qada Balance</p>
+                <p className={`text-2xl font-bold ${qadaTotal === 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                  {qadaTotal}
+                </p>
+                {qadaTotal === 0 && <p className="text-xs text-emerald-400/70 mt-1">Alhamdulillah! No missed prayers to make up.</p>}
+              </div>
             </div>
           )}
         </SettingGroup>

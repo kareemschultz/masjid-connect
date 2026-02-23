@@ -69,4 +69,5 @@ export const KEYS = {
   NAWAFIL_LOG: 'nawafil_log',
   HOME_MASJID: 'home_masjid_id',
   QURAN_TRANSLATION: 'quran_translation',
+  PRAYER_OFFSET: 'prayer_offset',
 } as const

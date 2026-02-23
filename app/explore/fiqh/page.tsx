@@ -2,7 +2,9 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Scale, ChevronDown, ChevronUp } from 'lucide-react'
+import { Scale, ChevronDown, ChevronUp, Heart, Share2 } from 'lucide-react'
+import { getItem, setItem } from '@/lib/storage'
+import { shareOrCopy } from '@/lib/share'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import {
@@ -22,6 +24,22 @@ function FiqhHubContent() {
   const [activeChapter, setActiveChapter] = useState<string | null>(null)
   const [sistersMode, setSistersMode] = useState(false)
   const [openTopic, setOpenTopic] = useState<string | null>(null)
+  const [bookmarks, setBookmarks] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') return new Set()
+    const saved = getItem<string[]>('fiqh_bookmarks', [])
+    return new Set(saved)
+  })
+  const [showSaved, setShowSaved] = useState(false)
+
+  const toggleBookmark = (id: string) => {
+    setBookmarks(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      setItem('fiqh_bookmarks', [...next])
+      return next
+    })
+  }
 
   // Read URL params on mount
   useEffect(() => {
@@ -40,8 +58,9 @@ function FiqhHubContent() {
     let list: FiqhTopic[] = FIQH_TOPICS
     if (activeChapter) list = list.filter(t => t.chapter === activeChapter)
     if (sistersMode) list = list.filter(t => t.sistersRelevant)
+    if (showSaved) list = list.filter(t => bookmarks.has(t.id))
     return list
-  }, [activeChapter, sistersMode])
+  }, [activeChapter, sistersMode, showSaved, bookmarks])
 
   // Group by chapter (preserving order)
   const grouped = useMemo(() => {
@@ -113,6 +132,15 @@ function FiqhHubContent() {
             }`}
           >
             Sisters Filter
+          </button>
+          <button
+            onClick={() => setShowSaved(!showSaved)}
+            className={`shrink-0 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              showSaved ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-gray-800 text-gray-500'
+            }`}
+          >
+            <Heart className={`h-3.5 w-3.5 ${showSaved ? 'fill-rose-400' : ''}`} />
+            {bookmarks.size > 0 ? `Saved (${bookmarks.size})` : 'Saved'}
           </button>
           {sistersMode && (
             <span className="text-[10px] text-rose-400/60">
@@ -279,6 +307,34 @@ function FiqhHubContent() {
                             </p>
                           </div>
                         )}
+
+                        {/* Actions */}
+                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-800">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              shareOrCopy({
+                                title: topic.title,
+                                text: `${topic.title}\n\n${topic.points[0]}\n\n— via MasjidConnect GY Fiqh Guide`,
+                              })
+                            }}
+                            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold bg-gray-800 text-gray-500 active:bg-gray-700 transition-all"
+                          >
+                            <Share2 className="h-3 w-3" />
+                            Share
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              toggleBookmark(topic.id)
+                            }}
+                            className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
+                              bookmarks.has(topic.id) ? 'bg-rose-500/20 text-rose-400' : 'bg-gray-800 text-gray-500 active:bg-gray-700'
+                            }`}
+                          >
+                            <Heart className={`h-3.5 w-3.5 ${bookmarks.has(topic.id) ? 'fill-rose-400' : ''}`} />
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>

@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { BookOpen, Check } from 'lucide-react'
+import { BookOpen, Check, Cloud, CloudOff } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem } from '@/lib/storage'
+import Link from 'next/link'
 
 interface JuzClaim {
   initials: string
@@ -17,8 +18,16 @@ export default function KhatamPage() {
   const [claims, setClaims] = useState<KhatamClaims>({})
   const [userInitials, setUserInitials] = useState('')
   const [nameInput, setNameInput] = useState('')
+  const [synced, setSynced] = useState<'loading' | 'online' | 'offline'>('loading')
+  const [isSignedIn, setIsSignedIn] = useState(false)
 
   useEffect(() => {
+    // Check auth status
+    fetch('/api/auth/get-session', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.user) setIsSignedIn(true) })
+      .catch(() => {})
+
     // Try API first, fallback to localStorage
     fetch('/api/community/khatam')
       .then((res) => (res.ok ? res.json() : null))
@@ -29,12 +38,17 @@ export default function KhatamPage() {
             mapped[row.juz] = { initials: row.user_name, completed: row.completed }
           }
           setClaims(mapped)
+          // Also update localStorage as cache
+          setItem('khatam_claims', mapped)
+          setSynced('online')
         } else {
           setClaims(getItem<KhatamClaims>('khatam_claims', {}))
+          setSynced('online')
         }
       })
       .catch(() => {
         setClaims(getItem<KhatamClaims>('khatam_claims', {}))
+        setSynced('offline')
       })
     setUserInitials(getItem<string>('khatam_user_initials', ''))
   }, [])
@@ -142,6 +156,25 @@ export default function KhatamPage() {
             </div>
           </div>
         </div>
+
+        {/* Sync status */}
+        <div className="flex items-center justify-center gap-2">
+          {synced === 'online' ? (
+            <span className="flex items-center gap-1.5 text-[10px] text-emerald-400"><Cloud className="h-3 w-3" /> Synced with server</span>
+          ) : synced === 'offline' ? (
+            <span className="flex items-center gap-1.5 text-[10px] text-amber-400"><CloudOff className="h-3 w-3" /> Offline — using local data</span>
+          ) : (
+            <span className="text-[10px] text-gray-500 animate-pulse">Syncing...</span>
+          )}
+        </div>
+
+        {/* Sign in prompt */}
+        {!isSignedIn && synced !== 'loading' && (
+          <Link href="/settings" className="block rounded-xl border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-center">
+            <p className="text-xs font-medium text-blue-400">Sign in to sync your Khatam progress</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">Your progress is saved locally for now</p>
+          </Link>
+        )}
 
         <div className="grid grid-cols-5 gap-2">
           {Array.from({ length: 30 }, (_, i) => i + 1).map((juz) => {

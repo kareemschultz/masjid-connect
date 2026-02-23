@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { Sunrise, Sun, CloudSun, Sunset, Moon } from 'lucide-react'
+import { getItem, KEYS } from '@/lib/storage'
 
 interface PrayerTime { name: string; time: string; date: Date }
 interface PrayerStripProps { prayers: PrayerTime[] }
@@ -16,7 +17,12 @@ const PRAYER_ICONS = {
 
 export function PrayerStrip({ prayers }: PrayerStripProps) {
   const [nextPrayer, setNextPrayer] = useState('')
+  const [offset, setOffset] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setOffset(getItem(KEYS.PRAYER_OFFSET, 0))
+  }, [])
 
   useEffect(() => {
     const now = new Date()
@@ -64,7 +70,10 @@ export function PrayerStrip({ prayers }: PrayerStripProps) {
               {prayer.name}
             </span>
             <span className={`text-xs font-extrabold tabular-nums transition-colors duration-300 ${isNext ? 'text-white' : 'text-gray-400'}`}>
-              {prayer.time}
+              {offset !== 0
+                ? new Date(prayer.date.getTime() + offset * 60000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+                : prayer.time
+              }
             </span>
           </div>
         )

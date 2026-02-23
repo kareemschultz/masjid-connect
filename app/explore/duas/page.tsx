@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { BookOpen, Search, Copy, Heart, Check, X } from 'lucide-react'
+import { BookOpen, Search, Copy, Heart, Check, X, Share2 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem } from '@/lib/storage'
+import { shareOrCopy } from '@/lib/share'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -807,6 +808,16 @@ export default function DuasPage() {
 
         {/* Actions */}
         <div className="mt-3 flex items-center justify-end gap-2">
+          <button
+            onClick={() => shareOrCopy({
+              title: dua.meaning,
+              text: `${dua.arabic}\n\n${dua.transliteration}\n\n"${dua.meaning}"\n\n${dua.source ? `— ${dua.source}` : ''}\n\n— via MasjidConnect GY`,
+            })}
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold bg-gray-800 text-gray-500 active:bg-gray-700 transition-all"
+          >
+            <Share2 className="h-3 w-3" />
+            Share
+          </button>
           <button
             onClick={() => copy(`${dua.arabic}\n\n${dua.transliteration}\n\n${dua.meaning}`, key)}
             className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold transition-all ${

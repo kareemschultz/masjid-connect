@@ -65,6 +65,7 @@ export default function SettingsPage() {
   const [usernameInput, setUsernameInput] = useState('')
   const [usernameSaving, setUsernameSaving] = useState(false)
   const [usernameMsg, setUsernameMsg] = useState('')
+  const [prayerOffset, setPrayerOffset] = useState(0)
   const [phone, setPhone] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
   const [phoneSaving, setPhoneSaving] = useState(false)
@@ -79,6 +80,7 @@ export default function SettingsPage() {
     setNotifs(getItem(KEYS.NOTIFICATIONS_ENABLED, false))
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
     setIsAdmin(getItem(KEYS.IS_ADMIN, false))
+    setPrayerOffset(getItem(KEYS.PRAYER_OFFSET, 0))
     // Check auth session
     fetch('/api/auth/get-session', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
@@ -373,6 +375,7 @@ export default function SettingsPage() {
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
           <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Fajr & Isha Calculation" value={methodLabel.split('—')[0].split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
           <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Asr Prayer Time" value={madhab === 'Hanafi' ? 'Hanafi (later)' : 'Standard (earlier)'} onClick={() => setModalOpen('madhab')} />
+          <SettingRow icon={Clock} iconColor="bg-teal-600" label="Prayer Time Adjustment" value={prayerOffset === 0 ? 'None' : `${prayerOffset > 0 ? '+' : ''}${prayerOffset} min`} onClick={() => setModalOpen('prayerOffset')} />
           <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
         </SettingGroup>
 
@@ -443,6 +446,22 @@ export default function SettingsPage() {
       <SelectModal open={modalOpen === 'madhab'} onClose={() => setModalOpen(null)} title="Asr Prayer Time" options={MADHABS.map(m => ({ key: m.key, label: m.key === 'Hanafi' ? 'Hanafi — later Asr time' : "Standard (earlier) — Shafi\u2019i / Hanbali / Maliki" }))} selected={madhab} onSelect={updateMadhab} />
       <SelectModal open={modalOpen === 'reciter'} onClose={() => setModalOpen(null)} title="Default Reciter" options={RECITERS.map(r => ({ key: r.key, label: r.label }))} selected={reciter} onSelect={updateReciter} />
       <SelectModal open={modalOpen === 'quranTranslation'} onClose={() => setModalOpen(null)} title="Quran Translation" subtitle="Choose the English translation shown alongside the Arabic text in the Quran reader." options={QURAN_TRANSLATIONS.map(t => ({ key: t.key, label: t.label, note: t.note }))} selected={quranTranslation} onSelect={updateQuranTranslation} />
+      <SelectModal
+        open={modalOpen === 'prayerOffset'}
+        onClose={() => setModalOpen(null)}
+        title="Prayer Time Adjustment"
+        subtitle="Adjusts all displayed prayer times by the selected amount. Use +2 to +3 min to match Masjid timetables that add a safety buffer."
+        options={[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5].map(n => ({
+          key: String(n),
+          label: n === 0 ? 'No adjustment' : `${n > 0 ? '+' : ''}${n} minutes`,
+        }))}
+        selected={String(prayerOffset)}
+        onSelect={(val) => {
+          const num = parseInt(val)
+          setPrayerOffset(num)
+          setItem(KEYS.PRAYER_OFFSET, num)
+        }}
+      />
       <SelectModal
         open={modalOpen === 'moon'}
         onClose={() => setModalOpen(null)}

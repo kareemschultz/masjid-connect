@@ -68,6 +68,19 @@ export default function AdhkarPage() {
         ))}
       </div>
 
+      {/* Reset & Progress */}
+      <div className="flex items-center justify-between px-4 pt-3">
+        <div className="text-xs text-gray-400">
+          {ADHKAR[category].filter((_, i) => (counts[`${category}-${i}`] || 0) >= ADHKAR[category][i].repeat).length}/{ADHKAR[category].length} complete
+        </div>
+        <button
+          onClick={() => setCounts({})}
+          className="rounded-lg bg-gray-800 px-3 py-1.5 text-[11px] font-medium text-gray-400 active:bg-gray-700 transition-all"
+        >
+          Reset All
+        </button>
+      </div>
+
       {/* Adhkar list */}
       <div className="space-y-3 px-4 pt-4 animate-stagger">
         {ADHKAR[category].map((dhikr, i) => {
@@ -93,7 +106,7 @@ export default function AdhkarPage() {
               <p className="mt-1 text-xs text-gray-400">{dhikr.meaning}</p>
               <div className="mt-3 flex items-center justify-between">
                 <span className={`text-xs font-bold ${done ? 'text-emerald-400' : 'text-gray-500'}`}>
-                  {current}/{dhikr.repeat}
+                  {done ? '✓ ' : ''}{current} / {dhikr.repeat}
                 </span>
                 <div className="h-1 w-24 overflow-hidden rounded-full bg-gray-800">
                   <div
@@ -106,6 +119,15 @@ export default function AdhkarPage() {
           )
         })}
       </div>
+
+      {/* Completion banner */}
+      {ADHKAR[category].every((dhikr, i) => (counts[`${category}-${i}`] || 0) >= dhikr.repeat) && (
+        <div className="mx-4 mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-center">
+          <p className="text-lg mb-1">✅</p>
+          <p className="text-sm font-bold text-emerald-400">{category} Adhkar Complete!</p>
+          <p className="text-xs text-emerald-400/70 mt-1">May Allah accept your remembrance</p>
+        </div>
+      )}
 
       <BottomNav />
     </div>

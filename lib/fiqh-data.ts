@@ -2794,6 +2794,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Full reward applies — Allah does not burden a soul beyond its capacity',
       '"Pray standing; if unable, sitting; if unable, on your side." (Bukhari)',
     ],
+    context: 'The sitting positions in Salah (qa\'dah) are integral parts with specific postures. The first sitting (qa\'dah ula) occurs after two rak\'ah in 3/4 rak\'ah prayers, and the final sitting (qa\'dah akhirah) is at the end of every prayer. The Hanafi school considers the final sitting wajib.',
+    examples: [
+      { scenario: 'A person prays Dhuhr and forgets the first sitting, standing up for the 3rd rak\'ah directly.', ruling: 'Per Hanafi, they should perform sajdah sahw at the end to compensate for the missed wajib sitting.' },
+      { scenario: 'Someone is unsure about sitting posture (cross-legged vs feet tucked).', ruling: 'The Sunnah is iftirash (sitting on left foot with right foot upright). Hanafis generally sit in iftirash for all sittings.' },
+    ],
   },
   {
     id: 'faq-combining',
@@ -2805,6 +2810,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Shafi\'i/Maliki/Hanbali: permitted during travel, rain, illness (specific conditions apply)',
       'Qasr (shortening 4-rakat prayers to 2): permitted during travel of 77+ km by all madhabs',
       'Hanafi position on combining is the stricter position followed in Guyana',
+    ],
+    context: 'Combining prayers (Jam\') means performing Dhuhr and Asr together, or Maghrib and Isha together. This is relevant during travel, rain, or illness.',
+    examples: [
+      { scenario: 'A traveler driving from Georgetown to Linden during Dhuhr time.', ruling: 'Per Hanafi, combining is generally NOT permitted — each prayer should be in its own time. Only shortening (qasr) is allowed. Per Shafi\'i/Hanbali, combining is permitted during travel.' },
+      { scenario: 'Heavy rain prevents reaching the masjid at Isha time.', ruling: 'Per Shafi\'i and Hanbali, combining Maghrib and Isha is permitted due to rain. Hanafis allow delaying until the last permissible time.' },
     ],
   },
   {
@@ -2820,6 +2830,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Allah is the Most Merciful — sincere repentance + consistent effort is the path',
       'Dying with missed prayers is a serious concern — make it a priority before death',
     ],
+    context: 'Qada al-\'Umri refers to making up years of missed obligatory prayers. The Hanafi position considers this obligatory for every Muslim who missed fard prayers.',
+    examples: [
+      { scenario: 'A Muslim who became practicing at 25 but didn\'t pray from age 15-25.', ruling: 'Per Hanafi, they must make up ~10 years of missed prayers. Pray one qada prayer with each daily prayer.' },
+      { scenario: 'Someone missed hundreds of prayers and feels overwhelmed.', ruling: 'Make them up gradually — even one qada prayer per day is progress. The obligation remains until all are completed.' },
+    ],
   },
   {
     id: 'faq-witr-optional',
@@ -2831,6 +2846,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Shafi\'i/Maliki/Hanbali: Sunnah Mu\'akkadah — highly emphasised, almost obligatory in practice',
       'The Prophet ﷺ never once left Witr — travelling or at home. This alone tells you its importance.',
       '"Make Witr the last of your night prayers." (Bukhari, Muslim)',
+    ],
+    context: 'Witr prayer is performed after Isha as the last prayer of night. The Hanafi school uniquely classifies it as wajib (necessary), more emphasized than sunnah but less than fard. Other schools classify it as sunnah mu\'akkadah.',
+    examples: [
+      { scenario: 'A person prays Isha but skips Witr.', ruling: 'Per Hanafi, deliberately leaving Witr is sinful — they must make it up. Per Shafi\'i/Maliki/Hanbali, leaving it is disliked but not sinful.' },
+      { scenario: 'A traveler shortening prayers wonders about Witr.', ruling: 'Witr is not shortened during travel. It remains 3 rak\'ah per Hanafi.' },
     ],
   },
   {
@@ -2844,6 +2864,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Trimming to exactly one fist-length is permitted; keeping it longer is mustahabb',
       '"Trim the moustache and let the beard grow, be different from the polytheists." (Bukhari, Muslim)',
       'Shaving the beard is an affront to masculinity — the Prophet ﷺ cursed men who imitate women (GII Halal-Haram book)',
+    ],
+    context: 'Growing a beard is wajib in Hanafi and Hanbali schools based on \'Trim the mustache and grow the beard\' (Bukhari & Muslim). Minimum length per Hanafi scholars is one fist-length.',
+    examples: [
+      { scenario: 'A man trims his beard to less than a fist length.', ruling: 'Per Hanafi/Hanbali, this is impermissible — the minimum is one fist-length. Per Shafi\'i, it is makruh to shave but length is not strictly prescribed.' },
+      { scenario: 'An employer requires clean-shaven appearance.', ruling: 'Scholars advise negotiating. If forced, some apply darurah (necessity), but seeking alternative employment is recommended.' },
     ],
   },
   {
@@ -2860,6 +2885,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Henna (mehndi) does NOT create a barrier — it stains the skin/nail but water passes through. Henna is permissible.',
       'Acrylic/gel nails: same ruling as nail polish — must be removed before wudu/ghusl as they create a barrier',
     ],
+    context: 'Traditional nail polish forms a waterproof barrier preventing water from reaching the nail in wudu/ghusl. Since water must reach every part of hands and feet, nail polish invalidates wudu — consensus of all four madhabs.',
+    examples: [
+      { scenario: 'A woman applies regular nail polish then makes wudu.', ruling: 'Her wudu is invalid as water cannot reach the nail bed. She must remove polish before wudu — all four madhabs agree.' },
+      { scenario: 'Someone asks about \'breathable\' or \'halal\' nail polish.', ruling: 'Scholars are divided. If the polish truly allows water through (verified independently), some scholars permit it, but many remain cautious.' },
+    ],
     note: 'This applies to men as well (for any coatings on hands/feet) — any barrier preventing water from reaching the skin invalidates wudu.',
   },
   {
@@ -2874,6 +2904,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'The safest approach: pour water generously over the head, massage the roots, and ensure thorough wetting',
       'Umm Salamah asked the Prophet ﷺ: "I am a woman with thick braided hair — should I undo them for ghusl?" He ﷺ said: "No, it suffices for you to throw three handfuls of water over your head, then pour water over yourself and you are purified." (Muslim)',
       'This ruling encourages ease — Islam does not intend hardship in purification',
+    ],
+    context: 'In ghusl, water must reach the roots of all hair. For women\'s head hair, the Hanafi school provides an easier ruling for braided/long hair.',
+    examples: [
+      { scenario: 'A woman with thick braided hair needs ghusl.', ruling: 'Per Hanafi, she does NOT need to unbraid — water must reach the roots but not soak all hair. Pour water over head three times. Per Shafi\'i, every strand must be wet.' },
+      { scenario: 'A man with thick beard performing ghusl.', ruling: 'Water must reach skin underneath the beard — all madhabs require water to penetrate to roots of facial hair during ghusl.' },
     ],
   },
   {
@@ -2902,7 +2937,12 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Listening to music that contains immoral content: haram regardless of the instrument debate — the content matters',
       'Music that leads to neglecting Salah, Quran, or other obligations: haram by consequence',
     ],
-    note: 'This is a topic with genuine scholarly disagreement. The Hanafi position (predominant in Guyana) considers musical instruments haram. Consult a local scholar for personal guidance.',
+    context: 'The ruling on music is extensively debated. The Hanafi position is that musical instruments are largely prohibited. The duff (frame drum) is an exception at weddings and Eid.',
+    examples: [
+      { scenario: 'Someone listens to nasheeds with background instruments.', ruling: 'If only duff, it is permissible per all madhabs. With other instruments, Hanafi/Hanbali consider it impermissible, while some Shafi\'i/Maliki scholars allow it if content is wholesome.' },
+      { scenario: 'Wedding celebration with music and drums.', ruling: 'The duff is explicitly permitted at weddings per authentic hadith. Other instruments are debated — strict Hanafi position prohibits them.' },
+    ],
+    note: 'The prohibition primarily concerns musical instruments, not the human voice. Nasheeds without instruments are permissible by consensus. The duff is the established exception.',
   },
   {
     id: 'qa-blood-tests-fasting',
@@ -2914,6 +2954,10 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Drawing blood for blood tests does NOT break the fast.',
       'Blood donation while fasting does NOT break the fast.',
       'However, drawing so much blood that it weakens the body is Makruh (disliked).',
+    ],
+    context: 'Blood tests extract blood from the body. Since this removes something rather than introducing it, it does not break the fast per the majority of scholars.',
+    examples: [
+      { scenario: 'A fasting person goes for a routine blood test during Ramadan.', ruling: 'The fast is valid per all four madhabs, as long as the person does not become excessively weak.' },
     ],
     madhab: 'Hanafi (Fatawaa Darul Uloom Zakari\'yya 3/287)',
     note: 'Source: Jami\'yyatul Ulamaa Guyana — Fatwa Department (Darul Iftaa & Irshad Guyana)',
@@ -2928,6 +2972,11 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Administering medication via an injection does NOT break the fast.',
       'Being vaccinated while fasting does NOT break the fast.',
       'However, if the injection is such that the medication reaches directly to the brain or the intestines, the fast WILL break.',
+    ],
+    context: 'Injections while fasting depend on the type. Non-nutritive injections (insulin, vaccines) do not break the fast per Hanafi position. IV drips with glucose or nutrients do break it.',
+    examples: [
+      { scenario: 'A diabetic takes insulin injection during Ramadan while fasting.', ruling: 'The fast remains valid. Insulin is non-nutritive and does not reach the stomach.' },
+      { scenario: 'A patient receives IV drip with glucose/saline.', ruling: 'Per majority of Hanafi scholars, IV drips with nutrients break the fast as they nourish the body.' },
     ],
     madhab: 'Hanafi (Kitaabul Masaill 2/154)',
     note: 'Source: Jami\'yyatul Ulamaa Guyana — Fatwa Department (Darul Iftaa & Irshad Guyana)',

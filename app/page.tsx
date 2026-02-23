@@ -620,6 +620,28 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* ========== EID COUNTDOWN ========== */}
+      {ramadan && (() => {
+        const eid = new Date('2026-03-20')
+        const todayEid = new Date()
+        todayEid.setHours(0,0,0,0)
+        const diff = Math.ceil((eid.getTime() - todayEid.getTime()) / (1000*60*60*24))
+        if (diff <= 0 || diff > 30) return null
+        return (
+          <div className="mx-4 mt-4">
+            <div className="glass-amber rounded-2xl px-4 py-3 flex items-center gap-3">
+              <span className="text-2xl">🌙</span>
+              <div>
+                <p className="text-xs font-bold text-amber-300">
+                  {diff === 1 ? 'Eid al-Fitr is TOMORROW! 🎉' : `${diff} days until Eid al-Fitr`}
+                </p>
+                <p className="text-[10px] text-amber-400/70">1 Shawwal 1447 · March 20, 2026</p>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
       {/* ========== QUICK ACTIONS ========== */}
       <div className="px-4 pt-6">
         <div className="section-label mb-3">

@@ -12,6 +12,11 @@ const SADAQATUL_FITR_GYD = 2_000      // per person
 const FIDYA_GYD = 60_000               // per fast missed
 const ZAKAT_FITR_DEFAULT = SADAQATUL_FITR_GYD  // $2,000 GYD — official 2026 value (Darul Uloom)
 
+const GOLD_PRICE_GYD = 800  // per gram — approximate
+const GOLD_NISAB_GRAMS = 85
+const SILVER_NISAB_GRAMS = 595
+const GOLD_NISAB_GYD = GOLD_NISAB_GRAMS * GOLD_PRICE_GYD
+
 const ASNAF = [
   { name: 'Al-Fuqara (The Poor)', desc: 'Those with very little or no income' },
   { name: 'Al-Masakin (The Needy)', desc: 'Those who cannot meet basic needs' },
@@ -36,13 +41,22 @@ export default function ZakatPage() {
   const [debts, setDebts] = useState('')
   const [familyMembers, setFamilyMembers] = useState('1')
   const [fitrAmount, setFitrAmount] = useState(String(ZAKAT_FITR_DEFAULT))
+  const [businessAssets, setBusinessAssets] = useState('')
+  const [receivables, setReceivables] = useState('')
+  const [goldGrams, setGoldGrams] = useState('')
+  const [silverGrams, setSilverGrams] = useState('')
+  const [activeTab, setActiveTab] = useState('cash')
 
+  const goldValue = (Number(goldGrams) || 0) * GOLD_PRICE_GYD + (Number(gold) || 0)
+  const silverValue = (Number(silverGrams) || 0) * 10 + (Number(silver) || 0)
   const totalAssets =
     (Number(cash) || 0) +
     (Number(savings) || 0) +
-    (Number(gold) || 0) +
-    (Number(silver) || 0) +
-    (Number(investments) || 0)
+    goldValue +
+    silverValue +
+    (Number(investments) || 0) +
+    (Number(businessAssets) || 0) +
+    (Number(receivables) || 0)
 
   const totalDebts = Number(debts) || 0
   const zakatableWealth = Math.max(0, totalAssets - totalDebts)
@@ -51,15 +65,6 @@ export default function ZakatPage() {
   const members = Math.max(1, Number(familyMembers) || 1)
   const fitr = Number(fitrAmount) || ZAKAT_FITR_DEFAULT
   const totalFitr = members * fitr
-
-  const fields = [
-    { label: 'Cash in Hand', value: cash, set: setCash },
-    { label: 'Bank Savings', value: savings, set: setSavings },
-    { label: 'Gold Value', value: gold, set: setGold },
-    { label: 'Silver Value', value: silver, set: setSilver },
-    { label: 'Investments', value: investments, set: setInvestments },
-    { label: 'Outstanding Debts', value: debts, set: setDebts },
-  ]
 
   return (
     <div className="min-h-screen bg-[#0a0b14] pb-nav">
@@ -83,28 +88,136 @@ export default function ZakatPage() {
           <p className="mt-2 text-[10px] text-gray-600">Based on 19.687 silver — set by Maulana Badrudeen Khan & Mufti Irfan Qasmi (Darul Uloom East St., Feb 2026)</p>
         </div>
 
-        {/* Input fields */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">Zakat al-Mal (Wealth)</h3>
-          <div className="space-y-4">
-            {fields.map((field) => (
-              <div key={field.label}>
-                <label className="mb-1.5 block text-xs font-medium text-gray-400">
-                  {field.label}
-                </label>
+        {/* Asset Tabs */}
+        <div className="flex gap-2 overflow-x-auto scrollbar-none">
+          {[
+            { key: 'cash', label: 'Cash & Savings' },
+            { key: 'gold', label: 'Gold' },
+            { key: 'silver', label: 'Silver' },
+            { key: 'business', label: 'Business' },
+            { key: 'other', label: 'Other' },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                activeTab === tab.key ? 'bg-emerald-600 text-white' : 'bg-gray-800 text-gray-500'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4 space-y-4">
+          {activeTab === 'cash' && (
+            <>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Cash & Savings</h3>
+              {[
+                { label: 'Cash in Hand', value: cash, set: setCash },
+                { label: 'Bank Savings', value: savings, set: setSavings },
+                { label: 'Investments', value: investments, set: setInvestments },
+              ].map(field => (
+                <div key={field.label}>
+                  <label className="mb-1.5 block text-xs font-medium text-gray-400">{field.label}</label>
+                  <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                    <span className="text-xs text-gray-500">GYD</span>
+                    <input type="number" value={field.value} onChange={(e) => field.set(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {activeTab === 'gold' && (
+            <>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Gold</h3>
+              <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-3">
+                <p className="text-[11px] text-amber-400">Gold Nisab: {GOLD_NISAB_GRAMS}g × GYD {GOLD_PRICE_GYD}/g = {fmtGYD(GOLD_NISAB_GYD)}</p>
+                <p className="text-[10px] text-gray-500 mt-1">Gold price varies — verify with current rate</p>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Gold Weight (grams)</label>
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                  <span className="text-xs text-gray-500">g</span>
+                  <input type="number" value={goldGrams} onChange={(e) => setGoldGrams(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                </div>
+                {Number(goldGrams) > 0 && <p className="mt-1 text-[11px] text-gray-500">Value: {fmtGYD((Number(goldGrams) || 0) * GOLD_PRICE_GYD)}</p>}
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Gold Value (if known, GYD)</label>
                 <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
                   <span className="text-xs text-gray-500">GYD</span>
-                  <input
-                    type="number"
-                    value={field.value}
-                    onChange={(e) => field.set(e.target.value)}
-                    placeholder="0"
-                    className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none"
-                  />
+                  <input type="number" value={gold} onChange={(e) => setGold(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
                 </div>
               </div>
-            ))}
+            </>
+          )}
+
+          {activeTab === 'silver' && (
+            <>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Silver</h3>
+              <div className="rounded-xl bg-gray-500/5 border border-gray-500/20 p-3">
+                <p className="text-[11px] text-gray-400">Silver Nisab: {SILVER_NISAB_GRAMS}g of silver</p>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Silver Weight (grams)</label>
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                  <span className="text-xs text-gray-500">g</span>
+                  <input type="number" value={silverGrams} onChange={(e) => setSilverGrams(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Silver Value (if known, GYD)</label>
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                  <span className="text-xs text-gray-500">GYD</span>
+                  <input type="number" value={silver} onChange={(e) => setSilver(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'business' && (
+            <>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Business Assets</h3>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Total Stock/Merchandise Value</label>
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                  <span className="text-xs text-gray-500">GYD</span>
+                  <input type="number" value={businessAssets} onChange={(e) => setBusinessAssets(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'other' && (
+            <>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Receivables & Debts</h3>
+              <p className="text-xs text-gray-500">Money owed to you that you expect to receive. Exclude doubtful debts.</p>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-gray-400">Money Owed to You</label>
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+                  <span className="text-xs text-gray-500">GYD</span>
+                  <input type="number" value={receivables} onChange={(e) => setReceivables(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Debts - always shown */}
+          <div className="pt-4 border-t border-gray-800">
+            <label className="mb-1.5 block text-xs font-medium text-gray-400">Outstanding Debts (deducted)</label>
+            <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#0a0b14] px-4 py-3">
+              <span className="text-xs text-gray-500">GYD</span>
+              <input type="number" value={debts} onChange={(e) => setDebts(e.target.value)} placeholder="0" className="w-full bg-transparent text-sm text-[#f9fafb] placeholder-gray-600 outline-none" />
+            </div>
           </div>
+        </div>
+
+        <div className="rounded-xl bg-gray-800/50 border border-gray-700/50 p-3">
+          <p className="text-[10px] text-gray-500 leading-relaxed">
+            This calculator provides an estimate. Consult a scholar for complex situations including business partnerships, agricultural produce, or cryptocurrency.
+          </p>
         </div>
 
         {/* Results */}
