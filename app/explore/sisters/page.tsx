@@ -90,7 +90,7 @@ export default function SistersPage() {
         subtitle="For Muslim Women"
         gradient="from-rose-950 to-pink-900"
         showBack
-        compact
+        stars
         heroTheme="sisters"
       />
 

@@ -88,7 +88,7 @@ export default function NewToIslamPage() {
         subtitle="Your Journey Begins Here"
         gradient="from-emerald-950 to-teal-900"
         showBack
-        compact
+        stars
         heroTheme="prayer"
       />
 
