@@ -289,7 +289,8 @@ function FiqhHubContent() {
       <div className="px-4 pt-6 pb-4">
         <p className="text-[10px] leading-relaxed text-gray-600 text-center">
           This guide presents the Hanafi position as primary (predominant madhab in Guyana) with notes
-          on other schools. Source: Al Fiqh-ul Muyassar by Maulana Shafeequr Rahman An-Nadvi.
+          on other schools. Sources: Al Fiqh-ul Muyassar (Maulana Shafeequr Rahman An-Nadvi),
+          Islamic Jurisprudence I &amp; II (GII), Halal and Haram in Everyday Life (GII).
           For specific personal rulings, consult a qualified scholar (Mufti/Aalim).
         </p>
       </div>
