@@ -819,11 +819,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <p className="text-center text-[10px] text-gray-600 mb-3">Jump straight to what matters</p>
 
               <button
-                onClick={finish}
+                onClick={() => {
+                  setItem(KEYS.TOUR_PENDING, true)
+                  finish()
+                }}
                 className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
               >
-                Open MasjidConnect GY
-                <ChevronRight className="h-5 w-5" />
+                Take the App Tour 🧭
+              </button>
+              <button
+                onClick={finish}
+                className="mt-2 text-xs text-gray-500 active:text-gray-300"
+              >
+                Skip — go straight in
               </button>
             </div>
           </div>

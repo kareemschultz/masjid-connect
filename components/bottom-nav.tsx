@@ -27,10 +27,17 @@ export function BottomNav() {
               ? pathname === '/'
               : pathname.startsWith(tab.href)
 
+            const tourId = tab.href === '/' ? 'nav-home'
+              : tab.href === '/quran' ? 'nav-quran'
+              : tab.href === '/tracker' ? 'nav-tracker'
+              : tab.href === '/masjids' ? 'nav-masjids'
+              : 'nav-explore'
+
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
+                data-tour={tourId}
                 className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-1.5 transition-all duration-300 ${
                   isActive ? 'text-emerald-400' : 'text-gray-600 active:scale-90'
                 }`}
