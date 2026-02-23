@@ -62,7 +62,6 @@ export default function CommunityPage() {
         subtitle="Connect with Muslims in GY"
         gradient="from-violet-900 to-purple-900"
         showBack
-        compact
         heroTheme="community"
       />
 

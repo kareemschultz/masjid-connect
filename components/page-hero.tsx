@@ -16,8 +16,6 @@ interface PageHeroProps {
   action?: ReactNode
   /** Show animated star field */
   stars?: boolean
-  /** Compact mode — slim header for hub/nav pages visited frequently */
-  compact?: boolean
   /** Page-specific background animation theme */
   heroTheme?: HeroTheme
 }
@@ -67,40 +65,8 @@ function StarField() {
   )
 }
 
-export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, action, stars, compact, heroTheme }: PageHeroProps) {
+export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, action, stars, heroTheme }: PageHeroProps) {
   const router = useRouter()
-
-  // ─── Compact variant — slim header for hub/nav pages ─────────────────────
-  if (compact) {
-    return (
-      <div className={`relative overflow-hidden bg-gradient-to-br ${gradient}`}>
-        <div className="islamic-pattern absolute inset-0 opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0b14]" />
-        {heroTheme && <HeroAnimation theme={heroTheme} />}
-        <div className="relative flex items-center gap-3 px-5 py-4" style={{ paddingTop: 'max(1rem, calc(env(safe-area-inset-top) + 0.5rem))' }}>
-          {showBack && (
-            <button
-              onClick={() => router.back()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/80 transition-transform active:scale-90"
-              aria-label="Go back"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-          )}
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md">
-            <Icon className="h-5 w-5 text-white" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-extrabold tracking-tight text-white leading-tight">{title}</h1>
-            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50 leading-tight mt-0.5">{subtitle}</p>
-          </div>
-          {action && <div className="shrink-0">{action}</div>}
-        </div>
-      </div>
-    )
-  }
-
-  // ─── Full variant ─────────────────────────────────────────────────────────
   return (
     <div className={`relative overflow-hidden bg-gradient-to-br ${gradient}`}>
       {/* Decorative blurred orbs */}
