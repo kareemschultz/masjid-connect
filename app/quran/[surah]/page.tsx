@@ -284,7 +284,7 @@ export default function SurahReaderPage() {
   if (!surah) return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Surah not found</div>
 
   return (
-    <div ref={scrollRef} className="min-h-screen bg-background pb-40">
+    <div ref={scrollRef} className="min-h-screen bg-background pb-56">
       <PageHero
         icon={BookOpen}
         title={surah.englishName}
@@ -462,7 +462,7 @@ export default function SurahReaderPage() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-36 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 shadow-lg transition-all active:scale-90"
+          className="fixed right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 shadow-lg transition-all active:scale-90" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 120px)' }}
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-5 w-5" />
@@ -470,7 +470,7 @@ export default function SurahReaderPage() {
       )}
 
       {/* Playback controls */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-40 border-t border-gray-800 bg-gray-950/95 px-2 py-2 backdrop-blur-lg">
+      <div className="fixed left-0 right-0 z-[65] border-t border-gray-800 bg-gray-950/95 px-2 py-2 backdrop-blur-lg" style={{ bottom: 'calc(max(env(safe-area-inset-bottom, 8px), 8px) + 52px)' }}>
         {/* Reciter button row */}
         <div className="mx-auto flex max-w-lg items-center justify-between px-2 pb-1.5">
           <button
