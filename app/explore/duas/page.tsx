@@ -554,6 +554,139 @@ const CATEGORIES: Category[] = [
       },
     ],
   },
+  // ── Wudu ────────────────────────────────────────────────────────────────────
+  {
+    id: 'wudu',
+    label: 'Wudu',
+    icon: '💧',
+    group: 'Daily Routines',
+    duas: [
+      {
+        arabic: 'بِسْمِ اللَّهِ',
+        transliteration: 'Bismillah',
+        meaning: 'In the name of Allah.',
+        source: 'Abu Dawud',
+        note: 'Saying Bismillah before wudu is Sunnah. Wudu without it is valid.',
+      },
+      {
+        arabic: 'أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ',
+        transliteration: 'Ashhadu an la ilaha illallahu wahdahu la shareeka lah, wa ashhadu anna Muhammadan abduhu wa rasooluh',
+        meaning: 'I bear witness that there is no god but Allah alone, with no partner, and I bear witness that Muhammad is His slave and messenger.',
+        source: 'Muslim',
+        note: 'Whoever says this after wudu, all 8 gates of Paradise are opened for them.',
+      },
+      {
+        arabic: 'اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ',
+        transliteration: "Allahumma-j'alnee minat-tawwabeena waj-alnee minal-mutatahhireen",
+        meaning: 'O Allah, make me among those who repent and among those who purify themselves.',
+        source: 'Tirmidhi',
+      },
+    ],
+  },
+  // ── Clothing ────────────────────────────────────────────────────────────────
+  {
+    id: 'clothing',
+    label: 'Clothing',
+    icon: '👕',
+    group: 'Daily Routines',
+    duas: [
+      {
+        arabic: 'اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيهِ أَسْأَلُكَ مِنْ خَيْرِهِ وَخَيْرِ مَا صُنِعَ لَهُ وَأَعُوذُ بِكَ مِنْ شَرِّهِ وَشَرِّ مَا صُنِعَ لَهُ',
+        transliteration: 'Allahumma lakal hamdu Anta kasawtaneehi, as-aluka min khayrihi wa khayri ma suni-a lahu, wa a-oodhu bika min sharrihi wa sharri ma suni-a lahu',
+        meaning: 'O Allah, all praise is due to You for clothing me with this. I ask You for its good and the good for which it was made, and I seek Your protection from its evil.',
+        source: 'Abu Dawud, Tirmidhi',
+      },
+      {
+        arabic: 'بِسْمِ اللَّهِ',
+        transliteration: 'Bismillah',
+        meaning: 'In the name of Allah.',
+        source: 'Adab al-Mufrad',
+        note: 'Say Bismillah when putting on any garment. Begin with the right side.',
+      },
+    ],
+  },
+  // ── Looking in Mirror ───────────────────────────────────────────────────────
+  {
+    id: 'mirror',
+    label: 'Looking in Mirror',
+    icon: '🪞',
+    group: 'Daily Routines',
+    duas: [
+      {
+        arabic: 'اللَّهُمَّ أَنْتَ حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي',
+        transliteration: 'Allahumma anta hassanta khalqee fa-hassin khuluqee',
+        meaning: 'O Allah, You have made my physical form beautiful, so beautify my character too.',
+        source: 'Ahmad, Ibn Hibban',
+        note: 'Attributed to the Prophet \uFDFA. Graded hasan by scholars.',
+      },
+    ],
+  },
+  // ── Anger ───────────────────────────────────────────────────────────────────
+  {
+    id: 'anger',
+    label: 'Anger',
+    icon: '😤',
+    group: 'Forgiveness & Mercy',
+    duas: [
+      {
+        arabic: 'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ',
+        transliteration: 'A-oodhu billahi minash-shaytanir-rajeem',
+        meaning: 'I seek protection with Allah from the accursed Shaytan.',
+        source: 'Bukhari & Muslim',
+        note: 'The Prophet \uFDFA said: If standing and angry, sit. If anger does not leave, lie down.',
+      },
+      {
+        arabic: 'رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي',
+        transliteration: 'Rabbish-rah lee sadree wa yassir lee amree',
+        meaning: 'My Lord, expand my chest and ease my affairs.',
+        source: 'Quran 20:25-26',
+      },
+    ],
+  },
+  // ── Seeking Knowledge ───────────────────────────────────────────────────────
+  {
+    id: 'knowledge',
+    label: 'Seeking Knowledge',
+    icon: '📖',
+    group: 'Prayer & Worship',
+    duas: [
+      {
+        arabic: 'اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي وَعَلِّمْنِي مَا يَنْفَعُنِي وَزِدْنِي عِلْمًا',
+        transliteration: 'Allahumma-nfa-nee bima allamtanee, wa-allim-nee ma yanfa-unee, wa-zidnee ilma',
+        meaning: 'O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.',
+        source: 'Tirmidhi, Ibn Majah',
+      },
+      {
+        arabic: 'رَبِّ زِدْنِي عِلْمًا',
+        transliteration: 'Rabbi zidnee ilma',
+        meaning: 'My Lord, increase me in knowledge.',
+        source: 'Quran 20:114',
+      },
+    ],
+  },
+  // ── Istighfar ───────────────────────────────────────────────────────────────
+  {
+    id: 'istighfar',
+    label: 'Istighfar',
+    icon: '🤍',
+    group: 'Forgiveness & Mercy',
+    duas: [
+      {
+        arabic: 'أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ',
+        transliteration: 'Astaghfirullahil-Adheem alladhee la ilaha illa Huwal-Hayyul-Qayyoom wa atoobu ilayh',
+        meaning: 'I seek forgiveness from Allah the Almighty, besides Whom there is none worthy of worship, the Ever-Living, the Self-Sustaining, and I turn to Him in repentance.',
+        source: 'Abu Dawud, Tirmidhi',
+        note: 'Whoever says this, Allah will forgive them even if they have fled from battle.',
+      },
+      {
+        arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+        transliteration: "Allahumma Anta Rabbee la ilaha illa Anta, khalaqtanee wa ana abduk, wa ana ala ahdika wa wa-dika mastata-t, a-oodhu bika min sharri ma sana-t, aboo-u laka bini-matika alayya, wa aboo-u laka bi-dhanbee faghfir lee fa-innahu la yaghfirudhdhunoba illa Ant",
+        meaning: 'O Allah, You are my Lord, there is no god but You. You created me and I am Your servant. I abide by Your covenant and promise as best I can. I seek protection from the evil I have done. I acknowledge Your favour upon me and acknowledge my sin — so forgive me, for none forgives sins but You.',
+        source: 'Bukhari',
+        note: 'Whoever says this in the morning with conviction and dies that day, will be among the people of Paradise. Same for the evening.',
+      },
+    ],
+  },
 ]
 
 // ─── Groups ───────────────────────────────────────────────────────────────────
