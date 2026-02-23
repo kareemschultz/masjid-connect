@@ -203,3 +203,71 @@ docker network connect kt-net-databases kt-masjidconnect-prod
 
 *This file should be read at the start of every dev session.*
 *Update the checkboxes as tasks complete.*
+
+---
+
+## 📝 ITEMS FOUND IN REVIEW (added after full message audit, Feb 22 ~8:45 PM)
+
+*These were mentioned in voice notes / captions but not captured in original ROADMAP.*
+
+### From msg 7480 — "Incorporate into the body system"
+Master Kareem asked for the Tracker to go beyond fasting/prayer into broader ibadah & wellness:
+- [ ] **Quran daily log** — pages read today, cumulative progress toward Khatam
+- [ ] **Sadaqah/charity log** — amount given (GYD), type (Sadaqah, Zakat, Sadaqah Jariyah)
+- [ ] **Good deeds counter** — custom daily deeds to tick off (e.g., visited sick person, fed someone)
+- [ ] **Sleep tracker** — hours of sleep (especially important during Ramadan; Suhoor alarm integration)
+- [ ] **Water intake** — glasses drunk during non-fasting hours
+- [ ] **Adhkar completion** — did I complete morning adhkar today? Evening adhkar?
+- [ ] **Istighfar counter** — how many times said Astaghfirullah today
+All to live under Tracker tab as additional cards/sections.
+
+### From msg 7474 — "Remember we had that so we can determine when that person fast started"
+The moon sighting preference (CIOG/Saudi) should feed into the Fasting Tracker:
+- [ ] **Ramadan start auto-detect** — when user selects CIOG sighting in onboarding, 
+  automatically set Ramadan 1 based on CIOG announcement date (Feb 28 or Mar 1, 2026).
+  When Saudi selected, use Saudi announcement date.
+  Store as `ramadan_start` in localStorage (already partially wired from v1).
+- [ ] **Fasting streak calculation** — start counting from the correct Ramadan Day 1 per sighting
+
+### From msg 7482 — "Relative to each palette" (background animations)
+The star field is on Explore/Quran heroes only. Request was for THEMED animations per section:
+- [ ] **Ramadan page** — animated crescent moon + stars floating gently
+- [ ] **Quran pages** — subtle arabesque/geometric pattern animation
+- [ ] **Duas page** — soft calligraphy stroke animation or flowing lines  
+- [ ] **Tasbih page** — gentle pulsing ring/geometric tessellation
+- [ ] **New to Islam** — sunrise/dawn gradient animation (hope/new beginning)
+- [ ] **Sisters section** — soft floral or flowing geometric pattern
+- [ ] **Masjid directory** — subtle dome/arch silhouette pattern
+- [ ] **Tracker** — growing plant/progress animation theme
+Implementation: CSS-only keyframe animations on `::before` pseudo-elements or absolutely 
+positioned SVG patterns with opacity animation. Keep subtle — not distracting.
+
+### From msg 7469 — "We had way more madrasa stuff"
+Beyond Qaida, v1 had or was planned to have:
+- [ ] **How to make Wudu** ✅ done (inside Learn to Pray page)
+- [ ] **Stories of the Prophets** (fully written content, not just a card)
+- [ ] **Seerah (Life of the Prophet)** ﷺ — summary by era: Birth, Makkah, Hijra, Madinah
+- [ ] **Islamic etiquette (Adab)** — manners when eating, entering home, greeting, sneezing
+- [ ] **Halal & Haram basics** — what's permissible/forbidden (food, finance, speech, relations)
+- [ ] **Death & Afterlife** — Barzakh, Day of Judgement, Jannah, Jahannam (in plain terms)
+- [ ] **Children's section** — simplified content for kids (basic Arabic letters fun mode, colouring-style SVG icons)
+
+### From msg 7481 — "Jumu'ah stuff"
+The check-in has a Friday banner. "Jumu'ah stuff" may also mean:
+- [ ] **Jumu'ah prep checklist** — Thursday evening reminder, ghusl, Surah Al-Kahf, early arrival
+- [ ] **Jumu'ah khutbah log** — what topic was discussed (personal note)
+- [ ] **Surah Al-Kahf reminder** — push notification Thursday evening/Friday morning
+
+### From msg 7483 — "Log what we've done today + update the docs"  
+- [x] Session log written to KareTech Vault ✅
+- [x] CLAUDE_CODE_CONTEXT.md created ✅
+- [x] ROADMAP.md created ✅
+- [ ] **README.md** for the GitHub repo still needs updating (probably shows old v0.dev placeholder)
+
+### Additional from screenshots / captions
+- From iftaar screenshot (original issue): iftaar page masjid cards white/light — ✅ FIXED
+- Submit form native select — ✅ FIXED (dark glass SelectModal)
+- Explore bottom cards cropped (Community, New to Islam partially cut off) — ✅ FIXED (pb-nav)
+- Browser URL bar visible in onboarding (PWA not installed) — inherent browser behaviour, 
+  mitigated by prominent "Install App" PWA prompt showing ABOVE the nav
+
