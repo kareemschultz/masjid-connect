@@ -55,6 +55,7 @@ const CHECKLIST_ITEMS = [
   { key: 'charity', label: 'Charity Given', icon: '💝' },
   { key: 'dhikr', label: 'Dhikr Done', icon: '📿' },
   { key: 'sunnah', label: 'Sunnah Prayers', icon: '🕌' },
+  { key: 'qaida_practiced', label: 'Qaida Practiced', icon: '📚' },
 ]
 
 const DAILY_VERSES = [
@@ -371,6 +372,16 @@ export default function HomePage() {
       setPoints(newPoints)
       setItem(KEYS.POINTS, newPoints)
     }
+
+    // Special sync for Qaida
+    if (key === 'qaida_practiced') {
+      const todayStr = new Date().toISOString().split('T')[0]
+      const qaidaLog = getItem<Record<string, { lesson: number; completed: boolean }>>(KEYS.QAIDA_LOG, {})
+      const current = qaidaLog[todayStr] || { lesson: 1, completed: false }
+      qaidaLog[todayStr] = { ...current, completed: newVal }
+      setItem(KEYS.QAIDA_LOG, qaidaLog)
+    }
+
     // Fire-and-forget sync to API
     fetch('/api/tracking', {
       method: 'POST',

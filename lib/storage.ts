@@ -70,6 +70,7 @@ export const KEYS = {
   HOME_MASJID: 'home_masjid_id',
   QURAN_TRANSLATION: 'quran_translation',
   TOUR_PENDING: 'app_tour_pending',
+  QAIDA_LOG: 'qaida_log',
   QURAN_SCRIPT: 'quran_script',
   QURAN_TAJWEED: 'quran_tajweed_colors',
   PRAYER_OFFSET: 'prayer_offset',

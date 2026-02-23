@@ -31,6 +31,7 @@ type SunnahLog = Record<string, Record<string, boolean>>
 type NawafilLog = Record<string, Record<string, number>>
 type QadaEntry = { prayer: 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha'; count: number }
 type IstighfarLog = Record<string, number>
+type QaidaLog = Record<string, { lesson: number; completed: boolean }>
 
 /* ─── helpers ─── */
 function dateKey(d: Date): string {
@@ -116,6 +117,8 @@ export default function TrackerPage() {
   const [sunnahLog, setSunnahLog] = useState<SunnahLog>({})
   const [nawafilLog, setNawafilLog] = useState<NawafilLog>({})
   const [qadaLog, setQadaLog] = useState<QadaEntry[]>([])
+  const [qaidaLog, setQaidaLog] = useState<QaidaLog>({})
+  const [qaidaLesson, setQaidaLesson] = useState<number>(1)
   const [rewardToast, setRewardToast] = useState<string | null>(null)
 
   /* ── toggle section helper ── */
@@ -169,6 +172,12 @@ export default function TrackerPage() {
     setSunnahLog(getItem<SunnahLog>(KEYS.SUNNAH_LOG, {}))
     setNawafilLog(getItem<NawafilLog>(KEYS.NAWAFIL_LOG, {}))
     setQadaLog(getItem<QadaEntry[]>('qada_log', []))
+    
+    const savedQaidaLog = getItem<QaidaLog>(KEYS.QAIDA_LOG, {})
+    setQaidaLog(savedQaidaLog)
+    // Default to the last practiced lesson if available
+    const lastLog = Object.values(savedQaidaLog).sort((a, b) => b.lesson - a.lesson)[0]
+    setQaidaLesson(lastLog ? lastLog.lesson : 1)
   }, [])
 
   /* ── prayer toggle ── */
@@ -310,6 +319,23 @@ export default function TrackerPage() {
     })
   }, [today])
 
+  /* ── Qaida helpers ── */
+  const qaidaToday = qaidaLog[today] ?? { lesson: qaidaLesson, completed: false }
+  const toggleQaida = useCallback(() => {
+    setQaidaLog(prev => {
+      const current = prev[today] ?? { lesson: qaidaLesson, completed: false }
+      const newStatus = !current.completed
+      const updated = { ...prev, [today]: { lesson: qaidaLesson, completed: newStatus } }
+      setItem(KEYS.QAIDA_LOG, updated)
+      
+      // Sync with checklist for home page
+      const checklist = getItem<Record<string, boolean>>(KEYS.CHECKLIST, {})
+      setItem(KEYS.CHECKLIST, { ...checklist, qaida_practiced: newStatus })
+      
+      return updated
+    })
+  }, [today, qaidaLesson])
+
   /* ── Sunnah helpers ── */
   const sunnahToday = sunnahLog[today] ?? {}
   const sunnahCount = SUNNAH_PRAYERS.filter(p => sunnahToday[p.key]).length
@@ -423,6 +449,7 @@ export default function TrackerPage() {
   const todayLog = log[today] || ({} as Record<PrayerName, boolean>)
   const todayCount = PRAYER_NAMES.filter((p) => todayLog[p]).length
   const fardPoints = todayCount * 20 // 20 per fard prayer
+  const qaidaPoints = useMemo(() => qaidaToday.completed ? 10 : 0, [qaidaToday.completed])
 
   const streak = useMemo(() => {
     let count = 0
@@ -528,7 +555,7 @@ export default function TrackerPage() {
           <p className="text-[9px] text-gray-500">Sunnah + Nawafil pts</p>
         </div>
         <div className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-center">
-          <p className="text-sm font-bold text-amber-400">{fardPoints + sunnahPoints}</p>
+          <p className="text-sm font-bold text-amber-400">{fardPoints + sunnahPoints + qaidaPoints}</p>
           <p className="text-[9px] text-gray-500">Total today</p>
         </div>
       </div>
@@ -906,6 +933,62 @@ export default function TrackerPage() {
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 1.5: Noorani Qaida */}
+        <SettingGroup label="Noorani Qaida Practice" accentColor="bg-purple-500">
+          <SectionHeader
+            id="qaida"
+            emoji="📚"
+            title="Noorani Qaida"
+            summary={qaidaToday.completed ? `Lesson ${qaidaToday.lesson} done` : 'Not practiced today'}
+          />
+          {openSections.qaida && (
+            <div className="border-t border-gray-800 p-4 space-y-4">
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex w-full items-center justify-between px-2">
+                  <label className="text-[11px] font-medium text-gray-400">Current Lesson</label>
+                  <span className="text-xs font-bold text-purple-400">Lesson {qaidaLesson} of 17</span>
+                </div>
+                
+                <div className="flex w-full gap-2">
+                  <select
+                    value={qaidaLesson}
+                    onChange={(e) => setQaidaLesson(Number(e.target.value))}
+                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-gray-200 outline-none focus:border-purple-500/50"
+                  >
+                    {Array.from({ length: 17 }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        Lesson {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <button
+                    onClick={toggleQaida}
+                    className={`flex-1 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-all active:scale-95 ${
+                      qaidaToday.completed
+                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                        : 'border-gray-700 bg-gray-800/50 text-gray-400'
+                    }`}
+                  >
+                    {qaidaToday.completed ? '✓ Completed' : 'Mark Done'}
+                  </button>
+                </div>
+              </div>
+
+              <Link
+                href="/explore/madrasa/qaida"
+                className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 py-2.5 text-sm font-medium text-purple-400 transition-all active:scale-[0.98]"
+              >
+                <BookOpenIcon className="h-4 w-4" /> Go to Qaida Lesson
+              </Link>
+              
+              <p className="text-center text-[11px] text-gray-500">
+                +10 points for daily lesson practice
+              </p>
             </div>
           )}
         </SettingGroup>
