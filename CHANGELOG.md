@@ -1,5 +1,29 @@
 # Changelog
 
+## v2.8.0 — 99 Names Detail Panel (Feb 22, 2026)
+- **99 Names of Allah**: tap any name for full detail panel — explanation, Quranic reference with verse, dhikr benefit, category badge, root word
+- New `lib/asmaul-husna-detail.ts` — complete 99-entry dataset with Islamic context
+- Detail bottom sheet: body scroll lock, drag handle, teal Quran verse box, rose dhikr benefit section
+
+## v2.7.0 — GII Library + Fixes (Feb 22, 2026)
+
+### GII Islamic Library
+- **New**: Guyana Islamic Institute (GII) book library in Madrasa
+- Scribd iframe embed — reads natively within the app, no redirect to browser
+- Commentary on Aqeedah Tahawiyyah (151 pages) — live
+- Fiqh-us-Seerah (185 pages) — coming soon
+- Full-screen reader: dark app-styled header, loading spinner, Download button, Open on Scribd link
+- GII attribution card with address and contact
+
+### Fixes
+- **Fix**: @username save — `displayUsername` column was missing from DB, caused Internal Server Error on save; added via migration
+- **Fix**: Qibla compass on iOS — `requestPermission()` was called in useEffect (iOS blocks this); now shows "Enable Compass" tap button first
+- **Fix**: Noorani Qaida sheet scrolling — rebuilt as flex column with body scroll lock, save/restore scroll position on close, `overscroll-contain`
+
+### Settings
+- **New**: "Your Profile Handle" — set @username in Settings (lowercase alphanumeric + underscore)
+- Username stored via Better Auth updateUser, enforces uniqueness at DB level
+
 ## v2.6.0 — Buddy System Upgrade (Feb 22, 2026)
 
 ### Buddy System
