@@ -1,5 +1,43 @@
 # Changelog
 
+## v2.11.0 — Darul Uloom Data + Ramadan Content (Feb 23, 2026)
+
+### Critical Data Fixes
+- **FIXED**: Ramadan dates reverted to correct GIT/Darul Uloom official values (Saudi: Feb 18, CIOG: Feb 19)
+- **FIXED**: Islamic Calendar dates corrected (Laylatul Qadr Mar 10/12/14/16/18, Eid Mar 20)
+- **FIXED**: `getRamadanDay()` now reads `ramadan_start` from localStorage (supports Saudi vs CIOG)
+- **FIXED**: Moon Sighting in Settings correctly sets Feb 18 (Saudi) or Feb 19 (CIOG)
+
+### GIT Official Ramadan 1447 Timetable
+- **NEW**: `lib/ramadan-timetable.ts` — complete 30-day GIT prayer time chart + Eid day
+- All prayer times for Georgetown area (Fajr, Sunrise, Zuhr, Asr Shafi/Hanafi, Maghrib, Isha)
+- Regional time adjustments for 6 Guyana regions (-4 to +2 min)
+- Helper functions: `getTodayTimetable()`, `getRamadanDay()`, `getTodayIftaarTime()`, `getTodaySuhoorEnd()`
+
+### Darul Uloom Masjid — Full Data
+- Masjid #22 updated: full name "Darul Uloom Masjid (Islamic & Academic Institute)"
+- Address: 310 East Street, South Cummingsburg (was incorrectly "Alberttown")
+- Imam: Moulana Badrudeen Khan | Head: Moulana Badrudeen Khan
+- Taraweeh reciters: Mufti Mohamed Irfan, Hafiz Khalid Lovell, Hafiz Asif Ameer
+- Islamic Store info, D.E.H.C. halal committee, Ramadan iftaar pricing
+
+### D.E.H.C. Halal Certifications
+- **NEW**: D.E.H.C. (Darul Uloom East Street Halaal Committee) added as official authority
+- **Church's Chicken**: D.E.H.C. certified — Iftar Meal $3,500 GYD
+- **Jade's Wok Asian Cuisine**: D.E.H.C. certified — 3 locations (Giftland Mall, Amazonia Mall, West Central Mall)
+
+### Zakat Page — 2026 Official Values
+- Nisab updated: $547,298 GYD (was $1,500,000 — incorrect)
+- Sadaqatul Fitr: $2,000 GYD/person (was $500 — incorrect)
+- Fidya: $60,000 GYD/fast (new display)
+- Source: Maulana Badrudeen Khan & Mufti Irfan Qasmi, Darul Uloom East Street
+
+### New Ramadan Content Pages
+- **Factors Affecting the Fast** (`/explore/ramadan/factors`): Full reference from Darul Uloom — what invalidates vs. doesn't invalidate the fast
+- **Fidya & Missed Fasts Guide** (`/explore/ramadan/fidya`): Who's exempt, Fidya rules, Sadaqatul Fitr guide
+- **Sisters in Ramadan** (`/explore/sisters/ramadan`): 8 worship actions for menstruating women (Darul Uloom)
+- All 3 pages linked from Explore (new "Ramadan Guides" section)
+
 ## v2.8.0 — 99 Names Detail Panel (Feb 22, 2026)
 - **99 Names of Allah**: tap any name for full detail panel — explanation, Quranic reference with verse, dhikr benefit, category badge, root word
 - New `lib/asmaul-husna-detail.ts` — complete 99-entry dataset with Islamic context
