@@ -8,9 +8,10 @@ import { SURAHS } from '@/lib/quran-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
   BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain,
-  ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic
+  ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic, Languages
 } from 'lucide-react'
 import { shareOrCopy } from '@/lib/share'
+import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
 import Link from 'next/link'
 
 interface Ayah {
@@ -56,14 +57,21 @@ export default function SurahReaderPage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [reciter, setReciter] = useState('ar.alafasy')
   const [showReciterSheet, setShowReciterSheet] = useState(false)
+  const [translation, setTranslation] = useState('en.sahih')
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false)
+  const [tafsirVerse, setTafsirVerse] = useState<number | null>(null)
+  const [tafsirText, setTafsirText] = useState('')
+  const [tafsirLoading, setTafsirLoading] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const repeatPlayCountRef = useRef(0)
+  const tafsirCacheRef = useRef<Map<string, string>>(new Map())
 
   useEffect(() => {
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
     setFontSize(getItem(KEYS.QURAN_FONT_SIZE, 28))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
+    setTranslation(getItem(KEYS.QURAN_TRANSLATION, 'en.sahih'))
   }, [])
 
   // Save last read position
@@ -85,10 +93,11 @@ export default function SurahReaderPage() {
   useEffect(() => {
     async function fetchAyahs() {
       try {
-        const reciter = getItem(KEYS.RECITER, 'ar.alafasy')
+        const savedReciter = getItem(KEYS.RECITER, 'ar.alafasy')
+        const savedTranslation = getItem(KEYS.QURAN_TRANSLATION, 'en.sahih')
         const [arRes, enRes] = await Promise.all([
-          fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciter}`),
-          fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/en.asad`),
+          fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${savedReciter}`),
+          fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${savedTranslation}`),
         ])
         const arData = await arRes.json()
         const enData = await enRes.json()
@@ -110,6 +119,28 @@ export default function SurahReaderPage() {
     }
     fetchAyahs()
   }, [surahNum])
+
+  // Re-fetch translation only when translation changes (not on initial mount)
+  const translationMountedRef = useRef(false)
+  useEffect(() => {
+    if (!translationMountedRef.current) {
+      translationMountedRef.current = true
+      return
+    }
+    async function refetchTranslation() {
+      try {
+        const enRes = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${translation}`)
+        const enData = await enRes.json()
+        if (enData.data?.ayahs) {
+          setAyahs(prev => prev.map((ayah, i) => ({
+            ...ayah,
+            translation: enData.data.ayahs[i]?.text || ayah.translation,
+          })))
+        }
+      } catch { /* keep existing translations on error */ }
+    }
+    refetchTranslation()
+  }, [translation, surahNum])
 
   const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
     if (audioRef.current) {
@@ -191,6 +222,39 @@ export default function SurahReaderPage() {
     setShowReciterSheet(false)
   }
 
+  const selectTranslation = (key: string) => {
+    setTranslation(key)
+    setItem(KEYS.QURAN_TRANSLATION, key)
+    setShowTranslationSheet(false)
+  }
+
+  const fetchTafsir = async (ayahNumberInSurah: number) => {
+    if (tafsirVerse === ayahNumberInSurah) {
+      setTafsirVerse(null)
+      return
+    }
+    setTafsirVerse(ayahNumberInSurah)
+    const cacheKey = `${surahNum}:${ayahNumberInSurah}`
+    const cached = tafsirCacheRef.current.get(cacheKey)
+    if (cached) {
+      setTafsirText(cached)
+      return
+    }
+    setTafsirLoading(true)
+    setTafsirText('')
+    try {
+      const res = await fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNumberInSurah}/en.tafsir.en-tafisr-ibn-kathir`)
+      const data = await res.json()
+      const text = data?.data?.text || 'Tafsir not available for this verse.'
+      tafsirCacheRef.current.set(cacheKey, text)
+      setTafsirText(text)
+    } catch {
+      setTafsirText('Failed to load tafsir. Please try again.')
+    } finally {
+      setTafsirLoading(false)
+    }
+  }
+
   const getRepeatLabel = () => {
     if (repeatCount === 0) return '\u221E' // infinity symbol
     if (repeatCount === 1) return '1x'
@@ -256,6 +320,13 @@ export default function SurahReaderPage() {
               <Plus className="h-3 w-3" />
             </button>
           </div>
+          <button
+            onClick={() => setShowTranslationSheet(true)}
+            className="flex items-center gap-1 rounded-lg bg-emerald-500/15 px-2.5 py-1 text-[10px] font-medium text-emerald-400"
+          >
+            <Languages className="h-3 w-3" />
+            {QURAN_TRANSLATIONS.find(t => t.key === translation)?.label || 'Sahih Intl'}
+          </button>
           <Link
             href="/quran/hifz"
             className="flex items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
@@ -343,6 +414,27 @@ export default function SurahReaderPage() {
               <p className="text-sm leading-relaxed text-gray-400">
                 {ayah.translation}
               </p>
+
+              {/* Tafsir button */}
+              <button
+                onClick={() => fetchTafsir(ayah.numberInSurah)}
+                className={`mt-2 text-[10px] font-semibold transition-colors ${
+                  tafsirVerse === ayah.numberInSurah ? 'text-amber-400' : 'text-emerald-500'
+                }`}
+              >
+                {tafsirVerse === ayah.numberInSurah ? 'Hide Tafsir' : 'Tafsir'}
+              </button>
+
+              {/* Tafsir panel */}
+              {tafsirVerse === ayah.numberInSurah && (
+                <div className="mt-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
+                  <p className="mb-1 text-[9px] font-bold uppercase tracking-wider text-amber-500">Tafsir Ibn Kathir</p>
+                  {tafsirLoading
+                    ? <p className="text-xs text-gray-500">Loading...</p>
+                    : <p className="max-h-60 overflow-y-auto text-xs leading-relaxed text-gray-400">{tafsirText}</p>
+                  }
+                </div>
+              )}
             </div>
           ))}
 
@@ -475,6 +567,47 @@ export default function SurahReaderPage() {
                   <Mic className={`h-4 w-4 shrink-0 ${reciter === r.id ? 'text-emerald-400' : 'text-gray-600'}`} />
                   <span className="text-sm font-medium">{r.name}</span>
                   {reciter === r.id && (
+                    <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Active</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Translation selector bottom sheet */}
+      {showTranslationSheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowTranslationSheet(false)} />
+          <div className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-4 pb-8 pt-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white">Choose Translation</h3>
+              <button
+                onClick={() => setShowTranslationSheet(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 active:text-white"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="max-h-[50vh] space-y-1 overflow-y-auto">
+              {QURAN_TRANSLATIONS.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => selectTranslation(t.key)}
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
+                    translation === t.key
+                      ? 'bg-emerald-500/15 text-emerald-400'
+                      : 'text-gray-300 active:bg-gray-800'
+                  }`}
+                >
+                  <Languages className={`h-4 w-4 shrink-0 ${translation === t.key ? 'text-emerald-400' : 'text-gray-600'}`} />
+                  <div>
+                    <span className="text-sm font-medium">{t.label}</span>
+                    <p className="text-[10px] text-gray-500">{t.note}</p>
+                  </div>
+                  {translation === t.key && (
                     <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">Active</span>
                   )}
                 </button>

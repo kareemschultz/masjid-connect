@@ -14,6 +14,7 @@ import { IOSToggle } from '@/components/ios-toggle'
 import { SelectModal } from '@/components/select-modal'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS, RECITERS } from '@/lib/prayer-times'
+import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
 import { requestNotificationPermission } from '@/lib/notifications'
 import { isPushSupported, subscribeToPush, unsubscribeFromPush, updatePushPreferences } from '@/lib/push-notifications'
 import Link from 'next/link'
@@ -51,6 +52,7 @@ export default function SettingsPage() {
   const [madhab, setMadhab] = useState('Shafi')
   const [moonSighting, setMoonSighting] = useState('ciog')
   const [reciter, setReciter] = useState('ar.alafasy')
+  const [quranTranslation, setQuranTranslation] = useState('en.sahih')
   const [notifs, setNotifs] = useState(false)
   const [enabledPrayers, setEnabledPrayers] = useState<string[]>([])
   const [modalOpen, setModalOpen] = useState<string | null>(null)
@@ -73,6 +75,7 @@ export default function SettingsPage() {
     setMadhab(getItem(KEYS.MADHAB, 'Shafi'))
     setMoonSighting(getItem<string>('moon_sighting', 'ciog'))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
+    setQuranTranslation(getItem(KEYS.QURAN_TRANSLATION, 'en.sahih'))
     setNotifs(getItem(KEYS.NOTIFICATIONS_ENABLED, false))
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
     setIsAdmin(getItem(KEYS.IS_ADMIN, false))
@@ -107,6 +110,7 @@ export default function SettingsPage() {
     setItem('ramadan_start', DATES[val] || '2026-02-19')
   }
   const updateReciter = (val: string) => { setReciter(val); setItem(KEYS.RECITER, val) }
+  const updateQuranTranslation = (val: string) => { setQuranTranslation(val); setItem(KEYS.QURAN_TRANSLATION, val) }
 
   /** Convert array of enabled prayer keys → notification_prefs object for push API */
   const prefsToObject = (prayers: string[]) =>
@@ -245,6 +249,7 @@ export default function SettingsPage() {
   const methodLabel = CALCULATION_METHODS.find(m => m.key === method)?.label || method
   const madhabLabel = MADHABS.find(m => m.key === madhab)?.label || madhab
   const reciterLabel = RECITERS.find(r => r.key === reciter)?.label || reciter
+  const quranTranslationLabel = QURAN_TRANSLATIONS.find(t => t.key === quranTranslation)?.label || 'Sahih International'
 
   return (
     <div className="min-h-screen bg-background pb-nav">
@@ -409,6 +414,7 @@ export default function SettingsPage() {
 
         {/* Display */}
         <SettingGroup label="Display" accentColor="bg-blue-500">
+          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Translation" value={quranTranslationLabel} onClick={() => setModalOpen('quranTranslation')} />
           <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value="Default" onClick={() => {}} isLast />
         </SettingGroup>
 
@@ -436,6 +442,7 @@ export default function SettingsPage() {
       <SelectModal open={modalOpen === 'method'} onClose={() => setModalOpen(null)} title="Fajr & Isha Calculation" subtitle="These settings adjust when Fajr and Isha begin. Most Guyanese Masjids follow the Standard (MWL) setting. If your local Masjid's timetable is slightly different, adjust here." options={CALCULATION_METHODS.map(m => ({ key: m.key, label: m.label, note: m.note }))} selected={method} onSelect={updateMethod} />
       <SelectModal open={modalOpen === 'madhab'} onClose={() => setModalOpen(null)} title="Asr Prayer Time" options={MADHABS.map(m => ({ key: m.key, label: m.key === 'Hanafi' ? 'Hanafi — later Asr time' : "Standard (earlier) — Shafi\u2019i / Hanbali / Maliki" }))} selected={madhab} onSelect={updateMadhab} />
       <SelectModal open={modalOpen === 'reciter'} onClose={() => setModalOpen(null)} title="Default Reciter" options={RECITERS.map(r => ({ key: r.key, label: r.label }))} selected={reciter} onSelect={updateReciter} />
+      <SelectModal open={modalOpen === 'quranTranslation'} onClose={() => setModalOpen(null)} title="Quran Translation" subtitle="Choose the English translation shown alongside the Arabic text in the Quran reader." options={QURAN_TRANSLATIONS.map(t => ({ key: t.key, label: t.label, note: t.note }))} selected={quranTranslation} onSelect={updateQuranTranslation} />
       <SelectModal
         open={modalOpen === 'moon'}
         onClose={() => setModalOpen(null)}
