@@ -105,6 +105,7 @@ export default function HomePage() {
   const [username, setUsername] = useState('')
   const [lastRead, setLastRead] = useState<{ surah: number; name: string } | null>(null)
   const [iftaarCountdown, setIftaarCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
+  const [suhoorCountdown, setSuhoorCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
   const [mounted, setMounted] = useState(false)
 
   const dailyVerse = getDailyVerse()
@@ -282,6 +283,19 @@ export default function HomePage() {
       } else {
         setIftaarCountdown(null)
       }
+      // Suhoor countdown (time until Fajr) — shown during Ramadan after Iftaar
+      const fajrToday = prayersRef.current.find((p) => p.name === 'Fajr')
+      const maghribPassed = !maghrib || maghrib.date <= now
+      if (maghribPassed && fajrToday) {
+        // After Maghrib: count down to tomorrow's Fajr
+        const tomorrowFajr = new Date(fajrToday.date.getTime() + 24 * 60 * 60 * 1000)
+        setSuhoorCountdown(getTimeUntil(tomorrowFajr))
+      } else if (!maghribPassed && fajrToday && fajrToday.date > now) {
+        // Before Fajr (early morning): count down to today's Fajr
+        setSuhoorCountdown(getTimeUntil(fajrToday.date))
+      } else {
+        setSuhoorCountdown(null)
+      }
     }, 1000)
     return () => clearInterval(timer)
   }, [])
@@ -434,6 +448,30 @@ export default function HomePage() {
                 </div>
               </div>
               <ChevronRight className="h-5 w-5 text-amber-400/30 shrink-0" />
+            </Link>
+          )}
+
+          {/* Suhoor Countdown -- shown during Ramadan after Iftaar / before Fajr */}
+          {ramadan && suhoorCountdown && (
+            <Link href="/ramadan" className="mt-3 flex items-center gap-4 rounded-2xl p-4 glass border border-blue-500/20 animate-fade-up card-premium" style={{ animationDelay: '0.35s', animationFillMode: 'backwards' }}>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/15">
+                <Moon className="h-5 w-5 text-blue-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-blue-400/70">Suhoor ends in</span>
+                  <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-bold text-blue-300">Fajr</span>
+                </div>
+                <div className="mt-1 flex items-baseline gap-0.5">
+                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.hours).padStart(2, '0')}</span>
+                  <span className="text-sm text-blue-400/50">h</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-sm text-blue-400/50">m</span>
+                  <span className="text-2xl font-extrabold tabular-nums text-white">{String(suhoorCountdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-sm text-blue-400/50">s</span>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-blue-400/30 shrink-0" />
             </Link>
           )}
         </div>
