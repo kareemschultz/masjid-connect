@@ -78,4 +78,5 @@ export const KEYS = {
   USER_CITY: 'user_city',
   USER_COUNTRY: 'user_country',
   USER_COUNTRY_CODE: 'user_country_code',
+  THEME: 'app_theme',
 } as const

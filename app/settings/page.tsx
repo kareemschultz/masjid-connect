@@ -13,6 +13,7 @@ import { SettingRow } from '@/components/setting-row'
 import { IOSToggle } from '@/components/ios-toggle'
 import { SelectModal } from '@/components/select-modal'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { applyTheme } from '@/components/theme-provider'
 import { CALCULATION_METHODS, MADHABS, RECITERS } from '@/lib/prayer-times'
 import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
 import { requestNotificationPermission } from '@/lib/notifications'
@@ -67,6 +68,7 @@ export default function SettingsPage() {
   const [usernameMsg, setUsernameMsg] = useState('')
   const [prayerOffset, setPrayerOffset] = useState(0)
   const [phone, setPhone] = useState('')
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [phoneInput, setPhoneInput] = useState('')
   const [phoneSaving, setPhoneSaving] = useState(false)
   const [phoneMsg, setPhoneMsg] = useState('')
@@ -81,6 +83,7 @@ export default function SettingsPage() {
     setEnabledPrayers(getItem(KEYS.NOTIF_PRAYERS, ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']))
     setIsAdmin(getItem(KEYS.IS_ADMIN, false))
     setPrayerOffset(getItem(KEYS.PRAYER_OFFSET, 0))
+    setTheme(getItem<'dark' | 'light'>(KEYS.THEME, 'dark'))
     // Check auth session
     fetch('/api/auth/get-session', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
@@ -418,7 +421,20 @@ export default function SettingsPage() {
         {/* Display */}
         <SettingGroup label="Display" accentColor="bg-blue-500">
           <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Translation" value={quranTranslationLabel} onClick={() => setModalOpen('quranTranslation')} />
-          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value="Default" onClick={() => {}} isLast />
+          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value="Default" onClick={() => {}} />
+          <SettingRow
+            icon={theme === 'light' ? Sun : Moon}
+            iconColor={theme === 'light' ? 'bg-amber-500' : 'bg-slate-700'}
+            label="App Theme"
+            value={theme === 'light' ? 'Light' : 'Dark'}
+            isLast
+            onClick={() => {
+              const next: 'dark' | 'light' = theme === 'dark' ? 'light' : 'dark'
+              setTheme(next)
+              setItem(KEYS.THEME, next)
+              applyTheme(next)
+            }}
+          />
         </SettingGroup>
 
         {/* App */}

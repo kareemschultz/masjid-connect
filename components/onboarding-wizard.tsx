@@ -11,6 +11,7 @@ import {
 import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
 import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
+import { applyTheme } from '@/components/theme-provider'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -178,6 +179,15 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [signingIn, setSigningIn] = useState(false)
   const showRamadanStep = isNearRamadan()
 
+  // Theme selection
+  const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light'>('dark')
+
+  const pickTheme = (t: 'dark' | 'light') => {
+    setSelectedTheme(t)
+    setItem(KEYS.THEME, t)
+    applyTheme(t)
+  }
+
   // Location detection
   const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'detected' | 'error'>('idle')
   const [detectedCity, setDetectedCity] = useState('')
@@ -284,6 +294,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     'welcome',
     'features',
     'install',
+    'theme',
     'profile',
     'prayer',
     ...(showRamadanStep ? ['ramadan'] : []),
@@ -823,6 +834,93 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <p className="text-xs text-gray-500">Install prompt not available right now. You can install later from your browser menu.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── Step: Theme ──────────────────────────────────── */}
+        {currentStepKey === 'theme' && (
+          <div className="relative flex flex-1 flex-col px-5 pt-6">
+            <div className="mb-4 flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500/15 ring-1 ring-purple-500/20">
+                <Sparkles className="h-6 w-6 text-purple-400" />
+              </div>
+            </div>
+            <h2 className="mb-1 text-center text-2xl font-bold text-white">Choose Your Theme</h2>
+            <p className="mb-6 text-center text-sm text-gray-400">Pick the look that feels right for you. You can change this anytime in Settings.</p>
+
+            <div className="space-y-3">
+              {/* Dark theme option */}
+              <button
+                onClick={() => pickTheme('dark')}
+                className={`w-full rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
+                  selectedTheme === 'dark'
+                    ? 'border-emerald-500/60 bg-emerald-500/10'
+                    : 'border-gray-800 bg-gray-900'
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  {/* Dark preview */}
+                  <div className="flex h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-[#0a0b14] border border-gray-700">
+                    <div className="flex flex-col justify-between p-2 w-full">
+                      <div className="h-1.5 w-10 rounded-full bg-emerald-500/60" />
+                      <div className="space-y-1">
+                        <div className="h-1 w-full rounded-full bg-gray-700" />
+                        <div className="h-1 w-3/4 rounded-full bg-gray-700" />
+                      </div>
+                      <div className="flex gap-1">
+                        {[1,2,3].map(i => <div key={i} className="h-3 flex-1 rounded bg-gray-800" />)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-white">Dark</p>
+                      <span className="rounded-full bg-gray-700 px-2 py-0.5 text-[10px] text-gray-300">Default</span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-gray-400">Easy on the eyes at night. Ideal for night prayers and late Quran reading.</p>
+                  </div>
+                  <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${selectedTheme === 'dark' ? 'border-emerald-500 bg-emerald-500' : 'border-gray-600'}`}>
+                    {selectedTheme === 'dark' && <Check className="h-3 w-3 text-white" />}
+                  </div>
+                </div>
+              </button>
+
+              {/* Light theme option */}
+              <button
+                onClick={() => pickTheme('light')}
+                className={`w-full rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
+                  selectedTheme === 'light'
+                    ? 'border-emerald-500/60 bg-emerald-500/10'
+                    : 'border-gray-800 bg-gray-900'
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  {/* Light preview */}
+                  <div className="flex h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-[#f5f5f0] border border-gray-200">
+                    <div className="flex flex-col justify-between p-2 w-full">
+                      <div className="h-1.5 w-10 rounded-full bg-emerald-500/80" />
+                      <div className="space-y-1">
+                        <div className="h-1 w-full rounded-full bg-gray-200" />
+                        <div className="h-1 w-3/4 rounded-full bg-gray-200" />
+                      </div>
+                      <div className="flex gap-1">
+                        {[1,2,3].map(i => <div key={i} className="h-3 flex-1 rounded bg-white border border-gray-100" />)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-white">Light</p>
+                      <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] text-amber-400">New</span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-gray-400">Clean and bright. Great for daytime use and outdoor reading.</p>
+                  </div>
+                  <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${selectedTheme === 'light' ? 'border-emerald-500 bg-emerald-500' : 'border-gray-600'}`}>
+                    {selectedTheme === 'light' && <Check className="h-3 w-3 text-white" />}
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         )}
 
