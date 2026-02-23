@@ -41,6 +41,32 @@ export default function QaidaPage() {
     setStarted(getItem<string[]>(PROGRESS_KEY, []))
   }, [])
 
+  // Lock body scroll when sheet is open — save/restore position to avoid jump on close
+  useEffect(() => {
+    if (activeLesson) {
+      const scrollY = window.scrollY
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      const top = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (top) window.scrollTo(0, -parseInt(top, 10))
+    }
+    return () => {
+      const top = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (top) window.scrollTo(0, -parseInt(top, 10))
+    }
+  }, [activeLesson])
+
   // ── Open a lesson ──────────────────────────────────────────────────────────
   function openLesson(lesson: QaidaLesson) {
     setActiveLesson(lesson)
@@ -142,9 +168,17 @@ export default function QaidaPage() {
           />
 
           {/* Sheet */}
-          <div className="relative max-h-[90vh] overflow-y-auto rounded-t-3xl border-t border-gray-800 bg-[#0a0b14] animate-scale-in">
-            {/* Header */}
-            <div className="sticky top-0 z-10 flex items-center justify-between bg-[#0a0b14]/95 backdrop-blur-md px-5 pt-5 pb-3">
+          <div
+            className="relative flex flex-col rounded-t-3xl border-t border-gray-800 bg-[#0a0b14] animate-scale-in"
+            style={{ maxHeight: '90dvh', height: '90dvh' }}
+          >
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1 shrink-0">
+              <div className="h-1 w-10 rounded-full bg-gray-700" />
+            </div>
+
+            {/* Header — fixed inside sheet, doesn't scroll */}
+            <div className="shrink-0 flex items-center justify-between bg-[#0a0b14] px-5 pt-2 pb-3 border-b border-gray-800/60">
               <div className="flex-1 min-w-0">
                 <p className="font-arabic text-xl text-teal-300 leading-relaxed truncate">
                   {activeLesson.arabicTitle}
@@ -163,8 +197,8 @@ export default function QaidaPage() {
               </button>
             </div>
 
-            {/* Content area */}
-            <div className="px-5 pb-10">
+            {/* Content area — this is the ONLY thing that scrolls */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4 pb-16">
               {/* ── Alphabet ───────────────────────────────────────────── */}
               {activeLesson.type === 'alphabet' && (
                 <AlphabetView
