@@ -31,10 +31,14 @@ interface Series {
 
 interface Scholar {
   id: string
-  name: string
-  bio: string
-  avatar: string       // emoji fallback
-  color: string        // card gradient
+  name: string           // Full formal name
+  shortName: string      // Short display name for pills
+  bio: string            // One-liner for compact view
+  fullBio: string        // Expanded bio paragraph
+  origin: string         // Nationality / background
+  specialty: string      // Main area of scholarship
+  avatar: string         // emoji fallback
+  color: string          // card gradient
   series: Series[]
 }
 
@@ -64,8 +68,12 @@ const ACCENT: Record<string, { tab: string; ring: string; text: string; dot: str
 const SCHOLARS: Scholar[] = [
   {
     id: 'awlaki',
-    name: 'Anwar al-Awlaki',
-    bio: 'American-Yemeni scholar known for his accessible English-language lectures on Islamic history and theology.',
+    name: 'Imam Anwar al-Awlaki',
+    shortName: 'Anwar al-Awlaki',
+    bio: 'American-Yemeni Imam. Renowned for deep, narrative-style Seerah lectures in English.',
+    fullBio: 'Imam Anwar al-Awlaki (1971–2011) was an American-born scholar of Yemeni descent. He studied Islamic Education at San Diego State University and later at Iman University, Sana\'a. He served as an Imam in Denver and San Diego before becoming one of the most widely-listened-to English-language scholars of the early 2000s. His lecture series on the Life of the Prophet ﷺ and the Lives of the Prophets are considered among the finest available in English — praised for their depth, storytelling quality, and accessibility to Western-raised Muslims.',
+    origin: 'American-Yemeni',
+    specialty: 'Seerah (Prophetic Biography) · Islamic History',
     avatar: '🎙',
     color: 'from-emerald-900/60 to-teal-900/60',
     series: [
@@ -194,8 +202,12 @@ const SCHOLARS: Scholar[] = [
   },
   {
     id: 'hamza-yusuf',
-    name: 'Hamza Yusuf',
-    bio: 'American Muslim scholar and co-founder of Zaytuna College, USA. One of the most influential Islamic scholars in the West, renowned for his lectures on spirituality, classical Arabic, and Islamic sciences.',
+    name: 'Shaykh Hamza Yusuf Hanson',
+    shortName: 'Hamza Yusuf',
+    bio: 'American Islamic scholar and co-founder of Zaytuna College, the first accredited Muslim liberal arts college in the USA.',
+    fullBio: 'Shaykh Hamza Yusuf (born Mark Hanson, 1958) is one of the most influential Islamic scholars in the Western world. He converted to Islam after a near-fatal accident at age 18. He studied Islamic sciences for nearly a decade in the UAE, Algeria, Mauritania, and Morocco under some of the greatest scholars of the 20th century. In 2009, he co-founded Zaytuna College in California — the first accredited Muslim liberal arts college in the United States. He is fluent in classical Arabic and grounded in the Maliki tradition. His lectures on classical Islamic spirituality, the purification of the heart, and Islamic ethics are among the most intellectually rich available in English.',
+    origin: 'American (convert)',
+    specialty: 'Islamic Spirituality · Classical Arabic · Maliki Fiqh',
     avatar: '🎓',
     color: 'from-teal-900/60 to-cyan-900/60',
     series: [
@@ -229,8 +241,12 @@ const SCHOLARS: Scholar[] = [
   },
   {
     id: 'bilal-philips',
-    name: 'Bilal Philips',
-    bio: 'Canadian-Jamaican Islamic scholar, founder of Islamic Online University. Known for clear, accessible teaching on Aqeedah (Islamic theology) and the fundamentals of Islam.',
+    name: 'Dr. Abu Ameenah Bilal Philips',
+    shortName: 'Dr. Bilal Philips',
+    bio: 'Canadian-Jamaican Islamic scholar. Founder of Islamic Online University, author of 50+ books on Aqeedah and Islamic studies.',
+    fullBio: 'Dr. Abu Ameenah Bilal Philips (born Dennis Bradley Philips, 1947) is a Canadian convert to Islam of Jamaican origin. He holds a BA in Islamic Studies from the Islamic University of Madinah, an MA from the University of Riyadh, and a PhD in Islamic Theology from the University of Wales. He is the founder of Islamic Online University (IOU), which has provided free and affordable Islamic education to over 200,000 students in 226 countries. He has authored over 50 books on Islamic theology, jurisprudence, and education. His lectures on the Foundations of Islamic Studies — covering Aqeedah, Fiqh, and the Sunnah — are among the most systematic and widely-used for new Muslims and students of knowledge.',
+    origin: 'Canadian-Jamaican (convert)',
+    specialty: "Aqeedah (Islamic Theology) · Usool al-Fiqh · Da'wah",
     avatar: '📚',
     color: 'from-blue-900/60 to-indigo-900/60',
     series: [
@@ -272,8 +288,12 @@ const SCHOLARS: Scholar[] = [
   },
   {
     id: 'yasmin-mogahed',
-    name: 'Yasmin Mogahed',
-    bio: 'Egyptian-American Muslim writer and speaker. Author of "Reclaim Your Heart". Known for her deeply personal and spiritual approach to topics of the heart, love, and relationship with Allah.',
+    name: 'Ustadha Yasmin Mogahed',
+    shortName: 'Yasmin Mogahed',
+    bio: 'Egyptian-American speaker and author of "Reclaim Your Heart". Known for her spiritually rich approach to the heart, loss, and closeness to Allah.',
+    fullBio: "Ustadha Yasmin Mogahed is an Egyptian-American Muslim speaker, author, and counsellor. She studied Psychology and Journalism at the University of Wisconsin-Madison and later studied Islam under several prominent scholars. She is the author of the internationally bestselling book \"Reclaim Your Heart\" (2012), which has been translated into multiple languages. She is widely known for her unique ability to speak about spiritual and emotional healing through an Islamic lens — addressing topics such as attachment, grief, toxic love, and finding peace through connection with Allah ﷻ. Her lectures resonate particularly with young Muslims navigating modern life, relationships, and personal struggles.",
+    origin: 'Egyptian-American',
+    specialty: 'Tazkiyah (Spiritual Purification) · Muslim Psychology · Heart & Soul',
     avatar: '💫',
     color: 'from-rose-900/60 to-pink-900/60',
     series: [
@@ -318,8 +338,12 @@ const SCHOLARS: Scholar[] = [
   },
   {
     id: 'jabbar',
-    name: 'Muhammad Abdul Jabbar',
-    bio: 'Prominent Islamic lecturer known for his powerful and direct style covering topics of faith, death, and the hereafter.',
+    name: 'Br. Muhammad Abdul Jabbar',
+    shortName: 'Abdul Jabbar',
+    bio: 'British Islamic lecturer known for his direct, no-nonsense style on Aqeedah, Shaitan, and the dangers facing Muslim youth.',
+    fullBio: "Br. Muhammad Abdul Jabbar is a British-born Muslim lecturer known for his bold, straightforward style and his focus on practical Islamic guidance for Western Muslims. His series 'Beware! He's Your Enemy' addresses the methods and traps of Shaitan (Satan) in detail — a highly relevant topic for young Muslims living in the West. His lectures are known for being direct, relatable, and grounded in Quran and authentic hadith. He is particularly popular among Muslim youth seeking no-nonsense Islamic guidance on faith, temptation, and staying firm on the Deen.",
+    origin: 'British',
+    specialty: 'Aqeedah · Muslim Youth · Practical Guidance',
     avatar: '🎤',
     color: 'from-rose-900/60 to-pink-900/60',
     series: [
@@ -373,6 +397,7 @@ export default function LecturesPage() {
   const [search, setSearch] = useState('')
   const [showSearch, setShowSearch] = useState(false)
   const [expandedSeries, setExpandedSeries] = useState<string | null>(null)
+  const [expandedBioId, setExpandedBioId] = useState<string | null>(null)
 
   // Player state
   const [playingScholarId, setPlayingScholarId] = useState<string | null>(null)
@@ -571,7 +596,7 @@ export default function LecturesPage() {
                 activeScholar === sch.id ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'
               }`}
             >
-              {sch.avatar} {sch.name.split(' ').slice(-1)[0]}
+              {sch.avatar} {sch.shortName}
             </button>
           ))}
 
@@ -633,17 +658,33 @@ export default function LecturesPage() {
 
         {filteredScholars.map(scholar => (
           <div key={scholar.id}>
-            {/* Scholar Header */}
+            {/* Scholar Header — tap to expand bio */}
             {(!activeScholar || filteredScholars.length > 1) && (
-              <div className={`mb-3 rounded-2xl bg-gradient-to-r ${scholar.color} border border-gray-700/50 px-4 py-3 flex items-center gap-3`}>
-                <span className="text-2xl">{scholar.avatar}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-white">{scholar.name}</p>
-                  <p className="text-[11px] text-gray-400 truncate">{scholar.bio}</p>
-                </div>
-                <span className="text-xs font-bold text-gray-400 shrink-0">
-                  {scholar.series.reduce((n, s) => n + s.lectures.length, 0)} lectures
-                </span>
+              <div className={`mb-3 rounded-2xl bg-gradient-to-r ${scholar.color} border border-gray-700/50 overflow-hidden`}>
+                <button
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left"
+                  onClick={() => setExpandedBioId(expandedBioId === scholar.id ? null : scholar.id)}
+                >
+                  <span className="text-3xl shrink-0">{scholar.avatar}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white leading-snug">{scholar.name}</p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">{scholar.origin} · {scholar.specialty}</p>
+                    <p className="text-[11px] text-gray-300 mt-1 leading-snug line-clamp-2">{scholar.bio}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-1">
+                    <span className="text-[10px] font-bold text-gray-400">
+                      {scholar.series.reduce((n, s) => n + s.lectures.length, 0)} lectures
+                    </span>
+                    {expandedBioId === scholar.id
+                      ? <ChevronUp className="h-3.5 w-3.5 text-gray-500" />
+                      : <ChevronDown className="h-3.5 w-3.5 text-gray-500" />}
+                  </div>
+                </button>
+                {expandedBioId === scholar.id && (
+                  <div className="px-4 pb-4 pt-0 border-t border-gray-700/40">
+                    <p className="text-xs text-gray-300 leading-relaxed mt-3">{scholar.fullBio}</p>
+                  </div>
+                )}
               </div>
             )}
 
