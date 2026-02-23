@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.6.0 — Buddy System Upgrade (Feb 22, 2026)
+
+### Buddy System
+- **5-level ranking system**: Seeker → Devoted → Steadfast → Illuminated → Champion (replaces 3-tier Bronze/Silver/Gold)
+- **My Stats card**: See your own points, level, streak, and progress to next level in the Buddies tab
+- **Live challenge progress**: Challenges now auto-compute progress from real tracker data (prayer streak, fasting log, nawafil log, Quran khatam, Witr log)
+- **Completed challenges**: Challenge cards show ✓ COMPLETED badge when target reached
+- **Buddy comparison**: Tap a buddy to see your points vs theirs side by side
+- **Find by @username or phone**: Add buddies without needing their email (Settings → set your @username)
+
+### How It Works — Accurate Points Reference
+- Fixed points breakdown to match actual calculation engine
+- Added Sunnah prayer points (Fajr Sunnah 30 pts, Witr 50 pts, etc.)
+- Added Nawafil points (Tahajjud 100 pts highest, Duha 50 pts, etc.)
+- Added streak multiplier table (3+ days = 1.2×, up to 2.0× at 21+ days)
+- Added Perfect Day bonus (+50 pts for completing all 5 daily ibadah items)
+- Corrected 5-level system throughout
+
+### Onboarding
+- Updated feature highlights to show all 8 current features including Sunnah tracker, 25 Prophets, @username buddy search
+
 ## v2.5.0 — Feb 23, 2026
 - Onboarding: Per-step themed animations (crescent+stars on welcome, amber sparkles on name, compass ring on prayer, Ramadan lantern+crescent, confetti on done)
 - Onboarding: iOS PWA install expanded to full 3-step guide with numbered badges

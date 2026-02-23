@@ -25,50 +25,66 @@ const FEATURES = [
   {
     emoji: '\uD83D\uDD4C',
     label: 'Prayer Times',
-    desc: 'Accurate times for Georgetown, Guyana',
-    color: 'bg-emerald-500/15',
-    iconColor: 'text-emerald-400',
+    desc: 'Accurate Georgetown times, Sunnah & Nawafil tracker, live countdown',
+    color: 'bg-emerald-500/10',
     border: 'border-emerald-500/20',
+    iconColor: 'text-emerald-400',
   },
   {
     emoji: '\uD83D\uDCD6',
     label: 'Quran',
-    desc: "Mus'haf, recitation with 12 reciters, Hifz mode",
-    color: 'bg-purple-500/15',
-    iconColor: 'text-purple-400',
+    desc: "Full Mus'haf, 12 reciters, Hifz mode, continue reading bookmark",
+    color: 'bg-purple-500/10',
     border: 'border-purple-500/20',
+    iconColor: 'text-purple-400',
   },
   {
     emoji: '\uD83C\uDF19',
-    label: 'Ramadan',
-    desc: 'Suhoor/Iftaar countdowns, Fasting Tracker',
-    color: 'bg-orange-500/15',
-    iconColor: 'text-orange-400',
-    border: 'border-orange-500/20',
+    label: 'Ramadan & Fasting',
+    desc: 'Suhoor/Iftaar countdowns, voluntary fasting tracker, moon sighting',
+    color: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    iconColor: 'text-amber-400',
   },
   {
     emoji: '\uD83C\uDFA7',
     label: 'Lectures',
-    desc: 'Anwar al-Awlaki, Hamza Yusuf, Bilal Philips, Yasmin Mogahed',
-    color: 'bg-teal-500/15',
-    iconColor: 'text-teal-400',
-    border: 'border-teal-500/20',
+    desc: 'Al-Awlaki, Hamza Yusuf, Bilal Philips, Yasmin Mogahed \u2014 80+ lectures',
+    color: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    iconColor: 'text-blue-400',
   },
   {
     emoji: '\uD83D\uDD4C',
-    label: 'Masjids',
-    desc: '20+ masjids across Guyana, Jumu\'ah prep',
-    color: 'bg-blue-500/15',
-    iconColor: 'text-blue-400',
-    border: 'border-blue-500/20',
+    label: 'Masjids & Jumu\'ah',
+    desc: '20+ Guyanese masjids, Qibla, prayer timetable, Jumu\'ah prep',
+    color: 'bg-teal-500/10',
+    border: 'border-teal-500/20',
+    iconColor: 'text-teal-400',
   },
   {
-    emoji: '\uD83D\uDCFF',
+    emoji: '\uD83D\uDCDA',
+    label: 'Learn Islam',
+    desc: 'Noorani Qaida, Salah guide, 25 Prophets, Seerah, 99 Names, Adab',
+    color: 'bg-indigo-500/10',
+    border: 'border-indigo-500/20',
+    iconColor: 'text-indigo-400',
+  },
+  {
+    emoji: '\uD83D\uDC65',
+    label: 'Faith Buddies',
+    desc: 'Add buddies by @username or phone, challenges, leaderboard, nudges',
+    color: 'bg-sky-500/10',
+    border: 'border-sky-500/20',
+    iconColor: 'text-sky-400',
+  },
+  {
+    emoji: '\uD83E\uDD1D',
     label: 'Community',
-    desc: 'Dua Board, Khatam Collective, Buddy System',
-    color: 'bg-amber-500/15',
-    iconColor: 'text-amber-400',
-    border: 'border-amber-500/20',
+    desc: 'Dua Board, Khatam Collective, community feed, halal directory',
+    color: 'bg-rose-500/10',
+    border: 'border-rose-500/20',
+    iconColor: 'text-rose-400',
   },
 ]
 
@@ -328,7 +344,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             </div>
             <h2 className="mb-1 text-center text-2xl font-bold text-white">How It Works</h2>
             <p className="mb-5 text-center text-sm text-gray-400">
-              Six powerful tools to strengthen your daily practice
+              Eight powerful tools to strengthen your daily practice
             </p>
 
             <div className="grid grid-cols-2 gap-3">
@@ -349,7 +365,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             {/* Community call-to-action */}
             <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3 text-center">
               <p className="text-xs text-gray-400">
-                🌙 <span className="font-semibold text-gray-300">Community-powered</span> — Iftaar Reports are submitted live by fellow Muslims. You can contribute too.
+                🌙 <span className="font-semibold text-gray-300">Community-powered</span> — Dua requests, Khatam drives, and Iftaar reports are submitted live by fellow Muslims.
               </p>
             </div>
           </div>
@@ -663,9 +679,20 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <h2 className="text-xl font-bold text-white">
                 {name ? `Bismillah, ${name}!` : "Bismillah — Let's Begin!"}
               </h2>
-              <p className="mt-2 max-w-xs text-center text-sm text-gray-400">
-                MasjidConnect GY has prayer times, Quran, lectures from 5 scholars, 20+ Guyana masjids, Seerah, Islamic Names, and more — all built for the Guyanese Muslim community. May Allah accept it from us all.
-              </p>
+              <div className="mt-4 w-full max-w-xs space-y-1.5 text-left">
+                {[
+                  'Track all 5 Fard prayers + Sunnah & Nawafil',
+                  'Build streaks and earn points (Tahajjud = 100 pts, Witr = 50 pts)',
+                  'Add Faith Buddies by @username or phone number',
+                  'Listen to 80+ lectures from world-renowned scholars',
+                  'Explore Noorani Qaida, 25 Prophets, Seerah, and Adab',
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                    <span className="text-xs text-gray-400">{item}</span>
+                  </div>
+                ))}
+              </div>
 
               <div className="mt-5 grid grid-cols-2 gap-2 w-full max-w-xs mb-4">
                 {[

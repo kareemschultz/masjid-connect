@@ -11,6 +11,7 @@ import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { getLevel, LEVELS } from '@/lib/points-client'
 import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
 
@@ -21,7 +22,7 @@ interface Buddy {
   totalPoints: number
   lastActive?: string
   avatar?: string
-  tier?: 'bronze' | 'silver' | 'gold'
+  level?: { level: number; label: string; arabic: string; min: number }
   status?: 'pending' | 'accepted'
   direction?: 'sent' | 'received'
 }
@@ -52,19 +53,57 @@ interface Challenge {
   category: 'prayer' | 'quran' | 'fasting' | 'dhikr' | 'charity' | 'nawafil' | 'witr'
 }
 
-function getTier(points: number): 'bronze' | 'silver' | 'gold' {
-  if (points >= 4000) return 'gold'
-  if (points >= 1000) return 'silver'
-  return 'bronze'
+function getLevelStyle(levelNum: number) {
+  const styles: Record<number, { bg: string; text: string; border: string; icon: string }> = {
+    1: { bg: 'bg-gray-500/20', text: 'text-gray-400', border: 'border-gray-500/30', icon: '\uD83C\uDF31' },
+    2: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', icon: '\uD83D\uDCFF' },
+    3: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', icon: '\u2B50' },
+    4: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', icon: '\u2728' },
+    5: { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30', icon: '\uD83D\uDC51' },
+  }
+  return styles[levelNum] || styles[1]
 }
 
-function getTierColor(tier: string) {
-  if (tier === 'gold') return { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30' }
-  if (tier === 'silver') return { bg: 'bg-gray-400/20', text: 'text-gray-300', border: 'border-gray-400/30' }
-  return { bg: 'bg-orange-700/20', text: 'text-orange-400', border: 'border-orange-700/30' }
+function computeProgress(challenge: Challenge): number {
+  try {
+    if (challenge.category === 'prayer') {
+      const streak = getItem('prayer_streak_cache', 0)
+      return Math.min(challenge.target, typeof streak === 'number' ? streak : 0)
+    }
+    if (challenge.category === 'quran') {
+      const juzDone = getItem('khatam_personal_progress', [])
+      return Math.min(challenge.target, Array.isArray(juzDone) ? juzDone.length : 0)
+    }
+    if (challenge.category === 'nawafil') {
+      const nawafilLog = getItem(KEYS.NAWAFIL_LOG, {} as Record<string, Record<string, number>>)
+      const days = Object.keys(nawafilLog).filter(d => {
+        const entry = nawafilLog[d]
+        return entry && Object.values(entry).some((v) => typeof v === 'number' && v > 0)
+      })
+      return Math.min(challenge.target, days.length)
+    }
+    if (challenge.category === 'witr') {
+      const sunnahLog = getItem(KEYS.SUNNAH_LOG, {} as Record<string, Record<string, boolean>>)
+      const days = Object.keys(sunnahLog).filter(d => {
+        const entry = sunnahLog[d] as Record<string, boolean> | undefined
+        return entry?.witr
+      })
+      return Math.min(challenge.target, days.length)
+    }
+    if (challenge.category === 'fasting') {
+      let count = 0
+      for (const key of [KEYS.FASTING_LOG_RAMADAN, KEYS.FASTING_LOG_SHAWWAL, KEYS.FASTING_LOG_MONTHU, KEYS.FASTING_LOG_AYYAM, KEYS.FASTING_LOG_VOLUNTARY]) {
+        const log = getItem(key, {} as Record<string, string>)
+        count += Object.values(log).filter((v) => v === 'fasted').length
+      }
+      return Math.min(challenge.target, count)
+    }
+    if (challenge.category === 'dhikr') {
+      return challenge.current
+    }
+  } catch { /* fallback */ }
+  return challenge.current
 }
-
-const RANK_ICON = { gold: Crown, silver: Medal, bronze: Award }
 
 const DEMO_CHALLENGES: Challenge[] = [
   {
@@ -104,8 +143,8 @@ const NUDGE_MESSAGES = [
   { text: 'Reminder: Do your morning adhkar today. I already did mine!', icon: Sparkles, color: 'text-cyan-400' },
   { text: 'Time for Tahajjud! The last third of the night is here. Join me in night prayer.', icon: Moon, color: 'text-indigo-400' },
   { text: 'Did you pray Witr last night? Let us hold each other accountable!', icon: Star, color: 'text-amber-400' },
-  { text: 'The Prophet ﷺ never abandoned the 2 Fajr Sunnah — not even on a journey. Have you prayed yours?', icon: Flame, color: 'text-orange-400' },
-  { text: 'Duha prayer is coming up soon! The Prophet ﷺ said it equals Hajj and Umrah rewards (with Fajr in congregation).', icon: Sun, color: 'text-yellow-400' },
+  { text: "The Prophet \u2E3A never abandoned the 2 Fajr Sunnah \u2014 not even on a journey. Have you prayed yours?", icon: Flame, color: 'text-orange-400' },
+  { text: "Duha prayer is coming up soon! The Prophet \u2E3A said it equals Hajj and Umrah rewards (with Fajr in congregation).", icon: Sun, color: 'text-yellow-400' },
 ]
 
 const NEW_CHALLENGE_TEMPLATES = [
@@ -114,17 +153,18 @@ const NEW_CHALLENGE_TEMPLATES = [
   { title: 'Fasting Challenge', description: 'Fast voluntary days together (Mon/Thu)', category: 'fasting' as const, target: 8, unit: 'fasts', reward: 200 },
   { title: 'Daily Dhikr', description: 'Complete daily dhikr for a month', category: 'dhikr' as const, target: 30, unit: 'days', reward: 120 },
   { title: 'Charity Drive', description: 'Give sadaqah every Friday together', category: 'charity' as const, target: 4, unit: 'donations', reward: 250 },
-  { title: 'Witr Streak', description: 'Pray Witr every night for 30 days — never miss the wajib prayer!', category: 'witr' as const, target: 30, unit: 'nights', reward: 300 },
+  { title: 'Witr Streak', description: 'Pray Witr every night for 30 days \u2014 never miss the wajib prayer!', category: 'witr' as const, target: 30, unit: 'nights', reward: 300 },
   { title: 'Tahajjud Week', description: 'Wake up for Tahajjud for 7 consecutive nights. The night prayer brings you closest to Allah.', category: 'nawafil' as const, target: 7, unit: 'nights', reward: 400 },
   { title: 'Duha Prayer Month', description: 'Pray Duha (the forenoon prayer) every day for 30 days.', category: 'nawafil' as const, target: 30, unit: 'days', reward: 350 },
   { title: 'Nawafil Sprint', description: 'Log at least one nawafil prayer daily for 14 days. Any optional prayer counts!', category: 'nawafil' as const, target: 14, unit: 'days', reward: 250 },
-  { title: 'Fajr Sunnah Commitment', description: "Pray the 2 Fajr Sunnah rak'ahs every single day for 30 days — better than the world and all it contains!", category: 'prayer' as const, target: 30, unit: 'days', reward: 200 },
+  { title: 'Fajr Sunnah Commitment', description: "Pray the 2 Fajr Sunnah rak'ahs every single day for 30 days \u2014 better than the world and all it contains!", category: 'prayer' as const, target: 30, unit: 'days', reward: 200 },
 ]
 
 export default function BuddyPage() {
   const [buddies, setBuddies] = useState<Buddy[]>([])
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [myStats, setMyStats] = useState<{ totalPoints: number; streak: number } | null>(null)
   const [tab, setTab] = useState<'buddies' | 'challenges' | 'leaderboard'>('buddies')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showNudgeModal, setShowNudgeModal] = useState<string | null>(null)
@@ -144,7 +184,7 @@ export default function BuddyPage() {
         setBuddies(data.map((b: any) => ({
           ...b,
           points: b.totalPoints || 0,
-          tier: getTier(b.totalPoints || 0),
+          level: getLevel(b.totalPoints || 0),
           avatar: (b.displayName || b.name || '?')[0].toUpperCase(),
           lastActive: 'Active recently'
         })))
@@ -163,6 +203,8 @@ export default function BuddyPage() {
           ...e,
           avatar: (e.displayName || e.name || '?')[0].toUpperCase()
         })))
+        const me = data.find((e: any) => e.isMe)
+        if (me) setMyStats({ totalPoints: me.totalPoints, streak: me.streak })
       }
     } catch (e) {
       console.error(e)
@@ -171,8 +213,11 @@ export default function BuddyPage() {
 
   useEffect(() => {
     fetchBuddies()
-    setChallenges(getItem(KEYS.BUDDY_CHALLENGES, DEMO_CHALLENGES))
-  }, [fetchBuddies])
+    fetchLeaderboard()
+    const stored = getItem(KEYS.BUDDY_CHALLENGES, DEMO_CHALLENGES)
+    const withProgress = stored.map((c: Challenge) => ({ ...c, current: computeProgress(c) }))
+    setChallenges(withProgress)
+  }, [fetchBuddies, fetchLeaderboard])
 
   useEffect(() => {
     if (tab === 'leaderboard') fetchLeaderboard()
@@ -284,6 +329,10 @@ export default function BuddyPage() {
     })
   }
 
+  const myLevel = myStats ? getLevel(myStats.totalPoints) : LEVELS[LEVELS.length - 1]
+  const nextLevel = LEVELS.slice().reverse().find(l => l.level === myLevel.level + 1)
+  const myLevelStyle = getLevelStyle(myLevel.level)
+
   const TABS = [
     { key: 'buddies' as const, label: 'Buddies', icon: Users },
     { key: 'challenges' as const, label: 'Challenges', icon: Swords },
@@ -339,6 +388,48 @@ export default function BuddyPage() {
         {/* ===================== BUDDIES TAB ===================== */}
         {tab === 'buddies' && (
           <>
+            {/* My Stats Card */}
+            {myStats && (
+              <div className="rounded-2xl border border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800 p-4">
+                <p className="text-xs text-gray-400 mb-3 font-semibold uppercase tracking-wide">Your Standing</p>
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-xl font-bold text-white">
+                    {getItem(KEYS.USERNAME, '?')[0]?.toUpperCase() || '?'}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${myLevelStyle.bg} ${myLevelStyle.text}`}>
+                        {myLevelStyle.icon} {myLevel.label}
+                      </span>
+                      {myStats.streak >= 3 && (
+                        <span className="flex items-center gap-0.5 text-xs text-amber-400">
+                          <Flame className="h-3 w-3" /> {myStats.streak}d
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-4">
+                      <div>
+                        <p className="text-lg font-bold text-foreground">{myStats.totalPoints.toLocaleString()}</p>
+                        <p className="text-[10px] text-gray-500">Total Points</p>
+                      </div>
+                      {nextLevel && (
+                        <div className="flex-1">
+                          <div className="flex justify-between text-[10px] text-gray-500 mb-1">
+                            <span>Next: {nextLevel.label}</span>
+                            <span>{(nextLevel.min - myStats.totalPoints).toLocaleString()} pts away</span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-gray-800">
+                            <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
+                              style={{ width: `${Math.min(100, ((myStats.totalPoints - myLevel.min) / (nextLevel.min - myLevel.min)) * 100)}%` }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={copyInviteLink}
@@ -400,8 +491,7 @@ export default function BuddyPage() {
               <SettingGroup label={`Your Buddies (${buddies.filter(b => b.status === 'accepted').length})`} accentColor="bg-blue-500">
                 <div className="divide-y divide-gray-800/50">
                   {buddies.filter(b => b.status === 'accepted').map((buddy) => {
-                    const tierStyle = getTierColor(buddy.tier || 'bronze')
-                    const TierIcon = RANK_ICON[buddy.tier || 'bronze']
+                    const ls = getLevelStyle(buddy.level?.level || 1)
                     return (
                       <button
                         key={buddy.id}
@@ -409,16 +499,17 @@ export default function BuddyPage() {
                         className="flex w-full items-center gap-3 p-4 text-left transition-all active:bg-white/5"
                       >
                         <div className="relative">
-                          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white`}>
+                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white">
                             {buddy.avatar}
                           </div>
-                          <div className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full ${tierStyle.bg} border ${tierStyle.border}`}>
-                            <TierIcon className={`h-2.5 w-2.5 ${tierStyle.text}`} />
+                          <div className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full ${ls.bg} border ${ls.border} text-xs`}>
+                            {ls.icon}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-foreground truncate">{buddy.name}</span>
+                            <span className={`text-[10px] font-semibold ${ls.text}`}>{buddy.level?.label || 'Seeker'}</span>
                             {buddy.streak >= 7 && (
                               <span className="flex items-center gap-0.5 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-400">
                                 <Flame className="h-2.5 w-2.5" /> {buddy.streak}
@@ -444,11 +535,12 @@ export default function BuddyPage() {
           </>
         )}
 
-        {/* ===================== CHALLENGES TAB (Local Only for now) ===================== */}
+        {/* ===================== CHALLENGES TAB ===================== */}
         {tab === 'challenges' && (
           <>
             {challenges.map((c) => {
               const pct = Math.round((c.current / c.target) * 100)
+              const isCompleted = c.current >= c.target
               const CIcon = CHALLENGE_ICONS[c.category] || Target
               const gradient = CHALLENGE_COLORS[c.category] || 'from-gray-500 to-gray-600'
               return (
@@ -471,11 +563,20 @@ export default function BuddyPage() {
                     <p className="text-xs leading-relaxed text-gray-400">{c.description}</p>
                     <div>
                       <div className="mb-1.5 flex items-center justify-between">
-                        <span className="text-[11px] text-gray-500">{c.current} / {c.target} {c.unit}</span>
-                        <span className="text-[11px] font-semibold text-emerald-400">{pct}%</span>
+                        {isCompleted ? (
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-6 items-center rounded-lg bg-emerald-500/20 px-2 text-[10px] font-bold text-emerald-400">
+                              \u2713 COMPLETED
+                            </div>
+                            <span className="text-[11px] text-gray-400">{c.current}/{c.target} {c.unit}</span>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-gray-500">{c.current} / {c.target} {c.unit}</span>
+                        )}
+                        <span className={`text-[11px] font-semibold ${isCompleted ? 'text-emerald-400' : 'text-emerald-400'}`}>{Math.min(pct, 100)}%</span>
                       </div>
                       <div className="h-2.5 overflow-hidden rounded-full bg-gray-800">
-                        <div className={`h-full rounded-full bg-gradient-to-r ${gradient}`} style={{ width: `${pct}%` }} />
+                        <div className={`h-full rounded-full bg-gradient-to-r ${isCompleted ? 'from-emerald-400 to-emerald-500' : gradient}`} style={{ width: `${Math.min(pct, 100)}%` }} />
                       </div>
                     </div>
                   </div>
@@ -528,7 +629,7 @@ export default function BuddyPage() {
               <div className="divide-y divide-gray-800/50">
                 {leaderboard.map((user, i) => {
                   const isYou = user.isMe
-                  const levelLabel = user.level?.label || 'Novice'
+                  const levelLabel = user.level?.label || 'Seeker'
                   return (
                     <div key={user.userId} className={`flex items-center gap-3 p-4 ${isYou ? 'bg-emerald-500/5' : ''}`}>
                       <div className={`flex h-8 w-8 items-center justify-center rounded-full font-bold text-xs ${
@@ -539,7 +640,7 @@ export default function BuddyPage() {
                       }`}>
                         {i + 1}
                       </div>
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white`}>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white">
                         {user.avatar}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -567,7 +668,9 @@ export default function BuddyPage() {
           </>
         )}
 
-        {/* ... (Modals remain mostly same, simplified AddBuddy to use email input) */}
+        {/* ===================== MODALS ===================== */}
+
+        {/* Add Buddy Modal */}
         {showAddModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowAddModal(false)} />
@@ -630,6 +733,145 @@ export default function BuddyPage() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Buddy Detail Modal */}
+        {showBuddyDetail && (
+          <div className="fixed inset-0 z-[100] flex items-end justify-center">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowBuddyDetail(null)} />
+            <div className="relative w-full max-w-sm rounded-t-3xl border-t border-gray-700 bg-gray-900 p-6 pb-10 shadow-2xl">
+              <button onClick={() => setShowBuddyDetail(null)} className="absolute right-4 top-4 rounded-lg bg-gray-800 p-1.5">
+                <X className="h-4 w-4 text-gray-400" />
+              </button>
+              <div className="flex flex-col items-center">
+                {(() => {
+                  const ls = getLevelStyle(showBuddyDetail.level?.level || 1)
+                  return (
+                    <>
+                      <div className="relative">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-2xl font-bold text-white">
+                          {showBuddyDetail.avatar}
+                        </div>
+                        <div className={`absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full ${ls.bg} border ${ls.border} text-sm`}>
+                          {ls.icon}
+                        </div>
+                      </div>
+                      <h3 className="mt-3 text-lg font-bold text-foreground">{showBuddyDetail.name}</h3>
+                      <span className={`text-xs font-semibold ${ls.text}`}>{showBuddyDetail.level?.label || 'Seeker'}</span>
+                    </>
+                  )
+                })()}
+              </div>
+
+              {/* Stats comparison */}
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-xl bg-gray-800 p-3 text-center">
+                  <p className="text-lg font-bold text-emerald-400">{myStats?.totalPoints?.toLocaleString() || 0}</p>
+                  <p className="text-[10px] text-gray-500">Your Points</p>
+                </div>
+                <div className="rounded-xl bg-gray-800 p-3 text-center">
+                  <p className="text-lg font-bold text-blue-400">{showBuddyDetail.totalPoints?.toLocaleString() || 0}</p>
+                  <p className="text-[10px] text-gray-500">Their Points</p>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center justify-between rounded-xl bg-gray-800/60 px-4 py-3">
+                <span className="flex items-center gap-1 text-xs text-gray-400">
+                  <Flame className="h-3.5 w-3.5 text-amber-400" /> Streak
+                </span>
+                <span className="text-sm font-bold text-foreground">{showBuddyDetail.streak} days</span>
+              </div>
+
+              <div className="mt-4 flex gap-3">
+                <button
+                  onClick={() => { setShowBuddyDetail(null); setShowNudgeModal(showBuddyDetail.id) }}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-500 py-3 text-sm font-medium text-white"
+                >
+                  <Bell className="h-4 w-4" /> Nudge
+                </button>
+                <button
+                  onClick={() => removeBuddy(showBuddyDetail.id)}
+                  className="rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-red-400"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Nudge Modal */}
+        {showNudgeModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowNudgeModal(null)} />
+            <div className="relative w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+              <h3 className="mb-4 text-center text-lg font-bold text-foreground">Send a Nudge</h3>
+              <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+                {NUDGE_MESSAGES.map((nudge, i) => (
+                  <button
+                    key={i}
+                    onClick={() => sendNudge(showNudgeModal)}
+                    className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-left transition-all active:bg-gray-700"
+                  >
+                    <nudge.icon className={`mt-0.5 h-4 w-4 shrink-0 ${nudge.color}`} />
+                    <span className="text-xs leading-relaxed text-gray-300">{nudge.text}</span>
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setShowNudgeModal(null)}
+                className="mt-4 w-full rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* New Challenge Modal */}
+        {showChallengeModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowChallengeModal(false)} />
+            <div className="relative w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+              <h3 className="mb-4 text-center text-lg font-bold text-foreground">Choose a Challenge</h3>
+              <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+                {NEW_CHALLENGE_TEMPLATES.map((t, i) => {
+                  const CIcon = CHALLENGE_ICONS[t.category] || Target
+                  const gradient = CHALLENGE_COLORS[t.category] || 'from-gray-500 to-gray-600'
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => addChallenge(t)}
+                      className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-left transition-all active:bg-gray-700"
+                    >
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradient}`}>
+                        <CIcon className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-foreground">{t.title}</p>
+                        <p className="text-[10px] text-gray-500">{t.description}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-[10px] text-gray-600">{t.target} {t.unit}</span>
+                          <span className="flex items-center gap-0.5 text-[10px] text-amber-400">
+                            <Star className="h-2 w-2" /> +{t.reward}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+              <button onClick={() => setShowChallengeModal(false)}
+                className="mt-4 w-full rounded-xl bg-gray-800 py-3 text-sm font-medium text-gray-300">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Toast */}
+        {toastMsg && (
+          <div className="fixed bottom-24 left-1/2 z-[200] -translate-x-1/2 rounded-2xl bg-gray-800 px-5 py-3 text-xs font-medium text-white shadow-xl border border-gray-700">
+            {toastMsg}
           </div>
         )}
       </div>

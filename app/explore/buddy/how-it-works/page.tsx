@@ -3,11 +3,12 @@
 import {
   Users, Heart, Target, Trophy, Star, Flame, Crown, Medal, Award,
   Bell, Swords, BookOpen, Moon, HandHeart, Sparkles, Gift,
-  ChevronRight, ArrowRight, ShieldCheck, Zap, MessageCircle
+  ChevronRight, ArrowRight, ShieldCheck, Zap, MessageCircle, TrendingUp
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
+import { LEVELS } from '@/lib/points-client'
 import Link from 'next/link'
 
 const STEPS = [
@@ -37,52 +38,88 @@ const STEPS = [
     icon: Trophy,
     color: 'from-purple-500 to-pink-600',
     title: 'Earn and Compete',
-    description: 'Earn points for completing prayers, reading Quran, fasting, and hitting challenge milestones. Climb the leaderboard and reach Gold tier.',
+    description: 'Earn points for completing prayers, reading Quran, fasting, and hitting challenge milestones. Climb the leaderboard and reach Champion level.',
   },
 ]
 
-const POINT_SYSTEM = [
-  { action: 'Complete a daily prayer on time', points: 5, icon: HandHeart, color: 'text-emerald-400' },
-  { action: 'All 5 prayers in a day', points: 50, icon: ShieldCheck, color: 'text-emerald-400' },
-  { action: 'Read 1 page of Quran', points: 3, icon: BookOpen, color: 'text-purple-400' },
-  { action: 'Complete a surah', points: 10, icon: BookOpen, color: 'text-purple-400' },
-  { action: 'Fast a voluntary day', points: 25, icon: Moon, color: 'text-amber-400' },
-  { action: 'Complete daily adhkar', points: 10, icon: Sparkles, color: 'text-cyan-400' },
-  { action: 'Reach a challenge milestone', points: 50, icon: Target, color: 'text-blue-400' },
-  { action: 'Win a challenge', points: 100, icon: Trophy, color: 'text-amber-400' },
-  { action: 'Maintain a 7-day streak', points: 30, icon: Flame, color: 'text-orange-400' },
-  { action: 'Maintain a 30-day streak', points: 150, icon: Zap, color: 'text-yellow-400' },
+const DAILY_POINTS = [
+  { action: 'Each Fard prayer', points: '5', bonus: '+5 in jamaah', icon: HandHeart, color: 'text-emerald-400' },
+  { action: 'Fast a day (Ramadan)', points: '50', icon: Moon, color: 'text-amber-400' },
+  { action: 'Fast a voluntary day', points: '25', icon: Moon, color: 'text-amber-400' },
+  { action: 'Visit the masjid', points: '40', icon: Sparkles, color: 'text-teal-400' },
+  { action: 'Daily adhkar (per 10)', points: '10', bonus: 'up to 100', icon: Sparkles, color: 'text-cyan-400' },
+  { action: 'Read a surah', points: '10', bonus: 'up to 100', icon: BookOpen, color: 'text-purple-400' },
+  { action: 'Perfect Day (all 5 items)', points: '+50', bonus: 'bonus', icon: ShieldCheck, color: 'text-emerald-400' },
 ]
 
-const TIERS = [
-  {
-    name: 'Bronze',
-    range: '0 - 199 pts',
-    icon: Award,
-    gradient: 'from-orange-700 to-orange-800',
-    border: 'border-orange-700/40',
-    text: 'text-orange-400',
-    description: 'Every journey begins with a single step. Start praying consistently and take on your first challenge.',
+const SUNNAH_POINTS = [
+  { label: "Fajr Sunnah (2 rak'ah)", pts: 30, note: 'Prophet \u2E3A never missed it' },
+  { label: 'Witr (Wajib/Sunnah)', pts: 50, note: 'Wajib per Hanafi school' },
+  { label: 'Dhuhr Sunnah (before + after)', pts: 40, note: "4+2 rak'ah" },
+  { label: 'Maghrib Sunnah', pts: 20 },
+  { label: 'Isha Sunnah', pts: 20 },
+]
+
+const NAWAFIL_POINTS = [
+  { label: 'Tahajjud', pts: 100, icon: '\uD83C\uDF19', note: 'Highest reward' },
+  { label: 'Tarawih (Ramadan)', pts: 60, icon: '\uD83C\uDF19' },
+  { label: 'Duha', pts: 50, icon: '\u2600\uFE0F' },
+  { label: 'Ishraq', pts: 40, icon: '\uD83C\uDF05' },
+  { label: 'Awwabeen', pts: 30, icon: '\u2B50' },
+]
+
+const STREAK_MULTIPLIERS = [
+  { days: '3+ days', mult: '1.2\u00D7', label: 'Consistent' },
+  { days: '7+ days', mult: '1.5\u00D7', label: 'Committed' },
+  { days: '14+ days', mult: '1.8\u00D7', label: 'Dedicated' },
+  { days: '21+ days', mult: '2.0\u00D7', label: 'Elite' },
+]
+
+const LEVEL_STYLES: Record<number, { gradient: string; text: string; border: string; description: string }> = {
+  1: {
+    gradient: 'from-gray-500 to-gray-600',
+    text: 'text-gray-400',
+    border: 'border-gray-500/40',
+    description: 'Every journey starts here. Begin your daily ibadah and earn your first points.',
   },
-  {
-    name: 'Silver',
-    range: '200 - 399 pts',
-    icon: Medal,
-    gradient: 'from-gray-400 to-gray-500',
-    border: 'border-gray-400/40',
-    text: 'text-gray-300',
-    description: 'You are building strong habits. Your dedication is showing. Keep pushing and inspire your buddies.',
+  2: {
+    gradient: 'from-blue-600 to-blue-700',
+    text: 'text-blue-400',
+    border: 'border-blue-600/40',
+    description: "You've established consistent habits. Your dedication is showing, keep going!",
   },
-  {
-    name: 'Gold',
-    range: '400+ pts',
-    icon: Crown,
+  3: {
+    gradient: 'from-emerald-500 to-emerald-600',
+    text: 'text-emerald-400',
+    border: 'border-emerald-500/40',
+    description: 'Strong in faith and practice. You inspire those around you with your consistency.',
+  },
+  4: {
+    gradient: 'from-purple-500 to-purple-600',
+    text: 'text-purple-400',
+    border: 'border-purple-500/40',
+    description: 'Your ibadah shines like a lantern. You are an example for the whole community.',
+  },
+  5: {
     gradient: 'from-amber-400 to-amber-600',
-    border: 'border-amber-400/40',
     text: 'text-amber-400',
-    description: 'The pinnacle of faith partnership. You are a role model for consistency, devotion, and spiritual growth.',
+    border: 'border-amber-400/40',
+    description: 'The pinnacle of devotion. You are a role model for the Ummah. May Allah keep you firm.',
   },
-]
+}
+
+const LEVEL_ICONS: Record<number, typeof Crown> = {
+  1: Award, 2: Medal, 3: Star, 4: Sparkles, 5: Crown,
+}
+
+function getLevelRange(level: typeof LEVELS[number]): string {
+  const nextLevel = LEVELS.find(l => l.level === level.level + 1)
+  if (!nextLevel) return `${level.min.toLocaleString()}+ pts`
+  return `${level.min.toLocaleString()} - ${(nextLevel.min - 1).toLocaleString()} pts`
+}
+
+// Reversed so Seeker is first visually
+const LEVELS_DISPLAY = [...LEVELS].reverse()
 
 const CHALLENGE_TYPES = [
   {
@@ -107,6 +144,13 @@ const CHALLENGE_TYPES = [
     examples: ['Monday/Thursday Fasting', 'White Days Challenge', 'Ramadan Companion'],
   },
   {
+    icon: Moon,
+    color: 'from-indigo-500 to-violet-600',
+    title: 'Sunnah & Nawafil',
+    description: 'Track your sunnah prayers and nawafil \u2014 Tahajjud, Duha, Witr. Earn the highest points per prayer in the app.',
+    examples: ['Witr Every Night', 'Tahajjud Week', 'Fajr Sunnah Month'],
+  },
+  {
     icon: Sparkles,
     color: 'from-blue-500 to-cyan-600',
     title: 'Dhikr Challenges',
@@ -124,15 +168,15 @@ const CHALLENGE_TYPES = [
 
 const HADITHS = [
   {
-    text: '"A person is upon the religion of their close friend, so let one of you look at whom they befriend."',
+    text: '\u201CA person is upon the religion of their close friend, so let one of you look at whom they befriend.\u201D',
     source: 'Abu Dawud and Tirmidhi',
   },
   {
-    text: '"The believers in their mutual kindness, compassion, and sympathy are just like one body. When one limb suffers, the whole body responds to it with wakefulness and fever."',
+    text: '\u201CThe believers in their mutual kindness, compassion, and sympathy are just like one body. When one limb suffers, the whole body responds to it with wakefulness and fever.\u201D',
     source: 'Sahih Muslim',
   },
   {
-    text: '"Whoever guides someone to good, they will have a reward like the one who did it."',
+    text: '\u201CWhoever guides someone to good, they will have a reward like the one who did it.\u201D',
     source: 'Sahih Muslim',
   },
 ]
@@ -184,38 +228,110 @@ export default function HowItWorksPage() {
           </div>
         </SettingGroup>
 
-        {/* Point System */}
-        <SettingGroup label="Point System" accentColor="bg-amber-500">
+        {/* Daily Point System */}
+        <SettingGroup label="Daily Points" accentColor="bg-amber-500">
           <div className="divide-y divide-gray-800/50">
-            {POINT_SYSTEM.map((item, i) => (
+            {DAILY_POINTS.map((item, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
                 <item.icon className={`h-4 w-4 shrink-0 ${item.color}`} />
-                <span className="flex-1 text-xs text-gray-300">{item.action}</span>
+                <div className="flex-1">
+                  <span className="text-xs text-gray-300">{item.action}</span>
+                  {item.bonus && (
+                    <span className="ml-1.5 text-[10px] text-gray-500">({item.bonus})</span>
+                  )}
+                </div>
                 <span className="flex items-center gap-0.5 rounded-lg bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-400">
-                  <Star className="h-2.5 w-2.5" /> +{item.points}
+                  <Star className="h-2.5 w-2.5" /> {item.points}
                 </span>
               </div>
             ))}
           </div>
         </SettingGroup>
 
-        {/* Tier System */}
-        <SettingGroup label="Tier System" accentColor="bg-purple-500">
-          <div className="space-y-3 p-4">
-            {TIERS.map((tier) => (
-              <div key={tier.name} className={`rounded-xl border ${tier.border} p-4`}>
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tier.gradient}`}>
-                    <tier.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className={`text-sm font-bold ${tier.text}`}>{tier.name}</h4>
-                    <span className="text-[11px] text-gray-500">{tier.range}</span>
-                  </div>
+        {/* Sunnah Prayer Points */}
+        <SettingGroup label="Sunnah Prayer Points" accentColor="bg-indigo-500">
+          <div className="divide-y divide-gray-800/50">
+            {SUNNAH_POINTS.map((s, i) => (
+              <div key={i} className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-300">{s.label}</p>
+                  {s.note && <p className="text-[10px] text-gray-500">{s.note}</p>}
                 </div>
-                <p className="mt-2 text-xs leading-relaxed text-gray-400">{tier.description}</p>
+                <span className="flex items-center gap-0.5 rounded-lg bg-indigo-500/10 px-2 py-0.5 text-[11px] font-bold text-indigo-400">
+                  <Star className="h-2.5 w-2.5" /> +{s.pts}
+                </span>
               </div>
             ))}
+          </div>
+        </SettingGroup>
+
+        {/* Nawafil Points */}
+        <SettingGroup label="Nawafil Points" accentColor="bg-violet-500">
+          <div className="divide-y divide-gray-800/50">
+            {NAWAFIL_POINTS.map((n, i) => (
+              <div key={i} className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">{n.icon}</span>
+                  <div>
+                    <p className="text-xs font-medium text-gray-300">{n.label}</p>
+                    {n.note && <p className="text-[10px] text-gray-500">{n.note}</p>}
+                  </div>
+                </div>
+                <span className="flex items-center gap-0.5 rounded-lg bg-violet-500/10 px-2 py-0.5 text-[11px] font-bold text-violet-400">
+                  <Star className="h-2.5 w-2.5" /> +{n.pts}
+                </span>
+              </div>
+            ))}
+          </div>
+        </SettingGroup>
+
+        {/* Streak Multipliers */}
+        <SettingGroup label="Streak Multipliers" accentColor="bg-orange-500">
+          <div className="p-4">
+            <p className="mb-3 text-xs leading-relaxed text-gray-400">
+              Maintain consecutive active days (3+ tracked items) to multiply all your daily points. The multiplier applies to your base score before the Perfect Day bonus.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {STREAK_MULTIPLIERS.map((s, i) => (
+                <div key={i} className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900 p-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/10">
+                    <TrendingUp className="h-4 w-4 text-orange-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-orange-400">{s.mult}</p>
+                    <p className="text-[10px] text-gray-500">{s.days}</p>
+                    <p className="text-[10px] text-gray-600">{s.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SettingGroup>
+
+        {/* Level System */}
+        <SettingGroup label="Level System" accentColor="bg-purple-500">
+          <div className="space-y-3 p-4">
+            {LEVELS_DISPLAY.map((level) => {
+              const style = LEVEL_STYLES[level.level]
+              const LevelIcon = LEVEL_ICONS[level.level]
+              return (
+                <div key={level.level} className={`rounded-xl border ${style.border} p-4`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${style.gradient}`}>
+                      <LevelIcon className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className={`text-sm font-bold ${style.text}`}>{level.label}</h4>
+                        <span className="text-[10px] text-gray-600">{level.arabic}</span>
+                      </div>
+                      <span className="text-[11px] text-gray-500">{getLevelRange(level)}</span>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-gray-400">{style.description}</p>
+                </div>
+              )
+            })}
           </div>
         </SettingGroup>
 
