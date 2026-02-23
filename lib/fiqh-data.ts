@@ -1994,4 +1994,32 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     ],
     note: 'This is a topic with genuine scholarly disagreement. The Hanafi position (predominant in Guyana) considers musical instruments haram. Consult a local scholar for personal guidance.',
   },
+  {
+    id: 'qa-blood-tests-fasting',
+    chapter: 'Q&A',
+    title: 'Blood Tests & Blood Donations While Fasting',
+    rulingType: 'fard',
+    overview: 'A common question during Ramadan — does giving blood for a test or donation break the fast?',
+    points: [
+      'Drawing blood for blood tests does NOT break the fast.',
+      'Blood donation while fasting does NOT break the fast.',
+      'However, drawing so much blood that it weakens the body is Makruh (disliked).',
+    ],
+    madhab: 'Hanafi (Fatawaa Darul Uloom Zakari\'yya 3/287)',
+    note: 'Source: Jami\'yyatul Ulamaa Guyana — Fatwa Department (Darul Iftaa & Irshad Guyana)',
+  },
+  {
+    id: 'qa-injections-fasting',
+    chapter: 'Q&A',
+    title: 'Injections & Vaccinations While Fasting',
+    rulingType: 'fard',
+    overview: 'Can a fasting person receive an injection or vaccine without breaking the fast?',
+    points: [
+      'Administering medication via an injection does NOT break the fast.',
+      'Being vaccinated while fasting does NOT break the fast.',
+      'However, if the injection is such that the medication reaches directly to the brain or the intestines, the fast WILL break.',
+    ],
+    madhab: 'Hanafi (Kitaabul Masaill 2/154)',
+    note: 'Source: Jami\'yyatul Ulamaa Guyana — Fatwa Department (Darul Iftaa & Irshad Guyana)',
+  },
 ]
