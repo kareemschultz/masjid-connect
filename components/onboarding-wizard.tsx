@@ -168,7 +168,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
   const [usernameError, setUsernameError] = useState('')
-  const [method, setMethod] = useState('Egyptian')
+  const [method, setMethod] = useState('MuslimWorldLeague')
   const [madhab, setMadhab] = useState('Shafi')
   const [ramadanStart, setRamadanStart] = useState('ciog')
   const [notifGranted, setNotifGranted] = useState(false)
@@ -506,19 +506,22 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Calculation Method
             </label>
-            <p className="mb-2 text-[11px] text-gray-500">These affect only Fajr and Isha times. For most of Guyana, Egyptian General Authority or Muslim World League work well.</p>
+            <p className="mb-2 text-[11px] text-gray-500">This adjusts when Fajr and Isha begin. Most Guyanese Masjids use <span className="text-emerald-400 font-semibold">Standard (MWL)</span> — already selected for you.</p>
             <div className="mb-4 max-h-[180px] overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900">
               {CALCULATION_METHODS.map((m) => (
                 <button
                   key={m.key}
                   onClick={() => setMethod(m.key)}
-                  className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-all first:rounded-t-2xl last:rounded-b-2xl not-last:border-b not-last:border-gray-800/50 ${
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-all first:rounded-t-2xl last:rounded-b-2xl not-last:border-b not-last:border-gray-800/50 ${
                     method === m.key ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300 active:bg-white/5'
                   }`}
                 >
                   {method === m.key && <Check className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
                   {method !== m.key && <span className="h-3.5 w-3.5 shrink-0" />}
-                  {m.label}
+                  <div className="min-w-0">
+                    <span className="block text-sm">{m.label}</span>
+                    {m.note && <span className="block text-[10px] text-gray-500 mt-0.5">{m.note}</span>}
+                  </div>
                 </button>
               ))}
             </div>

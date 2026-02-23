@@ -47,7 +47,7 @@ function GoogleIcon() {
 }
 
 export default function SettingsPage() {
-  const [method, setMethod] = useState('Egyptian')
+  const [method, setMethod] = useState('MuslimWorldLeague')
   const [madhab, setMadhab] = useState('Shafi')
   const [moonSighting, setMoonSighting] = useState('ciog')
   const [reciter, setReciter] = useState('ar.alafasy')
@@ -69,7 +69,7 @@ export default function SettingsPage() {
   const [phoneMsg, setPhoneMsg] = useState('')
 
   useEffect(() => {
-    setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
+    setMethod(getItem(KEYS.CALCULATION_METHOD, 'MuslimWorldLeague'))
     setMadhab(getItem(KEYS.MADHAB, 'Shafi'))
     setMoonSighting(getItem<string>('moon_sighting', 'ciog'))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
@@ -366,7 +366,7 @@ export default function SettingsPage() {
 
         {/* Prayer Settings */}
         <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
-          <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Calculation Method" value={methodLabel.split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
+          <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Fajr & Isha Calculation" value={methodLabel.split('—')[0].split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
           <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Asr Prayer Time" value={madhab === 'Hanafi' ? 'Hanafi (later)' : 'Standard (earlier)'} onClick={() => setModalOpen('madhab')} />
           <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
         </SettingGroup>
@@ -433,7 +433,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Modals */}
-      <SelectModal open={modalOpen === 'method'} onClose={() => setModalOpen(null)} title="Calculation Method" options={CALCULATION_METHODS.map(m => ({ key: m.key, label: m.label }))} selected={method} onSelect={updateMethod} />
+      <SelectModal open={modalOpen === 'method'} onClose={() => setModalOpen(null)} title="Fajr & Isha Calculation" subtitle="These settings adjust when Fajr and Isha begin. Most Guyanese Masjids follow the Standard (MWL) setting. If your local Masjid's timetable is slightly different, adjust here." options={CALCULATION_METHODS.map(m => ({ key: m.key, label: m.label, note: m.note }))} selected={method} onSelect={updateMethod} />
       <SelectModal open={modalOpen === 'madhab'} onClose={() => setModalOpen(null)} title="Asr Prayer Time" options={MADHABS.map(m => ({ key: m.key, label: m.key === 'Hanafi' ? 'Hanafi — later Asr time' : "Standard (earlier) — Shafi\u2019i / Hanbali / Maliki" }))} selected={madhab} onSelect={updateMadhab} />
       <SelectModal open={modalOpen === 'reciter'} onClose={() => setModalOpen(null)} title="Default Reciter" options={RECITERS.map(r => ({ key: r.key, label: r.label }))} selected={reciter} onSelect={updateReciter} />
       <SelectModal

@@ -8,18 +8,18 @@ export const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const
 export type PrayerName = (typeof PRAYER_NAMES)[number]
 
 export const CALCULATION_METHODS = [
-  { key: 'MuslimWorldLeague', label: 'Muslim World League' },
-  { key: 'Egyptian', label: 'Egyptian General Authority' },
-  { key: 'Karachi', label: 'University of Islamic Sciences, Karachi' },
-  { key: 'NorthAmerica', label: 'Islamic Society of North America (ISNA)' },
-  { key: 'MoonsightingCommittee', label: 'Moonsighting Committee' },
-  { key: 'UmmAlQura', label: 'Umm Al-Qura University, Makkah' },
-  { key: 'Dubai', label: 'Dubai' },
-  { key: 'Qatar', label: 'Qatar' },
-  { key: 'Kuwait', label: 'Kuwait' },
-  { key: 'Singapore', label: 'Singapore' },
-  { key: 'Tehran', label: 'Institute of Geophysics, Tehran' },
-  { key: 'Turkey', label: 'Turkey (Diyanet)' },
+  { key: 'MuslimWorldLeague', label: 'Standard — Muslim World League', note: 'Recommended for Guyana · 18° Fajr & Isha' },
+  { key: 'Egyptian', label: 'Egyptian General Authority', note: '19.5° Fajr · 17.5° Isha' },
+  { key: 'Karachi', label: 'University of Islamic Sciences, Karachi', note: '18° Fajr & Isha — common in South Asia' },
+  { key: 'NorthAmerica', label: 'North American Standard (ISNA)', note: '15° Fajr & Isha' },
+  { key: 'MoonsightingCommittee', label: 'Observation Based (Moonsighting Committee)', note: 'Manual / observation-based times' },
+  { key: 'UmmAlQura', label: 'Saudi Arabia / Makkah (Umm Al-Qura)', note: 'Used in Saudi Arabia' },
+  { key: 'Dubai', label: 'Dubai', note: 'UAE standard' },
+  { key: 'Qatar', label: 'Qatar', note: 'Qatar standard' },
+  { key: 'Kuwait', label: 'Kuwait', note: 'Kuwait standard' },
+  { key: 'Singapore', label: 'Singapore', note: 'Southeast Asia' },
+  { key: 'Tehran', label: 'Institute of Geophysics, Tehran', note: 'Shia standard · Iran' },
+  { key: 'Turkey', label: 'Turkey (Diyanet)', note: 'Turkish Directorate of Religious Affairs' },
 ] as const
 
 export const MADHABS = [
