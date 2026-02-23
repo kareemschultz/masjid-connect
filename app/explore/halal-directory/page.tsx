@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ShieldCheck, Search, X, MapPin, Phone, Globe, AlertTriangle, ChevronDown, ChevronUp, Info, Plus } from 'lucide-react'
+import { ShieldCheck, Search, X, MapPin, Phone, Globe, AlertTriangle, ChevronDown, ChevronUp, Info } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -611,15 +611,6 @@ export default function HalalDirectoryPage() {
         </div>
 
       </div>
-
-      {/* ── Floating Submit button ── */}
-      <button
-        onClick={openModal}
-        className="fixed bottom-[5.5rem] right-4 z-50 flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg active:bg-emerald-700"
-      >
-        <Plus className="h-3.5 w-3.5" />
-        Submit Update
-      </button>
 
       {/* ── Submit modal ── */}
       {showSubmitModal && (
