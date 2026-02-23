@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { BottomNav } from '@/components/bottom-nav'
 import { PrayerStrip } from '@/components/prayer-strip'
+import { HeroAnimation } from '@/components/hero-animations'
 import { getHijriDate, formatTime, getTimeUntil, PRAYER_NAMES } from '@/lib/prayer-times'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import Image from 'next/image'
@@ -380,6 +381,8 @@ export default function HomePage() {
         {/* Pattern overlay */}
         <div className="islamic-pattern absolute inset-0 opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0b14]" />
+        {/* Hero animation */}
+        <HeroAnimation theme={ramadan ? 'ramadan' : 'prayer'} />
 
         {/* Crescent moon for Ramadan */}
         {ramadan && (
