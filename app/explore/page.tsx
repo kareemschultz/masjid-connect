@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin } from 'lucide-react'
+import { Compass, Star, BookOpen, Calendar, Navigation2, Calculator, GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library, Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun, MapPin, Keyboard } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -14,6 +14,8 @@ const SECTIONS = [
       { icon: GraduationCap, label: 'Madrasa', description: 'Learn Islam', href: '/explore/madrasa', color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400' },
       { icon: Headphones, label: 'Lectures', description: 'Audio Series', href: '/explore/lectures', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
       { icon: Brain, label: 'Hifz Mode', description: 'Memorize Quran', href: '/quran/hifz', color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400' },
+      { icon: Users, label: 'Prophets', description: '25 Quranic Stories', href: '/explore/madrasa/prophets', color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400' },
+      { icon: Keyboard, label: 'Arabic Practice', description: 'Learn Letters', href: '/explore/madrasa/arabic-typing', color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400' },
     ],
   },
   {

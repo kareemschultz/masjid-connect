@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Loader2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Loader2, Share2, Copy, MessageCircle } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { getItem, setItem } from '@/lib/storage'
@@ -95,6 +95,31 @@ async function fetchPage(page: number): Promise<PageData | null> {
   }
 }
 
+// ─── Common Verse Translations (for sharing) ─────────────────────────────────
+const VERSE_TRANSLATIONS: Record<string, string> = {
+  '1:1': 'In the name of Allah, the Most Gracious, the Most Merciful.',
+  '1:2': 'All praise is due to Allah, Lord of the worlds.',
+  '2:152': 'So remember Me; I will remember you.',
+  '2:153': 'Indeed, Allah is with the patient.',
+  '2:186': 'I am near. I respond to the invocation of the supplicant when he calls upon Me.',
+  '2:255': 'Allah — there is no deity except Him, the Ever-Living, the Sustainer of existence.',
+  '2:286': 'Allah does not burden a soul beyond that it can bear.',
+  '3:139': 'Do not weaken and do not grieve, for you will be superior if you are believers.',
+  '12:87': 'Do not despair of the mercy of Allah.',
+  '13:28': 'Verily, in the remembrance of Allah do hearts find rest.',
+  '40:60': 'Call upon Me; I will respond to you.',
+  '55:13': 'So which of the favors of your Lord would you deny?',
+  '93:5': 'And your Lord is going to give you, and you will be satisfied.',
+  '94:6': 'Indeed, with hardship comes ease.',
+  '112:1': 'Say: He is Allah, the One.',
+}
+
+interface SelectedVerse {
+  verseKey: string
+  arabicText: string
+  surahName: string
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function MushafPage() {
@@ -108,6 +133,8 @@ export default function MushafPage() {
   const [showNav, setShowNav] = useState(false)
   const [jumpTo, setJumpTo] = useState('')
   const [surahFilter, setSurahFilter] = useState('')
+  const [selectedVerse, setSelectedVerse] = useState<SelectedVerse | null>(null)
+  const [copied, setCopied] = useState(false)
   const touchStartX = useRef<number | null>(null)
 
   const loadPage = useCallback(async (page: number) => {
@@ -216,14 +243,36 @@ export default function MushafPage() {
               className="text-center leading-[2.2] text-white"
               style={{ fontFamily: '"Amiri Quran", "Amiri", serif', fontSize: '1.25rem' }}
             >
-              {words.map((w, wi) => (
-                <span
-                  key={wi}
-                  className={w.char_type_name === 'end' ? 'text-amber-400/80' : ''}
-                >
-                  {w.text_uthmani}{' '}
-                </span>
-              ))}
+              {words.map((w, wi) => {
+                if (w.char_type_name === 'end') {
+                  return (
+                    <span
+                      key={wi}
+                      className="text-amber-400/80 cursor-pointer active:bg-amber-500/20 rounded px-0.5"
+                      onClick={() => {
+                        // Collect all words for this verse
+                        const verseWords = allWords
+                          .filter(aw => aw.verseKey === w.verseKey && aw.char_type_name !== 'end')
+                          .map(aw => aw.text_uthmani)
+                          .join(' ')
+                        const chId = parseInt(w.verseKey.split(':')[0])
+                        setSelectedVerse({
+                          verseKey: w.verseKey,
+                          arabicText: verseWords,
+                          surahName: SURAH_NAMES[chId] || `Surah ${chId}`,
+                        })
+                      }}
+                    >
+                      {w.text_uthmani}{' '}
+                    </span>
+                  )
+                }
+                return (
+                  <span key={wi}>
+                    {w.text_uthmani}{' '}
+                  </span>
+                )
+              })}
             </p>
           ))}
         </div>
@@ -359,6 +408,94 @@ export default function MushafPage() {
           style={{ width: `${(currentPage / 604) * 100}%` }}
         />
       </div>
+
+      {/* ── Verse Share Bottom Sheet ─────────────────────── */}
+      {selectedVerse && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setSelectedVerse(null)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-lg rounded-t-3xl border-t border-gray-700 bg-gray-900 px-5 pb-8 pt-5 animate-slide-up"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Handle */}
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-700" />
+
+            {/* Arabic text */}
+            <p
+              className="mb-3 text-center text-xl leading-[2.2] text-white"
+              dir="rtl"
+              style={{ fontFamily: '"Amiri Quran", "Amiri", serif' }}
+            >
+              {selectedVerse.arabicText}
+            </p>
+
+            {/* Translation (if available) */}
+            {VERSE_TRANSLATIONS[selectedVerse.verseKey] && (
+              <p className="mb-3 text-center text-sm italic text-gray-300">
+                &ldquo;{VERSE_TRANSLATIONS[selectedVerse.verseKey]}&rdquo;
+              </p>
+            )}
+
+            {/* Reference */}
+            <p className="mb-5 text-center text-xs text-amber-400/70">
+              {selectedVerse.surahName} — {selectedVerse.verseKey}
+            </p>
+
+            {/* Action buttons */}
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={async () => {
+                  const translation = VERSE_TRANSLATIONS[selectedVerse.verseKey]
+                  const text = `${selectedVerse.arabicText}${translation ? `\n\n"${translation}"` : ''}\n— Quran ${selectedVerse.verseKey}\n\nvia MasjidConnect GY`
+                  if (navigator.share) {
+                    await navigator.share({ text }).catch(() => {})
+                  } else {
+                    await navigator.clipboard.writeText(text).catch(() => {})
+                  }
+                }}
+                className="flex flex-col items-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 py-3.5 text-emerald-400 active:bg-emerald-500/20"
+              >
+                <Share2 className="h-5 w-5" />
+                <span className="text-[11px] font-semibold">Share</span>
+              </button>
+
+              <button
+                onClick={async () => {
+                  const translation = VERSE_TRANSLATIONS[selectedVerse.verseKey]
+                  const text = `${selectedVerse.arabicText}${translation ? `\n\n"${translation}"` : ''}\n— Quran ${selectedVerse.verseKey}`
+                  await navigator.clipboard.writeText(text).catch(() => {})
+                  setCopied(true)
+                  setTimeout(() => setCopied(false), 1500)
+                }}
+                className="flex flex-col items-center gap-2 rounded-2xl border border-blue-500/20 bg-blue-500/10 py-3.5 text-blue-400 active:bg-blue-500/20"
+              >
+                <Copy className="h-5 w-5" />
+                <span className="text-[11px] font-semibold">{copied ? 'Copied!' : 'Copy'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const translation = VERSE_TRANSLATIONS[selectedVerse.verseKey]
+                  const text = `${selectedVerse.arabicText}${translation ? `\n\n"${translation}"` : ''}\n— Quran ${selectedVerse.verseKey}\n\nvia MasjidConnect GY`
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+                }}
+                className="flex flex-col items-center gap-2 rounded-2xl border border-green-500/20 bg-green-500/10 py-3.5 text-green-400 active:bg-green-500/20"
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-[11px] font-semibold">WhatsApp</span>
+              </button>
+            </div>
+
+            {/* Close */}
+            <button
+              onClick={() => setSelectedVerse(null)}
+              className="mt-4 w-full rounded-2xl border border-gray-800 bg-gray-800/50 py-3 text-sm font-medium text-gray-400 active:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>

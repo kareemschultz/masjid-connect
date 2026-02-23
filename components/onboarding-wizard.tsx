@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import {
   BookOpen, MapPin, Clock, Users, ChevronRight, ChevronLeft,
   Sparkles, Moon, Bell, Smartphone, Share2, Heart, Star,
@@ -22,49 +23,49 @@ const TOTAL_STEPS = 6
 
 const FEATURES = [
   {
-    icon: Clock,
+    emoji: '\uD83D\uDD4C',
     label: 'Prayer Times',
-    desc: 'Accurate adhan times for Georgetown with live countdown, adhan notifications, and Qibla direction.',
+    desc: 'Accurate times for Georgetown, Guyana',
     color: 'bg-emerald-500/15',
     iconColor: 'text-emerald-400',
     border: 'border-emerald-500/20',
   },
   {
-    icon: UtensilsCrossed,
-    label: 'Iftaar Reports',
-    desc: 'Real-time community Iftaar sightings from masjids across Georgetown — submitted by your neighbours.',
-    color: 'bg-orange-500/15',
-    iconColor: 'text-orange-400',
-    border: 'border-orange-500/20',
-  },
-  {
-    icon: BookOpen,
-    label: 'Quran Reader',
-    desc: 'Full Quran in Arabic + English with audio recitation by 12 reciters, bookmarks, and Hifz mode.',
+    emoji: '\uD83D\uDCD6',
+    label: 'Quran',
+    desc: "Mus'haf, recitation with 12 reciters, Hifz mode",
     color: 'bg-purple-500/15',
     iconColor: 'text-purple-400',
     border: 'border-purple-500/20',
   },
   {
-    icon: Users,
-    label: 'Faith Buddies',
-    desc: 'Connect with friends, compete on leaderboards, track streaks, and grow together in deen.',
-    color: 'bg-blue-500/15',
-    iconColor: 'text-blue-400',
-    border: 'border-blue-500/20',
+    emoji: '\uD83C\uDF19',
+    label: 'Ramadan',
+    desc: 'Suhoor/Iftaar countdowns, Fasting Tracker',
+    color: 'bg-orange-500/15',
+    iconColor: 'text-orange-400',
+    border: 'border-orange-500/20',
   },
   {
-    icon: Headphones,
-    label: 'Islamic Lectures',
-    desc: 'Full audio lecture series by Anwar al-Awlaki — Life of the Prophet, Hereafter, Lives of Prophets.',
+    emoji: '\uD83C\uDFA7',
+    label: 'Lectures',
+    desc: 'Anwar al-Awlaki, Hamza Yusuf, Bilal Philips, Yasmin Mogahed',
     color: 'bg-teal-500/15',
     iconColor: 'text-teal-400',
     border: 'border-teal-500/20',
   },
   {
-    icon: Star,
-    label: 'Tracker & Adhkar',
-    desc: 'Log your daily prayers, fasting, and good deeds. Build habits with your personal Islamic tracker.',
+    emoji: '\uD83D\uDD4C',
+    label: 'Masjids',
+    desc: '20+ masjids across Guyana, Jumu\'ah prep',
+    color: 'bg-blue-500/15',
+    iconColor: 'text-blue-400',
+    border: 'border-blue-500/20',
+  },
+  {
+    emoji: '\uD83D\uDCFF',
+    label: 'Community',
+    desc: 'Dua Board, Khatam Collective, Buddy System',
     color: 'bg-amber-500/15',
     iconColor: 'text-amber-400',
     border: 'border-amber-500/20',
@@ -145,6 +146,7 @@ function StepDots({ step, total }: { step: number; total: number }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
+  const router = useRouter()
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
   const [method, setMethod] = useState('Egyptian')
@@ -194,7 +196,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     try {
       // Use Better Auth Google sign-in
       const { signIn } = await import('@/lib/auth-client')
-      await signIn.social({ provider: 'google', callbackURL: '/' })
+      await signIn.social({ provider: 'google', callbackURL: '/?auth_complete=1' })
     } catch {
       setSigningIn(false)
     }
@@ -324,8 +326,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   key={i}
                   className={`flex flex-col gap-2 rounded-2xl border ${f.border} ${f.color} p-3.5`}
                 >
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-black/20`}>
-                    <f.icon className={`h-4.5 w-4.5 ${f.iconColor}`} />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black/20 text-lg">
+                    {f.emoji}
                   </div>
                   <p className={`text-xs font-bold ${f.iconColor}`}>{f.label}</p>
                   <p className="text-[10px] leading-relaxed text-gray-400">{f.desc}</p>
@@ -364,6 +366,29 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <button onClick={next} className="mt-5 text-sm text-gray-500 underline underline-offset-4 active:text-gray-400">
               Skip for now
             </button>
+
+            <div className="mt-6 w-full max-w-xs">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px flex-1 bg-gray-800" />
+                <span className="text-xs text-gray-600">or</span>
+                <div className="h-px flex-1 bg-gray-800" />
+              </div>
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={signingIn}
+                className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-700 bg-gray-900 px-5 py-4 text-sm font-semibold text-white transition-all active:bg-gray-800 disabled:opacity-50"
+              >
+                {signingIn ? (
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-gray-600 border-t-white" />
+                ) : (
+                  <GoogleIcon />
+                )}
+                {signingIn ? 'Redirecting to Google...' : 'Continue with Google'}
+              </button>
+              <p className="mt-2 text-center text-[10px] text-gray-600">
+                Sign in to sync your tracker and streaks across devices
+              </p>
+            </div>
 
             {/* Data note */}
             <p className="mt-4 max-w-xs text-center text-[11px] text-gray-600">
@@ -583,12 +608,27 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 {name ? `Bismillah, ${name}!` : "Bismillah — Let's Begin!"}
               </h2>
               <p className="mt-2 max-w-xs text-center text-sm text-gray-400">
-                May your journey with MasjidConnect GY be full of barakah. This app is yours — built with love for the community.
+                MasjidConnect GY has prayer times, Quran, lectures from 5 scholars, 20+ Guyana masjids, Seerah, Islamic Names, and more — all built for the Guyanese Muslim community. May Allah accept it from us all.
               </p>
+
+              <div className="mt-5 grid grid-cols-2 gap-2 w-full max-w-xs mb-4">
+                {[
+                  { label: '\uD83C\uDFA7 Lectures', href: '/explore/lectures' },
+                  { label: '\uD83D\uDCD6 Quran', href: '/quran' },
+                  { label: '\uD83D\uDD4C Masjids', href: '/masjids' },
+                  { label: '\uD83E\uDD32 Duas', href: '/explore/duas' },
+                ].map(item => (
+                  <button key={item.href} onClick={() => { finish(); router.push(item.href) }}
+                    className="rounded-xl border border-gray-800 bg-gray-900/60 py-2.5 text-xs font-medium text-gray-300 active:bg-gray-800">
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-center text-[10px] text-gray-600 mb-3">Jump straight to what matters</p>
 
               <button
                 onClick={finish}
-                className="mt-6 flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
+                className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
               >
                 Open MasjidConnect GY
                 <ChevronRight className="h-5 w-5" />

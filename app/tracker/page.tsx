@@ -11,6 +11,8 @@ import { BottomNav } from '@/components/bottom-nav'
 import { SettingGroup } from '@/components/setting-group'
 import { PRAYER_NAMES, type PrayerName } from '@/lib/prayer-times'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+
+type KhatamProgress = boolean[]
 import { shareOrCopy } from '@/lib/share'
 import Link from 'next/link'
 
@@ -100,6 +102,8 @@ export default function TrackerPage() {
   const [waterLog, setWaterLog] = useState<WaterLog>({})
   const [istighfarLog, setIstighfarLog] = useState<IstighfarLog>({})
   const [adhkarLog, setAdhkarLog] = useState<AdhkarLog>({})
+  const [khatamProgress, setKhatamProgress] = useState<KhatamProgress>(Array(30).fill(false))
+  const [showKhatamReset, setShowKhatamReset] = useState(false)
 
   /* ── toggle section helper ── */
   const toggleSection = useCallback((key: string) => {
@@ -148,6 +152,7 @@ export default function TrackerPage() {
     setWaterLog(getItem<WaterLog>(KEYS.WATER_LOG, {}))
     setIstighfarLog(getItem<IstighfarLog>(KEYS.ISTIGHFAR_COUNT, {}))
     setAdhkarLog(getItem<AdhkarLog>(KEYS.ADHKAR_LOG, {}))
+    setKhatamProgress(getItem<KhatamProgress>('khatam_personal_progress', Array(30).fill(false)))
   }, [])
 
   /* ── prayer toggle ── */
@@ -973,6 +978,90 @@ export default function TrackerPage() {
               <p className="text-center text-[11px] text-gray-500">
                 Completing morning &amp; evening adhkar is Sunnah
               </p>
+            </div>
+          )}
+        </SettingGroup>
+
+        {/* SECTION 7: Personal Khatam */}
+        <SettingGroup label="Personal Khatam" accentColor="bg-purple-500">
+          <SectionHeader
+            id="khatam"
+            emoji="📖"
+            title="Personal Khatam"
+            summary={`${khatamProgress.filter(Boolean).length}/30 Juz`}
+          />
+          {openSections.khatam && (
+            <div className="border-t border-gray-800 p-4">
+              <p className="text-xs text-gray-400 mb-4 text-center">Track your Quran completion — tap a Juz to mark it done</p>
+
+              {/* 6x5 Juz grid */}
+              <div className="grid grid-cols-6 gap-2 mb-4">
+                {Array.from({ length: 30 }, (_, i) => {
+                  const done = khatamProgress[i]
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        const updated = [...khatamProgress]
+                        updated[i] = !updated[i]
+                        setKhatamProgress(updated)
+                        setItem('khatam_personal_progress', updated)
+                      }}
+                      className={`flex h-11 w-full items-center justify-center rounded-xl text-xs font-bold transition-all active:scale-90 ${
+                        done
+                          ? 'border border-emerald-500/40 bg-emerald-500/20 text-emerald-400'
+                          : 'border border-gray-700 bg-gray-800 text-gray-500'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Progress text */}
+              <p className="text-center text-sm text-gray-300 mb-3">
+                <span className="font-bold text-purple-400">{khatamProgress.filter(Boolean).length}</span>/30 Juz complete
+                {khatamProgress.every(Boolean) && <span className="ml-2 text-emerald-400">Alhamdulillah! 🎉</span>}
+              </p>
+
+              {/* Progress bar */}
+              <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-gray-800">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple-500 to-emerald-400 transition-all duration-500"
+                  style={{ width: `${(khatamProgress.filter(Boolean).length / 30) * 100}%` }}
+                />
+              </div>
+
+              {/* Reset button */}
+              {showKhatamReset ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      const reset = Array(30).fill(false)
+                      setKhatamProgress(reset)
+                      setItem('khatam_personal_progress', reset)
+                      setShowKhatamReset(false)
+                    }}
+                    className="flex-1 rounded-xl bg-red-500/20 py-2.5 text-xs font-semibold text-red-400 active:bg-red-500/30"
+                  >
+                    Yes, reset
+                  </button>
+                  <button
+                    onClick={() => setShowKhatamReset(false)}
+                    className="flex-1 rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-xs font-medium text-gray-400 active:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowKhatamReset(true)}
+                  className="w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-xs font-medium text-gray-400 transition-all active:bg-gray-700"
+                >
+                  Start New Khatam
+                </button>
+              )}
             </div>
           )}
         </SettingGroup>

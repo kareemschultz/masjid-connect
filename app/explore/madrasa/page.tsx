@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { GraduationCap, BookOpen, Star, Moon, Heart, Users, Lock, ChevronRight, Calendar } from 'lucide-react'
+import { GraduationCap, BookOpen, Star, Moon, Heart, Users, Lock, ChevronRight, Calendar, Keyboard } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 
@@ -29,6 +29,30 @@ const ACTIVE_MODULES = [
     href: '/explore/madrasa/adab',
     badge: 'NEW',
     badgeColor: 'bg-amber-500/20 text-amber-400',
+  },
+  {
+    icon: Users,
+    title: 'Stories of the Prophets',
+    description: '25 Quranic prophets — from Adam to Muhammad \uFDFA',
+    color: 'bg-emerald-500/20',
+    borderColor: 'border-emerald-500/30',
+    bgColor: 'bg-emerald-500/5',
+    iconColor: 'text-emerald-400',
+    href: '/explore/madrasa/prophets',
+    badge: 'NEW',
+    badgeColor: 'bg-emerald-500/20 text-emerald-400',
+  },
+  {
+    icon: Keyboard,
+    title: 'Arabic Practice',
+    description: 'Practice Arabic letters & common words',
+    color: 'bg-cyan-500/20',
+    borderColor: 'border-cyan-500/30',
+    bgColor: 'bg-cyan-500/5',
+    iconColor: 'text-cyan-400',
+    href: '/explore/madrasa/arabic-typing',
+    badge: 'NEW',
+    badgeColor: 'bg-cyan-500/20 text-cyan-400',
   },
 ]
 
@@ -61,14 +85,6 @@ const FUTURE_MODULES = [
     lessons: 10,
     color: 'bg-blue-500/20',
     iconColor: 'text-blue-400',
-  },
-  {
-    icon: Users,
-    title: 'Stories of the Prophets',
-    description: 'From Adam to Muhammad (PBUT)',
-    lessons: 25,
-    color: 'bg-emerald-500/20',
-    iconColor: 'text-emerald-400',
   },
 ]
 

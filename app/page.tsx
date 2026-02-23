@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { BottomNav } from '@/components/bottom-nav'
 import { PrayerStrip } from '@/components/prayer-strip'
 import { getHijriDate, formatTime, getTimeUntil, PRAYER_NAMES } from '@/lib/prayer-times'
@@ -94,6 +94,7 @@ function getDailyVerse() {
 
 export default function HomePage() {
   const [prayers, setPrayers] = useState<PrayerTimeData[]>([])
+  const prayersRef = useRef<PrayerTimeData[]>([])
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 })
   const [nextPrayerName, setNextPrayerName] = useState('')
   const [hijriDate, setHijriDate] = useState('')
@@ -156,10 +157,23 @@ export default function HomePage() {
         name, time: formatTime(prayerMap[name]), date: prayerMap[name],
       }))
       setPrayers(prayerData)
+      prayersRef.current = prayerData
       scheduleNotifications(prayerData)
+      // Immediate countdown update (don't wait 1 second)
       const now = new Date()
-      const next = prayerData.find((p) => p.date > now) || prayerData[0]
-      setNextPrayerName(next.name)
+      const next = prayerData.find((p) => p.date > now)
+      if (next) {
+        setCountdown(getTimeUntil(next.date))
+        setNextPrayerName(next.name)
+      } else {
+        // Past Isha — next prayer is Fajr tomorrow
+        setNextPrayerName('Fajr')
+        const fajr = prayerData.find((p) => p.name === 'Fajr')
+        if (fajr) {
+          const tomorrowFajr = new Date(fajr.date.getTime() + 24 * 60 * 60 * 1000)
+          setCountdown(getTimeUntil(tomorrowFajr))
+        }
+      }
     } catch {
       const now = new Date()
       const hours = [5, 12, 15, 18, 19]
@@ -168,12 +182,31 @@ export default function HomePage() {
         return { name, time: formatTime(d), date: d }
       })
       setPrayers(fallback)
-      setNextPrayerName(fallback.find(p => p.date > now)?.name || fallback[0].name)
+      prayersRef.current = fallback
+      const nextFallback = fallback.find(p => p.date > now)
+      if (nextFallback) {
+        setNextPrayerName(nextFallback.name)
+        setCountdown(getTimeUntil(nextFallback.date))
+      } else {
+        setNextPrayerName('Fajr')
+        const fajrFallback = fallback.find(p => p.name === 'Fajr')
+        if (fajrFallback) {
+          setCountdown(getTimeUntil(new Date(fajrFallback.date.getTime() + 24 * 60 * 60 * 1000)))
+        }
+      }
     }
   }, [scheduleNotifications])
 
   useEffect(() => {
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
+
+    // Handle Google auth callback — skip onboarding if auth just completed
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('auth_complete') === '1') {
+      setItem(KEYS.ONBOARDING_COMPLETE, true)
+      setShowOnboarding(false)
+      window.history.replaceState({}, '', '/')
+    }
     setHijriDate(getHijriDate())
     setChecklist(getItem(KEYS.CHECKLIST, {}))
     setStreak(getItem(KEYS.STREAK, 0))
@@ -225,17 +258,25 @@ export default function HomePage() {
       .catch(() => {})
   }, [loadPrayerTimes])
 
-  // Countdown timers
+  // Countdown timers — uses ref to avoid stale closure
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date()
-      const next = prayers.find((p) => p.date > now)
+      const next = prayersRef.current.find((p) => p.date > now)
       if (next) {
         setCountdown(getTimeUntil(next.date))
         setNextPrayerName(next.name)
+      } else if (prayersRef.current.length > 0) {
+        // Past Isha — next prayer is Fajr tomorrow
+        setNextPrayerName('Fajr')
+        const fajr = prayersRef.current.find((p) => p.name === 'Fajr')
+        if (fajr) {
+          const tomorrowFajr = new Date(fajr.date.getTime() + 24 * 60 * 60 * 1000)
+          setCountdown(getTimeUntil(tomorrowFajr))
+        }
       }
       // Iftaar countdown (time until Maghrib)
-      const maghrib = prayers.find((p) => p.name === 'Maghrib')
+      const maghrib = prayersRef.current.find((p) => p.name === 'Maghrib')
       if (maghrib && maghrib.date > now) {
         setIftaarCountdown(getTimeUntil(maghrib.date))
       } else {
@@ -243,7 +284,7 @@ export default function HomePage() {
       }
     }, 1000)
     return () => clearInterval(timer)
-  }, [prayers])
+  }, [])
 
   const toggleCheck = (key: string) => {
     const newVal = !checklist[key]

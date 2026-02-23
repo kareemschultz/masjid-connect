@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.3.0 — Feb 23, 2026
+- Fix: Prayer timer 00:00:00 — stale closure resolved, timer now uses ref
+- Fix: Post-Isha timer now shows time until next Fajr (not 00:00:00)
+- Fix: Google Sign-In now appears on the "What should we call you?" onboarding step
+- Onboarding: Updated feature highlights with 6 current features
+- New: Quran verse sharer — share any ayah via WhatsApp/text/copy
+- New: Personal Khatam tracker — 30-Juz grid in Tracker
+- New: Stories of 25 Prophets page in Madrasa (lib/prophets-data.ts)
+- New: Arabic typing practice tool in Madrasa
+- Explore grid: new items added to correct sections
+
 ## v2.2.0 — Feb 23, 2026
 - Home: Hadith of the Day card (40-hadith rotation, Arabic + transliteration + source)
 - Tracker: 7-day prayer statistics chart with streak, best day, Fajr rate stats
