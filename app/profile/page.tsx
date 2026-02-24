@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   User, Flame, Star, BookOpen, CheckSquare, Trophy,
-  Target, TrendingUp, Edit3, Save, LogOut
+  Target, TrendingUp, Edit3, Save, LogOut, Users, Phone
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -39,6 +39,16 @@ export default function ProfilePage() {
   const [bookmarks, setBookmarks] = useState<{ surah: number; ayah: number }[]>([])
   const [session, setSession] = useState<{ user?: { name?: string; email?: string; image?: string } } | null>(null)
   const [signingIn, setSigningIn] = useState(false)
+  
+  // Buddy profile fields
+  const [buddyUsername, setBuddyUsername] = useState('')
+  const [buddyUsernameInput, setBuddyUsernameInput] = useState('')
+  const [usernameSaving, setUsernameSaving] = useState(false)
+  const [usernameMsg, setUsernameMsg] = useState('')
+  const [phone, setPhone] = useState('')
+  const [phoneInput, setPhoneInput] = useState('')
+  const [phoneSaving, setPhoneSaving] = useState(false)
+  const [phoneMsg, setPhoneMsg] = useState('')
 
   useEffect(() => {
     const name = getItem(KEYS.USERNAME, '')
@@ -50,7 +60,23 @@ export default function ProfilePage() {
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
     fetch('/api/auth/get-session', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.user) setSession(data) })
+      .then(data => { 
+        if (data?.user) {
+          setSession(data)
+          // Fetch buddy profile data
+          fetch('/api/user/preferences', { credentials: 'include' })
+            .then(r => r.ok ? r.json() : {})
+            .then(prefs => {
+              const uname = prefs.username || ''
+              const ph = prefs.phone || ''
+              setBuddyUsername(uname)
+              setBuddyUsernameInput(uname)
+              setPhone(ph)
+              setPhoneInput(ph)
+            })
+            .catch(() => {})
+        }
+      })
       .catch(() => {})
   }, [])
 
@@ -58,6 +84,58 @@ export default function ProfilePage() {
     setUsername(editName.trim())
     setItem(KEYS.USERNAME, editName.trim())
     setEditing(false)
+  }
+
+  const saveUsername = async () => {
+    if (!buddyUsernameInput.trim()) return
+    const val = buddyUsernameInput.trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]/g, '')
+    setUsernameSaving(true)
+    setUsernameMsg('')
+    try {
+      const res = await fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: val })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setBuddyUsername(val)
+        setBuddyUsernameInput(val)
+        setUsernameMsg('Username saved!')
+      } else {
+        setUsernameMsg(data.error || 'Failed to save')
+      }
+    } catch {
+      setUsernameMsg('Error saving username')
+    } finally {
+      setUsernameSaving(false)
+    }
+  }
+
+  const savePhone = async () => {
+    if (!phoneInput.trim()) return
+    setPhoneSaving(true)
+    setPhoneMsg('')
+    try {
+      const res = await fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ phone: phoneInput.trim() })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setPhone(phoneInput.trim())
+        setPhoneMsg('Phone saved!')
+      } else {
+        setPhoneMsg(data.error || 'Failed to save')
+      }
+    } catch {
+      setPhoneMsg('Error saving phone')
+    } finally {
+      setPhoneSaving(false)
+    }
   }
 
   // Calculate total prayers prayed
@@ -242,6 +320,77 @@ export default function ProfilePage() {
             ))}
           </div>
         </SettingGroup>
+
+        {/* Buddy Profile Settings */}
+        {session?.user && (
+          <SettingGroup label="Buddy Profile" accentColor="bg-cyan-500" icon={Users}>
+            <div className="p-4 space-y-4">
+              {/* Username */}
+              <div>
+                <div className="mb-2 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-cyan-400" />
+                  <label className="text-xs font-semibold uppercase tracking-widest text-cyan-400/70">Your @Username</label>
+                </div>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Set a @username so Faith Buddies can find you.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={buddyUsernameInput}
+                    onChange={(e) => setBuddyUsernameInput(e.target.value)}
+                    placeholder="@username"
+                    className="flex-1 rounded-xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-cyan-500/50"
+                  />
+                  <button
+                    onClick={saveUsername}
+                    disabled={usernameSaving || !buddyUsernameInput.trim() || buddyUsernameInput === buddyUsername}
+                    className="rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
+                  >
+                    {usernameSaving ? '...' : 'Save'}
+                  </button>
+                </div>
+                {usernameMsg && (
+                  <p className={`mt-2 text-xs ${usernameMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {usernameMsg}
+                  </p>
+                )}
+              </div>
+
+              {/* Phone Number */}
+              <div className="border-t border-border pt-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-cyan-400" />
+                  <label className="text-xs font-semibold uppercase tracking-widest text-cyan-400/70">Phone Number</label>
+                </div>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Add your phone number so buddies can find you.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    placeholder="+5926123456"
+                    className="flex-1 rounded-xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-cyan-500/50"
+                  />
+                  <button
+                    onClick={savePhone}
+                    disabled={phoneSaving || !phoneInput.trim() || phoneInput === phone}
+                    className="rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
+                  >
+                    {phoneSaving ? '...' : 'Save'}
+                  </button>
+                </div>
+                {phoneMsg && (
+                  <p className={`mt-2 text-xs ${phoneMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {phoneMsg}
+                  </p>
+                )}
+              </div>
+            </div>
+          </SettingGroup>
+        )}
 
         {/* Activity Summary */}
         <SettingGroup label="Activity" accentColor="bg-teal-500">
