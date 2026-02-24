@@ -59,6 +59,7 @@ export default function MasjidDetailPage() {
   const [reportNotes, setReportNotes] = useState('')
   const [reportSubmitting, setReportSubmitting] = useState(false)
   const [showAllReports, setShowAllReports] = useState(false)
+  const [showTodayReports, setShowTodayReports] = useState(false)
 
   const today = getTodayKey()
 
@@ -106,6 +107,7 @@ export default function MasjidDetailPage() {
         setReportMenu('')
         setReportNotes('')
         setShowReportForm(false)
+        setShowTodayReports(true) // auto-open so user sees their submission
       }
     } catch {}
     setReportSubmitting(false)
@@ -310,27 +312,47 @@ export default function MasjidDetailPage() {
               </div>
             )}
 
-            {/* Today's reports */}
-            {iftaarReports.filter(r => r.date === today).length > 0 ? (
-              <div className="space-y-2.5">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-400/60">Today</p>
-                {iftaarReports.filter(r => r.date === today).map(report => (
-                  <div key={report.id} className="rounded-xl bg-card border border-border p-3.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-sm font-semibold text-foreground">{report.menu}</p>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
-                        <ThumbsUp className="h-3 w-3" />
-                        {report.likes}
+            {/* Today's reports — collapsible */}
+            <div className="border-t border-orange-900/30 pt-3">
+              <button
+                onClick={() => setShowTodayReports(v => !v)}
+                className="flex w-full items-center justify-between gap-1.5 text-xs text-gray-500 active:text-gray-300"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-orange-400/80">Today&apos;s Menu</span>
+                  {iftaarReports.filter(r => r.date === today).length > 0 ? (
+                    <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
+                      {iftaarReports.filter(r => r.date === today).length}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-gray-600 italic">None yet</span>
+                  )}
+                </div>
+                {showTodayReports ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+              </button>
+
+              {showTodayReports && (
+                <div className="mt-2.5 space-y-2.5">
+                  {iftaarReports.filter(r => r.date === today).length === 0 ? (
+                    <p className="text-xs text-gray-600 italic py-1">No iftaar reports yet today. Be the first to share!</p>
+                  ) : (
+                    iftaarReports.filter(r => r.date === today).map(report => (
+                      <div key={report.id} className="rounded-xl bg-card border border-border p-3.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="text-sm font-semibold text-foreground">{report.menu}</p>
+                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
+                            <ThumbsUp className="h-3 w-3" />
+                            {report.likes}
+                          </div>
+                        </div>
+                        {report.notes && <p className="mt-1 text-xs text-muted-foreground">{report.notes}</p>}
+                        <p className="mt-1.5 text-[10px] text-muted-foreground/60">Reported by {report.submittedBy}</p>
                       </div>
-                    </div>
-                    {report.notes && <p className="mt-1 text-xs text-muted-foreground">{report.notes}</p>}
-                    <p className="mt-1.5 text-[10px] text-muted-foreground/60">Reported by {report.submittedBy}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground/80 italic">No iftaar reports yet today. Be the first to share!</p>
-            )}
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Past Iftaar Archive — always visible so users know it exists */}
             <div className="border-t border-orange-900/30 pt-3">

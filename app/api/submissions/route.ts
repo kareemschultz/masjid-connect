@@ -5,7 +5,7 @@ import { sendNtfy } from '@/lib/ntfy'
 import { rateLimit, getClientIp, rateLimitResponse } from '@/lib/rate-limit'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-const MASJID_ID_RE = /^[a-z0-9_-]{2,60}$/i
+const MASJID_ID_RE = /^[a-z0-9_-]{1,60}$/i
 
 function rowToSubmission(row: any) {
   return {
