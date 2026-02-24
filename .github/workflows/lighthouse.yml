@@ -1,0 +1,26 @@
+name: Lighthouse Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run start &
+      - uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000
+            http://localhost:3000/iftaar
+            http://localhost:3000/settings
+          uploadArtifacts: true
+          temporaryPublicStorage: true

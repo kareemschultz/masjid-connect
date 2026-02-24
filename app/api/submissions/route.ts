@@ -5,6 +5,7 @@ import { sendNtfy } from '@/lib/ntfy'
 import { rateLimit, getClientIp, rateLimitResponse } from '@/lib/rate-limit'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const MASJID_ID_RE = /^[a-z0-9_-]{2,60}$/i
 
 function rowToSubmission(row: any) {
   return {
@@ -80,18 +81,43 @@ export async function POST(request: NextRequest) {
     if (!masjidId || !menu || !submittedBy) {
       return Response.json({ error: 'masjidId, menu, submittedBy are required' }, { status: 400 })
     }
+    const normalizedMasjidId = String(masjidId).trim()
+    const normalizedMenu = String(menu).trim()
+    const normalizedSubmittedBy = String(submittedBy).trim()
+    const normalizedNotes = typeof notes === 'string' ? notes.trim() : ''
+    const normalizedDate = typeof date === 'string' && date ? date : new Date().toISOString().split('T')[0]
+    const normalizedServings = servings === undefined || servings === null || servings === '' ? null : Number(servings)
+
+    if (!MASJID_ID_RE.test(normalizedMasjidId)) {
+      return Response.json({ error: 'Invalid masjidId format' }, { status: 400 })
+    }
+    if (normalizedMenu.length < 2 || normalizedMenu.length > 300) {
+      return Response.json({ error: 'Menu must be between 2 and 300 characters' }, { status: 400 })
+    }
+    if (normalizedSubmittedBy.length < 2 || normalizedSubmittedBy.length > 80) {
+      return Response.json({ error: 'submittedBy must be between 2 and 80 characters' }, { status: 400 })
+    }
+    if (normalizedNotes.length > 400) {
+      return Response.json({ error: 'Notes too long (max 400 characters)' }, { status: 400 })
+    }
+    if (!DATE_RE.test(normalizedDate)) {
+      return Response.json({ error: 'Invalid date format' }, { status: 400 })
+    }
+    if (normalizedServings !== null && (!Number.isInteger(normalizedServings) || normalizedServings < 1 || normalizedServings > 10000)) {
+      return Response.json({ error: 'servings must be an integer between 1 and 10000' }, { status: 400 })
+    }
 
     const pool = getPool()
     const result = await pool.query(
       `INSERT INTO iftaar_submissions (masjid_id, menu, submitted_by, servings, notes, date)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [masjidId, menu, submittedBy, servings || null, notes || '', date || new Date().toISOString().split('T')[0]]
+      [normalizedMasjidId, normalizedMenu, normalizedSubmittedBy, normalizedServings, normalizedNotes, normalizedDate]
     )
     const submission = rowToSubmission(result.rows[0])
 
     sendNtfy({
       title: 'New Iftaar Report',
-      message: `${submittedBy} submitted for ${masjidId}: ${menu}`,
+      message: `${normalizedSubmittedBy} submitted for ${normalizedMasjidId}: ${normalizedMenu}`,
       tags: ['fork_and_knife'],
     })
 

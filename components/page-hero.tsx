@@ -68,7 +68,7 @@ function StarField() {
 export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, action, stars, heroTheme }: PageHeroProps) {
   const router = useRouter()
   return (
-    <div className={`relative overflow-hidden bg-gradient-to-br ${gradient}`}>
+    <div className={`relative overflow-hidden bg-gradient-to-br ${gradient} animate-fade-down`}>
       {/* Decorative blurred orbs */}
       <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-white/5 blur-3xl" />
       <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/5 blur-3xl" />
@@ -81,7 +81,7 @@ export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, acti
       {heroTheme && <HeroAnimation theme={heroTheme} />}
 
       <div className="relative px-5 pb-10" style={{ paddingTop: 'max(3.5rem, calc(env(safe-area-inset-top) + 1rem))' }}>
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between animate-fade-up" style={{ animationDelay: '0.04s', animationFillMode: 'backwards' }}>
           {showBack && (
             <button
               onClick={() => router.back()}
@@ -94,7 +94,7 @@ export function PageHero({ icon: Icon, title, subtitle, gradient, showBack, acti
           {action && <div className="ml-auto">{action}</div>}
         </div>
 
-        <div className="flex flex-col items-center justify-center pt-2 pb-2">
+        <div className="flex flex-col items-center justify-center pt-2 pb-2 animate-fade-up" style={{ animationDelay: '0.08s', animationFillMode: 'backwards' }}>
           <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md animate-scale-in">
             <Icon className="h-7 w-7 text-foreground" />
           </div>
