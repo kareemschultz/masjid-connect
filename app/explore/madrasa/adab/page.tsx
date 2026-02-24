@@ -93,7 +93,7 @@ const categories: AdabCategory[] = [
     ],
     ruling: 'Wajib (avoiding gheebah)',
     rulingType: 'wajib',
-    source: 'Quran 49:12 — "O you who believe, avoid much suspicion..."',
+    source: 'Quran 49:12 — "O you who believe, avoid much suspicion. Indeed, some suspicion is sin. And do not spy nor backbite one another."',
   },
   {
     title: 'Dealing with Parents',

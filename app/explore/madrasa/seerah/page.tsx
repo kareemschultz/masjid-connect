@@ -28,7 +28,7 @@ const ERAS = [
     years: '610–622 CE',
     accent: 'purple',
     events: [
-      'First revelation in Cave Hira (Surah Al-Alaq): "Read in the name of your Lord..."',
+      'First revelation in Cave Hira (Surah Al-Alaq): "Read in the name of your Lord who created."',
       '13 years in Makkah, facing severe persecution',
       'Night Journey (Isra wal Mi\'raj): Jerusalem \u2192 7 heavens \u2192 meeting Allah',
       '5 daily prayers made obligatory during Isra wal Mi\'raj',
@@ -58,7 +58,7 @@ const ERAS = [
     events: [
       'Passed away Monday 12 Rabi al-Awwal, 11 AH (632 CE), aged 63',
       'Buried in Madinah in Masjid an-Nabawi',
-      'Final revelation: "Today I have perfected your religion..." (Quran 5:3)',
+      'Final revelation: "Today I have perfected your religion for you, completed My favor upon you, and chosen Islam as your religion." (Quran 5:3)',
       'Left: Quran and Sunnah; no worldly inheritance',
       'Legacy: 1.8 billion followers today, the most influential human in history',
     ],

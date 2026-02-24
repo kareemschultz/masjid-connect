@@ -72,7 +72,7 @@ const GII_MODULES: StudyModule[] = [
     practical: [
       'Pain protocol: Bismillah x3 + refuge formula x7.',
       'Anxiety protocol: supplication against grief, debt, and helplessness.',
-      'Calamity protocol: Inna lillahi... + ask for better replacement.',
+      "Calamity protocol: Inna lillahi wa inna ilayhi raji'un + Allahumma'jurni fi musibati wakhluf li khayran minha.",
       'Patient visit protocol: healing dua repetition with intention.',
     ],
     source: 'GII Practical Essentials (sickness, pain, and distress chapters)',

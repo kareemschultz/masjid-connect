@@ -42,10 +42,10 @@ const SECTIONS: JanazahSection[] = [
             اللَّهُمَّ اغْفِرْ لَهُ وَارْفَعْ دَرَجَتَهُ فِي الْمَهْدِيِّينَ
           </p>
           <p className="text-[11px] text-teal-400/70 italic">
-            Allahummaghfir lahu warfa&apos; darajatahu fil mahdiyyina...
+            Allahummaghfir lahu warfa&apos; darajatahu fil-mahdiyyin.
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            O Allah, forgive him and raise his rank among the rightly guided...
+            O Allah, forgive him and raise his rank among the rightly guided.
           </p>
         </div>
         <li className="flex gap-2 text-xs text-muted-foreground leading-relaxed">

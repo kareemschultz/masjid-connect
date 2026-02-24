@@ -508,7 +508,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       '2. Fingers spread and facing Qibla during the raising',
       '3. The Imam not raising his voice with the opening Takbir beyond what the followers need to hear',
       '4. Placing right hand over left below the navel (Hanafi; women: on chest)',
-      '5. Reciting Thana (Subhanakallahummma wa bihamdika...)',
+      '5. Reciting Thana ("Subhanakallahumma wa bihamdika wa tabarakasmuka wa ta\'ala jadduka wa la ilaha ghayruk")',
       '6. Saying Ta\'awwudh (A\'udhu billahi min ash-shaytan ir-rajeem)',
       '7. Saying Bismillah before Fatihah',
       '8. Saying Ameen silently (Hanafi; Shafi\'i: audibly)',
@@ -1097,7 +1097,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     hadith: [
       {
         arabic: 'مَا مِنْ صَاحِبِ ذَهَبٍ وَلَا فِضَّةٍ لَا يُؤَدِّي مِنْهَا حَقَّهَا',
-        translation: 'There is no owner of gold or silver who does not pay what is due on it, except that on the Day of Resurrection, plates of fire will be heated for him...',
+        translation: 'There is no owner of gold or silver who does not pay what is due on it, except that on the Day of Resurrection, plates of fire will be heated for him and his sides, forehead, and back will be branded with them.',
         source: 'Muslim',
       },
     ],
@@ -1229,7 +1229,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     definitions: {
       'Ihram': 'State of consecration — entering with intention and Talbiyah at the Miqat',
       'Miqat': 'Designated boundary points where Ihram must be entered before proceeding to Makkah',
-      'Talbiyah': 'Labbaik Allahumma labbaik... — the chant of the pilgrim recited frequently',
+      'Talbiyah': 'Labbaik Allahumma labbaik, labbaika la sharika laka labbaik, innal hamda wan-ni\'mata laka wal-mulk, la sharika lak — the chant of the pilgrim recited frequently',
       'Mahram': 'Close male relative whom a woman cannot marry (father, brother, son, uncle, etc.)',
     },
   },
@@ -1502,7 +1502,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
     ],
     points: [
       '── METHOD (4 Takbirs) ──',
-      '1st Takbir: Say "Allahu Akbar" and recite Thana (Subhanakallahunma wa bihamdika...)',
+      '1st Takbir: Say "Allahu Akbar" and recite Thana ("Subhanakallahumma wa bihamdika wa tabarakasmuka wa ta\'ala jadduka wa la ilaha ghayruk")',
       '2nd Takbir: Recite Durood Ibrahim (as in Tashahhud)',
       '3rd Takbir: Recite the Janazah dua — "Allahummaghfir lihayyina wa mayyitina, wa shahidina wa gha\'ibina, wa sagheerina wa kabeerina, wa dhakarina wa unthana. Allahumma man ahyaytahu minna fa ahyihi \'alal Islam, wa man tawaffaytahu minna fa tawaffahu \'alal Iman."',
       '4th Takbir: Tasleem — salaam to the right (and left per some scholars)',
@@ -1551,7 +1551,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Sitting or walking on graves is strongly disliked.',
       'Recite Quran at the graveside (recommended): Surah Yaseen, the opening and closing verses of Surah Baqarah.',
       '── VISITING GRAVES ──',
-      'Visiting graves is recommended. Say "Assalamu alaykum ya ahlal quboor..." (Peace be upon you, O inhabitants of the graves...).',
+      'Visiting graves is recommended. Say "Assalamu alaykum ya ahlal quboor, yaghfirullahu lana wa lakum" (Peace be upon you, O inhabitants of the graves; may Allah forgive us and you).',
       'Taziyah (condolence) to the family is sunnah for 3 days. It is makruh to sit for condolence after 3 days unless the person was absent.',
     ],
   },
@@ -2245,7 +2245,7 @@ export const FIQH_TOPICS: FiqhTopic[] = [
       'Lending money without interest (Qard Hasan) is a highly recommended act of charity — Allah doubles it for the lender',
       'The borrower must repay the exact amount — any increase stipulated is riba',
       'Voluntary extra payment by the borrower (without prior agreement) is permissible and praiseworthy — this is generosity, not riba',
-      'Document loans in writing — Quran 2:282 explicitly commands: "O you who believe! When you contract a debt for a fixed term, write it down..."',
+      'Document loans in writing — Quran 2:282 explicitly commands: "O you who believe! When you contract a debt for a fixed term, write it down."',
       'Dying with unpaid debt is extremely serious — the Prophet ﷺ initially refused to lead janazah for the indebted until a Companion guaranteed the debt',
       'The debtor must prioritise repayment; the lender should give grace to those in difficulty: "If the debtor is in difficulty, grant him time until it is easy for him to repay. But if you remit it as charity, that is best for you." (Quran 2:280)',
       'The Prophet ﷺ said: "Procrastination (in paying debts) by a wealthy person is an injustice." (Bukhari, Muslim)',

@@ -166,7 +166,7 @@ const SALAH_STEPS = [
     transliteration: 'Bismillah ir-Rahman ir-Raheem. Al-hamdu lillahi rabbil-alameen. Ar-rahmanir-raheem. Maliki yawmid-deen. Iyyaka nabudu wa iyyaka nastaeen. Ihdinas-siratal mustaqeem. Siratal-ladhina anamta alayhim, ghayril-maghdubi alayhim wa lad-dalleen.',
     meaning: 'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is for Allah, Lord of all worlds. The Entirely Merciful, the Especially Merciful. Sovereign of the Day of Recompense. You alone we worship and You alone we ask for help. Guide us to the straight path — the path of those You have blessed, not those who have earned anger, nor those who are astray.',
     desc: 'Recite Surah Al-Fatiha quietly (or aloud in Fajr, Maghrib, Isha — follow your imam). Then recite another short surah or verses.',
-    Icon: QiyamIcon, note: 'Al-Fatiha is obligatory. A short surah like Al-Ikhlas (Qul huwallahu ahad...) follows.',
+    Icon: QiyamIcon, note: 'Al-Fatiha is obligatory. A short surah like Al-Ikhlas (Qul huwallahu ahad) follows.',
   },
   {
     num: 4, position: 'Ruku (Bowing)', positionArabic: 'الركوع',
