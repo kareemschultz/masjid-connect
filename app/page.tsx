@@ -31,6 +31,7 @@ import { getTodayHadith } from '@/lib/hadith-data'
 import { MASJIDS } from '@/lib/masjid-data'
 
 interface PrayerTimeData { name: string; time: string; date: Date }
+const TOUR_START_EVENT = 'app-tour:start'
 
 const QUICK_ACTIONS = [
   { icon: Compass, label: 'Explore', href: '/explore', color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400' },
@@ -173,6 +174,13 @@ export default function HomePage() {
     }
     navigator.serviceWorker.addEventListener('controllerchange', onControllerChange)
     waiting.postMessage({ type: 'SKIP_WAITING' })
+  }, [])
+
+  const startAppTour = useCallback(() => {
+    setItem(KEYS.TOUR_PENDING, true)
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event(TOUR_START_EVENT))
+    }
   }, [])
 
   const loadPrayerTimes = useCallback(async () => {
@@ -803,6 +811,58 @@ export default function HomePage() {
       })()}
 
       {/* ========== QUICK ACTIONS ========== */}
+      <div className="px-4 pt-6">
+        <div className="section-label mb-3">
+          <div className="h-4 w-1 rounded-full bg-sky-500" />
+          Need Help Finding Things?
+        </div>
+
+        <div className="glass rounded-2xl p-4 card-premium">
+          <button
+            onClick={startAppTour}
+            className="mb-3 flex w-full items-center justify-between rounded-xl bg-sky-500/15 px-3.5 py-3 text-left"
+          >
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-sky-400">Guided Tour</p>
+              <p className="text-sm font-semibold text-foreground">Show me where everything is</p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-sky-400" />
+          </button>
+
+          <div className="space-y-2">
+            {[
+              {
+                title: 'Buddy requests',
+                note: 'Profile → Faith Buddies',
+                href: '/profile',
+              },
+              {
+                title: 'Add/find buddies',
+                note: 'Explore → Buddy',
+                href: '/explore/buddy',
+              },
+              {
+                title: 'Iftaar reports',
+                note: 'Masjids → open any masjid card',
+                href: '/masjids',
+              },
+            ].map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="flex items-center justify-between rounded-xl border border-border bg-card px-3.5 py-3 active:bg-secondary"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-[11px] text-muted-foreground/80">{item.note}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div data-tour="quick-actions" className="px-4 pt-6">
         <div className="section-label mb-3">
           <div className="h-4 w-1 rounded-full bg-emerald-500" />
