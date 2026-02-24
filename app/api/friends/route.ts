@@ -50,18 +50,49 @@ export async function POST(request: NextRequest) {
 
     const pool = getPool()
     let userRes
+    let lookupMode: 'username' | 'phone' | 'email' = 'email'
     if (username) {
+      lookupMode = 'username'
       const handle = username.replace(/^@/, '').toLowerCase()
       userRes = await pool.query('SELECT id, name, email, "displayName" FROM "user" WHERE LOWER(username) = $1', [handle])
     } else if (phone) {
-      let p = phone.replace(/[\s-]/g, '')
-      if (p.startsWith('6') && p.length === 7) p = '592' + p
-      userRes = await pool.query('SELECT id, name, email, "displayName" FROM "user" WHERE "phoneNumber" = $1', [p])
+      lookupMode = 'phone'
+      const digits = String(phone).replace(/\D/g, '')
+      let normalizedDigits = digits
+      if (normalizedDigits.startsWith('6') && normalizedDigits.length === 7) normalizedDigits = `592${normalizedDigits}`
+      userRes = await pool.query(
+        `SELECT id, name, email, "displayName"
+         FROM "user"
+         WHERE regexp_replace(COALESCE("phoneNumber", ''), '[^0-9]', '', 'g') = $1`,
+        [normalizedDigits]
+      )
     } else {
-      userRes = await pool.query('SELECT id, name, email, "displayName" FROM "user" WHERE email = $1', [email])
+      lookupMode = 'email'
+      const normalizedEmail = String(email).trim().toLowerCase()
+      userRes = await pool.query(
+        'SELECT id, name, email, "displayName" FROM "user" WHERE LOWER(email) = $1',
+        [normalizedEmail]
+      )
     }
 
-    if (!userRes.rows.length) return Response.json({ success: true })
+    if (!userRes.rows.length) {
+      if (lookupMode === 'username') {
+        return Response.json(
+          { error: 'No user found with that @username. Ask them to set it in Settings → Profile.' },
+          { status: 404 }
+        )
+      }
+      if (lookupMode === 'phone') {
+        return Response.json(
+          { error: 'No user found with that phone number.' },
+          { status: 404 }
+        )
+      }
+      return Response.json(
+        { error: 'No user found with that email address.' },
+        { status: 404 }
+      )
+    }
     const addressee = userRes.rows[0]
 
     if (addressee.id === session.user.id) return Response.json({ error: 'Cannot add yourself' }, { status: 400 })
