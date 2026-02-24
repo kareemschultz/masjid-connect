@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   User, Flame, Star, BookOpen, CheckSquare, Trophy,
   Target, TrendingUp, Edit3, Save, LogOut, Users, Phone
@@ -11,11 +11,15 @@ import { SettingGroup } from '@/components/setting-group'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { PRAYER_NAMES, type PrayerName } from '@/lib/prayer-times'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type PrayerLog = Record<string, Record<PrayerName, boolean>>
-
-function dateKey(d: Date): string {
-  return d.toISOString().split('T')[0]
+type BuddyConnection = {
+  id: string
+  name: string
+  username?: string
+  status: 'pending' | 'accepted'
+  direction: 'sent' | 'received'
 }
 
 function GoogleIcon() {
@@ -49,6 +53,38 @@ export default function ProfilePage() {
   const [phoneInput, setPhoneInput] = useState('')
   const [phoneSaving, setPhoneSaving] = useState(false)
   const [phoneMsg, setPhoneMsg] = useState('')
+  const [buddyConnections, setBuddyConnections] = useState<BuddyConnection[]>([])
+  const [buddyLoading, setBuddyLoading] = useState(false)
+  const [buddyMsg, setBuddyMsg] = useState('')
+
+  const loadBuddyConnections = useCallback(async () => {
+    if (!session?.user) {
+      setBuddyConnections([])
+      return
+    }
+
+    setBuddyLoading(true)
+    setBuddyMsg('')
+    try {
+      const res = await fetch('/api/friends', { credentials: 'include' })
+      if (!res.ok) throw new Error('Failed to load buddies')
+      const data = await res.json()
+      const mapped = Array.isArray(data)
+        ? data.map((b: any) => ({
+            id: b.id,
+            name: b.displayName || b.name || b.username || b.email || 'Unknown',
+            username: b.username || '',
+            status: b.status as 'pending' | 'accepted',
+            direction: b.direction as 'sent' | 'received',
+          }))
+        : []
+      setBuddyConnections(mapped)
+    } catch {
+      setBuddyMsg('Could not load buddy requests right now.')
+    } finally {
+      setBuddyLoading(false)
+    }
+  }, [session?.user])
 
   useEffect(() => {
     const name = getItem(KEYS.USERNAME, '')
@@ -64,11 +100,11 @@ export default function ProfilePage() {
         if (data?.user) {
           setSession(data)
           // Fetch buddy profile data
-          fetch('/api/user/preferences', { credentials: 'include' })
+          fetch('/api/user/profile', { credentials: 'include' })
             .then(r => r.ok ? r.json() : {})
             .then(prefs => {
               const uname = prefs.username || ''
-              const ph = prefs.phone || ''
+              const ph = prefs.phoneNumber || ''
               setBuddyUsername(uname)
               setBuddyUsernameInput(uname)
               setPhone(ph)
@@ -79,6 +115,14 @@ export default function ProfilePage() {
       })
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!session?.user) {
+      setBuddyConnections([])
+      return
+    }
+    loadBuddyConnections()
+  }, [session?.user, loadBuddyConnections])
 
   const saveName = () => {
     setUsername(editName.trim())
@@ -122,7 +166,7 @@ export default function ProfilePage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ phone: phoneInput.trim() })
+        body: JSON.stringify({ phoneNumber: phoneInput.trim() })
       })
       const data = await res.json()
       if (res.ok) {
@@ -135,6 +179,46 @@ export default function ProfilePage() {
       setPhoneMsg('Error saving phone')
     } finally {
       setPhoneSaving(false)
+    }
+  }
+
+  const acceptBuddyRequest = async (id: string) => {
+    setBuddyMsg('')
+    try {
+      const res = await fetch(`/api/friends/${id}/accept`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+      if (res.ok) {
+        setBuddyMsg('Buddy request accepted.')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setBuddyMsg(data.error || 'Could not accept request.')
+      }
+    } catch {
+      setBuddyMsg('Could not accept request.')
+    } finally {
+      loadBuddyConnections()
+    }
+  }
+
+  const ignoreBuddyRequest = async (id: string) => {
+    setBuddyMsg('')
+    try {
+      const res = await fetch(`/api/friends/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+      if (res.ok) {
+        setBuddyMsg('Request removed.')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setBuddyMsg(data.error || 'Could not remove request.')
+      }
+    } catch {
+      setBuddyMsg('Could not remove request.')
+    } finally {
+      loadBuddyConnections()
     }
   }
 
@@ -177,6 +261,19 @@ export default function ProfilePage() {
     { icon: Trophy, label: 'Perfect Days', value: perfectDays, color: 'text-purple-400', bg: 'bg-purple-500/15' },
     { icon: BookOpen, label: 'Bookmarks', value: bookmarks.length, color: 'text-blue-400', bg: 'bg-blue-500/15' },
   ]
+
+  const pendingReceived = useMemo(
+    () => buddyConnections.filter((b) => b.status === 'pending' && b.direction === 'received'),
+    [buddyConnections]
+  )
+  const pendingSent = useMemo(
+    () => buddyConnections.filter((b) => b.status === 'pending' && b.direction === 'sent'),
+    [buddyConnections]
+  )
+  const acceptedBuddies = useMemo(
+    () => buddyConnections.filter((b) => b.status === 'accepted'),
+    [buddyConnections]
+  )
 
   return (
     <div className="min-h-screen bg-background pb-nav">
@@ -388,6 +485,99 @@ export default function ProfilePage() {
                   </p>
                 )}
               </div>
+            </div>
+          </SettingGroup>
+        )}
+
+        {/* Buddy Requests + Quick Access */}
+        {session?.user && (
+          <SettingGroup label="Faith Buddies" accentColor="bg-sky-500" icon={Users}>
+            <div className="p-4 space-y-4">
+              <p className="text-xs text-muted-foreground">
+                Pending requests now appear here so you can manage buddies directly from Profile.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2">
+                <div className="rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-center">
+                  <p className="text-base font-bold text-orange-400">{pendingReceived.length}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Pending</p>
+                </div>
+                <div className="rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-center">
+                  <p className="text-base font-bold text-sky-400">{pendingSent.length}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Sent</p>
+                </div>
+                <div className="rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-center">
+                  <p className="text-base font-bold text-emerald-400">{acceptedBuddies.length}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Buddies</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/explore/buddy"
+                  className="rounded-xl border border-border bg-card px-3 py-2 text-center text-xs font-semibold text-foreground/80 active:bg-secondary"
+                >
+                  Open Buddy Manager
+                </Link>
+                <Link
+                  href="/explore/buddy/how-it-works"
+                  className="rounded-xl border border-border bg-card px-3 py-2 text-center text-xs font-semibold text-muted-foreground active:bg-secondary"
+                >
+                  How It Works
+                </Link>
+              </div>
+
+              {buddyLoading && (
+                <p className="text-xs text-muted-foreground">Loading buddy requests...</p>
+              )}
+
+              {pendingReceived.length > 0 ? (
+                <div className="space-y-2">
+                  {pendingReceived.map((req) => (
+                    <div key={req.id} className="flex items-center justify-between rounded-xl border border-border bg-secondary/30 px-3 py-2.5">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-foreground">{req.name}</p>
+                        <p className="truncate text-[11px] text-muted-foreground/80">
+                          {req.username ? `@${req.username} · ` : ''}Wants to be your buddy
+                        </p>
+                      </div>
+                      <div className="ml-3 flex shrink-0 gap-2">
+                        <button
+                          onClick={() => acceptBuddyRequest(req.id)}
+                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-foreground"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => ignoreBuddyRequest(req.id)}
+                          className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-muted-foreground"
+                        >
+                          Ignore
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-border bg-secondary/20 px-3 py-2.5">
+                  <p className="text-xs text-muted-foreground">No pending requests right now.</p>
+                </div>
+              )}
+
+              {pendingSent.length > 0 && (
+                <div className="rounded-xl border border-border bg-secondary/20 px-3 py-2.5">
+                  <p className="text-[11px] text-muted-foreground/80">
+                    Sent requests waiting: {pendingSent.map((r) => r.name).slice(0, 3).join(', ')}
+                    {pendingSent.length > 3 ? ` +${pendingSent.length - 3} more` : ''}
+                  </p>
+                </div>
+              )}
+
+              {buddyMsg && (
+                <p className={`text-xs ${buddyMsg.toLowerCase().includes('could not') ? 'text-red-400' : 'text-emerald-400'}`}>
+                  {buddyMsg}
+                </p>
+              )}
             </div>
           </SettingGroup>
         )}
