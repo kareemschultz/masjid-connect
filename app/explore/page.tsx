@@ -139,7 +139,7 @@ export default function ExplorePage() {
       <div className="px-4 pt-4 space-y-4">
 
         {/* ── Search bar (Sticky) ── */}
-        <div className="sticky top-[max(0.75rem,calc(env(safe-area-inset-top)+0.75rem))] z-50 -mx-4 px-4 pb-3 bg-background backdrop-blur-xl border-b border-border/30">
+        <div className="sticky top-0 z-50 -mx-4 px-4 pt-4 pb-3 bg-background border-b border-border/30">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
             <input
