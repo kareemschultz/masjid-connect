@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { guyanaDate } from '@/lib/timezone'
+import { masjidIdsMatch } from '@/lib/masjid-id'
 
 export function useSubmissions() {
   const [submissions, setSubmissions] = useState([])
@@ -40,6 +41,10 @@ export function useSubmissions() {
       if (!res.ok) throw new Error('submit failed')
       const entry = await res.json()
       setSubmissions(prev => [entry, ...prev])
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('iftaar:updated', { detail: { masjidId: entry?.masjidId, id: entry?.id } }))
+        try { localStorage.setItem('iftaar_last_update', String(Date.now())) } catch {}
+      }
       return entry
     } catch (err) {
       console.error('[MasjidConnect] useSubmissions.addSubmission:', err)
@@ -82,7 +87,7 @@ export async function fetchHistoricalSubmissions(date, masjidId) {
 
     if (cached && now - cached.ts < HISTORICAL_CACHE_TTL_MS) {
       const data = cached.data
-      return masjidId ? data.filter(s => s.masjidId === masjidId) : data
+      return masjidId ? data.filter(s => masjidIdsMatch(s.masjidId, masjidId)) : data
     }
 
     const res = await fetch(`/api/submissions?${query}`, {
@@ -91,7 +96,7 @@ export async function fetchHistoricalSubmissions(date, masjidId) {
     if (!res.ok) throw new Error('fetch failed')
     const data = await res.json()
     historicalCache.set(cacheKey, { ts: now, data })
-    return masjidId ? data.filter(s => s.masjidId === masjidId) : data
+    return masjidId ? data.filter(s => masjidIdsMatch(s.masjidId, masjidId)) : data
   } catch (err) {
     console.error('[MasjidConnect] fetchHistoricalSubmissions:', err)
     return []

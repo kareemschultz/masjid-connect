@@ -1,9 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server'
+import dns from 'node:dns'
+import https from 'node:https'
+import type { LookupFunction } from 'node:net'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://masjidconnectgy.com'
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY
+
+// Docker's embedded resolver can intermittently fail external lookups (EAI_AGAIN).
+// Force Stripe traffic through explicit public DNS first, then fall back to system DNS.
+const resolver = new dns.Resolver()
+resolver.setServers(['8.8.8.8', '1.1.1.1'])
+
+const stripeLookup: LookupFunction = (hostname, options, callback) => {
+  const cb = (typeof options === 'function' ? options : callback) as (...args: any[]) => void
+  const opts = typeof options === 'function' ? undefined : options
+
+  resolver.resolve4(hostname, (resolveErr, addresses) => {
+    if (!resolveErr && addresses && addresses.length > 0) {
+      if (opts && typeof opts === 'object' && 'all' in opts && (opts as dns.LookupAllOptions).all) {
+        cb(null, addresses.map((address) => ({ address, family: 4 })))
+        return
+      }
+      cb(null, addresses[0], 4)
+      return
+    }
+    dns.lookup(hostname, options as any, cb as any)
+  })
+}
+
+const stripeAgent = new https.Agent({
+  keepAlive: true,
+  lookup: stripeLookup,
+})
+
+const stripe = STRIPE_SECRET
+  ? new Stripe(STRIPE_SECRET, { httpAgent: stripeAgent, maxNetworkRetries: 2 })
+  : null
 
 export async function POST(req: NextRequest) {
+  if (!stripe) {
+    console.error('Stripe checkout error: STRIPE_SECRET_KEY is not configured')
+    return NextResponse.json({ error: 'Donations are temporarily unavailable' }, { status: 503 })
+  }
+
   try {
     const { amount } = await req.json()
 
@@ -12,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const session = await stripe.checkout.sessions.create({
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
@@ -28,8 +68,8 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/support/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/support`,
+      success_url: `${APP_URL}/support/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/support`,
       metadata: {
         source: 'masjidconnect-gy',
       },

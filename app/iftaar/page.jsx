@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Clock, Users, MapPin, AlertCircle, Heart, UserCheck, Navigation, Bell, BellOff, Plus, History, LayoutList, ChevronDown, ChevronUp, Search, X, Loader, UtensilsCrossed } from 'lucide-react'
-import { masjids } from '@/lib/masjids'
+import { MASJIDS as masjids } from '@/lib/masjid-data'
 import { getTodayTimetable, getRamadanDay } from '@/lib/ramadan-timetable'
 import { fetchHistoricalSubmissions, useSubmissions } from '@/hooks/use-submissions'
 import { guyanaDate } from '@/lib/timezone'
 import { isPushSupported, subscribeToPush, unsubscribeFromPush } from '@/lib/push-notifications'
+import { canonicalMasjidId, masjidIdsMatch } from '@/lib/masjid-id'
 import ShareMenu from '@/components/share-menu'
 import SubmitForm from '@/components/submit-form'
 import { PageHero } from '@/components/page-hero'
@@ -236,7 +237,7 @@ function ArchiveView() {
           ) : (
             <div className="space-y-3">
               {dateResults.map(s => {
-                const masjid = masjids.find(m => m.id === s.masjidId)
+                const masjid = masjids.find(m => masjidIdsMatch(m.id, s.masjidId))
                 return (
                   <div key={s.id} className="bg-secondary rounded-2xl p-4 border border-border">
                     <div className="flex items-start justify-between mb-2">
@@ -269,8 +270,8 @@ function ArchiveView() {
 
 function SilentMasjids({ submissions, onSubmit }) {
   const [open, setOpen] = useState(false)
-  const reportedIds = new Set(submissions.map(s => s.masjidId))
-  const silent = masjids.filter(m => !reportedIds.has(m.id))
+  const reportedIds = new Set(submissions.map(s => canonicalMasjidId(s.masjidId)))
+  const silent = masjids.filter(m => !reportedIds.has(canonicalMasjidId(m.id)))
   if (silent.length === 0) return null
   return (
     <div className="bg-secondary rounded-2xl border border-border overflow-hidden">
@@ -396,7 +397,7 @@ export default function IftaarPage() {
     return () => clearInterval(id)
   }, [])
 
-  const getMasjid = (id) => masjids.find(m => m.id === id)
+  const getMasjid = (id) => masjids.find(m => masjidIdsMatch(m.id, id))
 
   const sorted = useMemo(() => [...submissions].sort((a, b) => {
     if (sortBy === 'popular') return (b.likes || 0) - (a.likes || 0)

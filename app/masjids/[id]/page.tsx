@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -13,6 +13,8 @@ import { BottomNav } from '@/components/bottom-nav'
 import { MASJIDS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
+import { guyanaDate } from '@/lib/timezone'
+import { masjidIdsMatch } from '@/lib/masjid-id'
 
 interface CheckinData { count: number; lastReset: string }
 
@@ -41,10 +43,6 @@ const FACILITY_ICONS: Record<string, string> = {
   'Medical Room': '🏥',
 }
 
-function getTodayKey() { return new Date().toISOString().split('T')[0] }
-
-
-
 export default function MasjidDetailPage() {
   const params = useParams()
   const masjid = MASJIDS.find((m) => m.id === params.id)
@@ -61,10 +59,19 @@ export default function MasjidDetailPage() {
   const [showAllReports, setShowAllReports] = useState(false)
   const [showTodayReports, setShowTodayReports] = useState(false)
 
-  const today = getTodayKey()
+  const today = guyanaDate()
+  const todayReports = useMemo(
+    () => iftaarReports.filter((r) => r.date === today),
+    [iftaarReports, today]
+  )
+  const archivedReports = useMemo(
+    () => iftaarReports.filter((r) => r.date !== today),
+    [iftaarReports, today]
+  )
 
   useEffect(() => {
     if (!masjid) return
+
     // Check-in data
     const stored = getItem<Record<string, CheckinData>>(KEYS.CHECKINS, {})
     const data = stored[masjid.id]
@@ -77,12 +84,60 @@ export default function MasjidDetailPage() {
     // Ramadan
     const inRamadan = getRamadanStatus().isRamadan
     setRamadan(inRamadan)
-    // Iftaar reports (Ramadan only)
-    if (inRamadan && masjid) {
-      fetch(`/api/submissions?masjidId=${encodeURIComponent(masjid.id)}`)
-        .then(r => r.json())
-        .then(data => { if (Array.isArray(data)) setIftaarReports(data) })
-        .catch(() => {})
+
+    const loadReports = async () => {
+      if (!inRamadan) {
+        setIftaarReports([])
+        return
+      }
+      try {
+        const res = await fetch(`/api/submissions?masjidId=${encodeURIComponent(masjid.id)}`, {
+          cache: 'no-store',
+        })
+        if (!res.ok) return
+        const rows = await res.json()
+        if (Array.isArray(rows)) {
+          setIftaarReports(rows)
+          if (rows.some((r) => r?.date === today)) setShowTodayReports(true)
+        }
+      } catch {
+        // Keep current reports on transient errors.
+      }
+    }
+
+    void loadReports()
+
+    const onFocus = () => {
+      void loadReports()
+    }
+
+    const onVisibility = () => {
+      if (!document.hidden) void loadReports()
+    }
+
+    const onIftaarUpdated = (event: Event) => {
+      const detail = (event as CustomEvent<{ masjidId?: string }>).detail
+      if (!detail?.masjidId || masjidIdsMatch(detail.masjidId, masjid.id)) void loadReports()
+    }
+
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === 'iftaar_last_update') void loadReports()
+    }
+
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('iftaar:updated', onIftaarUpdated as EventListener)
+    window.addEventListener('storage', onStorage)
+    const pollId = window.setInterval(() => {
+      if (!document.hidden) void loadReports()
+    }, 60000)
+
+    return () => {
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('iftaar:updated', onIftaarUpdated as EventListener)
+      window.removeEventListener('storage', onStorage)
+      window.clearInterval(pollId)
     }
   }, [masjid, today])
 
@@ -108,6 +163,9 @@ export default function MasjidDetailPage() {
         setReportNotes('')
         setShowReportForm(false)
         setShowTodayReports(true) // auto-open so user sees their submission
+        window.dispatchEvent(
+          new CustomEvent('iftaar:updated', { detail: { masjidId: masjid.id } })
+        )
       }
     } catch {}
     setReportSubmitting(false)
@@ -320,9 +378,9 @@ export default function MasjidDetailPage() {
               >
                 <div className="flex items-center gap-1.5">
                   <span className="font-semibold text-orange-400/80">Today&apos;s Menu</span>
-                  {iftaarReports.filter(r => r.date === today).length > 0 ? (
+                  {todayReports.length > 0 ? (
                     <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
-                      {iftaarReports.filter(r => r.date === today).length}
+                      {todayReports.length}
                     </span>
                   ) : (
                     <span className="text-[10px] text-gray-600 italic">None yet</span>
@@ -333,10 +391,10 @@ export default function MasjidDetailPage() {
 
               {showTodayReports && (
                 <div className="mt-2.5 space-y-2.5">
-                  {iftaarReports.filter(r => r.date === today).length === 0 ? (
+                  {todayReports.length === 0 ? (
                     <p className="text-xs text-gray-600 italic py-1">No iftaar reports yet today. Be the first to share!</p>
                   ) : (
-                    iftaarReports.filter(r => r.date === today).map(report => (
+                    todayReports.map(report => (
                       <div key={report.id} className="rounded-xl bg-card border border-border p-3.5">
                         <div className="flex items-start justify-between gap-2">
                           <p className="text-sm font-semibold text-foreground">{report.menu}</p>
@@ -362,9 +420,9 @@ export default function MasjidDetailPage() {
               >
                 <div className="flex items-center gap-1.5">
                   <span className="font-semibold">Past Iftaar Reports</span>
-                  {iftaarReports.filter(r => r.date !== today).length > 0 && (
+                  {archivedReports.length > 0 && (
                     <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
-                      {iftaarReports.filter(r => r.date !== today).length}
+                      {archivedReports.length}
                     </span>
                   )}
                 </div>
@@ -373,12 +431,11 @@ export default function MasjidDetailPage() {
 
               {showAllReports && (
                 <div className="mt-2.5 space-y-4">
-                  {iftaarReports.filter(r => r.date !== today).length === 0 ? (
+                  {archivedReports.length === 0 ? (
                     <p className="text-xs text-gray-600 italic py-2">No archived reports yet — reports from past days will appear here.</p>
                   ) : (
                     Array.from(
-                      iftaarReports
-                        .filter(r => r.date !== today)
+                      archivedReports
                         .reduce((map, r) => {
                           if (!map.has(r.date)) map.set(r.date, [])
                           map.get(r.date)!.push(r)

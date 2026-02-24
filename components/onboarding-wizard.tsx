@@ -12,6 +12,7 @@ import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
 import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
 import { applyTheme } from '@/components/theme-provider'
+import { HeroAnimation, type HeroTheme } from '@/components/hero-animations'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -520,8 +521,23 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const prev = () => { if (step > 0) setStep(step - 1) }
   const progress = ((step + 1) / totalSteps) * 100
 
+  const STEP_THEMES: Record<string, HeroTheme> = {
+    welcome: 'prayer',
+    features: 'explore',
+    install: 'community',
+    profile: 'community',
+    prayer: 'prayer',
+    ramadan: 'ramadan',
+    notifications: 'duas',
+    theme: 'explore',
+    done: 'ramadan',
+  }
+  const stepTheme: HeroTheme = STEP_THEMES[currentStepKey] ?? 'default'
+
   return (
-    <div className="fixed inset-0 z-[200] flex flex-col bg-background">
+    <div className="fixed inset-0 z-[200] flex flex-col bg-background overflow-hidden">
+      {/* Themed background animation */}
+      <HeroAnimation theme={stepTheme} />
       {/* Progress bar */}
       <div className="h-0.5 w-full bg-secondary">
         <div
@@ -537,7 +553,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       </div>
 
       {/* Content area */}
-      <div className="flex flex-1 flex-col overflow-y-auto">
+      <div
+        key={currentStepKey}
+        className="flex flex-1 flex-col overflow-y-auto animate-fade-up"
+      >
 
         {/* ── Step 0: Welcome ──────────────────────────────── */}
         {currentStepKey === 'welcome' && (
@@ -1004,6 +1023,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             ) : isIOS() ? (
               /* iOS animated install guide */
               <div className="w-full flex flex-col items-center gap-4">
+                <p className="text-xs text-muted-foreground/80">
+                  Animated walkthrough: Share → Add to Home Screen → icon appears.
+                </p>
                 <IOSInstallAnimation />
                 <p className="text-[10px] text-center text-muted-foreground/60 leading-relaxed">
                   ⚠️ Must be in <strong className="text-muted-foreground/80">Safari</strong> — Chrome on iPhone cannot install apps.

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, Send, CheckCircle, ChevronDown } from 'lucide-react'
-import { masjids } from '@/lib/masjids'
+import { MASJIDS as masjids } from '@/lib/masjid-data'
 import { toast } from 'sonner'
 import { SelectModal } from '@/components/select-modal'
 

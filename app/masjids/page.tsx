@@ -7,6 +7,7 @@ import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { MASJIDS, AREAS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { guyanaDate } from '@/lib/timezone'
 
 interface CheckinData {
   count: number
@@ -24,7 +25,7 @@ const FACILITY_ICONS: Record<string, string> = {
 }
 
 function getTodayKey() {
-  return new Date().toISOString().split('T')[0]
+  return guyanaDate()
 }
 
 export default function MasjidsPage() {
@@ -36,7 +37,7 @@ export default function MasjidsPage() {
   const [homeMasjidId, setHomeMasjidId] = useState<string | null>(null)
   const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null)
 
-  const isFriday = new Date().getDay() === 5
+  const isFriday = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Guyana', weekday: 'short' }).format(new Date()) === 'Fri'
   const today = getTodayKey()
 
   useEffect(() => {
@@ -50,14 +51,32 @@ export default function MasjidsPage() {
     }
     setCheckins(cleaned)
     setCheckedIn(getItem<Record<string, boolean>>('masjid_checked_in_today', {}))
-    setHomeMasjidId(localStorage.getItem('home_masjid_id'))
-    // Try to get user location for proximity sort
+    setHomeMasjidId(getItem<string>(KEYS.HOME_MASJID, ''))
+
+    // Seed from saved onboarding/device location for immediate proximity sorting
+    const savedLat = getItem<number | null>(KEYS.USER_LAT, null)
+    const savedLng = getItem<number | null>(KEYS.USER_LNG, null)
+    if (typeof savedLat === 'number' && typeof savedLng === 'number') {
+      setUserLoc({ lat: savedLat, lng: savedLng })
+    }
+
+    // Try to get fresher user location for proximity sort
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => setUserLoc({ lat: 6.8013, lng: -58.1551 }), // Georgetown fallback
+        (pos) => {
+          const nextLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+          setUserLoc(nextLoc)
+          setItem(KEYS.USER_LAT, nextLoc.lat)
+          setItem(KEYS.USER_LNG, nextLoc.lng)
+        },
+        () => {
+          if (typeof savedLat === 'number' && typeof savedLng === 'number') return
+          setUserLoc({ lat: 6.8013, lng: -58.1551 }) // Georgetown fallback
+        },
         { timeout: 4000, maximumAge: 300000 }
       )
+    } else if (!(typeof savedLat === 'number' && typeof savedLng === 'number')) {
+      setUserLoc({ lat: 6.8013, lng: -58.1551 })
     }
   }, [today])
 

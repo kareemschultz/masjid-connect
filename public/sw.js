@@ -1,6 +1,6 @@
 // MasjidConnect GY — Service Worker for push notifications & offline
 
-const CACHE_NAME = 'masjidconnect-v5'
+const CACHE_NAME = 'masjidconnect-v6'
 const OFFLINE_URLS = ['/', '/quran', '/tracker', '/masjids', '/explore']
 
 // Install — cache shell

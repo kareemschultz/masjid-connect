@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth'
 import { getPool } from '@/lib/db'
 import { sendNtfy } from '@/lib/ntfy'
 import { rateLimit, getClientIp, rateLimitResponse } from '@/lib/rate-limit'
+import { canonicalMasjidId, masjidIdAliases } from '@/lib/masjid-id'
+import { guyanaDate } from '@/lib/timezone'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const MASJID_ID_RE = /^[a-z0-9_-]{1,60}$/i
@@ -10,7 +12,7 @@ const MASJID_ID_RE = /^[a-z0-9_-]{1,60}$/i
 function rowToSubmission(row: any) {
   return {
     id: String(row.id),
-    masjidId: row.masjid_id,
+    masjidId: canonicalMasjidId(row.masjid_id),
     menu: row.menu,
     submittedBy: row.submitted_by,
     servings: row.servings,
@@ -40,7 +42,10 @@ export async function GET(request: NextRequest) {
     const params: any[] = []
     const clauses: string[] = []
     if (date) { clauses.push(`date = $${params.length + 1}`); params.push(date) }
-    if (masjidId) { clauses.push(`masjid_id = $${params.length + 1}`); params.push(masjidId) }
+    if (masjidId) {
+      clauses.push(`masjid_id = ANY($${params.length + 1})`)
+      params.push(masjidIdAliases(masjidId))
+    }
     if (clauses.length) query += ' WHERE ' + clauses.join(' AND ')
     query += ' ORDER BY date DESC, submitted_at DESC LIMIT 50'
 
@@ -81,11 +86,11 @@ export async function POST(request: NextRequest) {
     if (!masjidId || !menu || !submittedBy) {
       return Response.json({ error: 'masjidId, menu, submittedBy are required' }, { status: 400 })
     }
-    const normalizedMasjidId = String(masjidId).trim()
+    const normalizedMasjidId = canonicalMasjidId(masjidId)
     const normalizedMenu = String(menu).trim()
     const normalizedSubmittedBy = String(submittedBy).trim()
     const normalizedNotes = typeof notes === 'string' ? notes.trim() : ''
-    const normalizedDate = typeof date === 'string' && date ? date : new Date().toISOString().split('T')[0]
+    const normalizedDate = typeof date === 'string' && date ? date : guyanaDate()
     const normalizedServings = servings === undefined || servings === null || servings === '' ? null : Number(servings)
 
     if (!MASJID_ID_RE.test(normalizedMasjidId)) {
