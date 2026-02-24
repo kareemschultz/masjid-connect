@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {
   BookOpen, MapPin, Clock, Users, ChevronRight, ChevronLeft,
   Sparkles, Moon, Bell, Smartphone, Share2, Heart, Star,
-  UtensilsCrossed, Headphones, Check
+  UtensilsCrossed, Headphones, Check, Plus, Settings
 } from 'lucide-react'
 import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
@@ -18,8 +18,6 @@ interface OnboardingWizardProps {
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-
-const TOTAL_STEPS = 6
 
 const FEATURES = [
   {
@@ -87,17 +85,6 @@ const RAMADAN_OPTIONS = [
   },
 ]
 
-// Detect Ramadan proximity using Hijri calendar
-function isNearRamadan(): boolean {
-  try {
-    const fmt = new Intl.DateTimeFormat('en-TN-u-ca-islamic-umalqura', { month: 'numeric' })
-    const hijriMonth = parseInt(fmt.format(new Date()))
-    return hijriMonth === 8 || hijriMonth === 9 || hijriMonth === 10
-  } catch {
-    return true // default to showing it
-  }
-}
-
 function isPushSupported(): boolean {
   return typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator
 }
@@ -123,6 +110,45 @@ function GoogleIcon() {
 }
 
 // ─── Step Dots ────────────────────────────────────────────────────────────────
+
+
+function IOSInstallMiniGuide() {
+  return (
+    <div className="mt-2 rounded-2xl border border-teal-500/20 bg-[#0b1620] p-3">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-teal-300/80">Visual install guide</p>
+      <div className="relative overflow-hidden rounded-xl border border-teal-500/20 bg-[#0a0b14] p-3">
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+        <div className="mx-auto w-full max-w-[220px] rounded-2xl border border-gray-700 bg-gray-900 p-2.5">
+          <div className="flex items-center justify-between text-[9px] text-gray-400">
+            <span>Safari</span>
+            <span className="rounded-full bg-teal-500/15 px-1.5 py-0.5 text-teal-300">Install</span>
+          </div>
+          <div className="mt-2 flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-950 px-2 py-1.5">
+            <Share2 className="h-3.5 w-3.5 animate-float-up text-teal-300" />
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold text-white">1) Tap Share</p>
+              <p className="text-[9px] text-gray-400">Bottom toolbar</p>
+            </div>
+          </div>
+          <div className="mt-2 flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-950 px-2 py-1.5">
+            <Plus className="h-3.5 w-3.5 animate-pulse text-emerald-300" />
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold text-white">2) Add to Home Screen</p>
+              <p className="text-[9px] text-gray-400">Scroll actions list</p>
+            </div>
+          </div>
+          <div className="mt-2 flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-950 px-2 py-1.5">
+            <Check className="h-3.5 w-3.5 animate-count-tick text-emerald-300" />
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold text-white">3) Tap Add</p>
+              <p className="text-[9px] text-gray-400">Top-right confirmation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function StepDots({ step, total }: { step: number; total: number }) {
   return (
@@ -156,7 +182,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [pwaInstalled, setPwaInstalled] = useState(false)
   const [signingIn, setSigningIn] = useState(false)
-  const showRamadanStep = isNearRamadan()
+  const showRamadanStep = true
 
   // PWA install prompt capture
   useEffect(() => {
@@ -220,6 +246,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const steps = [
     'welcome',
     'features',
+    'explore',
+    'buddy',
     'name',
     'prayer',
     ...(showRamadanStep ? ['ramadan'] : []),
@@ -237,6 +265,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
   return (
     <div className="fixed inset-0 z-[200] flex flex-col bg-[#0a0b14]">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-24 top-12 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl animate-float" />
+        <div className="absolute -right-16 top-1/3 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl animate-float" style={{ animationDelay: '0.8s' }} />
+        <div className="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl animate-float" style={{ animationDelay: '1.6s' }} />
+      </div>
+
       {/* Progress bar */}
       <div className="h-0.5 w-full bg-gray-800">
         <div
@@ -322,7 +356,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
         {/* ── Step 1: Features / How It Works ─────────────── */}
         {currentStepKey === 'features' && (
-          <div className="flex flex-1 flex-col px-5 py-6">
+          <div className="flex flex-1 flex-col px-5 py-6 animate-fade-up">
             <div className="mb-1 text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-teal-400">Everything in one place</p>
             </div>
@@ -355,7 +389,64 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           </div>
         )}
 
-        {/* ── Step 2: Your Name ────────────────────────────── */}
+        {/* ── Step 2: Explore Map ─────────────────────────── */}
+        {currentStepKey === 'explore' && (
+          <div className="flex flex-1 flex-col px-5 py-6 animate-fade-up">
+            <p className="text-center text-xs font-bold uppercase tracking-widest text-cyan-400">Explore page map</p>
+            <h2 className="mt-1 text-center text-2xl font-bold text-white">Where everything lives</h2>
+            <p className="mt-2 text-center text-sm text-gray-400">Open <span className="text-gray-200">Explore</span> from the bottom nav to find these sections quickly.</p>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 animate-stagger">
+              {[
+                { icon: Headphones, title: 'Lectures', path: 'Explore › Lectures', desc: 'Audio lessons by trusted scholars.' },
+                { icon: BookOpen, title: 'Duas & Names', path: 'Explore › Duas / Islamic Names', desc: 'Daily duas and meaningful names.' },
+                { icon: UtensilsCrossed, title: 'Iftaar + Ramadan', path: 'Explore › Iftaar / Ramadan', desc: 'Live iftaar reports and fasting tools.' },
+                { icon: MapPin, title: 'Masjid Directory', path: 'Explore › Masjids', desc: 'Find local masjids and details.' },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl border border-gray-800 bg-gray-900/70 p-3.5">
+                  <div className="mb-1.5 flex items-center gap-2">
+                    <item.icon className="h-4 w-4 text-cyan-300" />
+                    <p className="text-sm font-semibold text-white">{item.title}</p>
+                  </div>
+                  <p className="text-[11px] text-cyan-300/90">{item.path}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-gray-400">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 3: Buddy Setup ─────────────────────────── */}
+        {currentStepKey === 'buddy' && (
+          <div className="flex flex-1 flex-col px-5 py-6 animate-fade-up">
+            <p className="text-center text-xs font-bold uppercase tracking-widest text-amber-400">Buddy system setup</p>
+            <h2 className="mt-1 text-center text-2xl font-bold text-white">Find your accountability buddy</h2>
+            <p className="mt-2 text-center text-sm text-gray-400">You can manage this anytime at <span className="text-gray-200">Explore › Buddy</span>.</p>
+
+            <div className="mt-5 space-y-3 animate-stagger">
+              {[
+                { step: '1', title: 'Send a buddy request', note: 'Open Buddy and tap Add Friend to send a request.' },
+                { step: '2', title: 'Accept requests', note: 'Pending requests appear at the top of the Buddy page.' },
+                { step: '3', title: 'Start challenges', note: 'Pick daily/weekly goals and track streaks together.' },
+              ].map((item) => (
+                <div key={item.step} className="flex items-start gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-3.5">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 text-[11px] font-bold text-white">{item.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-200">{item.title}</p>
+                    <p className="mt-1 text-[11px] leading-relaxed text-gray-400">{item.note}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-gray-800 bg-gray-900/60 p-3.5">
+              <p className="text-xs text-gray-300">Need it later?</p>
+              <p className="mt-1 text-[11px] text-gray-500">Go to <span className="text-gray-300">Explore › Buddy</span> any time to add friends, view requests, and manage challenges.</p>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 4: Your Name ────────────────────────────── */}
         {currentStepKey === 'name' && (
           <div className="relative flex flex-1 flex-col items-center justify-center px-8">
             <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -645,6 +736,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                         </div>
                       ))}
                       <p className="text-[10px] text-gray-600 pt-1">⚠️ Must be opened in <strong className="text-gray-500">Safari</strong> — Chrome on iPhone cannot install apps.</p>
+                      <IOSInstallMiniGuide />
                     </div>
                   )}
                 </div>
@@ -682,6 +774,24 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               </div>
               <p className="text-center text-[10px] text-gray-600 mb-3">Jump straight to what matters</p>
 
+              <div className="w-full max-w-xs rounded-2xl border border-gray-800 bg-gray-900/60 p-3 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Settings className="h-3.5 w-3.5 text-emerald-400" />
+                  <p className="text-[11px] font-semibold text-gray-200">Where to find key settings</p>
+                </div>
+                <div className="space-y-1.5 text-[10px] text-gray-400">
+                  <button onClick={() => { finish(); router.push('/settings') }} className="w-full rounded-lg border border-gray-800 px-2.5 py-1.5 text-left active:bg-gray-800/70">
+                    Prayer Method & Madhab → <span className="text-gray-300">Settings › Prayer Times</span>
+                  </button>
+                  <button onClick={() => { finish(); router.push('/settings') }} className="w-full rounded-lg border border-gray-800 px-2.5 py-1.5 text-left active:bg-gray-800/70">
+                    Notifications & Adhan toggles → <span className="text-gray-300">Settings › Notifications</span>
+                  </button>
+                  <button onClick={() => { finish(); router.push('/settings') }} className="w-full rounded-lg border border-gray-800 px-2.5 py-1.5 text-left active:bg-gray-800/70">
+                    Reciter preference → <span className="text-gray-300">Settings › Adhan Sound</span>
+                  </button>
+                </div>
+              </div>
+
               <button
                 onClick={finish}
                 className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-white shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
@@ -696,7 +806,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
       {/* Bottom nav */}
       {currentStepKey !== 'done' && (
-        <div className="flex items-center justify-between px-6 pb-10 pt-4">
+        <div className="flex items-center justify-between px-6 pb-10 pt-4 animate-fade-up">
           <button
             onClick={prev}
             disabled={step === 0}

@@ -199,7 +199,26 @@ export default function HomePage() {
   }, [scheduleNotifications])
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {})
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        reg.addEventListener('updatefound', () => {
+          const key = 'sw_update_prompted_v2'
+          const alreadyPrompted = localStorage.getItem(key) === '1'
+          const install = reg.installing
+          if (!install) return
+          install.addEventListener('statechange', () => {
+            const waiting = reg.waiting
+            if (install.state === 'installed' && waiting && !alreadyPrompted) {
+              localStorage.setItem(key, '1')
+              if (window.confirm('Update available. Refresh now?')) {
+                waiting.postMessage({ type: 'SKIP_WAITING' })
+                window.location.reload()
+              }
+            }
+          })
+        })
+      }).catch(() => {})
+    }
 
     // Handle Google auth callback — skip onboarding if auth just completed
     const params = new URLSearchParams(window.location.search)

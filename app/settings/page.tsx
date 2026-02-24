@@ -15,6 +15,7 @@ import { SelectModal } from '@/components/select-modal'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS, RECITERS } from '@/lib/prayer-times'
 import { requestNotificationPermission } from '@/lib/notifications'
+import { shouldShowEnableNotificationsCta } from '@/lib/push-notifications'
 import Link from 'next/link'
 
 const PRAYER_NOTIF_CONFIG = [
@@ -49,10 +50,12 @@ export default function SettingsPage() {
   const [resetConfirm, setResetConfirm] = useState(false)
   const [adminTaps, setAdminTaps] = useState(0)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [showNotifCta, setShowNotifCta] = useState(true)
   const [session, setSession] = useState<{ user?: { name?: string; email?: string; image?: string } } | null>(null)
   const [signingIn, setSigningIn] = useState(false)
 
   useEffect(() => {
+    setShowNotifCta(typeof window !== 'undefined' ? shouldShowEnableNotificationsCta() : true)
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'Egyptian'))
     setMadhab(getItem(KEYS.MADHAB, 'Shafi'))
     setReciter(getItem(KEYS.RECITER, 'ar.alafasy'))
@@ -181,13 +184,13 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <SettingGroup label="Notifications" accentColor="bg-amber-500">
-          <SettingRow icon={Bell} iconColor="bg-amber-600" label="Enable Notifications" rightElement={
+          {showNotifCta ? <SettingRow icon={Bell} iconColor="bg-amber-600" label="Enable Notifications" rightElement={
             <div className="flex items-center gap-2">
               {notifs && <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />}
               <IOSToggle checked={notifs} onChange={toggleNotifs} />
             </div>
-          } />
-          {notifs && (
+          } /> : <div className="px-4 py-3 text-xs text-gray-400">Install this app to your home screen to enable notifications on iOS.</div>}
+          {showNotifCta && notifs && (
             <>
               {PRAYER_NOTIF_CONFIG.map((p, i) => (
                 <SettingRow

@@ -1,6 +1,7 @@
 // MasjidConnect GY — Service Worker for push notifications & offline
 
-const CACHE_NAME = 'masjidconnect-v1'
+const CACHE_VERSION = 'v2'
+const CACHE_NAME = `masjidconnect-${CACHE_VERSION}`
 const OFFLINE_URLS = ['/', '/quran', '/tracker', '/masjids', '/explore']
 
 // Install — cache shell
@@ -23,6 +24,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch — network-first with cache fallback
 self.addEventListener('fetch', (event) => {
+  if (event.request.url.includes('/api/submissions') || event.request.url.includes('/api/tracking')) {
+    event.respondWith(fetch(event.request))
+    return
+  }
+
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request) || caches.match('/'))
@@ -70,4 +76,9 @@ self.addEventListener('notificationclick', (event) => {
       }
     })
   )
+})
+
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting()
 })

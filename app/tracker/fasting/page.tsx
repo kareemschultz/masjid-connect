@@ -334,7 +334,7 @@ export default function FastingTrackerPage() {
             </p>
 
             {/* 6 Cards */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3 animate-stagger">
               {shawwalDays.map((key, i) => {
                 const status = log[key] || null
                 return (
@@ -376,7 +376,7 @@ export default function FastingTrackerPage() {
             </div>
 
             {/* Two Cards */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 animate-stagger">
               {monThuDates.map(({ label, date, key }) => {
                 const status = log[key] || null
                 const isToday = key === today

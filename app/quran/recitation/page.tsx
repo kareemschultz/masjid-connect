@@ -97,7 +97,7 @@ export default function RecitationPage() {
   // Fetch surah text when surah changes
   useEffect(() => {
     if (step !== 'player') return
-    fetch(`/api/quran/surah?surah=${selectedSurah}&reciter=${reciter}`)
+    fetch(`/api/quran/surah/${selectedSurah}`)
       .then(r => r.json())
       .then(data => {
         const texts = (data?.data?.ayahs || []).map((a: any) => ({
