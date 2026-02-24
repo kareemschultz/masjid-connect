@@ -135,6 +135,8 @@ function getSpotRect(selector: string): SpotRect | null {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const VIEWPORT_MARGIN = 12
+const TOUR_CARD_FALLBACK_HEIGHT = 260
 
 async function waitForRoute(route: string, timeoutMs = 7000): Promise<boolean> {
   if (window.location.pathname === route) return true
@@ -146,14 +148,50 @@ async function waitForRoute(route: string, timeoutMs = 7000): Promise<boolean> {
   return false
 }
 
-async function waitForTarget(selector: string, timeoutMs = 7000): Promise<Element | null> {
+async function ensureTargetSpot(selector: string, timeoutMs = 5000): Promise<SpotRect | null> {
   const started = Date.now()
-  let found: Element | null = document.querySelector(selector)
-  while (!found && Date.now() - started < timeoutMs) {
-    await sleep(120)
-    found = document.querySelector(selector)
+  let lastRect: SpotRect | null = null
+  let stableFrames = 0
+
+  while (Date.now() - started < timeoutMs) {
+    const found = document.querySelector(selector) as HTMLElement | null
+    if (!found) {
+      await sleep(80)
+      continue
+    }
+
+    found.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' })
+    await sleep(40)
+
+    const rect = getSpotRect(selector)
+    if (!rect) {
+      await sleep(80)
+      continue
+    }
+
+    const visibleTop = Math.max(rect.top, 0)
+    const visibleBottom = Math.min(rect.top + rect.height, window.innerHeight)
+    const visibleHeight = Math.max(0, visibleBottom - visibleTop)
+    const minVisible = Math.min(rect.height, window.innerHeight) * 0.35
+    const inViewport = visibleHeight >= Math.max(48, minVisible)
+    const nearLast =
+      !!lastRect &&
+      Math.abs(rect.top - lastRect.top) < 1 &&
+      Math.abs(rect.left - lastRect.left) < 1 &&
+      Math.abs(rect.width - lastRect.width) < 1 &&
+      Math.abs(rect.height - lastRect.height) < 1
+
+    stableFrames = inViewport && nearLast ? stableFrames + 1 : 0
+    lastRect = rect
+
+    if (inViewport && stableFrames >= 1) {
+      return rect
+    }
+
+    await sleep(80)
   }
-  return found
+
+  return lastRect ?? getSpotRect(selector)
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -163,6 +201,8 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   const [stepIdx, setStepIdx] = useState(0)
   const [spot, setSpot] = useState<SpotRect | null>(null)
   const [visible, setVisible] = useState(false)
+  const [cardHeight, setCardHeight] = useState(TOUR_CARD_FALLBACK_HEIGHT)
+  const cardRef = useRef<HTMLDivElement | null>(null)
   const runIdRef = useRef(0)
 
   const step = STEPS[stepIdx]
@@ -177,40 +217,39 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   // Scroll element into view, then calculate spotlight
   const updateSpot = useCallback(async (target: string | null, route?: string) => {
     const runId = ++runIdRef.current
-    setVisible(false)
+    const routeChanging = !!route && window.location.pathname !== route
+
+    if (routeChanging) {
+      setVisible(false)
+    }
 
     // Navigate if needed
-    if (route && window.location.pathname !== route) {
+    if (routeChanging && route) {
       router.push(route)
-      await waitForRoute(route)
-      await sleep(220)
+      const reachedRoute = await waitForRoute(route, 10000)
+      if (!reachedRoute) {
+        if (runId !== runIdRef.current) return
+        setSpot(null)
+        setVisible(true)
+        return
+      }
+      await sleep(80)
       if (runId !== runIdRef.current) return
     }
 
     if (!target) {
       setSpot(null)
-      await sleep(120)
       if (runId !== runIdRef.current) return
       setVisible(true)
       return
     }
 
-    const el = await waitForTarget(target)
+    const rect = await ensureTargetSpot(target)
     if (runId !== runIdRef.current) return
 
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      await sleep(420)
-      if (runId !== runIdRef.current) return
-      setSpot(getSpotRect(target))
-      setVisible(true)
-    } else {
-      // Element not found — fall back to center card
-      setSpot(null)
-      await sleep(120)
-      if (runId !== runIdRef.current) return
-      setVisible(true)
-    }
+    // Element missing or unstable — fall back to center card.
+    setSpot(rect)
+    setVisible(true)
   }, [router])
 
   useEffect(() => {
@@ -225,8 +264,33 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
     if (!step.target) return
     const recalc = () => setSpot(getSpotRect(step.target!))
     window.addEventListener('resize', recalc)
-    return () => window.removeEventListener('resize', recalc)
+    window.addEventListener('scroll', recalc, { passive: true })
+    window.visualViewport?.addEventListener('resize', recalc)
+    window.visualViewport?.addEventListener('scroll', recalc)
+    return () => {
+      window.removeEventListener('resize', recalc)
+      window.removeEventListener('scroll', recalc)
+      window.visualViewport?.removeEventListener('resize', recalc)
+      window.visualViewport?.removeEventListener('scroll', recalc)
+    }
   }, [step.target])
+
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+
+    const updateHeight = () => {
+      const nextHeight = card.getBoundingClientRect().height
+      if (nextHeight > 0) setCardHeight(nextHeight)
+    }
+
+    updateHeight()
+
+    if (typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(updateHeight)
+    ro.observe(card)
+    return () => ro.disconnect()
+  }, [stepIdx, visible, step.title, step.description, step.hint])
 
   const handleNext = useCallback(() => {
     if (isLast) { handleComplete(); return }
@@ -235,32 +299,53 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
 
   const handleSkip = useCallback(() => { handleComplete() }, [handleComplete])
 
-  // Tooltip position
-  const tooltipStyle = (): React.CSSProperties => {
+  const getTooltipLayout = (): { style: React.CSSProperties; placement: 'above' | 'below' | 'center' } => {
     if (isCenter || !spot) {
-      return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '340px' }
-    }
-    const viewH = window.innerHeight
-    const spaceBelow = viewH - (spot.top + spot.height)
-
-    if (step.tooltipSide === 'above' || spaceBelow < 220) {
       return {
-        bottom: `${viewH - spot.top + 12}px`,
+        style: { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '340px' },
+        placement: 'center',
+      }
+    }
+
+    const viewH = window.innerHeight
+    const maxTop = Math.max(VIEWPORT_MARGIN, viewH - cardHeight - VIEWPORT_MARGIN)
+    const belowTop = spot.top + spot.height + VIEWPORT_MARGIN
+    const aboveTop = spot.top - cardHeight - VIEWPORT_MARGIN
+    const belowFits = belowTop <= maxTop
+    const aboveFits = aboveTop >= VIEWPORT_MARGIN
+
+    let placement: 'above' | 'below'
+
+    if (step.tooltipSide === 'above') {
+      placement = aboveFits || !belowFits ? 'above' : 'below'
+    } else if (step.tooltipSide === 'below') {
+      placement = belowFits || !aboveFits ? 'below' : 'above'
+    } else {
+      const spaceBelow = viewH - (spot.top + spot.height)
+      const spaceAbove = spot.top
+      placement = spaceBelow >= spaceAbove ? 'below' : 'above'
+      if (placement === 'below' && !belowFits && aboveFits) placement = 'above'
+      if (placement === 'above' && !aboveFits && belowFits) placement = 'below'
+    }
+
+    let top = placement === 'below' ? belowTop : aboveTop
+    if (!Number.isFinite(top)) top = VIEWPORT_MARGIN
+    top = Math.min(Math.max(top, VIEWPORT_MARGIN), maxTop)
+
+    return {
+      style: {
+        top: `${top}px`,
         left: '50%',
         transform: 'translateX(-50%)',
         maxWidth: '340px',
-      }
-    }
-    return {
-      top: `${spot.top + spot.height + 12}px`,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      maxWidth: '340px',
+      },
+      placement,
     }
   }
 
-  const showArrowBelow = !isCenter && spot && step.tooltipSide === 'above'
-  const showArrowAbove = !isCenter && spot && step.tooltipSide === 'below'
+  const tooltipLayout = getTooltipLayout()
+  const showArrowBelow = !isCenter && !!spot && tooltipLayout.placement === 'above'
+  const showArrowAbove = !isCenter && !!spot && tooltipLayout.placement === 'below'
 
   return (
     <div className="fixed inset-0 z-[220]" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.2s ease' }}>
@@ -285,7 +370,7 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
       )}
 
       {/* ── Tooltip card ── */}
-      <div className="fixed z-[221] w-[calc(100%-2rem)]" style={tooltipStyle()}>
+      <div className="fixed z-[221] w-[calc(100%-2rem)]" style={tooltipLayout.style}>
 
         {showArrowBelow && (
           <div className="flex justify-center pb-1">
@@ -293,7 +378,7 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-2xl">
+        <div ref={cardRef} className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-2xl">
           {/* Progress dots */}
           <div className="flex items-center justify-between px-4 pt-4">
             <div className="flex gap-1 flex-wrap max-w-[200px]">
