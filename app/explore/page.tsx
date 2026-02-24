@@ -49,10 +49,11 @@ const SECTIONS = [
       { icon: Circle,      label: 'Tasbih',          description: 'Digital Counter',        href: '/explore/tasbih',                 color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400', animationTheme: 'tasbih' as CardAnimationTheme },
       { icon: Navigation2, label: 'Qibla',           description: 'Find Direction',         href: '/explore/qibla',                  color: 'from-blue-500/20 to-blue-600/10', iconColor: 'text-blue-400', animationTheme: 'qibla' as CardAnimationTheme },
       { icon: Calculator,  label: 'Zakat',           description: 'Calculate Zakat',        href: '/explore/zakat',                  color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400', animationTheme: 'default' as CardAnimationTheme },
-      { icon: Banknote,    label: 'Zakat Calculator', description: 'Detailed Calculator',    href: '/explore/zakat',                  color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400', animationTheme: 'default' as CardAnimationTheme },
       { icon: Calendar,    label: 'Islamic Calendar',description: 'Hijri Dates & Events',   href: '/explore/calendar',               color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400', animationTheme: 'default' as CardAnimationTheme },
+      { icon: Sun,         label: "Jumu'ah",         description: 'Friday Prayer Prep',     href: '/explore/jumuah',                 color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400', animationTheme: 'default' as CardAnimationTheme },
       { icon: Sparkles,    label: '99 Names',        description: 'Asma Al-Husna',          href: '/explore/names',                  color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400', animationTheme: 'arabic' as CardAnimationTheme },
       { icon: Heart,       label: 'Islamic Names',   description: 'Meanings & origins',     href: '/explore/names-search',           color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400', animationTheme: 'default' as CardAnimationTheme },
+      { icon: Library,     label: 'Resources',       description: 'Islamic Learning',       href: '/explore/resources',              color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400', animationTheme: 'default' as CardAnimationTheme },
     ],
   },
   {
