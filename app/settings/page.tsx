@@ -459,6 +459,8 @@ export default function SettingsPage() {
         <SettingGroup 
           label="Prayer & Location" 
           accentColor="bg-emerald-500"
+          gradientFrom="from-emerald-600/20"
+          gradientTo="to-teal-600/10"
           icon={MapPin}
           isCollapsible
           isExpanded={expanded.prayer}
@@ -541,6 +543,8 @@ export default function SettingsPage() {
         <SettingGroup 
           label="Notifications" 
           accentColor="bg-amber-500"
+          gradientFrom="from-amber-600/20"
+          gradientTo="to-orange-600/10"
           icon={Bell}
           isCollapsible
           isExpanded={expanded.notifications}
@@ -579,6 +583,8 @@ export default function SettingsPage() {
         <SettingGroup 
           label="Quran & Recitation" 
           accentColor="bg-violet-500"
+          gradientFrom="from-violet-600/20"
+          gradientTo="to-purple-600/10"
           icon={BookOpen}
           isCollapsible
           isExpanded={expanded.quran}
@@ -593,6 +599,8 @@ export default function SettingsPage() {
         <SettingGroup 
           label="App Preferences" 
           accentColor="bg-blue-500"
+          gradientFrom="from-blue-600/20"
+          gradientTo="to-indigo-600/10"
           icon={Settings}
           isCollapsible
           isExpanded={expanded.app}
@@ -617,6 +625,8 @@ export default function SettingsPage() {
         <SettingGroup 
           label="About & Support" 
           accentColor="bg-teal-500"
+          gradientFrom="from-teal-600/20"
+          gradientTo="to-cyan-600/10"
           icon={Info}
           isCollapsible
           isExpanded={expanded.about}
