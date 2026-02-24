@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Search, Copy, Heart, Check, X, Share2, HandHeart, ChevronRight } from 'lucide-react'
+import { BookOpen, Search, Copy, Heart, Check, X, Share2, HandHeart, ChevronRight, Sunrise, MoonStar } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import { PremiumAtmosphere } from '@/components/premium-atmosphere'
 import { getItem, setItem } from '@/lib/storage'
 import { shareOrCopy } from '@/lib/share'
 
@@ -101,6 +102,7 @@ const CATEGORIES: Category[] = [
         transliteration: "Asbahna wa asbahal mulku lillah, walhamdu lillah, la ilaha illallahu wahdahu la shareeka lah",
         meaning: 'We have entered the morning and the entire kingdom belongs to Allah. All praise is for Allah. None has the right to be worshipped except Allah, alone, without partner.',
         source: 'Abu Dawud',
+        note: 'From GII Practical Essentials: morning opening remembrance.',
       },
       {
         arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',
@@ -109,11 +111,65 @@ const CATEGORIES: Category[] = [
         source: 'Tirmidhi',
       },
       {
+        arabic: 'اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ',
+        transliteration: "Allahumma ma asbaha bee min ni'matin aw bi-ahadin min khalqika faminka wahdaka la shareeka lak, falakal hamdu wa lakash-shukr",
+        meaning: 'O Allah, whatever blessing I or any of Your creation have received this morning is from You alone, without partner. To You belongs all praise and thanks.',
+        source: 'Abu Dawud',
+      },
+      {
+        arabic: 'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ',
+        transliteration: "Allahumma 'afini fee badanee, Allahumma 'afini fee sam'ee, Allahumma 'afini fee basaree, la ilaha illa Anta",
+        meaning: 'O Allah, grant me health in my body, hearing, and sight. None has the right to be worshipped except You.',
+        source: 'Abu Dawud',
+        note: 'Recite 3 times in the morning.',
+      },
+      {
+        arabic: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+        transliteration: "Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'i wa Huwas-Samee'ul-'Aleem",
+        meaning: 'In the Name of Allah, with Whose Name nothing on earth or in heaven can harm, and He is the All-Hearing, All-Knowing.',
+        source: 'Abu Dawud & Tirmidhi',
+        note: 'Recite 3 times every morning.',
+      },
+      {
+        arabic: 'رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ ﷺ نَبِيًّا',
+        transliteration: 'Radeetu billahi Rabban wa bil-Islami deenan wa bi Muhammadin Nabiyyan',
+        meaning: 'I am pleased with Allah as my Lord, Islam as my religion, and Muhammad ﷺ as my Prophet.',
+        source: 'Abu Dawud',
+        note: 'Recite 3 times in the morning.',
+      },
+      {
+        arabic: 'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ',
+        transliteration: "Ya Hayyu Ya Qayyum, birahmatika astagheeth, aslih lee sha'nee kullah, wa la takilnee ila nafsee tarfata 'ayn",
+        meaning: 'O Ever-Living, O Sustainer, by Your mercy I seek help. Set all my affairs right and do not leave me to myself even for the blink of an eye.',
+        source: 'Hakim',
+      },
+      {
+        arabic: 'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+        transliteration: 'Hasbiyallahu la ilaha illa Huwa, alayhi tawakkaltu, wa Huwa Rabbul-arshil-azeem',
+        meaning: 'Allah is sufficient for me; none has the right to be worshipped except Him. Upon Him I rely, and He is Lord of the Mighty Throne.',
+        source: 'Abu Dawud',
+        note: 'Recite 7 times every morning.',
+      },
+      {
+        arabic: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ وَرِضَا نَفْسِهِ وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ',
+        transliteration: 'Subhanallahi wa bihamdihi adada khalqihi wa rida nafsihi wa zinata arshihi wa midada kalimatih',
+        meaning: 'Glory and praise be to Allah by the number of His creation, by His pleasure, by the weight of His Throne, and by the ink of His words.',
+        source: 'Muslim',
+        note: 'Recite 3 times in the morning.',
+      },
+      {
         arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ',
         transliteration: "Allahumma Anta Rabbee la ilaha illa Anta, khalaqtanee wa ana 'abduk, wa ana 'ala 'ahdika wa wa'dika mastata't",
         meaning: 'O Allah, You are my Lord, none has the right to be worshipped except You. You created me and I am Your servant. I am upon Your covenant and promise as best I can.',
         source: 'Bukhari',
         note: "The master of seeking forgiveness (Sayyidul Istighfar). Whoever says this in the morning with firm faith will enter Paradise if they die that day.",
+      },
+      {
+        arabic: 'أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ',
+        transliteration: 'Astaghfirullaha wa atoobu ilayh',
+        meaning: 'I seek Allah’s forgiveness and I repent to Him.',
+        source: 'Bukhari',
+        note: 'Recite abundantly in the day; 100 times is recommended.',
       },
     ],
   },
@@ -128,12 +184,75 @@ const CATEGORIES: Category[] = [
         transliteration: "Amsayna wa amsal mulku lillah, walhamdu lillah, la ilaha illallahu wahdahu la shareeka lah",
         meaning: 'We have entered the evening and the entire kingdom belongs to Allah. All praise is for Allah. None has the right to be worshipped except Allah, alone, without partner.',
         source: 'Abu Dawud',
+        note: 'From GII Practical Essentials: evening opening remembrance.',
+      },
+      {
+        arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',
+        transliteration: "Allahumma bika amsayna, wa bika asbahna, wa bika nahya, wa bika namootu, wa ilaykal-maseer",
+        meaning: 'O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the final return.',
+        source: 'Tirmidhi',
       },
       {
         arabic: 'اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ',
         transliteration: "Allahumma ma amsa bee min ni'matin aw bi-ahadin min khalqika faminka wahdaka la shareeka lak, falakal hamdu wa lakash-shukr",
         meaning: 'O Allah, whatever blessing I or any of Your creation have received in the evening is from You alone, without partner. To You belongs all praise and thanks.',
         source: 'Abu Dawud',
+      },
+      {
+        arabic: 'اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ وَمَلَائِكَتَكَ وَجَمِيعَ خَلْقِكَ أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ',
+        transliteration: "Allahumma inni amsaytu ushhiduka wa ushhidu hamalata 'arshika wa mala'ikataka wa jami'a khalqika annaka Antallaahu la ilaha illa Anta wahdaka la shareeka laka wa anna Muhammadan 'abduka wa rasooluk",
+        meaning: 'O Allah, I have entered the evening calling You, Your angels, and all creation to witness that You alone are Allah and Muhammad is Your servant and Messenger.',
+        source: 'Abu Dawud',
+        note: 'Recite 4 times in the evening.',
+      },
+      {
+        arabic: 'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ',
+        transliteration: "Allahumma 'afini fee badanee, Allahumma 'afini fee sam'ee, Allahumma 'afini fee basaree, la ilaha illa Anta",
+        meaning: 'O Allah, grant me health in my body, hearing, and sight. None has the right to be worshipped except You.',
+        source: 'Abu Dawud',
+        note: 'Recite 3 times in the evening.',
+      },
+      {
+        arabic: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+        transliteration: "Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'i wa Huwas-Samee'ul-'Aleem",
+        meaning: 'In the Name of Allah, with Whose Name nothing on earth or in heaven can harm, and He is the All-Hearing, All-Knowing.',
+        source: 'Abu Dawud & Tirmidhi',
+        note: 'Recite 3 times every evening.',
+      },
+      {
+        arabic: 'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
+        transliteration: "A'oodhu bikalimatillahit-tammati min sharri ma khalaq",
+        meaning: 'I seek refuge in the perfect words of Allah from the evil of what He has created.',
+        source: 'Muslim',
+        note: 'Recite 3 times in the evening.',
+      },
+      {
+        arabic: 'رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ ﷺ نَبِيًّا',
+        transliteration: 'Radeetu billahi Rabban wa bil-Islami deenan wa bi Muhammadin Nabiyyan',
+        meaning: 'I am pleased with Allah as my Lord, Islam as my religion, and Muhammad ﷺ as my Prophet.',
+        source: 'Abu Dawud',
+        note: 'Recite 3 times in the evening.',
+      },
+      {
+        arabic: 'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+        transliteration: 'Hasbiyallahu la ilaha illa Huwa, alayhi tawakkaltu, wa Huwa Rabbul-arshil-azeem',
+        meaning: 'Allah is sufficient for me; none has the right to be worshipped except Him. Upon Him I rely, and He is Lord of the Mighty Throne.',
+        source: 'Abu Dawud',
+        note: 'Recite 7 times every evening.',
+      },
+      {
+        arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ',
+        transliteration: "Allahumma Anta Rabbee la ilaha illa Anta, khalaqtanee wa ana 'abduk, wa ana 'ala 'ahdika wa wa'dika mastata't",
+        meaning: 'O Allah, You are my Lord. None has the right to be worshipped except You. You created me and I am Your servant, and I am upon Your covenant and promise as best I can.',
+        source: 'Bukhari',
+        note: 'Sayyidul Istighfar: recite once in the evening with conviction.',
+      },
+      {
+        arabic: 'اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ',
+        transliteration: 'Allahumma salli wa sallim ala Nabiyyina Muhammad',
+        meaning: 'O Allah, send prayers and peace upon our Prophet Muhammad.',
+        source: 'Tirmidhi',
+        note: 'Recite 10 times in the evening.',
       },
     ],
   },
@@ -696,11 +815,132 @@ const CATEGORIES: Category[] = [
       },
     ],
   },
+  // ── Azan & Prayer Call ───────────────────────────────────────────────────────
+  {
+    id: 'azan',
+    label: 'Azan & Iqamah',
+    icon: '📣',
+    group: 'Prayer & Worship',
+    duas: [
+      {
+        arabic: 'اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ وَالصَّلَاةِ الْقَائِمَةِ آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ',
+        transliteration: 'Allahumma Rabba hadhihid-da watit-tammati was-salatil-qa imah, ati Muhammadan al-waseelata wal-fadeelah, wab ath-hu maqaman mahmudan alladhi wa adtah',
+        meaning: 'O Allah, Lord of this perfect call and established prayer, grant Muhammad the intercession and virtue, and raise him to the praised station You promised him.',
+        source: 'Bukhari',
+        note: 'Recite after hearing the Azan.',
+      },
+      {
+        arabic: 'رَضِيتُ بِاللَّهِ رَبًّا وَبِالإِسْلَامِ دِينًا وَبِمُحَمَّدٍ ﷺ رَسُولًا',
+        transliteration: 'Radeetu billahi Rabban wa bil-Islami deenan wa bi Muhammadin Rasoola',
+        meaning: 'I am pleased with Allah as my Lord, Islam as my religion, and Muhammad ﷺ as my Messenger.',
+        source: 'Muslim',
+        note: 'Recite when the Muadhdhin says the testimony.',
+      },
+      {
+        arabic: 'اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ',
+        transliteration: 'Allahumma iftah lee abwaba rahmatik',
+        meaning: 'O Allah, open for me the doors of Your mercy.',
+        source: 'Muslim',
+        note: 'From GII Practical Essentials: masjid and prayer-call routine.',
+      },
+    ],
+  },
+  // ── Social & Community ───────────────────────────────────────────────────────
+  {
+    id: 'gatherings',
+    label: 'Gatherings',
+    icon: '👥',
+    group: 'Social & Community',
+    duas: [
+      {
+        arabic: 'سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ',
+        transliteration: 'Subhanaka Allahumma wa bihamdika, ashhadu an la ilaha illa Anta, astaghfiruka wa atoobu ilayk',
+        meaning: 'Glory is to You, O Allah, and praise is Yours. I bear witness that none has the right to be worshipped except You. I seek Your forgiveness and repent to You.',
+        source: 'Abu Dawud',
+        note: 'Expiation of an assembly (Kaffarat al-Majlis).',
+      },
+      {
+        arabic: 'جَزَاكَ اللَّهُ خَيْرًا',
+        transliteration: 'Jazakallahu khayran',
+        meaning: 'May Allah reward you with goodness.',
+        source: 'Tirmidhi',
+        note: 'The most complete way to thank someone.',
+      },
+      {
+        arabic: 'بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ',
+        transliteration: 'Barakallahu laka wa baraka alayka wa jama a baynakuma fee khayr',
+        meaning: 'May Allah bless you, shower blessings upon you, and unite you both in goodness.',
+        source: 'Abu Dawud, Tirmidhi',
+        note: 'Used for congratulating a marriage.',
+      },
+    ],
+  },
+  // ── Daily Etiquette ──────────────────────────────────────────────────────────
+  {
+    id: 'sneezing',
+    label: 'Sneezing',
+    icon: '🤧',
+    group: 'Daily Routines',
+    duas: [
+      {
+        arabic: 'الْحَمْدُ لِلَّهِ',
+        transliteration: 'Alhamdulillah',
+        meaning: 'All praise is for Allah.',
+        source: 'Bukhari & Muslim',
+        note: 'Said by the one who sneezes.',
+      },
+      {
+        arabic: 'يَرْحَمُكَ اللَّهُ',
+        transliteration: 'Yarhamukallah',
+        meaning: 'May Allah have mercy on you.',
+        source: 'Bukhari & Muslim',
+        note: 'Said by the listener in response.',
+      },
+      {
+        arabic: 'يَهْدِيكُمُ اللَّهُ وَيُصْلِحُ بَالَكُمْ',
+        transliteration: 'Yahdeekumullahu wa yuslihu balakum',
+        meaning: 'May Allah guide you and rectify your affairs.',
+        source: 'Bukhari',
+        note: 'Said by the sneezer after hearing Yarhamukallah.',
+      },
+    ],
+  },
+  // ── Decision Making ──────────────────────────────────────────────────────────
+  {
+    id: 'istikharah',
+    label: 'Istikharah',
+    icon: '🧭',
+    group: 'Special Occasions',
+    duas: [
+      {
+        arabic: 'اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ',
+        transliteration: "Allahumma inni astakheeruka bi ilmika wa astaqdiruka bi qudratika wa as aluka min fadlikal- azeem",
+        meaning: 'O Allah, I seek Your guidance by Your knowledge, and power by Your might, and I ask You from Your tremendous bounty.',
+        source: 'Bukhari',
+        note: 'Pray two non-obligatory rakah before reciting.',
+      },
+      {
+        arabic: 'فَإِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الْأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ',
+        transliteration: "Fa in kunta ta lamu anna hadhal-amra khayrun lee fee deenee wa ma ashee wa aqibati amree faqdurhu lee wa yassirhu lee thumma barik lee feeh",
+        meaning: 'If You know this matter is good for my religion, life, and final outcome, decree it for me, make it easy, and bless it for me.',
+        source: 'Bukhari',
+      },
+      {
+        arabic: 'وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الْأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ',
+        transliteration: "Wa in kunta ta lamu anna hadhal-amra sharrun lee fee deenee wa ma ashee wa aqibati amree fasrifhu annee wasrifnee anhu waqdur liyal-khayra haythu kana thumma ardinee bih",
+        meaning: 'If You know this matter is bad for me, turn it away from me and turn me away from it, then decree good for me wherever it is and make me content with it.',
+        source: 'Bukhari',
+        note: 'From GII Practical Essentials section on Salat al-Istikharah.',
+      },
+    ],
+  },
 ]
 
 // ─── Groups ───────────────────────────────────────────────────────────────────
 
 const GROUPS = [...new Set(CATEGORIES.map(c => c.group))]
+const MORNING_CATEGORY_ID = 'morning-adhkar'
+const EVENING_CATEGORY_ID = 'evening-adhkar'
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -711,6 +951,7 @@ export default function DuasPage() {
   const [search, setSearch] = useState('')
   const [showSearch, setShowSearch] = useState(false)
   const [activeGroup, setActiveGroup] = useState<string | null>(null)
+  const [adhkarPeriod, setAdhkarPeriod] = useState<'morning' | 'evening'>('morning')
   const [copiedIdx, setCopiedIdx] = useState<string | null>(null)
   const [bookmarks, setBookmarks] = useState<Set<string>>(() => {
     const saved = getItem<string[]>(BOOKMARKS_KEY, [])
@@ -734,7 +975,40 @@ export default function DuasPage() {
     })
   }
 
-  const activeCat = CATEGORIES.find(c => c.id === activeCategory)
+  const morningAdhkar = CATEGORIES.find((c) => c.id === MORNING_CATEGORY_ID)
+  const eveningAdhkar = CATEGORIES.find((c) => c.id === EVENING_CATEGORY_ID)
+
+  const filteredCategories = useMemo(() => (
+    activeGroup
+      ? CATEGORIES.filter((c) => c.group === activeGroup)
+      : CATEGORIES
+  ), [activeGroup])
+
+  const activeCat = useMemo(() => (
+    filteredCategories.find((c) => c.id === activeCategory) ?? filteredCategories[0] ?? null
+  ), [filteredCategories, activeCategory])
+
+  useEffect(() => {
+    if (filteredCategories.length === 0) return
+    const hasActive = filteredCategories.some((c) => c.id === activeCategory)
+    if (!hasActive) {
+      setActiveCategory(filteredCategories[0].id)
+    }
+  }, [filteredCategories, activeCategory])
+
+  useEffect(() => {
+    if (activeCategory === MORNING_CATEGORY_ID) setAdhkarPeriod('morning')
+    if (activeCategory === EVENING_CATEGORY_ID) setAdhkarPeriod('evening')
+  }, [activeCategory])
+
+  const openAdhkarPeriod = (period: 'morning' | 'evening') => {
+    setAdhkarPeriod(period)
+    setActiveGroup('Daily Routines')
+    setShowBookmarks(false)
+    if (showSearch) setShowSearch(false)
+    if (search) setSearch('')
+    setActiveCategory(period === 'morning' ? MORNING_CATEGORY_ID : EVENING_CATEGORY_ID)
+  }
 
   // Search across all duas
   const searchResults = useMemo(() => {
@@ -768,10 +1042,6 @@ export default function DuasPage() {
     return results
   }, [bookmarks])
 
-  const filteredCategories = activeGroup
-    ? CATEGORIES.filter(c => c.group === activeGroup)
-    : CATEGORIES
-
   const DuaCard = ({ dua, catId, idx }: { dua: Dua; catId: string; idx: number }) => {
     const key = `${catId}-${idx}`
     const isBookmarked = bookmarks.has(key)
@@ -788,7 +1058,7 @@ export default function DuasPage() {
         </p>
 
         {/* Transliteration */}
-        <p className="mt-3 text-xs font-semibold italic text-purple-400">{dua.transliteration}</p>
+        <p className="mt-3 text-xs font-semibold italic text-emerald-300">{dua.transliteration}</p>
 
         {/* Meaning */}
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{dua.meaning}</p>
@@ -842,10 +1112,17 @@ export default function DuasPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-background pb-28">
+    <div className="relative min-h-screen overflow-hidden bg-background pb-28">
+      <PremiumAtmosphere tone="community" />
+      <style>{`
+        @keyframes arabesqueDrift {
+          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.06; }
+          50% { transform: translate3d(-6px, 10px, 0) rotate(6deg); opacity: 0.14; }
+        }
+      `}</style>
       {/* Arabesque pattern */}
       <div className="pointer-events-none absolute top-0 right-0 h-48 w-48 overflow-hidden" aria-hidden>
-        <svg viewBox="0 0 200 200" style={{animation:'arabesque-drift 6s ease-in-out infinite',opacity:0.08}} className="text-purple-300" fill="currentColor">
+        <svg viewBox="0 0 200 200" style={{ animation: 'arabesqueDrift 8s ease-in-out infinite' }} className="text-emerald-300" fill="currentColor">
           <polygon points="100,10 120,80 190,80 135,125 155,195 100,155 45,195 65,125 10,80 80,80" />
         </svg>
       </div>
@@ -854,7 +1131,7 @@ export default function DuasPage() {
         icon={BookOpen}
         title="Duas"
         subtitle={`${CATEGORIES.reduce((n, c) => n + c.duas.length, 0)} supplications · ${CATEGORIES.length} categories`}
-        gradient="from-purple-900 to-violet-900"
+        gradient="from-emerald-950 via-teal-900 to-cyan-900"
         showBack
       
         heroTheme="duas"
@@ -875,6 +1152,44 @@ export default function DuasPage() {
         <ChevronRight className="h-5 w-5 text-emerald-400/30 shrink-0" />
       </Link>
 
+      {/* Morning/Evening toggle */}
+      {!search && !showBookmarks && morningAdhkar && eveningAdhkar && (
+        <div className="mx-4 mt-3 rounded-2xl border border-emerald-500/20 bg-slate-900/55 p-3 backdrop-blur">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300/80">Daily Adhkar Flow</p>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => openAdhkarPeriod('morning')}
+              className={`flex-1 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                adhkarPeriod === 'morning'
+                  ? 'bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/30'
+                  : 'bg-secondary text-muted-foreground'
+              }`}
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <Sunrise className="h-3.5 w-3.5" />
+                Morning ({morningAdhkar.duas.length})
+              </span>
+            </button>
+            <button
+              onClick={() => openAdhkarPeriod('evening')}
+              className={`flex-1 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                adhkarPeriod === 'evening'
+                  ? 'bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-300/30'
+                  : 'bg-secondary text-muted-foreground'
+              }`}
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <MoonStar className="h-3.5 w-3.5" />
+                Evening ({eveningAdhkar.duas.length})
+              </span>
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] text-muted-foreground/80">
+            Structured from GII Practical Essentials so users can switch between the morning and evening sequence instantly.
+          </p>
+        </div>
+      )}
+
       {/* ── Toolbar ─────────────────────────────────── */}
       <div data-tour="duas-categories" className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border/50 px-4 py-2.5 space-y-2">
         {/* Actions row */}
@@ -894,9 +1209,9 @@ export default function DuasPage() {
           <div className="flex-1 overflow-x-auto scrollbar-none">
             <div className="flex gap-1.5">
               <button
-                onClick={() => setActiveGroup(null)}
-                className={`flex-shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition-all ${
-                  !activeGroup ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
+                  onClick={() => setActiveGroup(null)}
+                  className={`flex-shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition-all ${
+                  !activeGroup ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
                 }`}
               >
                 All
@@ -906,7 +1221,7 @@ export default function DuasPage() {
                   key={g}
                   onClick={() => setActiveGroup(activeGroup === g ? null : g)}
                   className={`flex-shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition-all ${
-                    activeGroup === g ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
+                    activeGroup === g ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground/80'
                   }`}
                 >
                   {g}
@@ -919,7 +1234,7 @@ export default function DuasPage() {
           <button
             onClick={() => { setShowSearch(!showSearch); if (showSearch) setSearch('') }}
             className={`shrink-0 flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
-              showSearch ? 'bg-purple-500 text-foreground' : 'bg-secondary text-muted-foreground'
+              showSearch ? 'bg-emerald-500 text-foreground' : 'bg-secondary text-muted-foreground'
             }`}
           >
             {showSearch ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
@@ -934,7 +1249,7 @@ export default function DuasPage() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by meaning or transliteration..."
             autoFocus
-            className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-purple-500/50"
+            className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none focus:border-emerald-500/50"
           />
         )}
 
@@ -947,7 +1262,7 @@ export default function DuasPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`shrink-0 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all ${
                   activeCategory === cat.id
-                    ? 'bg-purple-500 text-foreground'
+                    ? 'bg-emerald-500 text-foreground'
                     : 'bg-secondary text-muted-foreground'
                 }`}
               >

@@ -6,7 +6,7 @@ import {
   GraduationCap, Users, Users2, Circle, Brain, Sparkles, Library,
   Moon, UtensilsCrossed, Headphones, Heart, MessageCircle, Sun,
   MapPin, Keyboard, ShieldCheck, ShieldAlert, HelpCircle, Search, X,
-  Scale, Banknote, BookText, HeartHandshake, Baby,
+  Scale, Banknote, BookText, BookMarked, HeartHandshake, Baby,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -28,6 +28,7 @@ const SECTIONS = [
       { icon: BookOpen,    label: 'Quran',          description: 'Read & Listen',          href: '/quran',                          color: 'from-purple-500 to-purple-800',    iconColor: 'text-white', cardTint: 'from-purple-950/50 to-purple-900/20', animationTheme: 'quran' as CardAnimationTheme },
       { icon: Scale,       label: 'Fiqh Guide',     description: 'Islamic Law reference',  href: '/explore/fiqh',                   color: 'from-violet-500 to-indigo-700',    iconColor: 'text-white', cardTint: 'from-violet-950/50 to-indigo-900/20', animationTheme: 'fiqh' as CardAnimationTheme },
       { icon: BookText,    label: 'Hadith',          description: '40 Nawawi Hadith',       href: '/explore/hadith',                 color: 'from-teal-500 to-teal-700',        iconColor: 'text-white', cardTint: 'from-teal-950/50 to-teal-900/20', animationTheme: 'hadith' as CardAnimationTheme },
+      { icon: BookMarked,  label: 'Tafseer',         description: 'Juz Amma insights',      href: '/explore/tafseer',                color: 'from-cyan-500 to-teal-700',        iconColor: 'text-white', cardTint: 'from-cyan-950/50 to-teal-900/20', animationTheme: 'tafseer' as CardAnimationTheme },
       { icon: GraduationCap, label: 'Madrasa',      description: 'Learn Islam',            href: '/explore/madrasa',                color: 'from-indigo-500 to-indigo-700',    iconColor: 'text-white', cardTint: 'from-indigo-950/50 to-indigo-900/20', animationTheme: 'madrasa' as CardAnimationTheme },
       { icon: Headphones,  label: 'Lectures',        description: 'Audio Series',           href: '/explore/lectures',               color: 'from-emerald-500 to-emerald-700',  iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-emerald-900/20', animationTheme: 'lectures' as CardAnimationTheme },
       { icon: Brain,       label: 'Hifz Mode',       description: 'Memorize Quran',         href: '/quran/hifz',                     color: 'from-blue-500 to-blue-700',        iconColor: 'text-white', cardTint: 'from-blue-950/50 to-blue-900/20', animationTheme: 'hifz' as CardAnimationTheme },
@@ -45,7 +46,7 @@ const SECTIONS = [
     iconColor: 'text-amber-400',
     items: [
       { icon: BookOpen,    label: 'Duas',            description: 'Daily Supplications',    href: '/explore/duas',                   color: 'from-purple-500 to-purple-800',    iconColor: 'text-white', cardTint: 'from-purple-950/50 to-purple-900/20', animationTheme: 'duas' as CardAnimationTheme },
-      { icon: Star,        label: 'Adhkar',          description: 'Morning & Evening',      href: '/explore/adhkar',                 color: 'from-amber-500 to-yellow-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-yellow-900/20', animationTheme: 'duas' as CardAnimationTheme },
+      { icon: Star,        label: 'Adhkar',          description: 'Morning & Evening',      href: '/explore/adhkar',                 color: 'from-amber-500 to-yellow-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-yellow-900/20', animationTheme: 'adhkar' as CardAnimationTheme },
       { icon: Circle,      label: 'Tasbih',          description: 'Digital Counter',        href: '/explore/tasbih',                 color: 'from-emerald-500 to-green-700',    iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-green-900/20', animationTheme: 'tasbih' as CardAnimationTheme },
       { icon: Navigation2, label: 'Qibla',           description: 'Find Direction',         href: '/explore/qibla',                  color: 'from-blue-500 to-blue-700',        iconColor: 'text-white', cardTint: 'from-blue-950/50 to-blue-900/20', animationTheme: 'qibla' as CardAnimationTheme },
       { icon: Calculator,  label: 'Zakat',           description: 'Calculate Zakat',        href: '/explore/zakat',                  color: 'from-teal-500 to-teal-700',        iconColor: 'text-white', cardTint: 'from-teal-950/50 to-teal-900/20', animationTheme: 'zakat' as CardAnimationTheme },

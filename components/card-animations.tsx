@@ -7,9 +7,9 @@
 
 export type CardAnimationTheme = 
   | 'quran' | 'fiqh' | 'hadith' | 'madrasa' | 'lectures' 
-  | 'hifz' | 'prophets' | 'arabic' | 'duas' | 'tasbih' 
+  | 'hifz' | 'prophets' | 'arabic' | 'duas' | 'adhkar' | 'tasbih' 
   | 'qibla' | 'community' | 'halal' | 'sisters' | 'kids' | 'ramadan' 
-  | 'zakat' | 'calendar' | 'jumuah' | 'names' | 'resources' | 'default'
+  | 'zakat' | 'calendar' | 'jumuah' | 'names' | 'resources' | 'tafseer' | 'default'
 
 interface CardAnimationProps {
   theme?: CardAnimationTheme
@@ -218,6 +218,35 @@ function DuasAnimation() {
       <circle cx="50" cy="60" r="10" fill="none" stroke="#a855f7" strokeWidth="0.8" style={{ animation: 'handRadiate 4s ease-in-out infinite' }} />
       <circle cx="50" cy="60" r="20" fill="none" stroke="#d946ef" strokeWidth="0.8" style={{ animation: 'handRadiate 4s ease-in-out infinite', animationDelay: '1s' }} />
       <path d="M40,80 Q45,50 50,50 Q55,50 60,80" fill="none" stroke="#a855f7" strokeWidth="1.5" opacity="0.6" />
+    </svg>
+  )
+}
+
+function AdhkarAnimation() {
+  return (
+    <svg className="absolute inset-0 h-full w-full opacity-[0.28]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes ringBreath {
+          0%, 100% { opacity: 0.25; transform: scale(0.92); }
+          50% { opacity: 0.8; transform: scale(1.1); }
+        }
+        @keyframes orbDrift {
+          0%, 100% { transform: translateY(0px); opacity: 0.55; }
+          50% { transform: translateY(-8px); opacity: 0.95; }
+        }
+      `}</style>
+      <circle cx="50" cy="50" r="26" fill="none" stroke="#14b8a6" strokeWidth="1.2" strokeDasharray="4 3" style={{ animation: 'ringBreath 5s ease-in-out infinite' }} />
+      <circle cx="50" cy="50" r="17" fill="none" stroke="#2dd4bf" strokeWidth="1" style={{ animation: 'ringBreath 5s ease-in-out 0.4s infinite' }} />
+      {[0, 1, 2, 3].map((i) => (
+        <circle
+          key={i}
+          cx={32 + i * 12}
+          cy={64 - (i % 2) * 12}
+          r="2.2"
+          fill="#5eead4"
+          style={{ animation: `orbDrift ${2.4 + i * 0.35}s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }}
+        />
+      ))}
     </svg>
   )
 }
@@ -445,6 +474,27 @@ function ResourcesAnimation() {
   )
 }
 
+function TafseerAnimation() {
+  return (
+    <svg className="absolute inset-0 h-full w-full opacity-[0.26]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes pageLift {
+          0%, 100% { transform: translateY(0px) scale(1); opacity: 0.45; }
+          50% { transform: translateY(-6px) scale(1.03); opacity: 0.9; }
+        }
+        @keyframes beamSweep {
+          0%, 100% { opacity: 0.15; transform: rotate(-14deg); }
+          50% { opacity: 0.45; transform: rotate(14deg); }
+        }
+      `}</style>
+      <path d="M25,30 Q50,20 75,30 L75,72 Q50,62 25,72 Z" fill="none" stroke="#22d3ee" strokeWidth="1.5" style={{ animation: 'pageLift 6s ease-in-out infinite' }} />
+      <path d="M50,26 L50,66" fill="none" stroke="#67e8f9" strokeWidth="1" style={{ animation: 'pageLift 6s ease-in-out 0.3s infinite' }} />
+      <path d="M35,40 L45,38 M35,48 L45,46 M55,38 L66,40 M55,46 L66,48" fill="none" stroke="#0891b2" strokeWidth="0.8" opacity="0.7" />
+      <path d="M48,16 L54,16 L69,5 L74,10 Z" fill="#22d3ee" opacity="0.6" style={{ animation: 'beamSweep 4.5s ease-in-out infinite' }} />
+    </svg>
+  )
+}
+
 function DefaultAnimation() {
   return (
     <svg className="absolute inset-0 h-full w-full opacity-[0.20]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
@@ -476,6 +526,7 @@ export function CardAnimation({ theme = 'default' }: CardAnimationProps) {
           case 'prophets':  return <ProphetsAnimation />
           case 'arabic':    return <ArabicAnimation />
           case 'duas':      return <DuasAnimation />
+          case 'adhkar':    return <AdhkarAnimation />
           case 'tasbih':    return <TasbihAnimation />
           case 'qibla':     return <QiblaAnimation />
           case 'community': return <CommunityAnimation />
@@ -488,6 +539,7 @@ export function CardAnimation({ theme = 'default' }: CardAnimationProps) {
           case 'jumuah':    return <JumuahAnimation />
           case 'names':     return <NamesAnimation />
           case 'resources': return <ResourcesAnimation />
+          case 'tafseer':   return <TafseerAnimation />
           default:          return <DefaultAnimation />
         }
       })()}

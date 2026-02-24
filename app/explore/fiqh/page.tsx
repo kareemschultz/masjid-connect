@@ -2,11 +2,12 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Scale, ChevronDown, ChevronUp, Heart, Share2 } from 'lucide-react'
+import { Scale, ChevronDown, ChevronUp, Heart, Share2, BookMarked, Sparkles } from 'lucide-react'
 import { getItem, setItem } from '@/lib/storage'
 import { shareOrCopy } from '@/lib/share'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import { PremiumAtmosphere } from '@/components/premium-atmosphere'
 import {
   FIQH_TOPICS,
   CHAPTER_ORDER,
@@ -15,6 +16,21 @@ import {
   type FiqhHadith,
   type FiqhExample,
 } from '@/lib/fiqh-data'
+
+const GII_FIQH_TRACKS = [
+  {
+    title: 'Practical Essentials for Muslim Students',
+    subtitle: 'Applied ibadah flow: purification, salah, janazah, and daily adab.',
+  },
+  {
+    title: 'Islamic Jurisprudence I',
+    subtitle: 'Expanded chapters for fasting, hajj, and legal structure.',
+  },
+  {
+    title: 'Maintenance Rights in Islam',
+    subtitle: 'Family law depth on nafaqah, obligations, and dispute boundaries.',
+  },
+]
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -30,6 +46,7 @@ function FiqhHubContent() {
     return new Set(saved)
   })
   const [showSaved, setShowSaved] = useState(false)
+  const [studyMode, setStudyMode] = useState<'structured' | 'deep'>('deep')
 
   const toggleBookmark = (id: string) => {
     setBookmarks(prev => {
@@ -75,7 +92,9 @@ function FiqhHubContent() {
   }, [filtered])
 
   return (
-    <div className="min-h-screen bg-background pb-nav">
+    <div className="relative min-h-screen overflow-hidden bg-background pb-nav">
+      <PremiumAtmosphere tone="community" />
+
       <PageHero
         icon={Scale}
         title="Fiqh Guide"
@@ -95,6 +114,42 @@ function FiqhHubContent() {
           <p className="text-[11px] leading-snug text-muted-foreground">
             Primary position: <span className="text-violet-300">Hanafi madhab</span> (predominant in Guyana). Positions of Imam Shafi&apos;i, Imam Malik, and Imam Ahmad ibn Hanbal noted where they differ.
           </p>
+        </div>
+      </div>
+
+      <div className="px-4 pt-2 space-y-2">
+        <div className="grid gap-2">
+          {GII_FIQH_TRACKS.map((track) => (
+            <div key={track.title} className="rounded-xl border border-cyan-500/20 bg-cyan-500/6 px-3 py-2.5">
+              <p className="text-[11px] font-semibold text-cyan-200">{track.title}</p>
+              <p className="mt-1 text-[10px] leading-relaxed text-cyan-100/75">{track.subtitle}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/90 px-3 py-2">
+          <p className="text-[11px] text-muted-foreground">
+            <span className="font-semibold text-foreground">{filtered.length}</span> topics across{' '}
+            <span className="font-semibold text-foreground">{grouped.length}</span> chapters
+          </p>
+          <div className="flex items-center gap-1 rounded-lg bg-secondary p-1">
+            <button
+              onClick={() => setStudyMode('structured')}
+              className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-all ${
+                studyMode === 'structured' ? 'bg-violet-500/20 text-violet-300' : 'text-muted-foreground'
+              }`}
+            >
+              Structured
+            </button>
+            <button
+              onClick={() => setStudyMode('deep')}
+              className={`flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-semibold transition-all ${
+                studyMode === 'deep' ? 'bg-cyan-500/20 text-cyan-200' : 'text-muted-foreground'
+              }`}
+            >
+              <Sparkles className="h-3 w-3" />
+              Deep
+            </button>
+          </div>
         </div>
       </div>
 
@@ -238,14 +293,29 @@ function FiqhHubContent() {
                         )}
 
                         {/* Points */}
-                        <ul className="space-y-2">
-                          {topic.points.map((point, i) => (
-                            <li key={i} className="flex gap-2 text-xs text-muted-foreground leading-relaxed">
-                              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-600" />
-                              <span>{point}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        {studyMode === 'structured' ? (
+                          <ul className="space-y-2">
+                            {topic.points.map((point, i) => (
+                              <li key={i} className="flex gap-2 text-xs text-muted-foreground leading-relaxed">
+                                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-600" />
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="space-y-2">
+                            {topic.points.map((point, i) => (
+                              <div key={i} className="rounded-xl border border-border/70 bg-secondary/35 p-3">
+                                <div className="flex items-start gap-2">
+                                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-[10px] font-bold text-cyan-300">
+                                    {i + 1}
+                                  </span>
+                                  <p className="text-xs leading-relaxed text-muted-foreground">{point}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                         {/* Examples */}
                         {topic.examples && topic.examples.length > 0 && (
@@ -312,6 +382,10 @@ function FiqhHubContent() {
 
                         {/* Actions */}
                         <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+                          <span className="mr-auto flex items-center gap-1 rounded-lg bg-violet-500/10 px-2 py-1 text-[10px] text-violet-300">
+                            <BookMarked className="h-3 w-3" />
+                            GII-linked topic
+                          </span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation()

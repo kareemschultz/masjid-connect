@@ -14,6 +14,8 @@ export type HeroTheme =
   | 'tasbih'      // Prayer beads ring with sequential shimmer
   | 'community'   // Network of pulsing connected nodes
   | 'duas'        // Raised hands + ascending particles
+  | 'adhkar'      // Day/night remembrance rhythm with orbiting dhikr nodes
+  | 'tafseer'     // Open pages + spotlight beams
   | 'lectures'    // Sound wave equalizer bars
   | 'hadith'      // Scroll + quill pen
   | 'sisters'     // Crescent + arabesque geometry
@@ -302,6 +304,52 @@ function DuasAnimation() {
   )
 }
 
+function AdhkarAnimation() {
+  const beads = Array.from({ length: 16 }, (_, i) => ({
+    angle: (i / 16) * 2 * Math.PI - Math.PI / 2,
+    delay: i * 0.2,
+  }))
+  return (
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes adhkarOrbit {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes adhkarPulse {
+          0%, 100% { opacity: 0.25; transform: scale(0.85); }
+          50% { opacity: 0.8; transform: scale(1.12); }
+        }
+        @keyframes dawnGlow {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.38; }
+        }
+      `}</style>
+
+      <ellipse cx="76" cy="42" rx="48" ry="26" fill="rgba(56,189,248,0.16)" style={{ animation: 'dawnGlow 5.6s ease-in-out infinite' }} />
+      <ellipse cx="336" cy="136" rx="56" ry="30" fill="rgba(20,184,166,0.14)" style={{ animation: 'dawnGlow 6.4s ease-in-out infinite' }} />
+
+      <g transform="translate(300, 80)" style={{ transformOrigin: '300px 80px', animation: 'adhkarOrbit 24s linear infinite' }}>
+        <circle cx="0" cy="0" r="54" fill="none" stroke="rgba(45,212,191,0.2)" strokeWidth="1.2" strokeDasharray="5 5" />
+        {beads.map((bead, i) => (
+          <circle
+            key={i}
+            cx={Math.cos(bead.angle) * 54}
+            cy={Math.sin(bead.angle) * 54}
+            r={i % 4 === 0 ? 3.4 : 2.4}
+            fill={i % 4 === 0 ? 'rgba(94,234,212,0.62)' : 'rgba(165,243,252,0.45)'}
+            style={{ animation: `adhkarPulse ${2 + (i % 5) * 0.22}s ease-in-out ${bead.delay}s infinite` }}
+          />
+        ))}
+      </g>
+
+      <text x="300" y="86" textAnchor="middle" fontSize="12" fill="rgba(153,246,228,0.45)" fontFamily="'Amiri', serif">
+        ذِكر
+      </text>
+    </svg>
+  )
+}
+
 function LecturesAnimation() {
   const bars = [30, 60, 45, 80, 55, 70, 40, 90, 50, 65, 35, 75, 45, 85, 60]
   return (
@@ -368,6 +416,40 @@ function HadithAnimation() {
         <path d="M 0 0 Q 15 -30 30 -50 Q 25 -20 20 0 Q 15 15 0 20 Q 5 10 0 0 Z" fill="rgba(255,255,255,0.18)"/>
         <line x1="0" y1="0" x2="-8" y2="18" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5"/>
       </g>
+    </svg>
+  )
+}
+
+function TafseerAnimation() {
+  return (
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes tafseerPage {
+          0%, 100% { transform: translateY(0px) scale(0.98); opacity: 0.24; }
+          50% { transform: translateY(-8px) scale(1.02); opacity: 0.42; }
+        }
+        @keyframes tafseerBeam {
+          0%, 100% { opacity: 0.08; transform: rotate(-12deg); }
+          50% { opacity: 0.26; transform: rotate(12deg); }
+        }
+        @keyframes tafseerInk {
+          0%, 100% { opacity: 0.16; }
+          50% { opacity: 0.34; }
+        }
+      `}</style>
+      <g transform="translate(205, 92)" style={{ transformOrigin: '205px 92px', animation: 'tafseerPage 5.5s ease-in-out infinite' }}>
+        <path d="M -88 -42 Q -48 -58 -4 -48 L -4 42 Q -48 32 -88 46 Z" fill="rgba(34,211,238,0.09)" stroke="rgba(34,211,238,0.28)" strokeWidth="1.2" />
+        <path d="M 4 -48 Q 48 -58 88 -42 L 88 46 Q 48 32 4 42 Z" fill="rgba(20,184,166,0.08)" stroke="rgba(45,212,191,0.26)" strokeWidth="1.2" />
+        <line x1="0" y1="-46" x2="0" y2="44" stroke="rgba(103,232,249,0.35)" strokeWidth="1" />
+        {[-26, -14, -2, 10, 22].map((y, i) => (
+          <g key={i} style={{ animation: `tafseerInk ${2 + i * 0.3}s ease-in-out ${i * 0.15}s infinite` }}>
+            <line x1="-66" y1={y} x2="-20" y2={y + 1} stroke="rgba(165,243,252,0.34)" strokeWidth="1.1" />
+            <line x1="20" y1={y + 1} x2="66" y2={y} stroke="rgba(153,246,228,0.32)" strokeWidth="1.1" />
+          </g>
+        ))}
+      </g>
+      <path d="M 260 20 L 340 72 L 340 86 L 244 30 Z" fill="rgba(34,211,238,0.18)" style={{ animation: 'tafseerBeam 6s ease-in-out infinite' }} />
+      <path d="M 142 24 L 62 72 L 62 86 L 158 30 Z" fill="rgba(16,185,129,0.16)" style={{ animation: 'tafseerBeam 6.4s ease-in-out 0.4s infinite' }} />
     </svg>
   )
 }
@@ -656,6 +738,8 @@ export function HeroAnimation({ theme }: { theme: HeroTheme }) {
     case 'tasbih':     return <TasbihAnimation />
     case 'community':  return <CommunityAnimation />
     case 'duas':       return <DuasAnimation />
+    case 'adhkar':     return <AdhkarAnimation />
+    case 'tafseer':    return <TafseerAnimation />
     case 'lectures':   return <LecturesAnimation />
     case 'hadith':     return <HadithAnimation />
     case 'sisters':    return <SistersAnimation />
