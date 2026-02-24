@@ -12,6 +12,7 @@ import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { MASJIDS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
+import { getRamadanStatus } from '@/lib/ramadan-mode'
 
 interface CheckinData { count: number; lastReset: string }
 
@@ -42,19 +43,7 @@ const FACILITY_ICONS: Record<string, string> = {
 
 function getTodayKey() { return new Date().toISOString().split('T')[0] }
 
-/** Returns true if we are currently in Ramadan (ramadan_start localStorage key exists and today ≤ Eid) */
-function isRamadanNow(): boolean {
-  try {
-    // Use getItem() so JSON-encoded values (from setItem) are parsed correctly
-    const ramadanStart = getItem<string | null>('ramadan_start', null)
-    if (!ramadanStart) return false
-    const start = new Date(ramadanStart + 'T00:00:00')
-    const end = new Date(start)
-    end.setDate(end.getDate() + 30) // Ramadan is 29-30 days
-    const today = new Date()
-    return today >= start && today <= end
-  } catch { return false }
-}
+
 
 export default function MasjidDetailPage() {
   const params = useParams()
@@ -85,7 +74,7 @@ export default function MasjidDetailPage() {
     const savedHome = getItem<string>(KEYS.HOME_MASJID, '')
     setIsHomeMasjid(savedHome === masjid.id)
     // Ramadan
-    const inRamadan = isRamadanNow()
+    const inRamadan = getRamadanStatus().isRamadan
     setRamadan(inRamadan)
     // Iftaar reports (Ramadan only)
     if (inRamadan && masjid) {
