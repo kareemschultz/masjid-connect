@@ -12,7 +12,7 @@ import { setItem, KEYS } from '@/lib/storage'
 import { CALCULATION_METHODS, MADHABS } from '@/lib/prayer-times'
 import { detectLocation, reverseGeocode, getRecommendedMethod } from '@/lib/location'
 import { applyTheme } from '@/components/theme-provider'
-import { HeroAnimation, type HeroTheme } from '@/components/hero-animations'
+import { OnboardingStepArt, type OnboardingStepKey } from '@/components/onboarding-step-art'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -291,7 +291,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   }
 
   // Effective step count (exclude Ramadan step if not needed)
-  const steps = [
+  const steps: OnboardingStepKey[] = [
     'welcome',
     'features',
     'install',
@@ -303,7 +303,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     'done',
   ]
   const totalSteps = steps.length
-  const currentStepKey = steps[step]
+  const currentStepKey: OnboardingStepKey = steps[step] ?? 'welcome'
 
   const next = () => {
     if (step < totalSteps - 1) setStep(step + 1)
@@ -312,43 +312,29 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const prev = () => { if (step > 0) setStep(step - 1) }
   const progress = ((step + 1) / totalSteps) * 100
 
-  const STEP_THEMES: Record<string, HeroTheme> = {
-    welcome: 'prayer',
-    features: 'explore',
-    install: 'community',
-    profile: 'community',
-    prayer: 'prayer',
-    ramadan: 'ramadan',
-    notifications: 'duas',
-    theme: 'explore',
-    done: 'ramadan',
+  const STEP_GRADIENTS: Record<OnboardingStepKey, string> = {
+    welcome: 'from-[#081b1b] via-[#0a2f2f] to-[#103c38]',
+    features: 'from-[#2f1020] via-[#4a1633] to-[#602a2b]',
+    install: 'from-[#05272e] via-[#11434c] to-[#14545a]',
+    profile: 'from-[#10263f] via-[#16395d] to-[#1f4f78]',
+    prayer: 'from-[#062b2f] via-[#0d3f4f] to-[#1c5c7a]',
+    ramadan: 'from-[#261643] via-[#3d1f63] to-[#5a2c86]',
+    notifications: 'from-[#40220d] via-[#65351d] to-[#7f4228]',
+    theme: 'from-[#2a1c41] via-[#3b2759] to-[#27386a]',
+    done: 'from-[#0c2b24] via-[#125043] to-[#1f6b67]',
   }
-  const STEP_GRADIENTS: Record<string, string> = {
-    welcome: 'from-emerald-950 via-emerald-900 to-teal-900',
-    features: 'from-rose-950 via-pink-900 to-orange-900',
-    install: 'from-teal-950 via-emerald-900 to-cyan-900',
-    profile: 'from-cyan-950 via-blue-900 to-slate-900',
-    prayer: 'from-emerald-950 via-teal-900 to-sky-900',
-    ramadan: 'from-indigo-950 via-purple-900 to-violet-900',
-    notifications: 'from-amber-950 via-orange-900 to-red-900',
-    theme: 'from-fuchsia-950 via-purple-900 to-indigo-900',
-    done: 'from-emerald-950 via-teal-900 to-indigo-900',
-  }
-  const stepTheme: HeroTheme = STEP_THEMES[currentStepKey] ?? 'default'
-  const stepGradient = STEP_GRADIENTS[currentStepKey] ?? STEP_GRADIENTS.welcome
+  const stepGradient = STEP_GRADIENTS[currentStepKey]
 
   return (
     <div className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className={`absolute inset-0 bg-gradient-to-br ${stepGradient}`} />
-        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-        <div className="islamic-pattern absolute inset-0 opacity-45" />
-        <div className="absolute inset-x-0 top-0 h-[48vh] overflow-hidden">
-          <HeroAnimation theme={stepTheme} />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        <div className="absolute inset-0 opacity-75">
+          <OnboardingStepArt step={currentStepKey} />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/45 to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(255,255,255,0.22),transparent_54%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_68%_at_50%_112%,rgba(15,23,42,0.68),transparent_62%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/38 to-background/88" />
       </div>
 
       {/* Progress bar */}
@@ -374,15 +360,6 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {/* ── Step 0: Welcome ──────────────────────────────── */}
         {currentStepKey === 'welcome' && (
           <div className="relative flex flex-1 flex-col items-center justify-center px-8 py-6">
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              {/* Floating crescent top-right */}
-              <div className="absolute right-6 top-8 text-emerald-500/20 text-5xl" style={{animation:'float-crescent 4s ease-in-out infinite'}}>☽</div>
-              {/* Twinkling stars */}
-              {[[15,20],[80,35],[10,65],[85,15],[70,75]].map(([x,y],i)=>(
-                <div key={i} className="absolute h-1 w-1 rounded-full bg-emerald-400/40"
-                  style={{left:`${x}%`,top:`${y}%`,animation:`twinkle ${1.5+i*0.4}s ease-in-out infinite`,animationDelay:`${i*0.3}s`}} />
-              ))}
-            </div>
             {/* Logo */}
             <div className="relative mb-6">
               <div className="absolute -inset-6 rounded-full bg-emerald-500/10 blur-3xl" />
@@ -566,18 +543,6 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {/* ── Step 3: Prayer Settings ──────────────────────── */}
         {currentStepKey === 'prayer' && (
           <div className="relative flex flex-1 flex-col px-5 pt-6">
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              {/* Compass ring top-right */}
-              <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full border border-emerald-500/10"
-                style={{animation:'spin-slow 20s linear infinite'}} />
-              <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full border border-emerald-500/[0.08]"
-                style={{animation:'spin-slow 15s linear infinite reverse'}} />
-              {/* Cardinal dots */}
-              {[0,90,180,270].map((deg,i)=>(
-                <div key={i} className="absolute right-2 top-2 h-1 w-1 rounded-full bg-emerald-400/20"
-                  style={{transform:`rotate(${deg}deg) translateY(-14px)`,animation:`twinkle ${2+i*0.3}s ease-in-out infinite`}} />
-              ))}
-            </div>
             <div className="mb-4 flex justify-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 ring-1 ring-emerald-500/20">
                 <Clock className="h-6 w-6 text-emerald-400" />
@@ -681,17 +646,6 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {/* ── Step: Ramadan ────────────────────────────────── */}
         {currentStepKey === 'ramadan' && (
           <div className="relative flex flex-1 flex-col px-5 pt-6">
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              {/* Large crescent */}
-              <div className="absolute right-4 top-4 text-6xl text-orange-500/15" style={{animation:'float-crescent 5s ease-in-out infinite'}}>☽</div>
-              {/* Stars around it */}
-              {[[75,8],[85,18],[68,22],[82,30]].map(([x,y],i)=>(
-                <div key={i} className="absolute text-xs text-orange-400/25"
-                  style={{left:`${x}%`,top:`${y}%`,animation:`twinkle ${1.5+i*0.5}s ease-in-out infinite`,animationDelay:`${i*0.4}s`}}>✦</div>
-              ))}
-              {/* Lantern glow bottom-left */}
-              <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-orange-500/5 blur-3xl" />
-            </div>
             <div className="mb-4 flex justify-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/15 ring-1 ring-orange-500/20">
                 <Moon className="h-6 w-6 text-orange-400" />
@@ -970,24 +924,6 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {/* ── Step: Done ───────────────────────────────────── */}
         {currentStepKey === 'done' && (
           <div className="relative flex flex-1 flex-col px-6 pt-6">
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              {/* Confetti sparkles */}
-              {[
-                {x:10,y:10,delay:0,color:'bg-emerald-400/30'},
-                {x:85,y:15,delay:0.3,color:'bg-teal-400/30'},
-                {x:20,y:80,delay:0.6,color:'bg-amber-400/30'},
-                {x:80,y:70,delay:0.9,color:'bg-emerald-400/25'},
-                {x:50,y:5,delay:0.2,color:'bg-teal-400/25'},
-                {x:15,y:45,delay:0.7,color:'bg-amber-400/20'},
-                {x:88,y:45,delay:0.4,color:'bg-emerald-400/20'},
-              ].map((dot,i)=>(
-                <div key={i} className={`absolute h-2 w-2 rounded-full ${dot.color}`}
-                  style={{left:`${dot.x}%`,top:`${dot.y}%`,animation:`confetti-fall 3s ease-in-out infinite`,animationDelay:`${dot.delay}s`}} />
-              ))}
-              {/* Radial glow behind CTA */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-40 w-64 rounded-full bg-emerald-500/5 blur-3xl" />
-            </div>
-
             {/* Completion CTA */}
             <div className="flex flex-1 flex-col items-center justify-center pb-4">
               <div className="relative mb-4">
