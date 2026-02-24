@@ -28,7 +28,8 @@ const articles = [
     badgeColor: 'bg-blue-500/20 text-blue-400',
     explanation:
       'Created from light, they carry out Allah\u2019s commands without question. Jibreel (Gabriel) brought the revelation. Mikail manages rain and provisions. Israfil will blow the trumpet on the Day of Judgement. Izrail (Malak al-Mawt) is the angel of death.',
-    reference: '"The Messenger has believed in what was revealed to him from his Lord, and so have the believers..."',
+    reference:
+      '"The Messenger has believed in what was revealed to him from his Lord, and so have the believers. All have believed in Allah and His angels and His books and His messengers [saying], We make no distinction between any of His messengers."',
     source: 'Quran 2:285',
   },
   {
@@ -40,7 +41,8 @@ const articles = [
     badgeColor: 'bg-purple-500/20 text-purple-400',
     explanation:
       'Allah sent divine books: Torah (Tawrat) to Musa, Psalms (Zabur) to Dawud, Gospel (Injeel) to Isa, and the Quran to Muhammad \uFDFA. The Quran is the final revelation, preserved in its original Arabic without alteration.',
-    reference: '"Say: We have believed in Allah and what has been revealed to us and what has been revealed to Abraham, Ishmael, Isaac, Jacob..."',
+    reference:
+      '"Say, We have believed in Allah and what has been revealed to us and what has been revealed to Abraham and Ishmael and Isaac and Jacob and the Descendants and what was given to Moses and Jesus and what was given to the prophets from their Lord."',
     source: 'Quran 2:136',
   },
   {
