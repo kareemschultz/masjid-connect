@@ -21,6 +21,7 @@ export type HeroTheme =
   | 'janazah'     // Peaceful flowing waves
   | 'zakat'       // Falling coins + sparkles
   | 'masjid'      // Masjid directory
+  | 'map'         // Live map route + pulsing location beacons
   | 'names'       // Arabic calligraphy swirl (99 Names)
   | 'default'     // Fallback geometric stars
 
@@ -529,6 +530,71 @@ function MasjidAnimation() {
   )
 }
 
+function MapAnimation() {
+  return (
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes mapRoutePulse { 0%,100%{opacity:0.12} 50%{opacity:0.35} }
+        @keyframes beaconPulse { 0%{opacity:0.2;transform:scale(0.75)} 70%{opacity:0.45;transform:scale(1.2)} 100%{opacity:0;transform:scale(1.45)} }
+        @keyframes nodeGlow { 0%,100%{opacity:0.28} 50%{opacity:0.62} }
+      `}</style>
+
+      {/* Route overlays */}
+      <path
+        d="M 22 146 Q 86 116 136 124 Q 176 130 214 102 Q 244 82 282 90 Q 318 98 372 66"
+        fill="none"
+        stroke="rgba(45,212,191,0.35)"
+        strokeWidth="2"
+        strokeDasharray="6 6"
+        style={{ animationName: 'mapRoutePulse', animationDuration: '2.8s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}
+      />
+      <path
+        d="M 40 64 Q 96 44 146 62 Q 194 80 246 58 Q 292 40 354 54"
+        fill="none"
+        stroke="rgba(110,231,183,0.24)"
+        strokeWidth="1.4"
+        strokeDasharray="4 7"
+        style={{ animationName: 'mapRoutePulse', animationDuration: '3.4s', animationDelay: '0.4s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}
+      />
+
+      {/* Active location beacons */}
+      {[
+        [80, 120, 0],
+        [178, 108, 0.5],
+        [286, 86, 1.1],
+        [336, 72, 1.5],
+      ].map(([x, y, delay], i) => (
+        <g key={i}>
+          <circle
+            cx={x}
+            cy={y}
+            r="5"
+            fill="rgba(16,185,129,0.68)"
+            style={{ animationName: 'nodeGlow', animationDuration: '1.8s', animationDelay: `${delay}s`, animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}
+          />
+          <circle
+            cx={x}
+            cy={y}
+            r="8"
+            fill="none"
+            stroke="rgba(45,212,191,0.65)"
+            strokeWidth="1.2"
+            style={{ transformOrigin: `${x}px ${y}px`, animationName: 'beaconPulse', animationDuration: '2.2s', animationDelay: `${delay}s`, animationIterationCount: 'infinite', animationTimingFunction: 'ease-out' }}
+          />
+        </g>
+      ))}
+
+      {/* Compass hint */}
+      <g transform="translate(348, 126)">
+        <circle cx="0" cy="0" r="16" fill="rgba(15,23,42,0.28)" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+        <path d="M 0 -10 L 3 0 L 0 4 L -3 0 Z" fill="rgba(52,211,153,0.8)" />
+        <path d="M 0 10 L 3 0 L 0 4 L -3 0 Z" fill="rgba(255,255,255,0.32)" />
+        <text x="0" y="-19" textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.4)" fontWeight="bold">N</text>
+      </g>
+    </svg>
+  )
+}
+
 function NamesAnimation() {
   const names99 = ['اللّٰه', 'الرَّحْمٰن', 'الرَّحِيم', 'الْمَلِك', 'الْقُدُّوس', 'السَّلَام', 'الْعَزِيز', 'الْجَبَّار']
   return (
@@ -597,6 +663,7 @@ export function HeroAnimation({ theme }: { theme: HeroTheme }) {
     case 'janazah':    return <JanazahAnimation />
     case 'zakat':      return <ZakatAnimation />
     case 'masjid':     return <MasjidAnimation />
+    case 'map':        return <MapAnimation />
     case 'names':      return <NamesAnimation />
     default:           return <DefaultAnimation />
   }

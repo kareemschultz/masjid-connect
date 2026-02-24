@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { masjids } from '@/lib/masjids'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { MapPin, Navigation } from 'lucide-react'
 
 // Fix default marker icons for Leaflet + bundlers
 delete L.Icon.Default.prototype._getIconUrl
@@ -34,6 +35,7 @@ export default function MapViewComponent({ submissions }) {
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
   const markersRef = useRef([])
+  const loadingSettledRef = useRef(false)
   const [loading, setLoading] = useState(true)
   const latestByMasjid = useMemo(() => {
     const map = new Map()
@@ -43,8 +45,17 @@ export default function MapViewComponent({ submissions }) {
     return map
   }, [submissions])
 
+  const finishLoading = useCallback(() => {
+    if (loadingSettledRef.current) return
+    loadingSettledRef.current = true
+    setLoading(false)
+  }, [])
+
   // ── Map init — runs once ────────────────────────────────────────────────────
   useEffect(() => {
+    loadingSettledRef.current = false
+    setLoading(true)
+
     const map = L.map(mapRef.current, {
       center: [6.808, -58.155],
       zoom: 14,
@@ -56,8 +67,18 @@ export default function MapViewComponent({ submissions }) {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 19,
     })
-    tileLayer.once('load', () => setLoading(false))
+    const handleTileLoad = () => finishLoading()
+    const handleMapLoad = () => finishLoading()
+    const handleTileError = () => {
+      window.setTimeout(() => finishLoading(), 240)
+    }
+    tileLayer.once('load', handleTileLoad)
+    map.once('load', handleMapLoad)
+    tileLayer.on('tileerror', handleTileError)
     tileLayer.addTo(map)
+
+    // Fail-safe to prevent indefinite loading overlays on flaky tile networks.
+    const failSafeTimer = window.setTimeout(() => finishLoading(), 9000)
 
     // User location (once at init)
     navigator.geolocation?.getCurrentPosition(
@@ -79,10 +100,14 @@ export default function MapViewComponent({ submissions }) {
     mapInstance.current = map
 
     return () => {
+      window.clearTimeout(failSafeTimer)
+      tileLayer.off('tileerror', handleTileError)
+      tileLayer.off('load', handleTileLoad)
+      map.off('load', handleMapLoad)
       map.remove()
       mapInstance.current = null
     }
-  }, [])
+  }, [finishLoading])
 
   // ── Markers update — runs when submissions change ───────────────────────────
   useEffect(() => {
@@ -117,8 +142,63 @@ export default function MapViewComponent({ submissions }) {
   return (
     <div className="rounded-2xl overflow-hidden relative border border-border">
       {loading && (
-        <div className="absolute inset-0 z-10 bg-background/80 flex items-center justify-center">
-          <div className="animate-spin w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full" />
+        <div className="absolute inset-0 z-20 overflow-hidden bg-background/84 backdrop-blur-sm">
+          <style>{`
+            @keyframes mapLoaderPulse {
+              0%, 100% { transform: scale(0.88); opacity: 0.2; }
+              50% { transform: scale(1.16); opacity: 0.55; }
+            }
+            @keyframes mapLoaderRoute {
+              0%, 100% { opacity: 0.16; stroke-dashoffset: 0; }
+              50% { opacity: 0.42; stroke-dashoffset: -24; }
+            }
+          `}</style>
+
+          <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 400 240" preserveAspectRatio="none" aria-hidden="true">
+            <path
+              d="M 20 192 Q 88 160 134 166 Q 188 172 222 146 Q 262 116 312 124 Q 350 130 382 108"
+              fill="none"
+              stroke="rgba(45,212,191,0.36)"
+              strokeWidth="2"
+              strokeDasharray="8 6"
+              style={{ animationName: 'mapLoaderRoute', animationDuration: '2.6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}
+            />
+            {[[76, 168], [186, 156], [292, 124], [348, 112]].map(([x, y], i) => (
+              <g key={i}>
+                <circle cx={x} cy={y} r="4.5" fill="rgba(16,185,129,0.68)" />
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="8"
+                  fill="none"
+                  stroke="rgba(45,212,191,0.58)"
+                  strokeWidth="1.2"
+                  style={{
+                    transformOrigin: `${x}px ${y}px`,
+                    animationName: 'mapLoaderPulse',
+                    animationDuration: `${1.8 + i * 0.25}s`,
+                    animationDelay: `${i * 0.3}s`,
+                    animationIterationCount: 'infinite',
+                    animationTimingFunction: 'ease-out',
+                  }}
+                />
+              </g>
+            ))}
+          </svg>
+
+          <div className="relative flex h-full flex-col items-center justify-center gap-4">
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/25 bg-card/72">
+              <MapPin className="h-7 w-7 text-emerald-400" />
+              <span
+                className="pointer-events-none absolute inset-1.5 rounded-xl border border-emerald-400/35"
+                style={{ animation: 'mapLoaderPulse 1.9s ease-out infinite' }}
+              />
+            </div>
+            <div className="flex items-center gap-2 rounded-xl border border-border/70 bg-card/72 px-3.5 py-2 text-xs text-muted-foreground">
+              <Navigation className="h-3.5 w-3.5 text-teal-300" />
+              Loading masjid map...
+            </div>
+          </div>
         </div>
       )}
       <div ref={mapRef} className="h-[60vh] sm:h-[400px] w-full" />
