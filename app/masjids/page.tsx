@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { MapPin, Navigation, Phone, Clock, Search, Map, Star, CheckCircle2, Users, AlertTriangle } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import { PremiumAtmosphere } from '@/components/premium-atmosphere'
 import { MASJIDS, AREAS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { guyanaDate } from '@/lib/timezone'
@@ -23,6 +24,9 @@ const FACILITY_ICONS: Record<string, string> = {
   Classes: '📚',
   Library: '📖',
 }
+
+const SURFACE_CLASS =
+  'rounded-2xl border border-border/80 bg-card/80 backdrop-blur-md shadow-[0_20px_50px_-35px_rgba(20,184,166,0.45)]'
 
 function getTodayKey() {
   return guyanaDate()
@@ -134,83 +138,85 @@ export default function MasjidsPage() {
   }, [search, area, facility, isFriday, homeMasjidId, userLoc])
 
   return (
-    <div className="min-h-screen bg-background pb-nav">
+    <div className="relative min-h-screen overflow-hidden bg-background pb-nav">
+      <PremiumAtmosphere tone="masjid" />
       <PageHero
         icon={MapPin}
         title="Masjid Directory"
         subtitle="Guyana"
         gradient="from-teal-900 to-green-900"
-      
         heroTheme="masjid"
       />
 
-      <div className="px-4 pt-4 space-y-3">
+      <div className="relative px-4 pt-4 space-y-3">
         {/* Friday Banner */}
         {isFriday && (
-          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-center animate-fade-up">
+          <div className={`${SURFACE_CLASS} animate-fade-up border-amber-500/25 bg-gradient-to-br from-amber-500/14 via-amber-500/5 to-orange-500/8 p-4 text-center`}>
             <p className="text-sm font-bold text-amber-300">Jumuah Today</p>
             <p className="mt-1 text-xs text-amber-400/70">Find a masjid near you for Friday prayer</p>
           </div>
         )}
 
-        {/* View Map + Count */}
-        <div className="flex gap-3">
-          <Link
-            href="/map"
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-teal-500/15 py-2.5 text-xs font-medium text-teal-400 transition-colors active:bg-teal-500/25 border border-teal-800/30"
-          >
-            <Map className="h-3.5 w-3.5" />
-            View Map
-          </Link>
-          <div className="flex items-center justify-center rounded-xl bg-secondary/50 px-4 py-2.5">
-            <span className="text-xs font-medium text-muted-foreground">{filtered.length} masjids listed</span>
+        <div className={`${SURFACE_CLASS} space-y-3 p-3`}>
+          {/* View Map + Count */}
+          <div className="flex gap-3">
+            <Link
+              href="/map"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/14 py-2.5 text-xs font-semibold text-teal-300 transition-all active:scale-[0.98] active:bg-teal-500/24"
+            >
+              <Map className="h-3.5 w-3.5" />
+              View Map
+            </Link>
+            <div className="flex items-center justify-center rounded-xl border border-border/70 bg-secondary/55 px-4 py-2.5">
+              <span className="text-xs font-medium text-muted-foreground">{filtered.length} masjids listed</span>
+            </div>
           </div>
-        </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" />
-          <input
-            type="text"
-            placeholder="Search by name or area..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-border bg-card py-3 pl-11 pr-4 text-sm text-foreground placeholder-gray-500 outline-none focus:border-teal-500/50"
-          />
-        </div>
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" />
+            <input
+              type="text"
+              placeholder="Search by name or area..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-xl border border-border/80 bg-card/85 py-3 pl-11 pr-4 text-sm text-foreground placeholder-gray-500 outline-none focus:border-teal-500/50"
+            />
+          </div>
 
-        {/* Area filter chips */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {AREAS.map((a) => (
-            <button
-              key={a}
-              onClick={() => setArea(a)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                area === a
-                  ? 'bg-emerald-500 text-foreground'
-                  : 'bg-secondary text-muted-foreground active:bg-muted'
-              }`}
-            >
-              {a}
-            </button>
-          ))}
-        </div>
+          {/* Area filter chips */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {AREAS.map((a) => (
+              <button
+                key={a}
+                onClick={() => setArea(a)}
+                className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
+                  area === a
+                    ? 'border-emerald-500/50 bg-emerald-500/90 text-foreground shadow-[0_8px_18px_-12px_rgba(16,185,129,0.8)]'
+                    : 'border-border/70 bg-secondary/65 text-muted-foreground active:bg-muted'
+                }`}
+              >
+                {a}
+              </button>
+            ))}
+          </div>
 
-        {/* Facility filter chips */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {FACILITY_FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFacility(f)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                facility === f
-                  ? 'bg-teal-500 text-foreground'
-                  : 'bg-secondary text-muted-foreground active:bg-muted'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {/* Facility filter chips */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {FACILITY_FILTERS.map((f) => (
+              <button
+                key={f}
+                onClick={() => setFacility(f)}
+                className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
+                  facility === f
+                    ? 'border-teal-500/50 bg-teal-500/90 text-foreground shadow-[0_8px_18px_-12px_rgba(20,184,166,0.8)]'
+                    : 'border-border/70 bg-secondary/65 text-muted-foreground active:bg-muted'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Masjid cards */}
@@ -222,10 +228,12 @@ export default function MasjidsPage() {
             return (
               <div
                 key={masjid.id}
-                className={`overflow-hidden rounded-2xl border bg-card ${masjid.id === homeMasjidId ? 'border-emerald-600/40 ring-1 ring-emerald-600/20' : 'border-border'}`}
+                className={`overflow-hidden rounded-2xl border bg-card/88 backdrop-blur-sm shadow-[0_16px_35px_-30px_rgba(20,184,166,0.45)] transition-all active:scale-[0.995] ${
+                  masjid.id === homeMasjidId ? 'border-emerald-600/40 ring-1 ring-emerald-600/25' : 'border-border/80'
+                }`}
               >
                 {masjid.id === homeMasjidId && (
-                  <div className="bg-emerald-600/20 border-b border-emerald-600/20 px-4 py-1.5 flex items-center gap-1.5">
+                  <div className="border-b border-emerald-600/20 bg-emerald-600/18 px-4 py-1.5 flex items-center gap-1.5">
                     <Star className="h-3 w-3 text-emerald-400 fill-emerald-400" />
                     <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">My Masjid — tap to remove</span>
                   </div>
@@ -254,7 +262,7 @@ export default function MasjidsPage() {
                   {/* Facility pills */}
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {masjid.facilities.map((f) => (
-                      <span key={f} className="rounded-lg bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
+                      <span key={f} className="rounded-lg border border-border/60 bg-secondary/65 px-2 py-0.5 text-[10px] text-muted-foreground">
                         {FACILITY_ICONS[f] || ''} {f}
                       </span>
                     ))}
@@ -288,7 +296,7 @@ export default function MasjidsPage() {
                       href={`https://www.google.com/maps/dir/?api=1&destination=${masjid.lat},${masjid.lng}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500/15 py-2.5 text-xs font-medium text-emerald-400 transition-colors active:bg-emerald-500/25"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/14 py-2.5 text-xs font-semibold text-emerald-300 transition-all active:scale-[0.98] active:bg-emerald-500/24"
                     >
                       <Navigation className="h-3.5 w-3.5" />
                       Directions
@@ -296,10 +304,10 @@ export default function MasjidsPage() {
                     <button
                       onClick={() => handleCheckin(masjid.id)}
                       disabled={isCheckedIn}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-medium transition-all active:scale-95 ${
+                      className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-xs font-semibold transition-all active:scale-[0.98] ${
                         isCheckedIn
-                          ? 'bg-teal-500/20 text-teal-400'
-                          : 'bg-teal-500/15 text-teal-400 active:bg-teal-500/25'
+                          ? 'border-teal-500/35 bg-teal-500/20 text-teal-300'
+                          : 'border-teal-500/30 bg-teal-500/14 text-teal-300 active:bg-teal-500/24'
                       }`}
                     >
                       <CheckCircle2 className={`h-3.5 w-3.5 ${isCheckedIn ? 'fill-teal-500' : ''}`} />
@@ -326,7 +334,7 @@ export default function MasjidsPage() {
         {/* Request a Masjid */}
         <Link
           href="/feedback?category=Request+New+Masjid"
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-xs font-medium text-muted-foreground transition-colors active:bg-secondary/50"
+          className={`${SURFACE_CLASS} flex w-full items-center justify-center gap-2 border-dashed py-3 text-xs font-semibold text-muted-foreground transition-colors active:bg-secondary/50`}
         >
           <Star className="h-3.5 w-3.5" />
           Request a Masjid

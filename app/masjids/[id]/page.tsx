@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
+import { PremiumAtmosphere } from '@/components/premium-atmosphere'
 import { MASJIDS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { getRamadanStatus } from '@/lib/ramadan-mode'
@@ -42,6 +43,12 @@ const FACILITY_ICONS: Record<string, string> = {
   Cafeteria: '🍽️',
   'Medical Room': '🏥',
 }
+
+const SURFACE_CLASS =
+  'rounded-2xl border border-border/80 bg-card/82 backdrop-blur-md shadow-[0_22px_50px_-35px_rgba(20,184,166,0.45)]'
+
+const IFTAAR_SURFACE_CLASS =
+  'rounded-3xl border border-amber-500/28 bg-gradient-to-br from-amber-500/14 via-card/82 to-orange-500/7 backdrop-blur-md shadow-[0_24px_60px_-34px_rgba(251,191,36,0.42)]'
 
 export default function MasjidDetailPage() {
   const params = useParams()
@@ -196,9 +203,10 @@ export default function MasjidDetailPage() {
 
   if (!masjid) {
     return (
-      <div className="min-h-screen bg-background pb-nav">
+      <div className="relative min-h-screen overflow-hidden bg-background pb-nav">
+        <PremiumAtmosphere tone="masjid" />
         <PageHero icon={MapPin} title="Not Found" subtitle="Masjid not found" gradient="from-teal-900 to-green-900" showBack heroTheme="masjid" />
-        <div className="px-4 pt-8 text-center">
+        <div className="relative px-4 pt-8 text-center">
           <p className="text-muted-foreground">This masjid could not be found.</p>
           <Link href="/masjids" className="mt-4 inline-block rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-foreground">
             Back to Directory
@@ -214,7 +222,8 @@ export default function MasjidDetailPage() {
     : []
 
   return (
-    <div className="min-h-screen bg-background pb-nav">
+    <div className="relative min-h-screen overflow-hidden bg-background pb-nav">
+      <PremiumAtmosphere tone={ramadan ? 'iftaar' : 'masjid'} />
       <PageHero
         icon={MapPin}
         title={masjid.name}
@@ -224,15 +233,15 @@ export default function MasjidDetailPage() {
         heroTheme="masjid"
       />
 
-      <div className="px-4 pt-5 space-y-4">
+      <div className="relative px-4 pt-5 space-y-4">
 
         {/* ── Set as My Masjid ───────────────────────────────────────── */}
         <button
           onClick={toggleHomeMasjid}
-          className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition-all active:scale-95 border ${
+          className={`flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition-all active:scale-[0.98] ${
             isHomeMasjid
-              ? 'bg-amber-500/15 text-amber-400 border-amber-700/30'
-              : 'bg-secondary text-muted-foreground border-border/30 active:bg-muted'
+              ? 'border-amber-500/35 bg-amber-500/15 text-amber-300'
+              : 'border-border/70 bg-secondary/65 text-muted-foreground active:bg-muted'
           }`}
         >
           {isHomeMasjid ? (
@@ -243,7 +252,7 @@ export default function MasjidDetailPage() {
         </button>
 
         {/* ── Quick Info ────────────────────────────────────────────── */}
-        <div className="rounded-2xl border border-border bg-card p-5 space-y-3">
+        <div className={`${SURFACE_CLASS} space-y-3 p-5`}>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-lg bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-400">{masjid.type}</span>
             <span className="rounded-lg bg-teal-500/15 px-3 py-1 text-xs font-medium text-teal-400">{masjid.area}</span>
@@ -306,7 +315,7 @@ export default function MasjidDetailPage() {
 
         {/* ── Prayer Times Detail ───────────────────────────────────── */}
         {prayerRows.length > 0 && (
-          <div className="rounded-2xl border border-border bg-card p-5">
+          <div className={`${SURFACE_CLASS} p-5`}>
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80 mb-3">Prayer Times</h3>
             <div className="space-y-1.5">
               {prayerRows.map(([prayer, time]) => (
@@ -322,16 +331,24 @@ export default function MasjidDetailPage() {
 
         {/* ── Ramadan Iftaar Community Feed ────────────────────────── */}
         {ramadan && (
-          <div className="rounded-2xl border border-orange-800/30 bg-orange-950/20 p-5 space-y-4">
+          <div className={`${IFTAAR_SURFACE_CLASS} relative overflow-hidden p-5 space-y-4`}>
+            <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-amber-400/14 blur-3xl" />
+            <div className="pointer-events-none absolute -left-12 bottom-8 h-36 w-36 rounded-full bg-orange-400/10 blur-3xl" />
+
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Soup className="h-4 w-4 text-orange-400" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-orange-400">Iftaar Reports</h3>
+            <div className="relative flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Soup className="h-4 w-4 text-amber-300" />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-amber-300">Iftaar Reports</h3>
+                </div>
+                <p className="mt-1 text-[11px] text-amber-200/70">
+                  Community updates for tonight and previous days at this masjid.
+                </p>
               </div>
               <button
                 onClick={() => setShowReportForm(v => !v)}
-                className="flex items-center gap-1 rounded-xl bg-orange-500/15 px-3 py-1.5 text-xs font-semibold text-orange-400 active:bg-orange-500/25"
+                className="flex items-center gap-1 rounded-xl border border-amber-500/35 bg-amber-500/18 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-all active:scale-[0.98] active:bg-amber-500/28"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Report
@@ -340,30 +357,30 @@ export default function MasjidDetailPage() {
 
             {/* Report form */}
             {showReportForm && (
-              <div className="space-y-2.5 rounded-xl border border-orange-800/30 bg-orange-950/30 p-4">
+              <div className="relative space-y-2.5 rounded-2xl border border-amber-500/25 bg-card/72 p-4 backdrop-blur-sm">
                 <input
                   value={reportName}
                   onChange={e => setReportName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full rounded-xl border border-border bg-secondary/60 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-orange-500/50"
+                  className="w-full rounded-xl border border-border/80 bg-secondary/65 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-amber-500/50"
                 />
                 <input
                   value={reportMenu}
                   onChange={e => setReportMenu(e.target.value)}
                   placeholder="What's being served? (e.g. Biryani, Roti)"
-                  className="w-full rounded-xl border border-border bg-secondary/60 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-orange-500/50"
+                  className="w-full rounded-xl border border-border/80 bg-secondary/65 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-amber-500/50"
                 />
                 <textarea
                   value={reportNotes}
                   onChange={e => setReportNotes(e.target.value)}
                   placeholder="Any additional info (optional)"
                   rows={2}
-                  className="w-full resize-none rounded-xl border border-border bg-secondary/60 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-orange-500/50"
+                  className="w-full resize-none rounded-xl border border-border/80 bg-secondary/65 px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-amber-500/50"
                 />
                 <button
                   onClick={submitIftaarReport}
                   disabled={!reportMenu.trim() || !reportName.trim() || reportSubmitting}
-                  className="w-full rounded-xl bg-orange-600 py-2.5 text-sm font-semibold text-foreground disabled:opacity-40 active:bg-orange-700"
+                  className="w-full rounded-xl border border-amber-500/45 bg-amber-600 py-2.5 text-sm font-semibold text-foreground transition-all active:scale-[0.98] active:bg-amber-700 disabled:opacity-40"
                 >
                   {reportSubmitting ? 'Submitting…' : 'Submit Report'}
                 </button>
@@ -371,40 +388,40 @@ export default function MasjidDetailPage() {
             )}
 
             {/* Today's reports — collapsible */}
-            <div className="border-t border-orange-900/30 pt-3">
+            <div className="relative border-t border-amber-500/20 pt-3">
               <button
                 onClick={() => setShowTodayReports(v => !v)}
-                className="flex w-full items-center justify-between gap-1.5 text-xs text-gray-500 active:text-gray-300"
+                className="flex w-full items-center justify-between gap-1.5 text-xs text-muted-foreground transition-colors active:text-foreground"
               >
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-orange-400/80">Today&apos;s Menu</span>
+                  <span className="font-semibold text-amber-200">Today&apos;s Menu</span>
                   {todayReports.length > 0 ? (
-                    <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
+                    <span className="rounded-full border border-amber-500/35 bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-200">
                       {todayReports.length}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-gray-600 italic">None yet</span>
+                    <span className="text-[10px] text-muted-foreground/70 italic">None yet</span>
                   )}
                 </div>
                 {showTodayReports ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
               </button>
 
               {showTodayReports && (
-                <div className="mt-2.5 space-y-2.5">
+                <div className="mt-2.5 space-y-2.5 animate-fade-up">
                   {todayReports.length === 0 ? (
-                    <p className="text-xs text-gray-600 italic py-1">No iftaar reports yet today. Be the first to share!</p>
+                    <p className="py-1 text-xs text-muted-foreground/70 italic">No iftaar reports yet today. Be the first to share!</p>
                   ) : (
                     todayReports.map(report => (
-                      <div key={report.id} className="rounded-xl bg-card border border-border p-3.5">
+                      <div key={report.id} className="rounded-2xl border border-amber-500/22 bg-card/78 p-3.5 backdrop-blur-sm">
                         <div className="flex items-start justify-between gap-2">
                           <p className="text-sm font-semibold text-foreground">{report.menu}</p>
-                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
+                          <div className="flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2 py-0.5 text-[10px] text-muted-foreground/80">
                             <ThumbsUp className="h-3 w-3" />
                             {report.likes}
                           </div>
                         </div>
-                        {report.notes && <p className="mt-1 text-xs text-muted-foreground">{report.notes}</p>}
-                        <p className="mt-1.5 text-[10px] text-muted-foreground/60">Reported by {report.submittedBy}</p>
+                        {report.notes && <p className="mt-1 text-xs text-muted-foreground/90">{report.notes}</p>}
+                        <p className="mt-1.5 text-[10px] text-muted-foreground/65">Reported by {report.submittedBy}</p>
                       </div>
                     ))
                   )}
@@ -413,15 +430,15 @@ export default function MasjidDetailPage() {
             </div>
 
             {/* Past Iftaar Archive — always visible so users know it exists */}
-            <div className="border-t border-orange-900/30 pt-3">
+            <div className="relative border-t border-amber-500/20 pt-3">
               <button
                 onClick={() => setShowAllReports(v => !v)}
-                className="flex w-full items-center justify-between gap-1.5 text-xs text-gray-500 active:text-gray-300"
+                className="flex w-full items-center justify-between gap-1.5 text-xs text-muted-foreground transition-colors active:text-foreground"
               >
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold">Past Iftaar Reports</span>
+                  <span className="font-semibold text-amber-200/90">Past Iftaar Reports</span>
                   {archivedReports.length > 0 && (
-                    <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] text-orange-400">
+                    <span className="rounded-full border border-amber-500/35 bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-200">
                       {archivedReports.length}
                     </span>
                   )}
@@ -430,9 +447,9 @@ export default function MasjidDetailPage() {
               </button>
 
               {showAllReports && (
-                <div className="mt-2.5 space-y-4">
+                <div className="mt-2.5 space-y-4 animate-fade-up">
                   {archivedReports.length === 0 ? (
-                    <p className="text-xs text-gray-600 italic py-2">No archived reports yet — reports from past days will appear here.</p>
+                    <p className="py-2 text-xs text-muted-foreground/70 italic">No archived reports yet — reports from past days will appear here.</p>
                   ) : (
                     Array.from(
                       archivedReports
@@ -445,19 +462,19 @@ export default function MasjidDetailPage() {
                       .sort(([a], [b]) => b.localeCompare(a))
                       .map(([date, reports]) => (
                         <div key={date} className="space-y-2">
-                          <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-400/60">
+                          <p className="text-[10px] font-semibold uppercase tracking-widest text-amber-300/75">
                             {new Date(date + 'T12:00:00').toLocaleDateString('en-GY', { weekday: 'short', month: 'short', day: 'numeric' })}
                           </p>
                           {reports.map(report => (
-                            <div key={report.id} className="rounded-xl bg-gray-900/50 border border-gray-800/60 p-3">
+                            <div key={report.id} className="rounded-2xl border border-border/75 bg-secondary/55 p-3">
                               <div className="flex items-start justify-between gap-2">
                                 <p className="text-sm font-semibold text-foreground">{report.menu}</p>
-                                <div className="flex items-center gap-1 text-[10px] text-gray-600">
+                                <div className="flex items-center gap-1 text-[10px] text-muted-foreground/75">
                                   <ThumbsUp className="h-2.5 w-2.5" /> {report.likes}
                                 </div>
                               </div>
-                              {report.notes && <p className="mt-1 text-[11px] text-gray-500">{report.notes}</p>}
-                              <p className="mt-1.5 text-[10px] text-gray-600">by {report.submittedBy}</p>
+                              {report.notes && <p className="mt-1 text-[11px] text-muted-foreground/85">{report.notes}</p>}
+                              <p className="mt-1.5 text-[10px] text-muted-foreground/70">by {report.submittedBy}</p>
                             </div>
                           ))}
                         </div>
@@ -468,8 +485,11 @@ export default function MasjidDetailPage() {
             </div>
 
             {/* Link to full archive on Iftaar page */}
-            <div className="border-t border-orange-900/30 pt-3">
-              <Link href="/iftaar" className="flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-orange-400 transition-colors">
+            <div className="relative border-t border-amber-500/20 pt-3">
+              <Link
+                href="/iftaar"
+                className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground/75 transition-colors hover:text-amber-200"
+              >
                 <CalendarDays className="h-3.5 w-3.5" />
                 <span>View full Iftaar history →</span>
               </Link>
@@ -478,7 +498,7 @@ export default function MasjidDetailPage() {
             {masjid.phone && (
               <a
                 href={`tel:${masjid.phone}`}
-                className="flex items-center gap-2 rounded-xl bg-orange-500/10 px-4 py-2.5 text-sm font-medium text-orange-400/80 active:bg-orange-500/20"
+                className="flex items-center gap-2 rounded-xl border border-amber-500/35 bg-amber-500/14 px-4 py-2.5 text-sm font-semibold text-amber-200 transition-all active:scale-[0.98] active:bg-amber-500/24"
               >
                 <Phone className="h-4 w-4" />
                 Call Masjid Directly
@@ -488,11 +508,11 @@ export default function MasjidDetailPage() {
         )}
 
         {/* ── Facilities ────────────────────────────────────────────── */}
-        <div className="rounded-2xl border border-border bg-card p-5">
+        <div className={`${SURFACE_CLASS} p-5`}>
           <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80 mb-3">Facilities</h3>
           <div className="flex flex-wrap gap-2">
             {masjid.facilities.map((f) => (
-              <span key={f} className="rounded-xl bg-secondary px-3 py-1.5 text-xs text-muted-foreground">
+              <span key={f} className="rounded-xl border border-border/70 bg-secondary/65 px-3 py-1.5 text-xs text-muted-foreground">
                 {FACILITY_ICONS[f] || ''} {f}
               </span>
             ))}
@@ -503,7 +523,7 @@ export default function MasjidDetailPage() {
         </div>
 
         {/* ── Check-in ──────────────────────────────────────────────── */}
-        <div className="rounded-2xl border border-border bg-card p-5">
+        <div className={`${SURFACE_CLASS} p-5`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80">Check In</h3>
             {checkinCount > 0 && (
@@ -516,8 +536,10 @@ export default function MasjidDetailPage() {
           <button
             onClick={handleCheckin}
             disabled={isCheckedIn}
-            className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition-all active:scale-95 ${
-              isCheckedIn ? 'bg-teal-500/20 text-teal-400' : 'bg-emerald-600 text-foreground active:bg-emerald-700'
+            className={`flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition-all active:scale-[0.98] ${
+              isCheckedIn
+                ? 'border-teal-500/35 bg-teal-500/18 text-teal-300'
+                : 'border-emerald-500/35 bg-emerald-600 text-foreground active:bg-emerald-700'
             }`}
           >
             <CheckCircle2 className={`h-4 w-4 ${isCheckedIn ? 'fill-teal-500' : ''}`} />
@@ -530,7 +552,7 @@ export default function MasjidDetailPage() {
           href={`https://www.google.com/maps/dir/?api=1&destination=${masjid.lat},${masjid.lng}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500/15 py-3 text-sm font-medium text-emerald-400 transition-colors active:bg-emerald-500/25 border border-emerald-800/30"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/14 py-3 text-sm font-semibold text-emerald-300 transition-all active:scale-[0.98] active:bg-emerald-500/24"
         >
           <Navigation className="h-4 w-4" />
           Get Directions
@@ -540,7 +562,7 @@ export default function MasjidDetailPage() {
           href={`https://www.google.com/maps/search/?api=1&query=${masjid.lat},${masjid.lng}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-sm font-medium text-muted-foreground transition-colors active:bg-muted"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border/70 bg-secondary/65 py-3 text-sm font-semibold text-muted-foreground transition-colors active:bg-muted"
         >
           <ExternalLink className="h-4 w-4" />
           View on Google Maps
@@ -548,7 +570,7 @@ export default function MasjidDetailPage() {
 
         <Link
           href={`/feedback?category=Report+Masjid+Error&masjid=${encodeURIComponent(masjid.name)}`}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-xs font-medium text-muted-foreground/80 transition-colors active:bg-secondary/50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border/70 bg-card/55 py-3 text-xs font-semibold text-muted-foreground/80 transition-colors active:bg-secondary/50"
         >
           <AlertTriangle className="h-3.5 w-3.5" />
           Report an Error
