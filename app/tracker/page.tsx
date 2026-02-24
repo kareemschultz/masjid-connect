@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import {
   CheckSquare, Flame, TrendingUp, UtensilsCrossed, Table2, ChevronRight, Share2,
   ChevronDown, ChevronUp, Plus, Minus, Trash2, BookOpen as BookOpenIcon, Heart, Droplets, Moon as MoonIcon,
-  BarChart2, Star,
+  BarChart2, Star, Users,
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -120,6 +120,7 @@ export default function TrackerPage() {
   const [qaidaLog, setQaidaLog] = useState<QaidaLog>({})
   const [qaidaLesson, setQaidaLesson] = useState<number>(1)
   const [rewardToast, setRewardToast] = useState<string | null>(null)
+  const [buddies, setBuddies] = useState<any[]>([])
 
   /* ── toggle section helper ── */
   const toggleSection = useCallback((key: string) => {
@@ -178,6 +179,11 @@ export default function TrackerPage() {
     // Default to the last practiced lesson if available
     const lastLog = Object.values(savedQaidaLog).sort((a, b) => b.lesson - a.lesson)[0]
     setQaidaLesson(lastLog ? lastLog.lesson : 1)
+
+    fetch('/api/friends')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setBuddies(data.filter((b: any) => b.status === 'accepted')))
+      .catch(() => {})
   }, [])
 
   /* ── prayer toggle ── */
@@ -521,6 +527,63 @@ export default function TrackerPage() {
       
         heroTheme="prayer"
       />
+
+      {/* ── Buddy Progress Card ── */}
+      {buddies.length > 0 && (
+        <div className="mx-4 mt-4 overflow-hidden rounded-2xl border border-sky-500/20 bg-card">
+          <div className="flex items-center justify-between bg-sky-500/10 p-3">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-sky-400" />
+              <span className="text-xs font-bold text-foreground">Buddy Progress</span>
+            </div>
+            <Link href="/explore/buddy" className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">
+              View Hub <ChevronRight className="inline h-3 w-3" />
+            </Link>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-lg font-bold text-emerald-400">
+                  {getItem(KEYS.USERNAME, '?')[0]?.toUpperCase() || '?'}
+                  <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white">
+                    {todayCount}
+                  </div>
+                </div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase">You</p>
+                <div className="flex gap-1">
+                  {PRAYER_NAMES.map(p => (
+                    <div key={p} className={`h-1.5 w-1.5 rounded-full ${todayLog[p] ? 'bg-emerald-500' : 'bg-muted'}`} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/10 text-lg font-bold text-sky-400">
+                  {(buddies[0].displayName || buddies[0].name || '?')[0].toUpperCase()}
+                  <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-sky-500 text-[10px] text-white">
+                    {buddies[0].streak || 0}d
+                  </div>
+                </div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase truncate max-w-[80px]">
+                  {buddies[0].displayName || buddies[0].name}
+                </p>
+                <div className="flex items-center gap-1">
+                   <Flame className="h-3 w-3 text-amber-400" />
+                   <span className="text-[10px] font-bold text-amber-400">{buddies[0].streak || 0} day streak</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex gap-2">
+              <Link href="/explore/buddy" className="flex-1 rounded-xl bg-sky-500/15 py-2 text-center text-[11px] font-bold text-sky-400">
+                Send Nudge
+              </Link>
+              <Link href="/explore/buddy" className="flex-1 rounded-xl bg-secondary py-2 text-center text-[11px] font-bold text-muted-foreground">
+                Challenge
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Daily Sunnah Score ── */}
       <div className="mx-4 mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3">

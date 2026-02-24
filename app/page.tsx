@@ -124,11 +124,22 @@ export default function HomePage() {
   const [homeMasjidName, setHomeMasjidName] = useState<string>('')
   const [locationDetected, setLocationDetected] = useState(false)
   const [locationFailed, setLocationFailed] = useState(false)
+  const [buddies, setBuddies] = useState<any[]>([])
 
   const dailyVerse = getDailyVerse()
   const hadith = getTodayHadith()
   const ramadanStatus = getRamadanStatus()
   const ramadan = ramadanStatus.isRamadan
+
+  const fetchBuddies = useCallback(async () => {
+    try {
+      const res = await fetch('/api/friends')
+      if (res.ok) {
+        const data = await res.json()
+        setBuddies(data.filter((b: any) => b.status === 'accepted'))
+      }
+    } catch { /* skip */ }
+  }, [])
 
   const scheduleNotifications = useCallback(async (prayerData: PrayerTimeData[]) => {
     try {
@@ -270,6 +281,7 @@ export default function HomePage() {
     }
 
     loadPrayerTimes()
+    fetchBuddies()
     setMounted(true)
 
     // Hydrate checklist from server (API is source of truth when available)
@@ -572,6 +584,48 @@ export default function HomePage() {
               <ChevronRight className="h-5 w-5 text-blue-400/30 shrink-0" />
             </Link>
           )}
+
+          {/* Buddy Bar */}
+          <div className="mt-3 animate-fade-up" style={{ animationDelay: '0.4s', animationFillMode: 'backwards' }}>
+            {buddies.length > 0 ? (
+              <div className="glass flex items-center gap-4 rounded-2xl p-4 card-premium">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/15">
+                  <Users className="h-5 w-5 text-sky-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-sky-400/70">Faith Buddy</p>
+                  <div className="mt-0.5 flex items-center gap-2">
+                    <p className="text-sm font-bold text-foreground truncate">{buddies[0].displayName || buddies[0].name}</p>
+                    {buddies[0].streak > 0 && (
+                      <span className="flex items-center gap-0.5 text-[10px] font-bold text-amber-400">
+                        <Flame className="h-3 w-3" /> {buddies[0].streak}d
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <Link
+                  href="/explore/buddy"
+                  className="rounded-xl bg-sky-500/15 px-4 py-2 text-xs font-bold text-sky-400 transition-all active:scale-95"
+                >
+                  Nudge
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href="/explore/buddy"
+                className="glass flex items-center gap-4 rounded-2xl p-4 card-premium border border-dashed border-sky-500/20"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/10">
+                  <Users className="h-5 w-5 text-sky-400/60" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold text-foreground/80">Find a Faith Buddy</p>
+                  <p className="text-[10px] text-muted-foreground">Compete in good deeds together</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-sky-400/30" />
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
