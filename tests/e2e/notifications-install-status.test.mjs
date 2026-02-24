@@ -10,6 +10,8 @@ test('notification install status helper exists', () => {
 
 test('settings page uses notification install status helper', () => {
   const src = fs.readFileSync('app/settings/page.tsx', 'utf8')
-  assert.match(src, /showNotifCta/)
-  assert.match(src, /Install this app to your home screen/)
+  assert.match(src, /isPushSupported/)
+  assert.match(src, /subscribeToPush/)
+  assert.match(src, /updatePushPreferences/)
+  assert.match(src, /Disable All Notifications/)
 })

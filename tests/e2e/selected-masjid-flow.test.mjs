@@ -7,8 +7,9 @@ test('selected masjid key exists in storage constants', () => {
   assert.match(src, /SELECTED_MASJID/) 
 })
 
-test('iftaar page uses global selected masjid store hook', () => {
+test('iftaar page carries selected masjid into submit flow', () => {
   const src = fs.readFileSync('app/iftaar/page.jsx', 'utf8')
-  assert.match(src, /useSelectedMasjidId/)
-  assert.match(src, /setSelectedMasjidId/)
+  assert.match(src, /defaultMasjidId/)
+  assert.match(src, /setDefaultMasjidId/)
+  assert.match(src, /defaultMasjidId=\{defaultMasjidId\}/)
 })
