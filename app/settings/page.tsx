@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Settings, Clock, BookOpen, Bell, Moon, Globe,
   Info, FileText, RotateCcw, Volume2, MessageSquarePlus,
-  Sun, Sunset, CloudSun, MoonStar, Shield, LogOut, User, ChevronRight, MapPin
+  Sun, Sunset, CloudSun, MoonStar, Shield, LogOut, User, ChevronRight, MapPin, Users
 } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
@@ -422,6 +422,22 @@ export default function SettingsPage() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              {/* Buddy Link */}
+              <div className="border-t border-border/50">
+                <Link href="/explore/buddy" className="flex items-center justify-between p-4 active:bg-secondary/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-600">
+                      <Users className="h-4 w-4 text-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Faith Buddy</p>
+                      <p className="text-xs text-muted-foreground">Find your prayer partner</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                </Link>
               </div>
             </>
           ) : (
