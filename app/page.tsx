@@ -18,7 +18,6 @@ import {
   Headphones, Navigation, GraduationCap
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
-import { AppTour } from '@/components/app-tour'
 import { AnnouncementsBanner } from '@/components/announcements-banner'
 import {
   requestNotificationPermission,
@@ -116,7 +115,6 @@ export default function HomePage() {
   const [streak, setStreak] = useState(0)
   const [points, setPoints] = useState(0)
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [showTour, setShowTour] = useState(false)
   const [username, setUsername] = useState('')
   const [lastRead, setLastRead] = useState<{ surah: number; name: string } | null>(null)
   const [iftaarCountdown, setIftaarCountdown] = useState<{ hours: number; minutes: number; seconds: number } | null>(null)
@@ -296,11 +294,6 @@ export default function HomePage() {
     const onboardingDone = getItem(KEYS.ONBOARDING_COMPLETE, false)
     if (onboardingDone) {
       setShowOnboarding(false)
-      // Check if tour was queued from the wizard
-      if (getItem(KEYS.TOUR_PENDING, false)) {
-        setItem(KEYS.TOUR_PENDING, false)
-        setTimeout(() => setShowTour(true), 600) // Small delay for page to settle
-      }
     } else {
       // Check if user is already signed in (returning user with empty localStorage)
       fetch('/api/user/profile')
@@ -459,11 +452,6 @@ export default function HomePage() {
         setShowOnboarding(false)
         setUsername(getItem(KEYS.USERNAME, ''))
         loadPrayerTimes()
-        // Check if user opted into the app tour
-        if (getItem(KEYS.TOUR_PENDING, false)) {
-          setItem(KEYS.TOUR_PENDING, false)
-          setTimeout(() => setShowTour(true), 800)
-        }
       }} />
     )
   }
@@ -906,10 +894,6 @@ export default function HomePage() {
       )}
       <BottomNav />
 
-      {/* App tour overlay */}
-      {showTour && (
-        <AppTour onComplete={() => setShowTour(false)} />
-      )}
     </div>
   )
 }

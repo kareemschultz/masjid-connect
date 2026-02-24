@@ -22,7 +22,7 @@ interface OnboardingWizardProps {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const TOTAL_STEPS = 6
+const TOUR_START_EVENT = 'app-tour:start'
 
 const FEATURES = [
   {
@@ -123,215 +123,6 @@ function isPushSupported(): boolean {
 
 function isIOS(): boolean {
   return typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
-}
-
-function IOSInstallAnimation() {
-  return (
-    <div className="relative mx-auto" style={{ width: 160, height: 300 }}>
-      <style>{`
-        @keyframes mcgTapShare {
-          0%,12%  { opacity:0; transform:scale(1); }
-          15%     { opacity:1; transform:scale(.8); }
-          20%,100%{ opacity:0; transform:scale(1); }
-        }
-        @keyframes mcgSheet {
-          0%,18%  { transform:translateY(100%); }
-          28%,72% { transform:translateY(0); }
-          82%,100%{ transform:translateY(100%); }
-        }
-        @keyframes mcgHighlight {
-          0%,32%  { background:transparent; }
-          38%,60% { background:rgba(52,211,153,.18); }
-          68%,100%{ background:transparent; }
-        }
-        @keyframes mcgTapAdd {
-          0%,48%  { opacity:0; transform:scale(1); }
-          52%     { opacity:1; transform:scale(.8); }
-          58%,100%{ opacity:0; transform:scale(1); }
-        }
-        @keyframes mcgIconPop {
-          0%,68%  { opacity:0; transform:scale(0) translateY(10px); }
-          76%     { opacity:1; transform:scale(1.15) translateY(-2px); }
-          82%,94% { opacity:1; transform:scale(1) translateY(0); }
-          100%    { opacity:0; transform:scale(0); }
-        }
-        @keyframes mcgScreenSwitch {
-          0%,70%  { opacity:1; }
-          75%,94% { opacity:0; }
-          100%    { opacity:1; }
-        }
-        @keyframes mcgHomeScreen {
-          0%,70%  { opacity:0; }
-          75%,94% { opacity:1; }
-          100%    { opacity:0; }
-        }
-      `}</style>
-
-      {/* Phone shell */}
-      <div style={{
-        width:160, height:300, borderRadius:28, border:'2.5px solid #374151',
-        background:'#111827', overflow:'hidden', position:'relative', boxShadow:'0 20px 40px rgba(0,0,0,.5)'
-      }}>
-        {/* Notch */}
-        <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:56,height:6,background:'#111827',borderRadius:'0 0 8px 8px',zIndex:10}} />
-
-        {/* Status bar */}
-        <div style={{height:22,background:'#0f172a',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 12px',fontSize:7,color:'#9ca3af'}}>
-          <span>9:41</span>
-          <div style={{display:'flex',gap:3,alignItems:'center'}}>
-            <span>●●●</span><span>WiFi</span><span style={{color:'#4ade80'}}>⬛</span>
-          </div>
-        </div>
-
-        {/* Browser chrome */}
-        <div style={{background:'#0f172a',borderBottom:'1px solid #1f2937',padding:'4px 8px'}}>
-          <div style={{background:'#1f2937',borderRadius:8,padding:'3px 8px',fontSize:7,color:'#6b7280',display:'flex',alignItems:'center',gap:4}}>
-            <span style={{color:'#10b981'}}>🔒</span> masjidconnectgy.com
-          </div>
-        </div>
-
-        {/* App screen (switches to home screen at end) */}
-        <div style={{position:'relative',flex:1,height:214}}>
-
-          {/* App content */}
-          <div style={{
-            position:'absolute',inset:0,background:'#0a0b14',
-            display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6,
-            animation:'mcgScreenSwitch 7s ease-in-out infinite'
-          }}>
-            <div style={{
-              width:48,height:48,borderRadius:12,
-              background:'linear-gradient(135deg,#10b981,#0d9488)',
-              display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,
-              boxShadow:'0 4px 16px rgba(16,185,129,.4)'
-            }}>🕌</div>
-            <span style={{fontSize:8,color:'#9ca3af',fontWeight:600}}>MasjidConnect GY</span>
-            <div style={{width:100,height:1.5,background:'#1f2937',margin:'4px 0'}} />
-            <div style={{display:'flex',gap:3}}>
-              {['🌙','📿','🕋'].map((e,i)=>(
-                <div key={i} style={{width:28,height:28,borderRadius:8,background:'#1f2937',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12}}>{e}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* Home screen (shows when app icon pops in) */}
-          <div style={{
-            position:'absolute',inset:0,
-            background:'linear-gradient(135deg,#0c1445,#0a0b14)',
-            padding:12,
-            animation:'mcgHomeScreen 7s ease-in-out infinite'
-          }}>
-            <div style={{fontSize:7,color:'#6b7280',marginBottom:8,textAlign:'center'}}>Home Screen</div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
-              {['📱','📷','🗺️','⚙️','🎵','📧','🔔','📅'].map((e,i)=>(
-                <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
-                  <div style={{width:28,height:28,borderRadius:8,background:'#1f2937',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}>{e}</div>
-                  <span style={{fontSize:5,color:'#6b7280'}}>App</span>
-                </div>
-              ))}
-            </div>
-            {/* New icon appearing */}
-            <div style={{
-              position:'absolute',top:'50%',left:'50%',transform:'translateX(-50%) translateY(-50%)',
-              display:'flex',flexDirection:'column',alignItems:'center',gap:3,
-              animation:'mcgIconPop 7s ease-in-out infinite'
-            }}>
-              <div style={{
-                width:44,height:44,borderRadius:12,
-                background:'linear-gradient(135deg,#10b981,#0d9488)',
-                display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,
-                boxShadow:'0 6px 20px rgba(16,185,129,.5)'
-              }}>🕌</div>
-              <span style={{fontSize:7,color:'#e5e7eb',fontWeight:600}}>MasjidConnect</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Safari bottom bar */}
-        <div style={{
-          position:'absolute',bottom:0,left:0,right:0,height:42,
-          background:'#0f172a',borderTop:'1px solid #1f2937',
-          display:'flex',alignItems:'center',justifyContent:'space-around',padding:'0 8px'
-        }}>
-          {['←','→','','⊡','≡'].map((icon,i) => (
-            <div key={i} style={{
-              width:24,height:24,display:'flex',alignItems:'center',justifyContent:'center',
-              fontSize:i===2?16:11,
-              color: i===2 ? '#10b981' : '#6b7280',
-              fontWeight: i===2 ? 'bold' : 'normal'
-            }}>
-              {i===2 ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5">
-                  <path d="M4 12V8a8 8 0 0116 0v4"/>
-                  <rect x="2" y="11" width="20" height="11" rx="2"/>
-                  <path d="M12 4v4M9 7l3-3 3 3"/>
-                </svg>
-              ) : icon}
-            </div>
-          ))}
-        </div>
-
-        {/* Tap on share button */}
-        <div style={{
-          position:'absolute',bottom:9,left:'50%',transform:'translateX(-50%)',
-          width:22,height:22,borderRadius:'50%',
-          background:'rgba(16,185,129,.25)',border:'1.5px solid rgba(16,185,129,.7)',
-          animation:'mcgTapShare 7s ease-in-out infinite'
-        }} />
-
-        {/* Share sheet */}
-        <div style={{
-          position:'absolute',bottom:42,left:0,right:0,
-          background:'#1f2937',borderTop:'1px solid #374151',borderRadius:'16px 16px 0 0',
-          animation:'mcgSheet 7s ease-in-out infinite'
-        }}>
-          <div style={{width:32,height:3,background:'#4b5563',borderRadius:2,margin:'8px auto 10px'}} />
-
-          {/* App row icons */}
-          <div style={{display:'flex',gap:10,padding:'0 12px 10px',overflowX:'hidden'}}>
-            {['📩','📋','📞','✉️','🔗'].map((e,i)=>(
-              <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:3,flexShrink:0}}>
-                <div style={{width:36,height:36,borderRadius:10,background:'#374151',display:'flex',alignItems:'center',justifyContent:'center',fontSize:16}}>{e}</div>
-                <span style={{fontSize:6,color:'#9ca3af'}}>Share</span>
-              </div>
-            ))}
-          </div>
-
-          <div style={{borderTop:'1px solid #374151',margin:'0 8px'}} />
-
-          {/* Add to Home Screen row */}
-          <div style={{
-            display:'flex',alignItems:'center',gap:10,padding:'10px 12px',
-            borderRadius:8,margin:'0 4px',
-            animation:'mcgHighlight 7s ease-in-out infinite'
-          }}>
-            <div style={{width:30,height:30,borderRadius:8,background:'#374151',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14}}>➕</div>
-            <span style={{fontSize:10,color:'#f3f4f6',fontWeight:600}}>Add to Home Screen</span>
-          </div>
-
-          {/* Tap indicator on Add to Home Screen */}
-          <div style={{
-            position:'absolute',right:20,top:68,
-            width:18,height:18,borderRadius:'50%',
-            background:'rgba(16,185,129,.25)',border:'1.5px solid rgba(16,185,129,.7)',
-            animation:'mcgTapAdd 7s ease-in-out infinite'
-          }} />
-
-          <div style={{height:8}} />
-        </div>
-      </div>
-
-      {/* Step labels below */}
-      <div style={{display:'flex',justifyContent:'space-around',marginTop:8,padding:'0 4px'}}>
-        {['Tap Share','Add to Home','Done! ✓'].map((label,i)=>(
-          <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
-            <div style={{width:18,height:18,borderRadius:'50%',background:'#10b981',display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,color:'#fff',fontWeight:'bold'}}>{i+1}</div>
-            <span style={{fontSize:8,color:'#6b7280',textAlign:'center',lineHeight:1.2}}>{label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
 }
 
 function isStandalone(): boolean {
@@ -532,14 +323,36 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     theme: 'explore',
     done: 'ramadan',
   }
+  const STEP_GRADIENTS: Record<string, string> = {
+    welcome: 'from-emerald-950 via-emerald-900 to-teal-900',
+    features: 'from-rose-950 via-pink-900 to-orange-900',
+    install: 'from-teal-950 via-emerald-900 to-cyan-900',
+    profile: 'from-cyan-950 via-blue-900 to-slate-900',
+    prayer: 'from-emerald-950 via-teal-900 to-sky-900',
+    ramadan: 'from-indigo-950 via-purple-900 to-violet-900',
+    notifications: 'from-amber-950 via-orange-900 to-red-900',
+    theme: 'from-fuchsia-950 via-purple-900 to-indigo-900',
+    done: 'from-emerald-950 via-teal-900 to-indigo-900',
+  }
   const stepTheme: HeroTheme = STEP_THEMES[currentStepKey] ?? 'default'
+  const stepGradient = STEP_GRADIENTS[currentStepKey] ?? STEP_GRADIENTS.welcome
 
   return (
-    <div className="fixed inset-0 z-[200] flex flex-col bg-background overflow-hidden">
-      {/* Themed background animation */}
-      <HeroAnimation theme={stepTheme} />
+    <div className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-background">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className={`absolute inset-0 bg-gradient-to-br ${stepGradient}`} />
+        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
+        <div className="islamic-pattern absolute inset-0 opacity-45" />
+        <div className="absolute inset-x-0 top-0 h-[48vh] overflow-hidden">
+          <HeroAnimation theme={stepTheme} />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/45 to-background" />
+      </div>
+
       {/* Progress bar */}
-      <div className="h-0.5 w-full bg-secondary">
+      <div className="relative h-0.5 w-full bg-secondary">
         <div
           className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -547,7 +360,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       </div>
 
       {/* Step dots */}
-      <div className="flex items-center justify-between px-6 pt-4">
+      <div className="relative flex items-center justify-between px-6 pt-4">
         <StepDots step={step} total={totalSteps} />
         <span className="text-xs text-muted-foreground/60">{step + 1}/{totalSteps}</span>
       </div>
@@ -555,7 +368,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       {/* Content area */}
       <div
         key={currentStepKey}
-        className="flex flex-1 flex-col overflow-y-auto animate-fade-up"
+        className="relative flex flex-1 flex-col overflow-y-auto animate-fade-up"
       >
 
         {/* ── Step 0: Welcome ──────────────────────────────── */}
@@ -1021,14 +834,23 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <p className="text-xs text-muted-foreground/80 mt-0.5">You are running the installed app.</p>
               </div>
             ) : isIOS() ? (
-              /* iOS animated install guide */
-              <div className="w-full flex flex-col items-center gap-4">
-                <p className="text-xs text-muted-foreground/80">
-                  Animated walkthrough: Share → Add to Home Screen → icon appears.
-                </p>
-                <IOSInstallAnimation />
-                <p className="text-[10px] text-center text-muted-foreground/60 leading-relaxed">
-                  ⚠️ Must be in <strong className="text-muted-foreground/80">Safari</strong> — Chrome on iPhone cannot install apps.
+              /* iOS instructions */
+              <div className="w-full rounded-2xl border border-teal-500/20 bg-teal-500/5 p-4 text-left space-y-3">
+                {[
+                  { n: '1', icon: '📤', text: 'Tap the Share button', sub: 'At the bottom of your Safari browser' },
+                  { n: '2', icon: '➕', text: 'Tap "Add to Home Screen"', sub: 'Scroll down in the share sheet' },
+                  { n: '3', icon: '✅', text: 'Tap "Add" to confirm', sub: 'The app will appear on your Home Screen' },
+                ].map(s => (
+                  <div key={s.n} className="flex items-start gap-2.5">
+                    <span className="shrink-0 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500 text-foreground text-[10px] font-bold">{s.n}</span>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">{s.icon} {s.text}</p>
+                      <p className="text-[10px] text-teal-400/60">{s.sub}</p>
+                    </div>
+                  </div>
+                ))}
+                <p className="pt-1 text-[10px] text-muted-foreground/70">
+                  ⚠️ Must be opened in <strong className="text-muted-foreground">Safari</strong> — Chrome on iPhone cannot install apps.
                 </p>
               </div>
             ) : deferredPrompt ? (
@@ -1210,6 +1032,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <button
                 onClick={() => {
                   setItem(KEYS.TOUR_PENDING, true)
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new Event(TOUR_START_EVENT))
+                  }
                   finish()
                 }}
                 className="flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 text-base font-bold text-foreground shadow-lg shadow-emerald-500/25 transition-all active:scale-95"
@@ -1229,7 +1054,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
       {/* Bottom nav */}
       {currentStepKey !== 'done' && (
-        <div className="flex items-center justify-between px-6 pb-10 pt-4">
+        <div className="relative flex items-center justify-between px-6 pb-10 pt-4">
           <button
             onClick={prev}
             disabled={step === 0}

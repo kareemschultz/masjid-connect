@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { PwaInstallPrompt } from '@/components/pwa-install-prompt'
 import { OfflineBadge } from '@/components/offline-badge'
 import { ThemeProvider } from '@/components/theme-provider'
+import { AppTourHost } from '@/components/app-tour-host'
 import './globals.css'
 
 const geistSans = Geist({
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-background text-foreground">
         <ThemeProvider />
         <OfflineBadge />
+        <AppTourHost />
         {children}
         <PwaInstallPrompt />
       </body>

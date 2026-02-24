@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { X, ChevronRight, Sparkles } from 'lucide-react'
 
 // ─── Tour steps ───────────────────────────────────────────────────────────────
@@ -134,14 +134,36 @@ function getSpotRect(selector: string): SpotRect | null {
   return { top: r.top - pad, left: r.left - pad, width: r.width + pad*2, height: r.height + pad*2 }
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+async function waitForRoute(route: string, timeoutMs = 7000): Promise<boolean> {
+  if (window.location.pathname === route) return true
+  const started = Date.now()
+  while (Date.now() - started < timeoutMs) {
+    await sleep(120)
+    if (window.location.pathname === route) return true
+  }
+  return false
+}
+
+async function waitForTarget(selector: string, timeoutMs = 7000): Promise<Element | null> {
+  const started = Date.now()
+  let found: Element | null = document.querySelector(selector)
+  while (!found && Date.now() - started < timeoutMs) {
+    await sleep(120)
+    found = document.querySelector(selector)
+  }
+  return found
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AppTour({ onComplete }: { onComplete: () => void }) {
   const router = useRouter()
-  const pathname = usePathname()
   const [stepIdx, setStepIdx] = useState(0)
   const [spot, setSpot] = useState<SpotRect | null>(null)
   const [visible, setVisible] = useState(false)
+  const runIdRef = useRef(0)
 
   const step = STEPS[stepIdx]
   const isLast = stepIdx === STEPS.length - 1
@@ -154,38 +176,48 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
 
   // Scroll element into view, then calculate spotlight
   const updateSpot = useCallback(async (target: string | null, route?: string) => {
+    const runId = ++runIdRef.current
     setVisible(false)
 
     // Navigate if needed
-    if (route && pathname !== route) {
+    if (route && window.location.pathname !== route) {
       router.push(route)
-      // Wait for page to load before trying to find elements
-      await new Promise(resolve => setTimeout(resolve, 900))
+      await waitForRoute(route)
+      await sleep(220)
+      if (runId !== runIdRef.current) return
     }
 
     if (!target) {
       setSpot(null)
-      setTimeout(() => setVisible(true), 120)
+      await sleep(120)
+      if (runId !== runIdRef.current) return
+      setVisible(true)
       return
     }
 
-    const el = document.querySelector(target)
+    const el = await waitForTarget(target)
+    if (runId !== runIdRef.current) return
+
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      // Wait for scroll to settle before measuring
-      setTimeout(() => {
-        setSpot(getSpotRect(target))
-        setVisible(true)
-      }, 450)
+      await sleep(420)
+      if (runId !== runIdRef.current) return
+      setSpot(getSpotRect(target))
+      setVisible(true)
     } else {
       // Element not found — fall back to center card
       setSpot(null)
-      setTimeout(() => setVisible(true), 120)
+      await sleep(120)
+      if (runId !== runIdRef.current) return
+      setVisible(true)
     }
-  }, [pathname, router])
+  }, [router])
 
   useEffect(() => {
     updateSpot(step.target, step.route)
+    return () => {
+      runIdRef.current += 1
+    }
   }, [stepIdx, step.target, step.route, updateSpot])
 
   // Recalculate on resize
