@@ -23,6 +23,7 @@ export type HeroTheme =
   | 'janazah'     // Peaceful flowing waves
   | 'zakat'       // Falling coins + sparkles
   | 'masjid'      // Masjid directory
+  | 'halal'       // Halal verification seals + trace lines
   | 'map'         // Live map route + pulsing location beacons
   | 'names'       // Arabic calligraphy swirl (99 Names)
   | 'default'     // Fallback geometric stars
@@ -612,6 +613,47 @@ function MasjidAnimation() {
   )
 }
 
+function HalalAnimation() {
+  const seals = [
+    { x: 84, y: 56, delay: 0 },
+    { x: 146, y: 96, delay: 0.5 },
+    { x: 228, y: 62, delay: 1.1 },
+    { x: 304, y: 102, delay: 1.7 },
+  ]
+
+  return (
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+      <style>{`
+        @keyframes certPulse { 0%,100%{opacity:0.18;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.08)} }
+        @keyframes routeScan { 0%{opacity:0.08;stroke-dashoffset:60} 50%{opacity:0.28} 100%{opacity:0.08;stroke-dashoffset:0} }
+        @keyframes badgeGlow { 0%,100%{opacity:0.14} 50%{opacity:0.3} }
+      `}</style>
+
+      <path
+        d="M 46 122 Q 104 66 168 90 Q 236 114 350 70"
+        fill="none"
+        stroke="rgba(16,185,129,0.4)"
+        strokeWidth="1.5"
+        strokeDasharray="6 8"
+        style={{ animationName: 'routeScan', animationDuration: '3.6s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}
+      />
+
+      {seals.map((seal, i) => (
+        <g key={i} style={{ transformOrigin: `${seal.x}px ${seal.y}px`, animationName: 'certPulse', animationDuration: `${2.3 + i * 0.25}s`, animationDelay: `${seal.delay}s`, animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}>
+          <circle cx={seal.x} cy={seal.y} r="8.5" fill="rgba(16,185,129,0.2)" stroke="rgba(110,231,183,0.7)" strokeWidth="1" />
+          <circle cx={seal.x} cy={seal.y} r="3" fill="rgba(167,243,208,0.75)" />
+        </g>
+      ))}
+
+      <g style={{ animationName: 'badgeGlow', animationDuration: '4.2s', animationIterationCount: 'infinite', animationTimingFunction: 'ease-in-out' }}>
+        <rect x="250" y="26" width="102" height="52" rx="12" fill="rgba(15,23,42,0.24)" stroke="rgba(255,255,255,0.16)" strokeWidth="1" />
+        <text x="301" y="48" textAnchor="middle" fontSize="9" fill="rgba(167,243,208,0.85)" fontWeight="bold">HALAL VERIFIED</text>
+        <text x="301" y="62" textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.45)">CIOG · D.E.H.C.</text>
+      </g>
+    </svg>
+  )
+}
+
 function MapAnimation() {
   return (
     <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
@@ -747,6 +789,7 @@ export function HeroAnimation({ theme }: { theme: HeroTheme }) {
     case 'janazah':    return <JanazahAnimation />
     case 'zakat':      return <ZakatAnimation />
     case 'masjid':     return <MasjidAnimation />
+    case 'halal':      return <HalalAnimation />
     case 'map':        return <MapAnimation />
     case 'names':      return <NamesAnimation />
     default:           return <DefaultAnimation />

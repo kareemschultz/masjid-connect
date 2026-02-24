@@ -292,6 +292,8 @@ const BUSINESSES: Business[] = [
 const CATEGORY_FILTERS: (BizCategory | 'All')[] = ['All', 'Fast Food', 'Restaurant', 'Café', 'Catering', 'Meat Plant', 'Butcher']
 const AREA_FILTERS: AreaFilter[] = ['All', 'Georgetown', 'East Coast Demerara', 'East Bank Demerara', 'West Coast Demerara', 'Berbice', 'Essequibo', 'Linden']
 const AUTH_FILTERS: (Authority | 'All' | 'Both')[] = ['All', 'CIOG', 'D.E.H.C.', 'Both']
+const SORT_OPTIONS = ['Default', 'A-Z', 'Most Locations', 'Dual Certified First'] as const
+type SortOption = typeof SORT_OPTIONS[number]
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -327,8 +329,10 @@ export default function HalalDirectoryPage() {
   const [categoryFilter, setCategoryFilter] = useState<BizCategory | 'All'>('All')
   const [areaFilter, setAreaFilter] = useState<AreaFilter>('All')
   const [authFilter, setAuthFilter] = useState<Authority | 'All' | 'Both'>('All')
-  const [showRevoked, setShowRevoked] = useState(false)
+  const [showRevoked, setShowRevoked] = useState(true)
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [sortBy, setSortBy] = useState<SortOption>('Default')
+  const [multiLocationOnly, setMultiLocationOnly] = useState(false)
 
   // ── Submit modal ──────────────────────────────────────────────────────────
   const [showSubmitModal, setShowSubmitModal] = useState(false)
@@ -373,19 +377,34 @@ export default function HalalDirectoryPage() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    return activeBiz.filter(b => {
+    const base = activeBiz.filter(b => {
       if (categoryFilter !== 'All' && b.category !== categoryFilter) return false
       if (authFilter === 'Both' && b.authorities.length < 2) return false
       if (authFilter === 'CIOG' && !b.authorities.includes('CIOG')) return false
       if (authFilter === 'D.E.H.C.' && !b.authorities.includes('D.E.H.C.')) return false
       if (areaFilter !== 'All' && !b.locations.some(l => l.area === areaFilter)) return false
+      if (multiLocationOnly && b.locations.length < 2) return false
       if (q && !b.name.toLowerCase().includes(q) && !b.locations.some(l => l.address.toLowerCase().includes(q))) return false
       return true
     })
-  }, [activeBiz, search, categoryFilter, areaFilter, authFilter])
+
+    return base.sort((a, b) => {
+      if (sortBy === 'A-Z') return a.name.localeCompare(b.name)
+      if (sortBy === 'Most Locations') return b.locations.length - a.locations.length
+      if (sortBy === 'Dual Certified First') {
+        const byDual = Number(b.authorities.length >= 2) - Number(a.authorities.length >= 2)
+        if (byDual !== 0) return byDual
+        return a.name.localeCompare(b.name)
+      }
+      return 0
+    })
+  }, [activeBiz, search, categoryFilter, areaFilter, authFilter, multiLocationOnly, sortBy])
 
   const filteredLocations = (b: Business) =>
     areaFilter === 'All' ? b.locations : b.locations.filter(l => l.area === areaFilter)
+
+  const dualCertifiedCount = activeBiz.filter(b => b.authorities.length >= 2).length
+  const totalLocations = activeBiz.reduce((sum, b) => sum + b.locations.length, 0)
 
   return (
     <div className="min-h-screen bg-background pb-nav">
@@ -393,12 +412,71 @@ export default function HalalDirectoryPage() {
         icon={ShieldCheck}
         title="Halal Directory"
         subtitle="Certified businesses in Guyana"
-        gradient="from-emerald-900 to-teal-900"
+        gradient="from-emerald-950 via-teal-900 to-slate-900"
         showBack
-        heroTheme="fiqh"
+        heroTheme="halal"
       />
 
-      <div className="px-4 pt-4 space-y-3">
+      <div className="relative px-4 pt-4 space-y-3">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.08)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(circle_at_top,black,transparent_70%)] opacity-40" />
+          <div className="absolute -top-20 right-[-4.5rem] h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl animate-pulse" />
+          <div className="absolute top-56 -left-12 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl animate-pulse [animation-delay:900ms]" />
+        </div>
+
+        {/* ── Certification bodies note ── */}
+        <div className="rounded-2xl border border-border bg-card/50 p-4 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed">
+          <p><span className="font-semibold text-emerald-400">CIOG</span> — Central Islamic Organisation of Guyana. Woolford Ave, Thomas Lands. Tel: 225-6167 / 225-8654. Secretariat: 698-4123.</p>
+          <p><span className="font-semibold text-amber-400">D.E.H.C.</span> — Darul Uloom East Street Halaal Committee. 310 East Street, Georgetown. Maulana Badrudeen Khan: 623-2780. Tel: 223-0579.</p>
+          <p className="text-muted-foreground/60">Always verify certification status directly with the authority before dining, especially if some time has passed since this listing was updated.</p>
+        </div>
+
+        {/* ── Revoked section ── */}
+        <div className="rounded-2xl border border-orange-800/30 bg-orange-950/10 overflow-hidden">
+          <button
+            className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+            onClick={() => setShowRevoked(v => !v)}
+          >
+            <AlertTriangle className="h-4 w-4 text-orange-400 shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs font-bold text-orange-400">Revoked Certifications ({revokedBiz.length})</p>
+              <p className="text-[10px] text-muted-foreground/80">Businesses that had halal cert revoked</p>
+            </div>
+            {showRevoked ? <ChevronUp className="h-4 w-4 text-muted-foreground/60" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60" />}
+          </button>
+          {showRevoked && (
+            <div className="border-t border-orange-800/20 p-4 space-y-2">
+              {revokedBiz.map(biz => (
+                <div key={biz.id} className="rounded-xl border border-orange-800/20 bg-card p-3">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-orange-400 shrink-0" />
+                    <p className="text-sm font-bold text-orange-300">{biz.name}</p>
+                  </div>
+                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{biz.notes}</p>
+                  <p className="mt-1 text-[10px] text-muted-foreground/60">
+                    {biz.locations.map(l => l.address).join(' | ')}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Quick trust metrics ── */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="rounded-2xl border border-emerald-800/30 bg-emerald-950/20 px-3 py-2.5">
+            <p className="text-[10px] text-muted-foreground/80">Active</p>
+            <p className="mt-0.5 text-base font-extrabold text-emerald-300">{activeBiz.length}</p>
+          </div>
+          <div className="rounded-2xl border border-blue-800/30 bg-blue-950/20 px-3 py-2.5">
+            <p className="text-[10px] text-muted-foreground/80">Dual Cert</p>
+            <p className="mt-0.5 text-base font-extrabold text-blue-300">{dualCertifiedCount}</p>
+          </div>
+          <div className="rounded-2xl border border-teal-800/30 bg-teal-950/20 px-3 py-2.5">
+            <p className="text-[10px] text-muted-foreground/80">Locations</p>
+            <p className="mt-0.5 text-base font-extrabold text-teal-300">{totalLocations}</p>
+          </div>
+        </div>
 
         {/* ── Disclaimer ── */}
         <div className="rounded-2xl border border-border bg-card/50 px-4 py-3 flex items-start gap-3">
@@ -480,11 +558,38 @@ export default function HalalDirectoryPage() {
           ))}
         </div>
 
+        {/* ── Enhance discovery controls ── */}
+        <div className="rounded-2xl border border-border bg-card/60 px-3 py-2.5">
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+            {SORT_OPTIONS.map(option => (
+              <button
+                key={option}
+                onClick={() => setSortBy(option)}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                  sortBy === option ? 'bg-emerald-600 text-foreground' : 'bg-secondary text-muted-foreground'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+            <button
+              onClick={() => setMultiLocationOnly(v => !v)}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                multiLocationOnly ? 'bg-teal-600 text-foreground' : 'bg-secondary text-muted-foreground'
+              }`}
+            >
+              {multiLocationOnly ? '✅ Multi-location only' : '📍 Multi-location only'}
+            </button>
+          </div>
+        </div>
+
         {/* ── Results count ── */}
         <p className="text-[11px] text-muted-foreground/80 px-1">
           {filtered.length} {filtered.length === 1 ? 'business' : 'businesses'} found
           {authFilter !== 'All' && <span className="ml-1 text-emerald-500">· {authFilter} certified</span>}
           {areaFilter !== 'All' && <span className="ml-1 text-teal-500">· {areaFilter}</span>}
+          {sortBy !== 'Default' && <span className="ml-1 text-blue-400">· sorted: {sortBy}</span>}
+          {multiLocationOnly && <span className="ml-1 text-cyan-400">· multi-location only</span>}
         </p>
 
         {/* ── Business cards ── */}
@@ -492,7 +597,7 @@ export default function HalalDirectoryPage() {
           <div className="rounded-2xl border border-dashed border-border py-12 text-center">
             <p className="text-3xl mb-2">🔍</p>
             <p className="text-sm text-muted-foreground/80">No businesses match your filters</p>
-            <button onClick={() => { setSearch(''); setCategoryFilter('All'); setAreaFilter('All'); setAuthFilter('All') }}
+            <button onClick={() => { setSearch(''); setCategoryFilter('All'); setAreaFilter('All'); setAuthFilter('All'); setSortBy('Default'); setMultiLocationOnly(false) }}
               className="mt-3 text-xs text-emerald-400 underline underline-offset-4">
               Clear all filters
             </button>
@@ -571,44 +676,6 @@ export default function HalalDirectoryPage() {
               </div>
             )
           })}
-        </div>
-
-        {/* ── Revoked section ── */}
-        <div className="rounded-2xl border border-orange-800/30 bg-orange-950/10 overflow-hidden">
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-            onClick={() => setShowRevoked(v => !v)}
-          >
-            <AlertTriangle className="h-4 w-4 text-orange-400 shrink-0" />
-            <div className="flex-1">
-              <p className="text-xs font-bold text-orange-400">Revoked Certifications ({revokedBiz.length})</p>
-              <p className="text-[10px] text-muted-foreground/80">Businesses that had halal cert revoked</p>
-            </div>
-            {showRevoked ? <ChevronUp className="h-4 w-4 text-muted-foreground/60" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/60" />}
-          </button>
-          {showRevoked && (
-            <div className="border-t border-orange-800/20 p-4 space-y-2">
-              {revokedBiz.map(biz => (
-                <div key={biz.id} className="rounded-xl border border-orange-800/20 bg-card p-3">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-3.5 w-3.5 text-orange-400 shrink-0" />
-                    <p className="text-sm font-bold text-orange-300">{biz.name}</p>
-                  </div>
-                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{biz.notes}</p>
-                  <p className="mt-1 text-[10px] text-muted-foreground/60">
-                    {biz.locations.map(l => l.address).join(' | ')}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ── Certification bodies note ── */}
-        <div className="rounded-2xl border border-border bg-card/50 p-4 space-y-2 text-[11px] text-muted-foreground/80 leading-relaxed">
-          <p><span className="font-semibold text-emerald-400">CIOG</span> — Central Islamic Organisation of Guyana. Woolford Ave, Thomas Lands. Tel: 225-6167 / 225-8654. Secretariat: 698-4123.</p>
-          <p><span className="font-semibold text-amber-400">D.E.H.C.</span> — Darul Uloom East Street Halaal Committee. 310 East Street, Georgetown. Maulana Badrudeen Khan: 623-2780. Tel: 223-0579.</p>
-          <p className="text-muted-foreground/60">Always verify certification status directly with the authority before dining, especially if some time has passed since this listing was updated.</p>
         </div>
 
       </div>
