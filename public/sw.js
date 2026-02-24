@@ -21,6 +21,13 @@ self.addEventListener('activate', (event) => {
   self.clients.claim()
 })
 
+// Allow clients to force-activate an updated worker immediately.
+self.addEventListener('message', (event) => {
+  if (event?.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})
+
 // Fetch — network-first with cache fallback
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {

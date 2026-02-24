@@ -14,7 +14,7 @@ import {
   BookOpen, Circle, Compass, Calculator, Star,
   Settings, User, CheckCircle2, Timer, Sparkles, Brain,
   ChevronRight, Flame, BookMarked, Moon, UtensilsCrossed,
-  Clock, HandHeart, MapPin, CheckSquare, Users, Users2, Scale,
+  Clock, HandHeart, MapPin, CheckSquare, Users, Users2, Scale, RefreshCw,
   Headphones, Navigation, GraduationCap
 } from 'lucide-react'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
@@ -126,6 +126,9 @@ export default function HomePage() {
   const [locationDetected, setLocationDetected] = useState(false)
   const [locationFailed, setLocationFailed] = useState(false)
   const [buddies, setBuddies] = useState<any[]>([])
+  const [showSwUpdatePrompt, setShowSwUpdatePrompt] = useState(false)
+  const swWaitingRef = useRef<ServiceWorker | null>(null)
+  const swPromptShownRef = useRef(false)
 
   const dailyVerse = getDailyVerse()
   const hadith = getTodayHadith()
@@ -157,6 +160,21 @@ export default function HomePage() {
       const fajr = prayerData.find((p) => p.name === 'Fajr')
       if (fajr) scheduleSuhoorNotification(fajr.date)
     } catch { /* noop */ }
+  }, [])
+
+  const applySwUpdate = useCallback(() => {
+    const waiting = swWaitingRef.current
+    setShowSwUpdatePrompt(false)
+    if (!waiting || !('serviceWorker' in navigator)) {
+      window.location.reload()
+      return
+    }
+    const onControllerChange = () => {
+      navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange)
+      window.location.reload()
+    }
+    navigator.serviceWorker.addEventListener('controllerchange', onControllerChange)
+    waiting.postMessage({ type: 'SKIP_WAITING' })
   }, [])
 
   const loadPrayerTimes = useCallback(async () => {
@@ -236,20 +254,20 @@ export default function HomePage() {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').then((reg) => {
+        const showUpdatePrompt = (waiting?: ServiceWorker | null) => {
+          if (!waiting || swPromptShownRef.current) return
+          swPromptShownRef.current = true
+          swWaitingRef.current = waiting
+          setShowSwUpdatePrompt(true)
+        }
+
+        showUpdatePrompt(reg.waiting)
+
         reg.addEventListener('updatefound', () => {
-          const key = 'sw_update_prompted_v2'
-          const alreadyPrompted = localStorage.getItem(key) === '1'
           const install = reg.installing
           if (!install) return
           install.addEventListener('statechange', () => {
-            const waiting = reg.waiting
-            if (install.state === 'installed' && waiting && !alreadyPrompted) {
-              localStorage.setItem(key, '1')
-              if (window.confirm('Update available. Refresh now?')) {
-                waiting.postMessage({ type: 'SKIP_WAITING' })
-                window.location.reload()
-              }
-            }
+            if (install.state === 'installed') showUpdatePrompt(reg.waiting)
           })
         })
       }).catch(() => {})
@@ -850,6 +868,42 @@ export default function HomePage() {
       </div>
 
       <div className="h-6" />
+      {showSwUpdatePrompt && (
+        <div
+          className="fixed inset-x-4 z-[70]"
+          style={{ bottom: 'max(4.5rem, calc(env(safe-area-inset-bottom) + 4rem))' }}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="rounded-2xl border border-emerald-500/30 bg-card/95 p-3.5 shadow-2xl shadow-black/40 backdrop-blur">
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15">
+                <RefreshCw className="h-4 w-4 text-emerald-400" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-foreground">Update Ready</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  A new MasjidConnect version is available.
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setShowSwUpdatePrompt(false)}
+                    className="rounded-xl border border-border bg-secondary px-3 py-2 text-xs font-semibold text-muted-foreground active:bg-muted"
+                  >
+                    Later
+                  </button>
+                  <button
+                    onClick={applySwUpdate}
+                    className="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-foreground active:bg-emerald-700"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <BottomNav />
 
       {/* App tour overlay */}
