@@ -40,7 +40,7 @@ const port = String(await getAvailablePort())
 try { rmSync('.next/dev/lock') } catch {}
 const child = spawn('npm', ['run', 'dev', '--', '--port', port], {
   stdio: ['ignore', 'pipe', 'pipe'],
-  env: { ...process.env, NODE_ENV: 'test' },
+  env: { ...process.env, NODE_ENV: 'test', DISABLE_RATE_LIMIT: '1' },
 })
 let ready = false
 child.stdout.on('data', (d) => {
