@@ -25,15 +25,15 @@ const SECTIONS = [
     gradient: 'from-indigo-600/20 to-purple-600/10',
     iconColor: 'text-indigo-400',
     items: [
-      { icon: BookOpen,    label: 'Quran',          description: 'Read & Listen',          href: '/quran',                          color: 'from-purple-500/20 to-purple-600/10', iconColor: 'text-purple-400', animationTheme: 'quran' as CardAnimationTheme },
-      { icon: Scale,       label: 'Fiqh Guide',        description: 'Islamic Law reference',  href: '/explore/fiqh',                   color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400', animationTheme: 'fiqh' as CardAnimationTheme },
-      { icon: BookText,    label: 'Hadith',           description: '40 Nawawi Hadith',       href: '/explore/hadith',                 color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400', animationTheme: 'hadith' as CardAnimationTheme },
-      { icon: GraduationCap, label: 'Madrasa',      description: 'Learn Islam',            href: '/explore/madrasa',                color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400', animationTheme: 'madrasa' as CardAnimationTheme },
-      { icon: Headphones,  label: 'Lectures',        description: 'Audio Series',           href: '/explore/lectures',               color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400', animationTheme: 'lectures' as CardAnimationTheme },
-      { icon: Brain,       label: 'Hifz Mode',       description: 'Memorize Quran',         href: '/quran/hifz',                     color: 'from-indigo-500/20 to-indigo-600/10', iconColor: 'text-indigo-400', animationTheme: 'hifz' as CardAnimationTheme },
-      { icon: Users,       label: 'Prophets',        description: '25 Quranic Stories',     href: '/explore/madrasa/prophets',       color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400', animationTheme: 'prophets' as CardAnimationTheme },
-      { icon: Keyboard,    label: 'Arabic Practice', description: 'Learn the Letters',      href: '/explore/madrasa/arabic-typing',  color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400', animationTheme: 'arabic' as CardAnimationTheme },
-      { icon: Library,     label: 'GII Library',     description: 'Islamic Books',          href: '/explore/madrasa/library',        color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400', animationTheme: 'resources' as CardAnimationTheme },
+      { icon: BookOpen,    label: 'Quran',          description: 'Read & Listen',          href: '/quran',                          color: 'from-purple-500 to-purple-800',    iconColor: 'text-white', cardTint: 'from-purple-950/50 to-purple-900/20', animationTheme: 'quran' as CardAnimationTheme },
+      { icon: Scale,       label: 'Fiqh Guide',     description: 'Islamic Law reference',  href: '/explore/fiqh',                   color: 'from-violet-500 to-indigo-700',    iconColor: 'text-white', cardTint: 'from-violet-950/50 to-indigo-900/20', animationTheme: 'fiqh' as CardAnimationTheme },
+      { icon: BookText,    label: 'Hadith',          description: '40 Nawawi Hadith',       href: '/explore/hadith',                 color: 'from-teal-500 to-teal-700',        iconColor: 'text-white', cardTint: 'from-teal-950/50 to-teal-900/20', animationTheme: 'hadith' as CardAnimationTheme },
+      { icon: GraduationCap, label: 'Madrasa',      description: 'Learn Islam',            href: '/explore/madrasa',                color: 'from-indigo-500 to-indigo-700',    iconColor: 'text-white', cardTint: 'from-indigo-950/50 to-indigo-900/20', animationTheme: 'madrasa' as CardAnimationTheme },
+      { icon: Headphones,  label: 'Lectures',        description: 'Audio Series',           href: '/explore/lectures',               color: 'from-emerald-500 to-emerald-700',  iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-emerald-900/20', animationTheme: 'lectures' as CardAnimationTheme },
+      { icon: Brain,       label: 'Hifz Mode',       description: 'Memorize Quran',         href: '/quran/hifz',                     color: 'from-blue-500 to-blue-700',        iconColor: 'text-white', cardTint: 'from-blue-950/50 to-blue-900/20', animationTheme: 'hifz' as CardAnimationTheme },
+      { icon: Users,       label: 'Prophets',        description: '25 Quranic Stories',     href: '/explore/madrasa/prophets',       color: 'from-amber-500 to-orange-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-orange-900/20', animationTheme: 'prophets' as CardAnimationTheme },
+      { icon: Keyboard,    label: 'Arabic Practice', description: 'Learn the Letters',      href: '/explore/madrasa/arabic-typing',  color: 'from-cyan-500 to-cyan-700',        iconColor: 'text-white', cardTint: 'from-cyan-950/50 to-cyan-900/20', animationTheme: 'arabic' as CardAnimationTheme },
+      { icon: Library,     label: 'GII Library',     description: 'Islamic Books',          href: '/explore/madrasa/library',        color: 'from-sky-500 to-sky-700',          iconColor: 'text-white', cardTint: 'from-sky-950/50 to-sky-900/20', animationTheme: 'resources' as CardAnimationTheme },
     ],
   },
   {
@@ -44,16 +44,16 @@ const SECTIONS = [
     gradient: 'from-amber-600/20 to-orange-600/10',
     iconColor: 'text-amber-400',
     items: [
-      { icon: BookOpen,    label: 'Duas',            description: 'Daily Supplications',    href: '/explore/duas',                   color: 'from-purple-500/20 to-purple-600/10', iconColor: 'text-purple-400', animationTheme: 'duas' as CardAnimationTheme },
-      { icon: Star,        label: 'Adhkar',          description: 'Morning & Evening',      href: '/explore/adhkar',                 color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400', animationTheme: 'duas' as CardAnimationTheme },
-      { icon: Circle,      label: 'Tasbih',          description: 'Digital Counter',        href: '/explore/tasbih',                 color: 'from-emerald-500/20 to-emerald-600/10', iconColor: 'text-emerald-400', animationTheme: 'tasbih' as CardAnimationTheme },
-      { icon: Navigation2, label: 'Qibla',           description: 'Find Direction',         href: '/explore/qibla',                  color: 'from-blue-500/20 to-blue-600/10', iconColor: 'text-blue-400', animationTheme: 'qibla' as CardAnimationTheme },
-      { icon: Calculator,  label: 'Zakat',           description: 'Calculate Zakat',        href: '/explore/zakat',                  color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400', animationTheme: 'zakat' as CardAnimationTheme },
-      { icon: Calendar,    label: 'Islamic Calendar',description: 'Hijri Dates & Events',   href: '/explore/calendar',               color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400', animationTheme: 'calendar' as CardAnimationTheme },
-      { icon: Sun,         label: "Jumu'ah",         description: 'Friday Prayer Prep',     href: '/explore/jumuah',                 color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400', animationTheme: 'jumuah' as CardAnimationTheme },
-      { icon: Sparkles,    label: '99 Names',        description: 'Asma Al-Husna',          href: '/explore/names',                  color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400', animationTheme: 'names' as CardAnimationTheme },
-      { icon: Heart,       label: 'Islamic Names',   description: 'Meanings & origins',     href: '/explore/names-search',           color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400', animationTheme: 'names' as CardAnimationTheme },
-      { icon: Library,     label: 'Resources',       description: 'Islamic Learning',       href: '/explore/resources',              color: 'from-sky-500/20 to-sky-600/10', iconColor: 'text-sky-400', animationTheme: 'resources' as CardAnimationTheme },
+      { icon: BookOpen,    label: 'Duas',            description: 'Daily Supplications',    href: '/explore/duas',                   color: 'from-purple-500 to-purple-800',    iconColor: 'text-white', cardTint: 'from-purple-950/50 to-purple-900/20', animationTheme: 'duas' as CardAnimationTheme },
+      { icon: Star,        label: 'Adhkar',          description: 'Morning & Evening',      href: '/explore/adhkar',                 color: 'from-amber-500 to-yellow-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-yellow-900/20', animationTheme: 'duas' as CardAnimationTheme },
+      { icon: Circle,      label: 'Tasbih',          description: 'Digital Counter',        href: '/explore/tasbih',                 color: 'from-emerald-500 to-green-700',    iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-green-900/20', animationTheme: 'tasbih' as CardAnimationTheme },
+      { icon: Navigation2, label: 'Qibla',           description: 'Find Direction',         href: '/explore/qibla',                  color: 'from-blue-500 to-blue-700',        iconColor: 'text-white', cardTint: 'from-blue-950/50 to-blue-900/20', animationTheme: 'qibla' as CardAnimationTheme },
+      { icon: Calculator,  label: 'Zakat',           description: 'Calculate Zakat',        href: '/explore/zakat',                  color: 'from-teal-500 to-teal-700',        iconColor: 'text-white', cardTint: 'from-teal-950/50 to-teal-900/20', animationTheme: 'zakat' as CardAnimationTheme },
+      { icon: Calendar,    label: 'Islamic Calendar',description: 'Hijri Dates & Events',   href: '/explore/calendar',               color: 'from-rose-500 to-rose-700',        iconColor: 'text-white', cardTint: 'from-rose-950/50 to-rose-900/20', animationTheme: 'calendar' as CardAnimationTheme },
+      { icon: Sun,         label: "Jumu'ah",         description: 'Friday Prayer Prep',     href: '/explore/jumuah',                 color: 'from-orange-500 to-amber-700',     iconColor: 'text-white', cardTint: 'from-orange-950/50 to-amber-900/20', animationTheme: 'jumuah' as CardAnimationTheme },
+      { icon: Sparkles,    label: '99 Names',        description: 'Asma Al-Husna',          href: '/explore/names',                  color: 'from-amber-400 to-orange-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-orange-900/20', animationTheme: 'names' as CardAnimationTheme },
+      { icon: Heart,       label: 'Islamic Names',   description: 'Meanings & origins',     href: '/explore/names-search',           color: 'from-pink-500 to-rose-700',        iconColor: 'text-white', cardTint: 'from-pink-950/50 to-rose-900/20', animationTheme: 'names' as CardAnimationTheme },
+      { icon: Library,     label: 'Resources',       description: 'Islamic Learning',       href: '/explore/resources',              color: 'from-sky-500 to-sky-700',          iconColor: 'text-white', cardTint: 'from-sky-950/50 to-sky-900/20', animationTheme: 'resources' as CardAnimationTheme },
     ],
   },
   {
@@ -64,16 +64,16 @@ const SECTIONS = [
     gradient: 'from-teal-600/20 to-emerald-600/10',
     iconColor: 'text-teal-400',
     items: [
-      { icon: Users,       label: 'Buddy',           description: 'Faith Partners',         href: '/explore/buddy',                  color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: Users2,      label: 'Community Feed',  description: 'Connect with Muslims',   href: '/explore/community',              color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: ShieldCheck, label: 'Halal Directory',  description: 'Certified businesses',   href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400', animationTheme: 'halal' as CardAnimationTheme },
-      { icon: ShieldCheck, label: 'Halal Guide',     description: 'Rulings & E-numbers',    href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400', animationTheme: 'halal' as CardAnimationTheme },
-      { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: GraduationCap, label: 'Local Scholars', description: 'Guyanese Scholars',      href: '/explore/scholars',            color: 'from-amber-500/20 to-amber-600/10', iconColor: 'text-amber-400', animationTheme: 'madrasa' as CardAnimationTheme },
-      { icon: HeartHandshake, label: 'Janazah Guide', description: 'Funeral Rites',          href: '/explore/janazah',                color: 'from-gray-500/20 to-gray-600/10', iconColor: 'text-muted-foreground', animationTheme: 'default' as CardAnimationTheme },
-      { icon: UtensilsCrossed, label: 'Iftaar Feed', description: 'Community reports',      href: '/iftaar',                         color: 'from-orange-500/20 to-amber-600/10', iconColor: 'text-orange-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: Calendar,    label: 'Events',          description: 'Upcoming Programs',      href: '/explore/events',                 color: 'from-blue-500/20 to-indigo-600/10', iconColor: 'text-blue-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: HeartHandshake, label: 'Support the App', description: 'Keep it free',        href: '/support', color: 'from-amber-500/20 to-yellow-600/10', iconColor: 'text-amber-400', animationTheme: 'community' as CardAnimationTheme },
+      { icon: Users,       label: 'Buddy',           description: 'Faith Partners',         href: '/explore/buddy',                  color: 'from-cyan-500 to-cyan-700',        iconColor: 'text-white', cardTint: 'from-cyan-950/50 to-cyan-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: Users2,      label: 'Community Feed',  description: 'Connect with Muslims',   href: '/explore/community',              color: 'from-violet-500 to-purple-700',    iconColor: 'text-white', cardTint: 'from-violet-950/50 to-purple-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: ShieldCheck, label: 'Halal Directory', description: 'Certified businesses',   href: '/explore/halal-directory',        color: 'from-emerald-500 to-green-700',    iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-green-900/20', animationTheme: 'halal' as CardAnimationTheme },
+      { icon: ShieldCheck, label: 'Halal Guide',     description: 'Rulings & E-numbers',    href: '/explore/halal-guide',            color: 'from-teal-400 to-emerald-600',     iconColor: 'text-white', cardTint: 'from-teal-950/50 to-emerald-900/20', animationTheme: 'halal' as CardAnimationTheme },
+      { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-green-500 to-teal-700',       iconColor: 'text-white', cardTint: 'from-green-950/50 to-teal-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: GraduationCap, label: 'Local Scholars', description: 'Guyanese Scholars',    href: '/explore/scholars',               color: 'from-amber-500 to-orange-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-orange-900/20', animationTheme: 'madrasa' as CardAnimationTheme },
+      { icon: HeartHandshake, label: 'Janazah Guide', description: 'Funeral Rites',         href: '/explore/janazah',                color: 'from-slate-500 to-slate-700',      iconColor: 'text-white', cardTint: 'from-slate-950/50 to-slate-900/20', animationTheme: 'default' as CardAnimationTheme },
+      { icon: UtensilsCrossed, label: 'Iftaar Feed', description: 'Community reports',     href: '/iftaar',                          color: 'from-orange-500 to-red-600',       iconColor: 'text-white', cardTint: 'from-orange-950/50 to-red-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: Calendar,    label: 'Events',          description: 'Upcoming Programs',      href: '/explore/events',                 color: 'from-blue-500 to-indigo-700',      iconColor: 'text-white', cardTint: 'from-blue-950/50 to-indigo-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: HeartHandshake, label: 'Support the App', description: 'Keep it free',       href: '/support',                         color: 'from-amber-400 to-yellow-600',     iconColor: 'text-white', cardTint: 'from-amber-950/50 to-yellow-900/20', animationTheme: 'community' as CardAnimationTheme },
     ],
   },
   {
@@ -84,10 +84,10 @@ const SECTIONS = [
     gradient: 'from-rose-600/20 to-pink-600/10',
     iconColor: 'text-rose-400',
     items: [
-      { icon: MessageCircle, label: 'New to Islam',  description: 'Start your journey',     href: '/explore/new-to-islam',           color: 'from-emerald-500/20 to-teal-600/10', iconColor: 'text-emerald-400', animationTheme: 'community' as CardAnimationTheme },
-      { icon: Heart,       label: 'Sisters',         description: 'For Muslim women',       href: '/explore/sisters',                color: 'from-rose-500/20 to-pink-600/10', iconColor: 'text-rose-400', animationTheme: 'sisters' as CardAnimationTheme },
-      { icon: Moon,        label: 'Sisters in Ramadan', description: 'Worship guide',       href: '/explore/sisters/ramadan', color: 'from-rose-500/20 to-rose-600/10', iconColor: 'text-rose-400', animationTheme: 'sisters' as CardAnimationTheme },
-      { icon: Baby,        label: 'Kids Corner',     description: 'For children',           href: '/explore/kids',           color: 'from-yellow-500/20 to-yellow-600/10', iconColor: 'text-yellow-400', animationTheme: 'kids' as CardAnimationTheme },
+      { icon: MessageCircle, label: 'New to Islam',  description: 'Start your journey',     href: '/explore/new-to-islam',           color: 'from-emerald-500 to-teal-700',     iconColor: 'text-white', cardTint: 'from-emerald-950/50 to-teal-900/20', animationTheme: 'community' as CardAnimationTheme },
+      { icon: Heart,       label: 'Sisters',         description: 'For Muslim women',       href: '/explore/sisters',                color: 'from-pink-500 to-rose-700',        iconColor: 'text-white', cardTint: 'from-pink-950/50 to-rose-900/20', animationTheme: 'sisters' as CardAnimationTheme },
+      { icon: Moon,        label: 'Sisters in Ramadan', description: 'Worship guide',       href: '/explore/sisters/ramadan',        color: 'from-rose-500 to-pink-700',        iconColor: 'text-white', cardTint: 'from-rose-950/50 to-pink-900/20', animationTheme: 'sisters' as CardAnimationTheme },
+      { icon: Baby,        label: 'Kids Corner',     description: 'For children',           href: '/explore/kids',                   color: 'from-yellow-400 to-amber-600',     iconColor: 'text-white', cardTint: 'from-yellow-950/50 to-amber-900/20', animationTheme: 'kids' as CardAnimationTheme },
     ],
   },
 ]
@@ -193,10 +193,10 @@ export default function ExplorePage() {
                   <Link
                     key={item.label + item.href}
                     href={item.href}
-                    className="glass relative flex flex-col items-center gap-3 rounded-2xl px-4 py-5 card-premium overflow-hidden"
+                    className={`relative flex flex-col items-center gap-3 rounded-2xl px-4 py-5 overflow-hidden border border-white/5 bg-gradient-to-br ${'cardTint' in item ? (item as { cardTint: string }).cardTint : 'from-gray-900/50 to-gray-800/20'}`}
                   >
                     <CardAnimation theme={item.animationTheme} />
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color}`}>
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} shadow-lg`}>
                       <item.icon className={`h-5 w-5 ${item.iconColor}`} />
                     </div>
                     <div className="text-center">
@@ -263,10 +263,10 @@ export default function ExplorePage() {
                     <Link
                       key={item.label + item.href}
                       href={item.href}
-                      className="glass relative flex flex-col items-center gap-3 rounded-2xl px-4 py-6 card-premium overflow-hidden"
+                      className={`relative flex flex-col items-center gap-3 rounded-2xl px-4 py-6 overflow-hidden border border-white/5 bg-gradient-to-br ${'cardTint' in item ? (item as { cardTint: string }).cardTint : 'from-gray-900/50 to-gray-800/20'}`}
                     >
                       <CardAnimation theme={item.animationTheme} />
-                      <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color}`}>
+                      <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} shadow-lg`}>
                         <item.icon className={`h-6 w-6 ${item.iconColor}`} />
                       </div>
                       <div className="text-center">

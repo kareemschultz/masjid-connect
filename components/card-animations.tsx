@@ -19,7 +19,7 @@ interface CardAnimationProps {
 
 function RamadanAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <defs>
         <radialGradient id="ramadanGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
           <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.8" />
@@ -43,7 +43,7 @@ function RamadanAnimation() {
 
 function QuranAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <defs>
         <linearGradient id="quranGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9333ea" />
@@ -66,7 +66,7 @@ function QuranAnimation() {
 
 function FiqhAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes scaleRock {
           0%, 100% { transform: rotate(-5deg); }
@@ -86,7 +86,7 @@ function FiqhAnimation() {
 
 function HadithAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes scrollUnfurl {
           0%, 100% { transform: scaleX(0.95); }
@@ -107,7 +107,7 @@ function HadithAnimation() {
 
 function MadrasaAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes floatUp {
           0% { transform: translateY(20px); opacity: 0; }
@@ -127,7 +127,7 @@ function MadrasaAnimation() {
 
 function LecturesAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes pulseBar {
           0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
@@ -146,7 +146,7 @@ function LecturesAnimation() {
 
 function HifzAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes neuralPulse {
           0%, 100% { opacity: 0.3; transform: scale(0.9); }
@@ -170,7 +170,7 @@ function HifzAnimation() {
 
 function ProphetsAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes starTwinkle {
           0%, 100% { opacity: 0.3; transform: scale(0.8); }
@@ -187,7 +187,7 @@ function ProphetsAnimation() {
 
 function ArabicAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes charFloat {
           0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
@@ -208,7 +208,7 @@ function ArabicAnimation() {
 
 function DuasAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes handRadiate {
           0%, 100% { opacity: 0.2; transform: scale(1); }
@@ -224,7 +224,7 @@ function DuasAnimation() {
 
 function TasbihAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes rotateBeads {
           from { transform: rotate(0deg); }
@@ -243,7 +243,7 @@ function TasbihAnimation() {
 
 function QiblaAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes needleWobble {
           0%, 100% { transform: rotate(40deg); }
@@ -262,7 +262,7 @@ function QiblaAnimation() {
 
 function CommunityAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.25]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes peoplePulse {
           0%, 100% { transform: scale(1); opacity: 0.4; }
@@ -297,7 +297,7 @@ function HalalAnimation() {
 
 function SistersAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes petalFloat {
           0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
@@ -333,7 +333,7 @@ function KidsAnimation() {
 
 function ZakatAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes coinFloat {
           0% { transform: translateY(20px); opacity: 0; }
@@ -354,7 +354,7 @@ function ZakatAnimation() {
 
 function CalendarAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes moonCycle {
           0%, 100% { opacity: 0.4; transform: scale(0.9); }
@@ -400,7 +400,7 @@ function JumuahAnimation() {
 
 function NamesAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes particleFly {
           0% { transform: translate(0, 0); opacity: 0; }
@@ -426,7 +426,7 @@ function NamesAnimation() {
 
 function ResourcesAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.30]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes bookOpen {
           0% { transform: scale(0.8) translateY(10px); opacity: 0; }
@@ -447,7 +447,7 @@ function ResourcesAnimation() {
 
 function DefaultAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full opacity-[0.08]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <svg className="absolute inset-0 h-full w-full opacity-[0.20]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes gradientShift {
           0%, 100% { opacity: 0.4; }
