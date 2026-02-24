@@ -69,6 +69,7 @@ export default function MasjidDetailPage() {
   const [reportName, setReportName] = useState('')
   const [reportNotes, setReportNotes] = useState('')
   const [reportSubmitting, setReportSubmitting] = useState(false)
+  const [showArchive, setShowArchive] = useState(false)
 
   const today = getTodayKey()
 
@@ -340,6 +341,54 @@ export default function MasjidDetailPage() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground/80 italic">No iftaar reports yet today. Be the first to share!</p>
+            )}
+
+            {/* Past Iftaar Archive */}
+            {iftaarReports.filter(r => r.date !== today).length > 0 && (
+              <div className="border-t border-orange-900/30 pt-3">
+                <button
+                  onClick={() => setShowArchive(v => !v)}
+                  className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-widest text-orange-400/70 hover:text-orange-400 transition-colors"
+                >
+                  <span>Past Iftaar Reports ({iftaarReports.filter(r => r.date !== today).length})</span>
+                  <span>{showArchive ? '▲' : '▼'}</span>
+                </button>
+
+                {showArchive && (
+                  <div className="mt-3 space-y-4">
+                    {Array.from(
+                      iftaarReports
+                        .filter(r => r.date !== today)
+                        .reduce((map, r) => {
+                          if (!map.has(r.date)) map.set(r.date, [])
+                          map.get(r.date)!.push(r)
+                          return map
+                        }, new Map<string, IftaarReport[]>())
+                    )
+                      .sort(([a], [b]) => b.localeCompare(a))
+                      .map(([date, reports]) => (
+                        <div key={date} className="space-y-2">
+                          <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-400/60">
+                            {new Date(date + 'T12:00:00').toLocaleDateString('en-GY', { weekday: 'short', month: 'short', day: 'numeric' })}
+                          </p>
+                          {reports.map(report => (
+                            <div key={report.id} className="rounded-xl bg-card border border-border/60 p-3">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-sm font-semibold text-foreground">{report.menu}</p>
+                                <div className="flex items-center gap-1 text-[10px] text-muted-foreground/70">
+                                  <ThumbsUp className="h-3 w-3" />
+                                  {report.likes}
+                                </div>
+                              </div>
+                              {report.notes && <p className="mt-1 text-xs text-muted-foreground">{report.notes}</p>}
+                              <p className="mt-1.5 text-[10px] text-muted-foreground/50">Reported by {report.submittedBy}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Link to full archive on Iftaar page */}
