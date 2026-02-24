@@ -635,6 +635,30 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* ========== ANNOUNCEMENTS ========== */}
+      <div className="px-4 pt-4">
+        <AnnouncementsBanner />
+      </div>
+
+      {/* ========== VERSE OF THE DAY ========== */}
+      <div data-tour="verse-card" className="px-4 pt-5 animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+        <div className="relative overflow-hidden rounded-3xl glass-amber p-5">
+          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl" />
+          <div className="mb-3 flex items-center gap-2">
+            <BookMarked className="h-4 w-4 text-amber-400" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400/80">Verse of the Day</span>
+          </div>
+          <p className="mb-3 text-right font-arabic text-xl leading-[2.2] text-foreground/90" dir="rtl">{dailyVerse.arabic}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground/90">{dailyVerse.translation}</p>
+          <div className="mt-4 flex items-center justify-between">
+            <p className="text-[11px] font-medium text-amber-400/50">{dailyVerse.reference}</p>
+            <Link href={`/quran/${dailyVerse.surah}`} className="flex items-center gap-1 rounded-full bg-amber-500/10 px-3 py-1.5 text-[11px] font-semibold text-amber-400 transition-all active:scale-95">
+              Read Surah <ChevronRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* ========== BUDDY BAR ========== */}
       <div className="px-4 pt-5 animate-fade-up" style={{ animationDelay: '0.4s', animationFillMode: 'backwards' }}>
         {buddies.length > 0 ? (
@@ -675,30 +699,6 @@ export default function HomePage() {
             <ChevronRight className="h-4 w-4 text-sky-400/30" />
           </Link>
         )}
-      </div>
-
-      {/* ========== ANNOUNCEMENTS ========== */}
-      <div className="px-4 pt-4">
-        <AnnouncementsBanner />
-      </div>
-
-      {/* ========== VERSE OF THE DAY ========== */}
-      <div data-tour="verse-card" className="px-4 pt-5 animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-        <div className="relative overflow-hidden rounded-3xl glass-amber p-5">
-          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl" />
-          <div className="mb-3 flex items-center gap-2">
-            <BookMarked className="h-4 w-4 text-amber-400" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400/80">Verse of the Day</span>
-          </div>
-          <p className="mb-3 text-right font-arabic text-xl leading-[2.2] text-foreground/90" dir="rtl">{dailyVerse.arabic}</p>
-          <p className="text-sm leading-relaxed text-muted-foreground/90">{dailyVerse.translation}</p>
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-[11px] font-medium text-amber-400/50">{dailyVerse.reference}</p>
-            <Link href={`/quran/${dailyVerse.surah}`} className="flex items-center gap-1 rounded-full bg-amber-500/10 px-3 py-1.5 text-[11px] font-semibold text-amber-400 transition-all active:scale-95">
-              Read Surah <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
-        </div>
       </div>
 
       {/* ========== CONTINUE READING ========== */}
