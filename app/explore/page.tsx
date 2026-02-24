@@ -63,6 +63,8 @@ const SECTIONS = [
     gradient: 'from-teal-600/20 to-emerald-600/10',
     iconColor: 'text-teal-400',
     items: [
+      { icon: Users,       label: 'Buddy',           description: 'Faith Partners',         href: '/explore/buddy',                  color: 'from-cyan-500/20 to-cyan-600/10', iconColor: 'text-cyan-400', animationTheme: 'community' as CardAnimationTheme },
+      { icon: Users2,      label: 'Community Feed',  description: 'Connect with Muslims',   href: '/explore/community',              color: 'from-violet-500/20 to-purple-600/10', iconColor: 'text-violet-400', animationTheme: 'community' as CardAnimationTheme },
       { icon: ShieldCheck, label: 'Halal Directory',  description: 'Certified businesses',   href: '/explore/halal-directory',       color: 'from-emerald-500/20 to-green-600/10', iconColor: 'text-emerald-400', animationTheme: 'halal' as CardAnimationTheme },
       { icon: ShieldCheck, label: 'Halal Guide',     description: 'Rulings & E-numbers',    href: '/explore/halal-guide',            color: 'from-teal-500/20 to-emerald-600/10', iconColor: 'text-teal-400', animationTheme: 'halal' as CardAnimationTheme },
       { icon: MapPin,      label: 'Masjids',         description: 'Masjid Directory',       href: '/masjids',                        color: 'from-teal-500/20 to-teal-600/10', iconColor: 'text-teal-400', animationTheme: 'community' as CardAnimationTheme },
@@ -70,6 +72,7 @@ const SECTIONS = [
       { icon: HeartHandshake, label: 'Janazah Guide', description: 'Funeral Rites',          href: '/explore/janazah',                color: 'from-gray-500/20 to-gray-600/10', iconColor: 'text-muted-foreground', animationTheme: 'default' as CardAnimationTheme },
       { icon: UtensilsCrossed, label: 'Iftaar Feed', description: 'Community reports',      href: '/iftaar',                         color: 'from-orange-500/20 to-amber-600/10', iconColor: 'text-orange-400', animationTheme: 'community' as CardAnimationTheme },
       { icon: Calendar,    label: 'Events',          description: 'Upcoming Programs',      href: '/explore/events',                 color: 'from-blue-500/20 to-indigo-600/10', iconColor: 'text-blue-400', animationTheme: 'community' as CardAnimationTheme },
+      { icon: HeartHandshake, label: 'Support the App', description: 'Keep it free',        href: '/support', color: 'from-amber-500/20 to-yellow-600/10', iconColor: 'text-amber-400', animationTheme: 'community' as CardAnimationTheme },
     ],
   },
   {
