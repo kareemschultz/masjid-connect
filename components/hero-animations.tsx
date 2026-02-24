@@ -32,7 +32,7 @@ function QuranAnimation() {
   const delays = [0, 0.8, 1.6, 0.4, 2.1, 1.2, 0.2, 1.8, 2.5, 0.6, 1.4]
   const durations = [5, 6, 4.5, 5.5, 6, 4.8, 5.2, 4, 6.5, 5, 4.5]
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes qFloat {
           0%   { opacity: 0; transform: translateY(30px) scale(0.8); }
@@ -65,7 +65,7 @@ function QuranAnimation() {
 
 function PrayerAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes crescentPulse { 0%,100%{opacity:0.18;transform:scale(1)} 50%{opacity:0.28;transform:scale(1.03)} }
         @keyframes starTwinkle { 0%,100%{opacity:0.1} 50%{opacity:0.45} }
@@ -104,7 +104,7 @@ function PrayerAnimation() {
 
 function RamadanAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes lanternSway { 0%,100%{transform:rotate(-5deg) translateX(0)} 50%{transform:rotate(5deg) translateX(2px)} }
         @keyframes lanternGlow { 0%,100%{opacity:0.55} 50%{opacity:0.75} }
@@ -147,7 +147,7 @@ function RamadanAnimation() {
 
 function FiqhAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes scalesRock { 0%{transform:rotate(0deg)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} 100%{transform:rotate(0deg)} }
         @keyframes panLeft { 0%,100%{transform:translateY(0)} 25%{transform:translateY(-6px)} 75%{transform:translateY(6px)} }
@@ -186,7 +186,7 @@ function FiqhAnimation() {
 
 function ExploreAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes compassSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes ringPulse { 0%,100%{opacity:0.08;r:55} 50%{opacity:0.15;r:60} }
@@ -218,7 +218,7 @@ function TasbihAnimation() {
   const radius = 55
   const cx = 320, cy = 90
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes beadShimmer { 0%,100%{opacity:0.12} 50%{opacity:0.50} }
       `}</style>
@@ -246,7 +246,7 @@ function CommunityAnimation() {
   const nodes = [[80,50],[130,35],[170,70],[110,90],[60,100],[150,110],[200,45],[230,80],[280,50],[260,110]]
   const links = [[0,1],[1,2],[2,3],[3,4],[4,0],[2,6],[6,7],[7,8],[8,9],[3,5],[5,9],[1,6]]
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes nodePulse { 0%,100%{opacity:0.15;r:4} 50%{opacity:0.45;r:6} }
         @keyframes linkPulse { 0%,100%{opacity:0.05} 50%{opacity:0.18} }
@@ -276,7 +276,7 @@ function DuasAnimation() {
     size: 2 + (i % 3),
   }))
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes particleRise { 0%{opacity:0;transform:translateY(0) scale(1)} 30%{opacity:0.5} 70%{opacity:0.25} 100%{opacity:0;transform:translateY(-80px) scale(0.5)} }
         @keyframes handsGlow { 0%,100%{opacity:0.14} 50%{opacity:0.24} }
@@ -304,7 +304,7 @@ function DuasAnimation() {
 function LecturesAnimation() {
   const bars = [30, 60, 45, 80, 55, 70, 40, 90, 50, 65, 35, 75, 45, 85, 60]
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes barAnim0 { 0%,100%{transform:scaleY(0.3)} 50%{transform:scaleY(1)} }
         @keyframes barAnim1 { 0%,100%{transform:scaleY(0.6)} 50%{transform:scaleY(0.25)} }
@@ -341,7 +341,7 @@ function LecturesAnimation() {
 
 function HadithAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes scrollUnfurl { 0%,100%{transform:scaleX(0.9) scaleY(0.95)} 50%{transform:scaleX(1) scaleY(1)} }
         @keyframes quillWrite { 0%{transform:rotate(-15deg) translateX(0)} 50%{transform:rotate(-10deg) translateX(6px)} 100%{transform:rotate(-15deg) translateX(0)} }
@@ -373,7 +373,7 @@ function HadithAnimation() {
 
 function SistersAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes petalRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes sisCrescent { 0%,100%{opacity:0.18;transform:scale(1)} 50%{opacity:0.28;transform:scale(1.03)} }
@@ -409,7 +409,7 @@ function KidsAnimation() {
     delay: i*0.5, size: 3+(i%3)*2
   }))
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes shootStar { 0%{opacity:0;transform:translate(0,0)} 20%{opacity:0.7} 80%{opacity:0.5} 100%{opacity:0;transform:translate(60px,30px)} }
         @keyframes moonWobble { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
@@ -443,7 +443,7 @@ function KidsAnimation() {
 
 function JanazahAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes waveFlow { 0%{transform:translateX(-30px)} 100%{transform:translateX(30px)} }
         @keyframes janGlow { 0%,100%{opacity:0.05} 50%{opacity:0.14} }
@@ -475,7 +475,7 @@ function ZakatAnimation() {
     x: 80 + i*32 + (i%3)*10, delay: i*0.4, duration: 3+(i%3)*0.5
   }))
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes coinFall { 0%{opacity:0;transform:translateY(-30px) rotate(0deg)} 20%{opacity:0.6} 80%{opacity:0.4;transform:translateY(60px) rotate(180deg)} 100%{opacity:0;transform:translateY(80px) rotate(240deg)} }
         @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0)} 50%{opacity:0.6;transform:scale(1)} }
@@ -500,7 +500,7 @@ function ZakatAnimation() {
 
 function MasjidAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes masjidGlow { 0%,100%{opacity:0.13} 50%{opacity:0.22} }
         @keyframes pinPulse { 0%,100%{opacity:0.3;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.15)} }
@@ -532,7 +532,7 @@ function MasjidAnimation() {
 function NamesAnimation() {
   const names99 = ['اللّٰه', 'الرَّحْمٰن', 'الرَّحِيم', 'الْمَلِك', 'الْقُدُّوس', 'السَّلَام', 'الْعَزِيز', 'الْجَبَّار']
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes nameFloat { 0%{opacity:0;transform:translateY(20px)} 20%{opacity:0.30} 80%{opacity:0.20} 100%{opacity:0;transform:translateY(-40px)} }
         @keyframes innerRing { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
@@ -563,7 +563,7 @@ function NamesAnimation() {
 
 function DefaultAnimation() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
       <style>{`
         @keyframes geoSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes geoPulse2 { 0%,100%{opacity:0.05} 50%{opacity:0.12} }
