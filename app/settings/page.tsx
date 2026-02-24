@@ -81,6 +81,20 @@ export default function SettingsPage() {
   const [locationLoading, setLocationLoading] = useState(false)
   const [locationMsg, setLocationMsg] = useState('')
 
+  // Expanded sections state
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    account: true,
+    prayer: false,
+    quran: false,
+    notifications: false,
+    app: false,
+    about: false
+  })
+
+  const toggleSection = (section: string) => {
+    setExpanded(prev => ({ ...prev, [section]: !prev[section] }))
+  }
+
   useEffect(() => {
     setMethod(getItem(KEYS.CALCULATION_METHOD, 'MuslimWorldLeague'))
     setMadhab(getItem(KEYS.MADHAB, 'Shafi'))
@@ -315,30 +329,101 @@ export default function SettingsPage() {
       <PageHero icon={Settings} title="Settings" subtitle="Customize Your Experience" gradient="from-gray-800 to-gray-900" showBack heroTheme="explore" />
 
       <div className="space-y-5 px-4 pt-5">
-        {/* Account */}
-        <SettingGroup label="Account" accentColor="bg-blue-500">
+        {/* Account & Profile */}
+        <SettingGroup 
+          label="Account & Profile" 
+          accentColor="bg-blue-500"
+          icon={User}
+          isCollapsible
+          isExpanded={expanded.account}
+          onToggle={() => toggleSection('account')}
+        >
           {session?.user ? (
-            <div className="p-4">
-              <div className="flex items-center gap-3">
-                {session.user.image ? (
-                  <img src={session.user.image} alt="" className="h-12 w-12 rounded-full" />
-                ) : (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20">
-                    <User className="h-5 w-5 text-emerald-400" />
+            <>
+              <div className="p-4">
+                <div className="flex items-center gap-3">
+                  {session.user.image ? (
+                    <img src={session.user.image} alt="" className="h-12 w-12 rounded-full" />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20">
+                      <User className="h-5 w-5 text-emerald-400" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">{session.user.name || 'User'}</p>
+                    <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
                   </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{session.user.name || 'User'}</p>
-                  <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex h-9 items-center gap-1.5 rounded-xl bg-secondary px-3 text-xs font-medium text-muted-foreground active:bg-muted"
+                  >
+                    <LogOut className="h-3.5 w-3.5" /> Sign Out
+                  </button>
                 </div>
-                <button
-                  onClick={handleSignOut}
-                  className="flex h-9 items-center gap-1.5 rounded-xl bg-secondary px-3 text-xs font-medium text-muted-foreground active:bg-muted"
-                >
-                  <LogOut className="h-3.5 w-3.5" /> Sign Out
-                </button>
               </div>
-            </div>
+
+              {/* Username Handle */}
+              <div className="border-t border-border/50 p-4 space-y-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-blue-400">Profile Handle</p>
+                <p className="text-xs text-muted-foreground">
+                  Set a @username so Faith Buddies can find you.
+                </p>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-blue-400">@</span>
+                    <input
+                      type="text"
+                      value={usernameInput}
+                      onChange={(e) => setUsernameInput(e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())}
+                      placeholder="your_username"
+                      maxLength={30}
+                      className="w-full rounded-xl border border-border bg-secondary pl-7 pr-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                    />
+                  </div>
+                  <button
+                    onClick={saveUsername}
+                    disabled={usernameSaving || !usernameInput.trim() || usernameInput === username}
+                    className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
+                  >
+                    {usernameSaving ? '...' : 'Save'}
+                  </button>
+                </div>
+                {usernameMsg && (
+                  <p className={`text-xs ${usernameMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {usernameMsg}
+                  </p>
+                )}
+
+                {/* Phone number */}
+                <div className="border-t border-border/50 pt-3 space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-blue-400">WhatsApp Discovery</p>
+                  <p className="text-xs text-muted-foreground">
+                    Add your phone number so buddies can find you.
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                      placeholder="+5926123456"
+                      className="flex-1 rounded-xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
+                    />
+                    <button
+                      onClick={savePhone}
+                      disabled={phoneSaving || !phoneInput.trim() || phoneInput === phone}
+                      className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
+                    >
+                      {phoneSaving ? '...' : 'Save'}
+                    </button>
+                  </div>
+                  {phoneMsg && (
+                    <p className={`text-xs ${phoneMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {phoneMsg}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
           ) : (
             <div className="p-4">
               <p className="mb-3 text-xs text-muted-foreground">Sign in with Google to sync your data, streaks, and prayer log across devices.</p>
@@ -354,160 +439,97 @@ export default function SettingsPage() {
           )}
         </SettingGroup>
 
-        {/* Username Handle */}
-        {session?.user && (
-          <SettingGroup label="Your Profile Handle" accentColor="bg-blue-500">
-            <div className="p-4 space-y-3">
-              <p className="text-xs text-muted-foreground">
-                Set a @username so Faith Buddies can find you without needing your email.
-              </p>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-blue-400">@</span>
-                  <input
-                    type="text"
-                    value={usernameInput}
-                    onChange={(e) => setUsernameInput(e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase())}
-                    placeholder="your_username"
-                    maxLength={30}
-                    className="w-full rounded-xl border border-border bg-secondary pl-7 pr-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
-                  />
-                </div>
-                <button
-                  onClick={saveUsername}
-                  disabled={usernameSaving || !usernameInput.trim() || usernameInput === username}
-                  className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
-                >
-                  {usernameSaving ? '...' : 'Save'}
-                </button>
+        {/* Prayer & Location */}
+        <SettingGroup 
+          label="Prayer & Location" 
+          accentColor="bg-emerald-500"
+          icon={MapPin}
+          isCollapsible
+          isExpanded={expanded.prayer}
+          onToggle={() => toggleSection('prayer')}
+        >
+          {/* Current Location Display */}
+          <div className="p-4 bg-emerald-500/5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
+                <MapPin className="h-5 w-5 text-emerald-400" />
               </div>
-              {usernameMsg && (
-                <p className={`text-xs ${usernameMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {usernameMsg}
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  {userCity || 'Georgetown'}
                 </p>
-              )}
-              {username && (
-                <p className="text-[11px] text-muted-foreground/80">
-                  Others can find you by searching <span className="text-blue-400 font-medium">@{username}</span> in the buddy search.
-                </p>
-              )}
-
-              {/* Phone number */}
-              <div className="border-t border-border pt-3 space-y-2">
-                <p className="text-xs text-muted-foreground">
-                  Add your phone number so buddies can find you by WhatsApp number (e.g. +5926123456).
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="tel"
-                    value={phoneInput}
-                    onChange={(e) => setPhoneInput(e.target.value)}
-                    placeholder="+5926123456"
-                    className="flex-1 rounded-xl border border-border bg-secondary px-4 py-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-blue-500/50"
-                  />
-                  <button
-                    onClick={savePhone}
-                    disabled={phoneSaving || !phoneInput.trim() || phoneInput === phone}
-                    className="rounded-xl bg-blue-500 px-4 py-3 text-sm font-semibold text-foreground disabled:opacity-40"
-                  >
-                    {phoneSaving ? '...' : 'Save'}
-                  </button>
-                </div>
-                {phoneMsg && (
-                  <p className={`text-xs ${phoneMsg.includes('saved') ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {phoneMsg}
-                  </p>
-                )}
-                {phone && (
-                  <p className="text-[11px] text-muted-foreground/80">
-                    Buddies can find you by searching <span className="text-blue-400 font-medium">{phone}</span>.
-                  </p>
-                )}
+                <p className="text-xs text-muted-foreground">{userCountry || 'Guyana (default)'}</p>
               </div>
             </div>
-          </SettingGroup>
-        )}
-
-        {/* Location */}
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <MapPin className="h-4 w-4 text-emerald-400" />
-            <h3 className="text-sm font-semibold text-foreground">Your Location</h3>
-          </div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
-              <MapPin className="h-5 w-5 text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">
-                {userCity || 'Georgetown'}
+            <button
+              onClick={handleDetectLocation}
+              disabled={locationLoading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-foreground transition-opacity disabled:opacity-60 active:scale-[0.98]"
+            >
+              {locationLoading ? (
+                <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />Detecting...</>
+              ) : (
+                <><MapPin className="h-4 w-4" />Detect My Location</>
+              )}
+            </button>
+            {locationMsg && (
+              <p className={`mt-2 text-center text-xs ${locationMsg.startsWith('Could not') ? 'text-red-400' : 'text-emerald-400'}`}>
+                {locationMsg}
               </p>
-              <p className="text-xs text-muted-foreground">{userCountry || 'Guyana (default)'}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleDetectLocation}
-            disabled={locationLoading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-foreground transition-opacity disabled:opacity-60 active:scale-[0.98]"
-          >
-            {locationLoading ? (
-              <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />Detecting...</>
-            ) : (
-              <><MapPin className="h-4 w-4" />Detect My Location</>
             )}
-          </button>
-          {locationMsg && (
-            <p className={`mt-2 text-center text-xs ${locationMsg.startsWith('Could not') ? 'text-red-400' : 'text-emerald-400'}`}>
-              {locationMsg}
-            </p>
-          )}
-          <button
-            onClick={handleResetLocation}
-            className="mt-2 w-full text-center text-[10px] text-muted-foreground/60 underline active:text-muted-foreground"
-          >
-            Reset to Georgetown, Guyana
-          </button>
-        </div>
+            <button
+              onClick={handleResetLocation}
+              className="mt-2 w-full text-center text-[10px] text-muted-foreground/60 underline active:text-muted-foreground"
+            >
+              Reset to Georgetown, Guyana
+            </button>
+          </div>
 
-        {/* Prayer Settings */}
-        <SettingGroup label="Prayer Times" accentColor="bg-emerald-500">
-          <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Fajr & Isha Calculation" value={methodLabel.split('—')[0].split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
-          <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Asr Prayer Time" value={madhab === 'Hanafi' ? 'Hanafi (later)' : 'Standard (earlier)'} onClick={() => setModalOpen('madhab')} />
-          <SettingRow icon={Clock} iconColor="bg-teal-600" label="Prayer Time Adjustment" value={prayerOffset === 0 ? 'None' : `${prayerOffset > 0 ? '+' : ''}${prayerOffset} min`} onClick={() => setModalOpen('prayerOffset')} />
-          <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} isLast />
+          <div className="border-t border-border/50">
+            <SettingRow icon={Clock} iconColor="bg-emerald-600" label="Fajr & Isha Calculation" value={methodLabel.split('—')[0].split(',')[0].split('(')[0].trim()} onClick={() => setModalOpen('method')} />
+            <SettingRow icon={Moon} iconColor="bg-indigo-600" label="Asr Prayer Time" value={madhab === 'Hanafi' ? 'Hanafi (later)' : 'Standard (earlier)'} onClick={() => setModalOpen('madhab')} />
+            <SettingRow icon={Clock} iconColor="bg-teal-600" label="Global Time Adjustment" value={prayerOffset === 0 ? 'None' : `${prayerOffset > 0 ? '+' : ''}${prayerOffset} min`} onClick={() => setModalOpen('prayerOffset')} />
+            <SettingRow icon={MoonStar} iconColor="bg-orange-700" label="Ramadan Moon Sighting" value={moonSighting === 'ciog' ? 'Local Guyana (GIT / CIOG)' : 'Saudi / International'} onClick={() => setModalOpen('moon')} />
+          </div>
+
+          {/* Per-Prayer Time Adjustment */}
+          <div className="border-t border-border/50 bg-secondary/30">
+            <div className="flex items-center gap-2 px-4 py-3">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-600">
+                <Clock className="h-4 w-4 text-foreground" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Fine-tune Individual Times</p>
+              </div>
+            </div>
+            <div className="divide-y divide-border/40">
+              {(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const).map((prayer, i) => (
+                <div key={prayer} className={`flex items-center justify-between px-4 py-3 ${i === 4 ? 'pb-4' : ''}`}>
+                  <span className="text-xs font-medium text-foreground w-16">{prayer}</span>
+                  <select
+                    value={prayerOffsets[prayer] ?? 0}
+                    onChange={(e) => updatePrayerOffset(prayer, Number(e.target.value))}
+                    className="rounded-xl border border-border bg-secondary px-3 py-2 text-xs text-foreground focus:outline-none focus:border-teal-500"
+                  >
+                    {OFFSET_OPTIONS.map((min) => (
+                      <option key={min} value={min}>{offsetLabel(min)}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
         </SettingGroup>
 
-        {/* Per-Prayer Time Adjustment */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-600">
-              <Clock className="h-4 w-4 text-foreground" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Prayer Time Adjustment</p>
-              <p className="text-[10px] text-muted-foreground/80">Fine-tune each prayer time individually</p>
-            </div>
-          </div>
-          <div className="divide-y divide-border/60">
-            {(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const).map((prayer) => (
-              <div key={prayer} className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm font-medium text-foreground w-16">{prayer}</span>
-                <select
-                  value={prayerOffsets[prayer] ?? 0}
-                  onChange={(e) => updatePrayerOffset(prayer, Number(e.target.value))}
-                  className="rounded-xl border border-border bg-secondary px-3 py-2 text-xs text-foreground focus:outline-none focus:border-teal-500"
-                >
-                  {OFFSET_OPTIONS.map((min) => (
-                    <option key={min} value={min}>{offsetLabel(min)}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Notifications */}
-        <SettingGroup label="Notifications" accentColor="bg-amber-500">
+        <SettingGroup 
+          label="Notifications" 
+          accentColor="bg-amber-500"
+          icon={Bell}
+          isCollapsible
+          isExpanded={expanded.notifications}
+          onToggle={() => toggleSection('notifications')}
+        >
           <SettingRow icon={Bell} iconColor="bg-amber-600" label="Enable Notifications" rightElement={
             <div className="flex items-center gap-2">
               {notifs && <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />}
@@ -537,21 +559,34 @@ export default function SettingsPage() {
           )}
         </SettingGroup>
 
-        {/* Adhan Sound */}
-        <SettingGroup label="Adhan Sound" accentColor="bg-purple-500">
-          <SettingRow icon={Volume2} iconColor="bg-purple-600" label="Default Reciter" value={reciterLabel.split(' ').slice(-1)[0]} onClick={() => setModalOpen('reciter')} isLast />
+        {/* Quran & Content */}
+        <SettingGroup 
+          label="Quran & Recitation" 
+          accentColor="bg-violet-500"
+          icon={BookOpen}
+          isCollapsible
+          isExpanded={expanded.quran}
+          onToggle={() => toggleSection('quran')}
+        >
+          <SettingRow icon={Volume2} iconColor="bg-purple-600" label="Default Adhan Reciter" value={reciterLabel.split(' ').slice(-1)[0]} onClick={() => setModalOpen('reciter')} />
+          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Translation" value={quranTranslationLabel} onClick={() => setModalOpen('quranTranslation')} />
+          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value={quranFont === 'indopak' ? 'IndoPak Nastaliq' : quranFont === 'amiri' ? 'Amiri' : 'Default'} onClick={() => setModalOpen('quranFont')} isLast />
         </SettingGroup>
 
-        {/* Display */}
-        <SettingGroup label="Display" accentColor="bg-blue-500">
-          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Translation" value={quranTranslationLabel} onClick={() => setModalOpen('quranTranslation')} />
-          <SettingRow icon={BookOpen} iconColor="bg-violet-600" label="Quran Font" value={quranFont === 'indopak' ? 'IndoPak Nastaliq' : quranFont === 'amiri' ? 'Amiri' : 'Default'} onClick={() => setModalOpen('quranFont')} />
+        {/* App Preferences */}
+        <SettingGroup 
+          label="App Preferences" 
+          accentColor="bg-blue-500"
+          icon={Settings}
+          isCollapsible
+          isExpanded={expanded.app}
+          onToggle={() => toggleSection('app')}
+        >
           <SettingRow
             icon={theme === 'light' ? Sun : Moon}
             iconColor={theme === 'light' ? 'bg-amber-500' : 'bg-slate-700'}
             label="App Theme"
             value={theme === 'light' ? 'Light' : 'Dark'}
-            isLast
             onClick={() => {
               const next: 'dark' | 'light' = theme === 'dark' ? 'light' : 'dark'
               setTheme(next)
@@ -559,11 +594,29 @@ export default function SettingsPage() {
               applyTheme(next)
             }}
           />
+          <SettingRow icon={Globe} iconColor="bg-teal-600" label="Language" value="English" onClick={() => setModalOpen('language')} isLast />
         </SettingGroup>
 
-        {/* App */}
-        <SettingGroup label="About" accentColor="bg-teal-500">
-          <SettingRow icon={Globe} iconColor="bg-teal-600" label="Language" value="English" onClick={() => setModalOpen('language')} />
+        {/* About & Support */}
+        <SettingGroup 
+          label="About & Support" 
+          accentColor="bg-teal-500"
+          icon={Info}
+          isCollapsible
+          isExpanded={expanded.about}
+          onToggle={() => toggleSection('about')}
+        >
+          <Link href="/support" className="flex items-center justify-between px-4 py-4 bg-amber-500/5 active:bg-amber-500/10 transition-colors border-b border-border/50">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-xl">🤲</div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Support the App</p>
+                <p className="text-xs text-muted-foreground">Built fisabilillah — donate to help</p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground/80" />
+          </Link>
+
           <Link href="/feedback"><SettingRow icon={MessageSquarePlus} iconColor="bg-rose-600" label="Send Feedback" onClick={() => {}} /></Link>
           <Link href="/changelog"><SettingRow icon={FileText} iconColor="bg-blue-600" label="Changelog" onClick={() => {}} /></Link>
           <Link href="/about"><SettingRow icon={Info} iconColor="bg-gray-600" label="About" onClick={() => {}} /></Link>
@@ -572,18 +625,6 @@ export default function SettingsPage() {
           )}
           <SettingRow icon={RotateCcw} iconColor="bg-red-600" label="Reset All Data" isLast onClick={() => setResetConfirm(true)} />
         </SettingGroup>
-
-        {/* Support */}
-        <Link href="/support" className="flex items-center justify-between rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 active:scale-[0.98] transition-transform">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-xl">🤲</div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Support the App</p>
-              <p className="text-xs text-muted-foreground">Built fisabilillah — donate to help</p>
-            </div>
-          </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground/80" />
-        </Link>
 
         <div className="pb-4 text-center">
           <button onClick={handleVersionTap} className="inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
