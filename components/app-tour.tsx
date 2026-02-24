@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { flushSync } from 'react-dom'
 import { X, ChevronRight, Sparkles } from 'lucide-react'
 
 // ─── Tour steps ───────────────────────────────────────────────────────────────
@@ -152,6 +153,7 @@ async function ensureTargetSpot(selector: string, timeoutMs = 5000): Promise<Spo
   const started = Date.now()
   let lastRect: SpotRect | null = null
   let stableFrames = 0
+  let visibleFrames = 0
 
   while (Date.now() - started < timeoutMs) {
     const found = document.querySelector(selector) as HTMLElement | null
@@ -181,10 +183,11 @@ async function ensureTargetSpot(selector: string, timeoutMs = 5000): Promise<Spo
       Math.abs(rect.width - lastRect.width) < 1 &&
       Math.abs(rect.height - lastRect.height) < 1
 
+    visibleFrames = inViewport ? visibleFrames + 1 : 0
     stableFrames = inViewport && nearLast ? stableFrames + 1 : 0
     lastRect = rect
 
-    if (inViewport && stableFrames >= 1) {
+    if (inViewport && (stableFrames >= 1 || visibleFrames >= 2)) {
       return rect
     }
 
@@ -214,6 +217,17 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
     onComplete()
   }, [router, onComplete])
 
+  useEffect(() => {
+    const uniqueRoutes = Array.from(
+      new Set(
+        STEPS
+          .map((tourStep) => tourStep.route)
+          .filter((route): route is string => !!route)
+      )
+    )
+    uniqueRoutes.forEach((route) => router.prefetch(route))
+  }, [router])
+
   // Scroll element into view, then calculate spotlight
   const updateSpot = useCallback(async (target: string | null, route?: string) => {
     const runId = ++runIdRef.current
@@ -233,7 +247,7 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
         setVisible(true)
         return
       }
-      await sleep(80)
+      await sleep(40)
       if (runId !== runIdRef.current) return
     }
 
@@ -262,12 +276,20 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
   // Recalculate on resize
   useEffect(() => {
     if (!step.target) return
-    const recalc = () => setSpot(getSpotRect(step.target!))
+    let frame = 0
+    const recalc = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        setSpot(getSpotRect(step.target!))
+      })
+    }
     window.addEventListener('resize', recalc)
     window.addEventListener('scroll', recalc, { passive: true })
     window.visualViewport?.addEventListener('resize', recalc)
     window.visualViewport?.addEventListener('scroll', recalc)
     return () => {
+      if (frame) window.cancelAnimationFrame(frame)
       window.removeEventListener('resize', recalc)
       window.removeEventListener('scroll', recalc)
       window.visualViewport?.removeEventListener('resize', recalc)
@@ -294,8 +316,15 @@ export function AppTour({ onComplete }: { onComplete: () => void }) {
 
   const handleNext = useCallback(() => {
     if (isLast) { handleComplete(); return }
-    setStepIdx(i => i + 1)
-  }, [isLast, handleComplete])
+    const nextStep = STEPS[stepIdx + 1]
+    flushSync(() => {
+      if (nextStep?.route && window.location.pathname !== nextStep.route) {
+        setVisible(false)
+        setSpot(null)
+      }
+      setStepIdx(i => i + 1)
+    })
+  }, [isLast, handleComplete, stepIdx])
 
   const handleSkip = useCallback(() => { handleComplete() }, [handleComplete])
 

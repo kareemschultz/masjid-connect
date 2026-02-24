@@ -11,10 +11,18 @@ export type OnboardingStepKey =
   | 'notifications'
   | 'done'
 
-function WelcomeArt() {
+interface ArtProps {
+  reducedMotion?: boolean
+}
+
+const motionGuard = (reducedMotion?: boolean) =>
+  reducedMotion ? '* { animation: none !important; }' : ''
+
+function WelcomeArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizWelcomeFloat { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         @keyframes wizWelcomeTwinkle { 0%,100% { opacity: 0.12; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
         @keyframes wizWelcomeOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -46,10 +54,11 @@ function WelcomeArt() {
   )
 }
 
-function FeaturesArt() {
+function FeaturesArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizFeatDriftA { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-9px); } }
         @keyframes wizFeatDriftB { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(11px); } }
         @keyframes wizFeatPulse { 0%,100% { opacity: 0.1; } 50% { opacity: 0.35; } }
@@ -90,10 +99,11 @@ function FeaturesArt() {
   )
 }
 
-function InstallArt() {
+function InstallArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizInstallPulse { 0%,100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(1.08); } }
         @keyframes wizInstallFloat { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
         @keyframes wizInstallPing { 0% { opacity: 0.35; } 100% { opacity: 0; } }
@@ -120,10 +130,11 @@ function InstallArt() {
   )
 }
 
-function ThemeArt() {
+function ThemeArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizThemeShift { 0%,100% { transform: translateX(0px); } 50% { transform: translateX(8px); } }
         @keyframes wizThemePulse { 0%,100% { opacity: 0.12; } 50% { opacity: 0.32; } }
       `}</style>
@@ -141,11 +152,12 @@ function ThemeArt() {
   )
 }
 
-function ProfileArt() {
+function ProfileArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
-        @keyframes wizProfilePulse { 0%,100% { opacity: 0.22; r: 20px; } 50% { opacity: 0.48; r: 26px; } }
+        ${motionGuard(reducedMotion)}
+        @keyframes wizProfilePulse { 0%,100% { opacity: 0.22; transform: scale(1); } 50% { opacity: 0.48; transform: scale(1.28); } }
         @keyframes wizProfileFlow { 0%,100% { opacity: 0.1; } 50% { opacity: 0.35; } }
       `}</style>
       {[
@@ -153,7 +165,17 @@ function ProfileArt() {
       ].map((n, i) => (
         <g key={i}>
           <circle cx={n[0]} cy={n[1]} r={n[2]} fill="rgba(20,184,166,0.14)" />
-          <circle cx={n[0]} cy={n[1]} r="20" fill="none" stroke="rgba(236,253,245,0.25)" style={{ animation: `wizProfilePulse ${2.1 + i * 0.35}s ease-in-out ${i * 0.15}s infinite` }} />
+          <circle
+            cx={n[0]}
+            cy={n[1]}
+            r="20"
+            fill="none"
+            stroke="rgba(236,253,245,0.25)"
+            style={{
+              transformOrigin: `${n[0]}px ${n[1]}px`,
+              animation: `wizProfilePulse ${2.1 + i * 0.35}s ease-in-out ${i * 0.15}s infinite`,
+            }}
+          />
         </g>
       ))}
       {[
@@ -174,10 +196,11 @@ function ProfileArt() {
   )
 }
 
-function PrayerArt() {
+function PrayerArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizPrayerSpinA { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes wizPrayerSpinB { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
         @keyframes wizPrayerSweep { 0% { opacity: 0.1; transform: rotate(0deg); } 50% { opacity: 0.35; } 100% { opacity: 0.1; transform: rotate(360deg); } }
@@ -195,10 +218,11 @@ function PrayerArt() {
   )
 }
 
-function RamadanArt() {
+function RamadanArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizRamadanSway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
         @keyframes wizRamadanGlow { 0%,100% { opacity: 0.3; } 50% { opacity: 0.65; } }
         @keyframes wizRamadanTwinkle { 0%,100% { opacity: 0.08; transform: scale(1); } 50% { opacity: 0.42; transform: scale(1.3); } }
@@ -222,10 +246,11 @@ function RamadanArt() {
   )
 }
 
-function NotificationsArt() {
+function NotificationsArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizNotifRing { 0% { opacity: 0.38; transform: scale(0.8); } 100% { opacity: 0; transform: scale(1.4); } }
         @keyframes wizNotifPulse { 0%,100% { opacity: 0.16; } 50% { opacity: 0.45; } }
       `}</style>
@@ -243,10 +268,11 @@ function NotificationsArt() {
   )
 }
 
-function DoneArt() {
+function DoneArt({ reducedMotion }: ArtProps) {
   return (
     <svg className="h-full w-full" viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice">
       <style>{`
+        ${motionGuard(reducedMotion)}
         @keyframes wizDoneRise { 0% { opacity: 0; transform: translateY(26px) rotate(0deg); } 25% { opacity: 0.52; } 100% { opacity: 0; transform: translateY(-70px) rotate(180deg); } }
         @keyframes wizDoneSweep { 0%,100% { opacity: 0.12; } 50% { opacity: 0.32; } }
       `}</style>
@@ -268,14 +294,14 @@ function DoneArt() {
   )
 }
 
-export function OnboardingStepArt({ step }: { step: OnboardingStepKey }) {
-  if (step === 'welcome') return <WelcomeArt />
-  if (step === 'features') return <FeaturesArt />
-  if (step === 'install') return <InstallArt />
-  if (step === 'theme') return <ThemeArt />
-  if (step === 'profile') return <ProfileArt />
-  if (step === 'prayer') return <PrayerArt />
-  if (step === 'ramadan') return <RamadanArt />
-  if (step === 'notifications') return <NotificationsArt />
-  return <DoneArt />
+export function OnboardingStepArt({ step, reducedMotion = false }: { step: OnboardingStepKey; reducedMotion?: boolean }) {
+  if (step === 'welcome') return <WelcomeArt reducedMotion={reducedMotion} />
+  if (step === 'features') return <FeaturesArt reducedMotion={reducedMotion} />
+  if (step === 'install') return <InstallArt reducedMotion={reducedMotion} />
+  if (step === 'theme') return <ThemeArt reducedMotion={reducedMotion} />
+  if (step === 'profile') return <ProfileArt reducedMotion={reducedMotion} />
+  if (step === 'prayer') return <PrayerArt reducedMotion={reducedMotion} />
+  if (step === 'ramadan') return <RamadanArt reducedMotion={reducedMotion} />
+  if (step === 'notifications') return <NotificationsArt reducedMotion={reducedMotion} />
+  return <DoneArt reducedMotion={reducedMotion} />
 }

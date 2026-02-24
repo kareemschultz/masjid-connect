@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import {
@@ -178,6 +178,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [pwaInstalled, setPwaInstalled] = useState(false)
   const [signingIn, setSigningIn] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
   const showRamadanStep = isNearRamadan()
 
   // Theme selection
@@ -225,6 +226,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     const handler = (e: Event) => { e.preventDefault(); setDeferredPrompt(e) }
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const syncPreference = () => setReducedMotion(media.matches)
+    syncPreference()
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', syncPreference)
+      return () => media.removeEventListener('change', syncPreference)
+    }
+    media.addListener(syncPreference)
+    return () => media.removeListener(syncPreference)
   }, [])
 
   const requestNotifications = async () => {
@@ -325,12 +339,39 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   }
   const stepGradient = STEP_GRADIENTS[currentStepKey]
 
+  const STEP_ART_CHOREOGRAPHY: Record<OnboardingStepKey, CSSProperties> = {
+    welcome: { opacity: 0.82, animation: 'fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '50% 24%', willChange: 'transform, opacity' },
+    features: { opacity: 0.78, animation: 'slide-in-right 0.72s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '50% 40%', willChange: 'transform, opacity' },
+    install: { opacity: 0.84, animation: 'scale-in 0.68s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '66% 36%', willChange: 'transform, opacity' },
+    theme: { opacity: 0.8, animation: 'fade-down 0.76s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '50% 50%', willChange: 'transform, opacity' },
+    profile: { opacity: 0.8, animation: 'fade-up 0.74s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '50% 52%', willChange: 'transform, opacity' },
+    prayer: { opacity: 0.82, animation: 'scale-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '72% 44%', willChange: 'transform, opacity' },
+    ramadan: { opacity: 0.8, animation: 'fade-up 0.86s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '58% 34%', willChange: 'transform, opacity' },
+    notifications: { opacity: 0.8, animation: 'slide-in-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '70% 38%', willChange: 'transform, opacity' },
+    done: { opacity: 0.84, animation: 'scale-in 0.78s cubic-bezier(0.22, 1, 0.36, 1) both', transformOrigin: '50% 64%', willChange: 'transform, opacity' },
+  }
+
+  const STEP_CONTENT_CHOREOGRAPHY: Record<OnboardingStepKey, CSSProperties> = {
+    welcome: { animation: 'fade-up 0.48s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    features: { animation: 'slide-in-right 0.44s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    install: { animation: 'scale-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    theme: { animation: 'fade-down 0.44s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    profile: { animation: 'fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    prayer: { animation: 'scale-in 0.46s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    ramadan: { animation: 'fade-up 0.52s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    notifications: { animation: 'slide-in-right 0.44s cubic-bezier(0.22, 1, 0.36, 1) both' },
+    done: { animation: 'scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both' },
+  }
+
+  const stepArtStyle = reducedMotion ? { opacity: 0.74 } : STEP_ART_CHOREOGRAPHY[currentStepKey]
+  const stepContentStyle = reducedMotion ? undefined : STEP_CONTENT_CHOREOGRAPHY[currentStepKey]
+
   return (
     <div className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className={`absolute inset-0 bg-gradient-to-br ${stepGradient}`} />
-        <div className="absolute inset-0 opacity-75">
-          <OnboardingStepArt step={currentStepKey} />
+        <div key={`art-${currentStepKey}`} className="absolute inset-0" style={stepArtStyle}>
+          <OnboardingStepArt step={currentStepKey} reducedMotion={reducedMotion} />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(255,255,255,0.22),transparent_54%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(90%_68%_at_50%_112%,rgba(15,23,42,0.68),transparent_62%)]" />
@@ -354,7 +395,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       {/* Content area */}
       <div
         key={currentStepKey}
-        className="relative flex flex-1 flex-col overflow-y-auto animate-fade-up"
+        className="relative flex flex-1 flex-col overflow-y-auto"
+        style={stepContentStyle}
       >
 
         {/* ── Step 0: Welcome ──────────────────────────────── */}
