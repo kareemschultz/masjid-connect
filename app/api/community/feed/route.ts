@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { getPool } from '@/lib/db'
+import { getClientIp, rateLimit, rateLimitResponse } from '@/lib/rate-limit'
 
 const INIT_SQL = `
 CREATE TABLE IF NOT EXISTS community_posts (
@@ -35,17 +36,34 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (!rateLimit(ip, 20, 60000)) return rateLimitResponse()
+
   try {
-    await ensureTable()
     const body = await request.json()
     const { name, message, type } = body
-    if (!message?.trim()) {
+    const normalizedMessage = typeof message === 'string' ? message.trim() : ''
+    const normalizedName = typeof name === 'string' ? name.trim() : 'Anonymous'
+    const normalizedType = typeof type === 'string' ? type.trim() : 'General'
+
+    if (!normalizedMessage) {
       return Response.json({ error: 'Message required' }, { status: 400 })
     }
+    if (normalizedMessage.length > 600) {
+      return Response.json({ error: 'Message is too long (max 600 chars)' }, { status: 400 })
+    }
+    if (normalizedName.length > 80) {
+      return Response.json({ error: 'Name is too long (max 80 chars)' }, { status: 400 })
+    }
+    if (normalizedType.length > 40) {
+      return Response.json({ error: 'Type is too long (max 40 chars)' }, { status: 400 })
+    }
+
+    await ensureTable()
     const pool = getPool()
     const result = await pool.query(
       'INSERT INTO community_posts (name, message, type) VALUES ($1, $2, $3) RETURNING *',
-      [name?.trim() || 'Anonymous', message.trim(), type || 'General']
+      [normalizedName || 'Anonymous', normalizedMessage, normalizedType || 'General']
     )
     return Response.json(result.rows[0])
   } catch (err) {

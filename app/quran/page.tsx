@@ -109,7 +109,7 @@ export default function QuranPage() {
 
       {/* ── Mode Cards ─────────────────────────────── */}
       <div className="px-4 pt-4">
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5 animate-stagger">
           {MODES.map(m => (
             <Link
               key={m.href}

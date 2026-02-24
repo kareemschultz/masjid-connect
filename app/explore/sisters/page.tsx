@@ -104,7 +104,7 @@ export default function SistersPage() {
         </div>
 
         {/* Navigation Grid */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 animate-stagger">
           {items.map((item) => (
             <Link
               key={item.href}

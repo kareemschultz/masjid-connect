@@ -34,6 +34,7 @@ export const KEYS = {
   PROFILE: 'profile',
   CHECKLIST: 'checklist',
   ONBOARDING_COMPLETE: 'onboarding_complete',
+  SELECTED_MASJID: 'selected_masjid_id',
   BUDDY_LIST: 'buddy_list',
   BUDDY_CHALLENGES: 'buddy_challenges',
   HIFZ_PROGRESS: 'hifz_progress',

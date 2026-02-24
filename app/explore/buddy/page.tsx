@@ -185,7 +185,7 @@ export default function BuddyPage() {
   const addBuddy = async () => {
     if (!newBuddyEmail.trim()) return
     try {
-      const res = await fetch('/api/friends/request', {
+      const res = await fetch('/api/friends', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newBuddyEmail.trim() })
@@ -323,7 +323,7 @@ export default function BuddyPage() {
         {/* ===================== BUDDIES TAB ===================== */}
         {tab === 'buddies' && (
           <>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 animate-stagger">
               <button
                 onClick={copyInviteLink}
                 className={`flex flex-col items-center gap-2 rounded-2xl border p-4 transition-all active:scale-[0.97] ${

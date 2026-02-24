@@ -12,6 +12,7 @@ import SubmitForm from '@/components/submit-form'
 import { PageHero } from '@/components/page-hero'
 import { BottomNav } from '@/components/bottom-nav'
 import { toast } from 'sonner'
+import { useSelectedMasjidId, setSelectedMasjidId } from '@/lib/selected-masjid'
 import { Toaster } from 'sonner'
 
 // ─── Archive mode: 'by-date' or 'by-masjid' ─────────────────────────────────
@@ -20,7 +21,7 @@ function ArchiveView() {
   const [searchQuery, setSearchQuery] = useState('')
 
   // By-date state
-  const [selectedMasjid, setSelectedMasjid] = useState('')
+  const selectedMasjid = useSelectedMasjidId()
   const [selectedDate, setSelectedDate] = useState(guyanaDate())
   const [dateResults, setDateResults] = useState([])
   const [searching, setSearching] = useState(false)
@@ -199,7 +200,7 @@ function ArchiveView() {
               <div className="relative flex-1">
                 <select
                   value={selectedMasjid}
-                  onChange={e => setSelectedMasjid(e.target.value)}
+                  onChange={e => setSelectedMasjidId(e.target.value)}
                   className="w-full appearance-none bg-gray-700 border border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-200 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 >
                   <option value="">All Masjids</option>
@@ -313,6 +314,7 @@ function SilentMasjids({ submissions, onSubmit }) {
 export default function IftaarPage() {
   const { submissions, loading, addSubmission, reactToSubmission } = useSubmissions()
   const [showSubmitForm, setShowSubmitForm] = useState(false)
+  const selectedMasjidId = useSelectedMasjidId()
   const [defaultMasjidId, setDefaultMasjidId] = useState('')
 
   const today = getTodayTimetable()
@@ -405,7 +407,9 @@ export default function IftaarPage() {
   }), [submissions, sortBy])
 
   const handleOpenSubmit = (masjidId) => {
-    setDefaultMasjidId(typeof masjidId === 'string' ? masjidId : '')
+    const next = typeof masjidId === 'string' ? masjidId : selectedMasjidId
+    setSelectedMasjidId(next || '')
+    setDefaultMasjidId(next || '')
     setShowSubmitForm(true)
   }
 
@@ -534,7 +538,7 @@ export default function IftaarPage() {
             <p className="text-xs text-gray-400 mt-1">Be the first to share what your masjid is serving!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3 animate-stagger">
             {sorted.map((s, i) => {
               const masjid = getMasjid(s.masjidId)
               const likeCount = s.likes || 0

@@ -533,7 +533,7 @@ export default function TrackerPage() {
           <p className="text-center text-xs text-gray-400">Week Average: <span className="font-bold text-white">{weekAverage.toFixed(1)}/5</span> prayers</p>
 
           {/* Stat cards */}
-          <div className="grid grid-cols-3 gap-2 mt-4">
+          <div className="grid grid-cols-3 gap-2 mt-4 animate-stagger">
             <div className="rounded-xl border border-gray-800 bg-gray-800/50 p-3 text-center">
               <p className="text-lg font-bold text-amber-400">{prayerStreak}</p>
               <p className="text-[10px] text-gray-500">Day Streak</p>
@@ -588,7 +588,7 @@ export default function TrackerPage() {
         </button>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 animate-stagger">
           <Link href="/tracker/fasting" className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900 px-4 py-3.5 transition-all active:scale-[0.98]">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/20">
               <UtensilsCrossed className="h-4 w-4 text-orange-400" />
@@ -628,7 +628,7 @@ export default function TrackerPage() {
               />
             </div>
 
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-5 gap-2 animate-stagger">
               {PRAYER_NAMES.map((prayer) => {
                 const prayed = todayLog[prayer]
                 const colors = PRAYER_COLORS[prayer]
