@@ -9,6 +9,7 @@ import { PremiumAtmosphere } from '@/components/premium-atmosphere'
 import { MASJIDS, AREAS } from '@/lib/masjid-data'
 import { getItem, setItem, KEYS } from '@/lib/storage'
 import { guyanaDate } from '@/lib/timezone'
+import { reverseGeocode } from '@/lib/location'
 
 interface CheckinData {
   count: number
@@ -40,6 +41,8 @@ export default function MasjidsPage() {
   const [checkedIn, setCheckedIn] = useState<Record<string, boolean>>({})
   const [homeMasjidId, setHomeMasjidId] = useState<string | null>(null)
   const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null)
+  const [detectedArea, setDetectedArea] = useState<string | null>(null)
+  const [nearMeOnly, setNearMeOnly] = useState(false)
 
   const isFriday = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Guyana', weekday: 'short' }).format(new Date()) === 'Fri'
   const today = getTodayKey()
@@ -64,7 +67,21 @@ export default function MasjidsPage() {
       setUserLoc({ lat: savedLat, lng: savedLng })
     }
 
-    // Try to get fresher user location for proximity sort
+    const hydrateDetectedArea = async (lat: number, lng: number) => {
+      try {
+        const geo = await reverseGeocode(lat, lng)
+        const tokens = `${geo.city} ${geo.state}`.toLowerCase()
+        const areaMatch = AREAS.find((a) => a !== 'All' && tokens.includes(a.toLowerCase()))
+        if (areaMatch) {
+          setDetectedArea(areaMatch)
+          setArea((currentArea) => (currentArea === 'All' ? areaMatch : currentArea))
+        }
+      } catch {
+        // silent fallback to proximity sorting only
+      }
+    }
+
+    // Try to get fresher user location for proximity sort and area selection
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -72,6 +89,7 @@ export default function MasjidsPage() {
           setUserLoc(nextLoc)
           setItem(KEYS.USER_LAT, nextLoc.lat)
           setItem(KEYS.USER_LNG, nextLoc.lng)
+          hydrateDetectedArea(nextLoc.lat, nextLoc.lng)
         },
         () => {
           if (typeof savedLat === 'number' && typeof savedLng === 'number') return
@@ -81,6 +99,10 @@ export default function MasjidsPage() {
       )
     } else if (!(typeof savedLat === 'number' && typeof savedLng === 'number')) {
       setUserLoc({ lat: 6.8013, lng: -58.1551 })
+    }
+
+    if (typeof savedLat === 'number' && typeof savedLng === 'number') {
+      hydrateDetectedArea(savedLat, savedLng)
     }
   }, [today])
 
@@ -113,6 +135,9 @@ export default function MasjidsPage() {
     if (area !== 'All') {
       list = list.filter((m) => m.area === area)
     }
+    if (nearMeOnly && userLoc) {
+      list = list.filter((m) => haversineKm(userLoc.lat, userLoc.lng, m.lat, m.lng) <= 25)
+    }
     if (facility === 'Has Jumuah') {
       list = list.filter((m) => m.jumuah)
     } else if (facility === 'Has Parking') {
@@ -135,7 +160,7 @@ export default function MasjidsPage() {
     })
 
     return list
-  }, [search, area, facility, isFriday, homeMasjidId, userLoc])
+  }, [search, area, facility, isFriday, homeMasjidId, userLoc, nearMeOnly])
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background pb-nav">
@@ -217,6 +242,28 @@ export default function MasjidsPage() {
               </button>
             ))}
           </div>
+
+          {/* Smart location filters */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <button
+              onClick={() => setNearMeOnly((v) => !v)}
+              className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
+                nearMeOnly
+                  ? 'border-cyan-500/50 bg-cyan-500/90 text-foreground shadow-[0_8px_18px_-12px_rgba(6,182,212,0.8)]'
+                  : 'border-border/70 bg-secondary/65 text-muted-foreground active:bg-muted'
+              }`}
+            >
+              Near Me (25km)
+            </button>
+            {detectedArea && (
+              <button
+                onClick={() => setArea(detectedArea)}
+                className="shrink-0 rounded-full border border-emerald-500/35 bg-emerald-500/18 px-4 py-1.5 text-xs font-semibold text-emerald-300"
+              >
+                Detected Area: {detectedArea}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Masjid cards */}
@@ -251,6 +298,11 @@ export default function MasjidsPage() {
                       <span className="rounded-lg bg-emerald-500/15 px-2 py-1 text-[10px] font-medium text-emerald-400">
                         {masjid.area}
                       </span>
+                      {userLoc && (
+                        <span className="rounded-lg bg-cyan-500/15 px-2 py-1 text-[10px] font-medium text-cyan-300">
+                          {haversineKm(userLoc.lat, userLoc.lng, masjid.lat, masjid.lng).toFixed(1)} km
+                        </span>
+                      )}
                       {masjid.jumuah && (
                         <span className="rounded-lg bg-amber-500/15 px-2 py-1 text-[10px] font-medium text-amber-400">
                           Jumuah
