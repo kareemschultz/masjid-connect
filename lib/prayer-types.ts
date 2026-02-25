@@ -10,6 +10,7 @@ export interface SunnahPrayer {
   timing: string
   category: SunnahCategory
   reward: string
+  source: string
   importance: SunnahImportance
   note?: string
 }
@@ -36,6 +37,7 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     timing: 'Before Fajr Fard',
     category: 'sunnah_muakkadah',
     reward: 'The Prophet ﷺ said: "The two rak\'ahs of Fajr are better than the world and everything in it." (Muslim)',
+    source: 'Sahih Muslim',
     importance: 'highest',
   },
   {
@@ -46,6 +48,7 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     timing: 'Before Dhuhr Fard',
     category: 'sunnah_muakkadah',
     reward: 'Whoever prays 4 before Dhuhr and 4 after, Allah forbids that person from the Fire. (Abu Dawud)',
+    source: 'Sunan Abu Dawud',
     importance: 'high',
   },
   {
@@ -55,7 +58,8 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     rakat: 2,
     timing: 'After Dhuhr Fard',
     category: 'sunnah_muakkadah',
-    reward: 'Regular confirmed Sunnah of the Prophet ﷺ.',
+    reward: 'Regular confirmed Sunnah of the Prophet ﷺ and part of the 12 daily Sunnah rak\'ahs tied to a house in Jannah.',
+    source: 'Sahih Muslim',
     importance: 'high',
   },
   {
@@ -65,7 +69,8 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     rakat: 2,
     timing: 'After Maghrib Fard',
     category: 'sunnah_muakkadah',
-    reward: 'Regular confirmed Sunnah.',
+    reward: 'Regular confirmed Sunnah and part of the 12 daily Sunnah rak\'ahs tied to a house in Jannah.',
+    source: 'Sahih Muslim',
     importance: 'high',
   },
   {
@@ -75,7 +80,8 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     rakat: 2,
     timing: 'After Isha Fard',
     category: 'sunnah_muakkadah',
-    reward: 'Regular confirmed Sunnah.',
+    reward: 'Regular confirmed Sunnah and part of the 12 daily Sunnah rak\'ahs tied to a house in Jannah.',
+    source: 'Sahih Muslim',
     importance: 'high',
   },
   {
@@ -86,6 +92,7 @@ export const SUNNAH_PRAYERS: SunnahPrayer[] = [
     timing: 'After Isha Sunnah, before Fajr',
     category: 'wajib',
     reward: 'The Prophet ﷺ said: "Witr is a duty for every Muslim." (Abu Dawud). In the Hanafi school, Witr is Wajib.',
+    source: 'Sunan Abu Dawud',
     importance: 'wajib',
     note: 'Wajib per Hanafi school; Sunnah Mu\'akkadah per other schools',
   },

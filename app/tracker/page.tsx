@@ -121,10 +121,15 @@ export default function TrackerPage() {
   const [qaidaLesson, setQaidaLesson] = useState<number>(1)
   const [rewardToast, setRewardToast] = useState<string | null>(null)
   const [buddies, setBuddies] = useState<any[]>([])
+  const [openPrayerInfo, setOpenPrayerInfo] = useState<Record<string, boolean>>({})
 
   /* ── toggle section helper ── */
   const toggleSection = useCallback((key: string) => {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
+  }, [])
+
+  const togglePrayerInfo = useCallback((key: string) => {
+    setOpenPrayerInfo(prev => ({ ...prev, [key]: !prev[key] }))
   }, [])
 
   /* ── load prayer log ── */
@@ -795,16 +800,10 @@ export default function TrackerPage() {
                     const done = sunnahToday[prayer.key] ?? false
                     const isWitr = prayer.category === 'wajib'
                     const isFajrSunnah = prayer.importance === 'highest'
+                    const infoOpen = openPrayerInfo[prayer.key] ?? false
                     return (
-                      <button
+                      <div
                         key={prayer.key}
-                        onClick={() => {
-                          toggleSunnah(prayer.key)
-                          if (!done) {
-                            setRewardToast(prayer.reward)
-                            setTimeout(() => setRewardToast(null), 2500)
-                          }
-                        }}
                         className={`w-full text-left rounded-xl border p-3 transition-all active:scale-[0.98] ${
                           done
                             ? 'border-emerald-500/30 bg-emerald-500/10'
@@ -817,7 +816,18 @@ export default function TrackerPage() {
                           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all ${
                             done ? 'bg-emerald-500 text-foreground' : isWitr ? 'bg-amber-500/20 text-amber-400' : 'bg-muted text-muted-foreground'
                           }`}>
-                            {done ? <CheckSquare className="h-4 w-4" /> : <div className="h-3 w-3 rounded-full border-2 border-current" />}
+                            <button
+                              onClick={() => {
+                                toggleSunnah(prayer.key)
+                                if (!done) {
+                                  setRewardToast(prayer.reward)
+                                  setTimeout(() => setRewardToast(null), 2500)
+                                }
+                              }}
+                              aria-label={`Mark ${prayer.label} as ${done ? 'incomplete' : 'complete'}`}
+                            >
+                              {done ? <CheckSquare className="h-4 w-4" /> : <div className="h-3 w-3 rounded-full border-2 border-current" />}
+                            </button>
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
@@ -831,8 +841,27 @@ export default function TrackerPage() {
                             </div>
                             <span className="text-[10px] text-muted-foreground/80">{prayer.timing}</span>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => togglePrayerInfo(prayer.key)}
+                            aria-expanded={infoOpen}
+                            aria-label={`${infoOpen ? 'Hide' : 'Show'} evidence for ${prayer.label}`}
+                            className="ml-1 rounded-full p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                          >
+                            {infoOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
                         </div>
-                      </button>
+
+                        {infoOpen && (
+                          <div className="mt-3 rounded-lg border border-border bg-background/50 p-2.5 text-[11px]">
+                            <p className="text-muted-foreground leading-relaxed">{prayer.reward}</p>
+                            <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-amber-300">Reference: {prayer.source}</p>
+                            {prayer.note && (
+                              <p className="mt-1 text-[10px] text-muted-foreground/80">Note: {prayer.note}</p>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     )
                   })}
                 </div>
@@ -844,6 +873,7 @@ export default function TrackerPage() {
                 <div className="space-y-3">
                   {NAWAFIL_PRAYERS.map((prayer) => {
                     const loggedRakat = nawafilToday[prayer.key] ?? 0
+                    const infoOpen = openPrayerInfo[prayer.key] ?? false
                     return (
                       <div
                         key={prayer.key}
@@ -867,7 +897,23 @@ export default function TrackerPage() {
                               <span className="text-[10px] text-muted-foreground/80">{prayer.timing}</span>
                             </div>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => togglePrayerInfo(prayer.key)}
+                            aria-expanded={infoOpen}
+                            aria-label={`${infoOpen ? 'Hide' : 'Show'} evidence for ${prayer.label}`}
+                            className="rounded-full p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                          >
+                            {infoOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
                         </div>
+
+                        {infoOpen && (
+                          <div className="mt-2 rounded-lg border border-border bg-background/50 p-2.5 text-[11px]">
+                            <p className="text-muted-foreground leading-relaxed">{prayer.reward}</p>
+                            <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-amber-300">Reference: {prayer.source}</p>
+                          </div>
+                        )}
 
                         {/* Rakat stepper — tap +2 multiple times */}
                         <div className="mt-2 flex items-center gap-2">
