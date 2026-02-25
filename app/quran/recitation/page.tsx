@@ -69,10 +69,26 @@ export default function RecitationPage() {
   const [ayahTexts, setAyahTexts] = useState<{ key: string; text: string }[]>([])
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const ayahListRef = useRef<HTMLDivElement>(null)
+  const playAyahRef = useRef<(ayah: number) => void>(() => {})
 
   const surah = SURAHS[selectedSurah - 1]
   const reciterData = RECITERS.find(r => r.id === reciter) || RECITERS[0]
   const REPEAT_OPTIONS: (1 | 2 | 3 | 0)[] = [1, 2, 3, 0]
+
+  const updateMediaPositionState = useCallback((audio: HTMLAudioElement | null) => {
+    if (!audio || typeof navigator === 'undefined' || !('mediaSession' in navigator)) return
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return
+
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        position: Math.min(audio.currentTime, audio.duration),
+        playbackRate: audio.playbackRate || 1,
+      })
+    } catch {
+      // Not all Media Session implementations support position state.
+    }
+  }, [])
 
   // ── Audio setup ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -83,16 +99,19 @@ export default function RecitationPage() {
     audio.ontimeupdate = () => {
       setCurrentTime(audio.currentTime)
       setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0)
+      updateMediaPositionState(audio)
     }
-    audio.ondurationchange = () => setDuration(audio.duration)
+    audio.ondurationchange = () => {
+      setDuration(audio.duration)
+      updateMediaPositionState(audio)
+    }
     audio.onplay = () => { setIsPlaying(true); setIsLoading(false) }
     audio.onpause = () => setIsPlaying(false)
     audio.onwaiting = () => setIsLoading(true)
     audio.oncanplay = () => setIsLoading(false)
-    audio.onended = () => handleAyahEnd()
 
     return () => { audio.pause(); audio.src = '' }
-  }, []) // eslint-disable-line
+  }, [updateMediaPositionState])
 
   // Fetch surah text when surah changes
   useEffect(() => {
@@ -128,7 +147,7 @@ export default function RecitationPage() {
       // Move to next ayah or stop
       setCurrentAyah(prevAyah => {
         if (continuousPlay && prevAyah < surah.numberOfAyahs) {
-          setTimeout(() => playAyah(prevAyah + 1), 300)
+          setTimeout(() => playAyahRef.current(prevAyah + 1), 300)
           return prevAyah + 1
         }
         return prevAyah
@@ -136,6 +155,11 @@ export default function RecitationPage() {
       return 0
     })
   }, [repeatMode, continuousPlay, surah]) // eslint-disable-line
+
+  useEffect(() => {
+    if (!audioRef.current) return
+    audioRef.current.onended = handleAyahEnd
+  }, [handleAyahEnd])
 
   const playAyah = useCallback((ayah: number) => {
     if (!audioRef.current || !surah) return
@@ -154,12 +178,30 @@ export default function RecitationPage() {
     setIsPlaying(true)
   }, [reciter, selectedSurah, surah, speed])
 
-  const togglePlay = () => {
+  useEffect(() => {
+    playAyahRef.current = playAyah
+  }, [playAyah])
+
+  const togglePlay = useCallback(() => {
     if (!audioRef.current) return
     if (isPlaying) audioRef.current.pause()
     else if (!audioRef.current.src || audioRef.current.src === window.location.href) playAyah(currentAyah)
     else audioRef.current.play().catch(() => {})
-  }
+  }, [isPlaying, playAyah, currentAyah])
+
+  const skipPrevious = useCallback(() => {
+    if (currentAyah <= 1) {
+      playAyah(1)
+      return
+    }
+    playAyah(currentAyah - 1)
+  }, [currentAyah, playAyah])
+
+  const skipNext = useCallback(() => {
+    if (currentAyah < surah.numberOfAyahs) {
+      playAyah(currentAyah + 1)
+    }
+  }, [currentAyah, surah, playAyah])
 
   const cycleRepeat = () => {
     const idx = REPEAT_OPTIONS.indexOf(repeatMode)
@@ -180,6 +222,84 @@ export default function RecitationPage() {
     setStep('player')
     setTimeout(() => playAyah(1), 300)
   }
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return
+
+    if (typeof MediaMetadata !== 'undefined') {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `Surah ${surah.englishName} - Ayah ${currentAyah}`,
+        artist: reciterData.name,
+        album: 'MasjidConnect Quran Recitation',
+        artwork: [
+          { src: '/images/logo.jpg', sizes: '192x192', type: 'image/jpeg' },
+          { src: '/images/logo.jpg', sizes: '512x512', type: 'image/jpeg' },
+        ],
+      })
+    }
+
+    navigator.mediaSession.playbackState = step === 'player' && isPlaying ? 'playing' : 'paused'
+  }, [currentAyah, reciterData.name, step, surah.englishName, isPlaying])
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return
+    const mediaSession = navigator.mediaSession
+
+    const setHandler = (action: MediaSessionAction, handler: MediaSessionActionHandler | null) => {
+      try {
+        mediaSession.setActionHandler(action, handler)
+      } catch {
+        // Ignore unsupported media actions in some browsers.
+      }
+    }
+
+    setHandler('play', () => {
+      if (step !== 'player') return
+      togglePlay()
+    })
+    setHandler('pause', () => audioRef.current?.pause())
+    setHandler('previoustrack', () => {
+      if (step !== 'player') return
+      skipPrevious()
+    })
+    setHandler('nexttrack', () => {
+      if (step !== 'player') return
+      skipNext()
+    })
+    setHandler('seekbackward', () => {
+      if (!audioRef.current) return
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10)
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('seekforward', () => {
+      if (!audioRef.current) return
+      const maxTime = Number.isFinite(audioRef.current.duration) ? audioRef.current.duration : Infinity
+      audioRef.current.currentTime = Math.min(maxTime, audioRef.current.currentTime + 10)
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('seekto', details => {
+      if (!audioRef.current || typeof details.seekTime !== 'number') return
+      audioRef.current.currentTime = details.seekTime
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('stop', () => {
+      if (!audioRef.current) return
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setIsPlaying(false)
+    })
+
+    return () => {
+      setHandler('play', null)
+      setHandler('pause', null)
+      setHandler('previoustrack', null)
+      setHandler('nexttrack', null)
+      setHandler('seekbackward', null)
+      setHandler('seekforward', null)
+      setHandler('seekto', null)
+      setHandler('stop', null)
+    }
+  }, [step, togglePlay, skipPrevious, skipNext, updateMediaPositionState])
 
   const filteredSurahs = SURAHS.filter(s =>
     !surahSearch ||

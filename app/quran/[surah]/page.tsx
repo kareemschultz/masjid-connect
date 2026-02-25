@@ -91,6 +91,7 @@ export default function SurahReaderPage() {
   const [tafsirLoading, setTafsirLoading] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const verseRefs = useRef<Record<number, HTMLDivElement | null>>({})
   const repeatPlayCountRef = useRef(0)
   const tafsirCacheRef = useRef<Map<string, string>>(new Map())
   // Always holds latest reciter so onended closures never go stale
@@ -212,10 +213,32 @@ export default function SurahReaderPage() {
   }, [])
 
   const scriptClass = quranFont === 'indopak' ? 'font-indopak' : quranFont === 'amiri' ? 'font-arabic' : (displayScript === 'indopak' ? 'font-indopak' : 'font-arabic')
+  const activeVerse = currentAyah >= 0 ? (ayahs[currentAyah]?.numberInSurah ?? null) : null
+
+  const updateMediaPositionState = useCallback((audio: HTMLAudioElement | null) => {
+    if (!audio || typeof navigator === 'undefined' || !('mediaSession' in navigator)) return
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return
+
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        position: Math.min(audio.currentTime, audio.duration),
+        playbackRate: audio.playbackRate || 1,
+      })
+    } catch {
+      // Some browsers implement Media Session without position state support.
+    }
+  }, [])
 
   const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
-    if (audioRef.current) {
-      audioRef.current.pause()
+    const previousAudio = audioRef.current
+    if (previousAudio) {
+      previousAudio.onplay = null
+      previousAudio.onpause = null
+      previousAudio.onended = null
+      previousAudio.ontimeupdate = null
+      previousAudio.ondurationchange = null
+      previousAudio.pause()
     }
     if (resetRepeat) repeatPlayCountRef.current = 0
 
@@ -223,9 +246,15 @@ export default function SurahReaderPage() {
       `https://cdn.islamic.network/quran/audio/128/${reciterRef.current}/${ayahGlobalNumber}.mp3`
     )
     audio.playbackRate = speed
+    audio.preload = 'auto'
     audioRef.current = audio
     setCurrentAyah(ayahIndex)
     setPlaying(true)
+
+    audio.onplay = () => setPlaying(true)
+    audio.onpause = () => setPlaying(false)
+    audio.ontimeupdate = () => updateMediaPositionState(audio)
+    audio.ondurationchange = () => updateMediaPositionState(audio)
 
     audio.play().catch(() => {
       setPlaying(false)
@@ -251,24 +280,133 @@ export default function SurahReaderPage() {
         setCurrentAyah(-1)
       }
     }
-  }, [ayahs, repeatCount, continuousPlay, speed, reciter])
+  }, [ayahs, repeatCount, continuousPlay, speed, updateMediaPositionState])
 
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
     if (playing && audioRef.current) {
       audioRef.current.pause()
-      setPlaying(false)
+    } else if (audioRef.current && currentAyah >= 0) {
+      audioRef.current.play().catch(() => {
+        setPlaying(false)
+      })
     } else if (ayahs.length > 0) {
       const idx = currentAyah >= 0 ? currentAyah : 0
       playAyah(ayahs[idx].number, idx)
     }
-  }
+  }, [playing, currentAyah, ayahs, playAyah])
 
-  const skipNext = () => {
+  const skipNext = useCallback(() => {
     if (currentAyah < ayahs.length - 1 && ayahs.length > 0) {
       const nextIdx = currentAyah + 1
       playAyah(ayahs[nextIdx].number, nextIdx)
     }
-  }
+  }, [currentAyah, ayahs, playAyah])
+
+  const skipPrevious = useCallback(() => {
+    if (ayahs.length === 0) return
+
+    if (currentAyah <= 0) {
+      playAyah(ayahs[0].number, 0)
+      return
+    }
+
+    const previousIdx = currentAyah - 1
+    playAyah(ayahs[previousIdx].number, previousIdx)
+  }, [currentAyah, ayahs, playAyah])
+
+  // Keep the active ayah centered while recitation advances.
+  useEffect(() => {
+    if (!activeVerse || !playing) return
+    const ayahEl = verseRefs.current[activeVerse] ?? document.getElementById(`ayah-${activeVerse}`)
+    if (!ayahEl) return
+
+    requestAnimationFrame(() => {
+      ayahEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+  }, [activeVerse, playing])
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator) || !surah) return
+
+    const activeAyah = currentAyah >= 0 ? ayahs[currentAyah] : null
+    if (typeof MediaMetadata !== 'undefined') {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: activeAyah
+          ? `${surah.englishName} - Ayah ${activeAyah.numberInSurah}`
+          : surah.englishName,
+        artist: RECITERS.find(r => r.id === reciter)?.name || 'Quran Recitation',
+        album: `Surah ${surah.englishName}`,
+        artwork: [
+          { src: '/images/logo.jpg', sizes: '192x192', type: 'image/jpeg' },
+          { src: '/images/logo.jpg', sizes: '512x512', type: 'image/jpeg' },
+        ],
+      })
+    }
+
+    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused'
+  }, [ayahs, currentAyah, playing, reciter, surah])
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return
+    const mediaSession = navigator.mediaSession
+
+    const setHandler = (action: MediaSessionAction, handler: MediaSessionActionHandler | null) => {
+      try {
+        mediaSession.setActionHandler(action, handler)
+      } catch {
+        // Ignore unsupported actions by browser.
+      }
+    }
+
+    setHandler('play', () => {
+      if (audioRef.current) {
+        audioRef.current.play().catch(() => {
+          setPlaying(false)
+        })
+        return
+      }
+      if (ayahs.length > 0) {
+        const idx = currentAyah >= 0 ? currentAyah : 0
+        playAyah(ayahs[idx].number, idx)
+      }
+    })
+    setHandler('pause', () => audioRef.current?.pause())
+    setHandler('previoustrack', () => skipPrevious())
+    setHandler('nexttrack', () => skipNext())
+    setHandler('seekbackward', () => {
+      if (!audioRef.current) return
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10)
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('seekforward', () => {
+      if (!audioRef.current) return
+      const maxTime = Number.isFinite(audioRef.current.duration) ? audioRef.current.duration : Infinity
+      audioRef.current.currentTime = Math.min(maxTime, audioRef.current.currentTime + 10)
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('seekto', (details) => {
+      if (!audioRef.current || typeof details.seekTime !== 'number') return
+      audioRef.current.currentTime = details.seekTime
+      updateMediaPositionState(audioRef.current)
+    })
+    setHandler('stop', () => {
+      if (!audioRef.current) return
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setPlaying(false)
+    })
+
+    return () => {
+      setHandler('play', null)
+      setHandler('pause', null)
+      setHandler('previoustrack', null)
+      setHandler('nexttrack', null)
+      setHandler('seekbackward', null)
+      setHandler('seekforward', null)
+      setHandler('seekto', null)
+      setHandler('stop', null)
+    }
+  }, [ayahs, currentAyah, playAyah, skipNext, skipPrevious, updateMediaPositionState])
 
   const toggleBookmark = (ayahNum: number) => {
     const exists = bookmarks.some((b) => b.surah === surahNum && b.ayah === ayahNum)
@@ -372,16 +510,16 @@ export default function SurahReaderPage() {
       />
 
       {/* Surah info bar */}
-      <div className="flex items-center justify-between border-b border-border bg-card/50 px-4 py-2.5">
+      <div className="flex flex-col gap-2 border-b border-border bg-card/50 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span className="font-arabic text-lg text-foreground">{surah.name}</span>
           <span className="text-xs text-muted-foreground">
             {surah.numberOfAyahs} Ayahs
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="min-w-0 flex flex-nowrap items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 pr-1 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {/* Font size controls */}
-          <div className="flex items-center gap-1 rounded-lg bg-secondary p-1">
+          <div className="flex shrink-0 items-center gap-1 rounded-lg bg-secondary p-1">
             <button
               onClick={() => adjustFontSize(-1)}
               className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground active:text-foreground"
@@ -400,14 +538,14 @@ export default function SurahReaderPage() {
           </div>
           <button
             onClick={() => setShowTranslationSheet(true)}
-            className="flex items-center gap-1 rounded-lg bg-emerald-500/15 px-2.5 py-1 text-[10px] font-medium text-emerald-400"
+            className="flex shrink-0 items-center gap-1 rounded-lg bg-emerald-500/15 px-2.5 py-1 text-[10px] font-medium text-emerald-400"
           >
             <Languages className="h-3 w-3" />
             {QURAN_TRANSLATIONS.find(t => t.key === translation)?.label || 'Sahih Intl'}
           </button>
           <button
             onClick={() => setShowDisplaySheet(true)}
-            className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
+            className={`flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
               tajweedColors || displayScript === 'indopak'
                 ? 'bg-violet-500/15 text-violet-400'
                 : 'bg-secondary text-muted-foreground'
@@ -419,7 +557,7 @@ export default function SurahReaderPage() {
           </button>
           <button
             onClick={toggleTransliteration}
-            className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
+            className={`flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
               showTransliteration
                 ? 'bg-amber-500/15 text-amber-400'
                 : 'bg-secondary text-muted-foreground'
@@ -431,7 +569,7 @@ export default function SurahReaderPage() {
           </button>
           <Link
             href="/quran/hifz"
-            className="flex items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
+            className="flex shrink-0 items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
           >
             <Brain className="h-3 w-3" />
             Hifz
@@ -456,107 +594,111 @@ export default function SurahReaderPage() {
             </div>
           )}
 
-          {ayahs.map((ayah, i) => (
-            <div
-              key={ayah.number}
-              id={`ayah-${ayah.numberInSurah}`}
-              className={`rounded-2xl border p-4 transition-all ${
-                currentAyah === i
-                  ? 'border-emerald-500/30 bg-emerald-500/5 shadow-lg shadow-emerald-500/5'
-                  : 'border-border bg-card'
-              }`}
-            >
-              {/* Ayah header */}
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/15">
-                  <span className="text-[10px] font-bold text-purple-400">{ayah.numberInSurah}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => playAyah(ayah.number, i)}
-                    className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                      currentAyah === i && playing ? 'text-emerald-400' : 'text-muted-foreground active:text-emerald-400'
-                    }`}
-                    aria-label={`Play ayah ${ayah.numberInSurah}`}
-                  >
-                    {currentAyah === i && playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-                  </button>
-                  <button
-                    onClick={() => toggleBookmark(ayah.numberInSurah)}
-                    className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                      isBookmarked(ayah.numberInSurah) ? 'text-amber-400' : 'text-muted-foreground'
-                    }`}
-                    aria-label={`Bookmark ayah ${ayah.numberInSurah}`}
-                  >
-                    <Bookmark className={`h-3.5 w-3.5 ${isBookmarked(ayah.numberInSurah) ? 'fill-amber-400' : ''}`} />
-                  </button>
-                  <button
-                    onClick={() => shareOrCopy({
-                      title: `${surah?.englishName} ${ayah.numberInSurah}`,
-                      text: `${ayah.text}\n\n"${ayah.translation}"\n\n- ${surah?.englishName} (${surah?.englishNameTranslation}), Ayah ${ayah.numberInSurah}\n\nvia MasjidConnect GY`
-                    })}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors active:text-emerald-400"
-                    aria-label={`Share ayah ${ayah.numberInSurah}`}
-                  >
-                    <Share2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Arabic text — tajweed or plain */}
-              {tajweedColors && tajweedData[ayah.numberInSurah] ? (
-                <p
-                  className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
-                  dir="rtl"
-                  style={{ fontSize: `${fontSize}px` }}
-                  dangerouslySetInnerHTML={{ __html: tajweedData[ayah.numberInSurah] }}
-                />
-              ) : (
-                <p
-                  className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
-                  dir="rtl"
-                  style={{ fontSize: `${fontSize}px` }}
-                >
-                  {tajweedColors && tajweedLoading
-                    ? <span className="text-muted-foreground/80 text-sm">Loading tajweed...</span>
-                    : ayah.text
-                  }
-                </p>
-              )}
-
-              {showTransliteration && ayah.transliteration && (
-                <p className="mb-3 text-sm italic leading-relaxed text-amber-300/90">
-                  {ayah.transliteration}
-                </p>
-              )}
-
-              {/* Translation */}
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {ayah.translation}
-              </p>
-
-              {/* Tafsir button */}
-              <button
-                onClick={() => fetchTafsir(ayah.numberInSurah)}
-                className={`mt-2 text-[10px] font-semibold transition-colors ${
-                  tafsirVerse === ayah.numberInSurah ? 'text-amber-400' : 'text-emerald-500'
+          {ayahs.map((ayah, i) => {
+            const isActiveVerse = ayah.numberInSurah === activeVerse
+            return (
+              <div
+                key={ayah.number}
+                id={`ayah-${ayah.numberInSurah}`}
+                ref={(el) => { verseRefs.current[ayah.numberInSurah] = el }}
+                className={`rounded-2xl border p-4 transition-all duration-300 ${
+                  isActiveVerse
+                    ? 'border-emerald-400/70 bg-emerald-500/12 shadow-lg shadow-emerald-500/20 ring-1 ring-emerald-400/35'
+                    : 'border-border bg-card'
                 }`}
               >
-                {tafsirVerse === ayah.numberInSurah ? 'Hide Tafsir' : 'Tafsir'}
-              </button>
-
-              {/* Tafsir panel */}
-              {tafsirVerse === ayah.numberInSurah && (
-                <div className="mt-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
-                  <p className="mb-1 text-[9px] font-bold uppercase tracking-wider text-amber-500">Tafsir Ibn Kathir</p>
-                  {tafsirLoading
-                    ? <p className="text-xs text-muted-foreground/80">Loading...</p>
-                    : <p className="max-h-60 overflow-y-auto text-xs leading-relaxed text-muted-foreground">{tafsirText}</p>
-                  }
+                {/* Ayah header */}
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/15">
+                    <span className="text-[10px] font-bold text-purple-400">{ayah.numberInSurah}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => playAyah(ayah.number, i)}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        isActiveVerse && playing ? 'text-emerald-400' : 'text-muted-foreground active:text-emerald-400'
+                      }`}
+                      aria-label={`Play ayah ${ayah.numberInSurah}`}
+                    >
+                      {isActiveVerse && playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                    </button>
+                    <button
+                      onClick={() => toggleBookmark(ayah.numberInSurah)}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        isBookmarked(ayah.numberInSurah) ? 'text-amber-400' : 'text-muted-foreground'
+                      }`}
+                      aria-label={`Bookmark ayah ${ayah.numberInSurah}`}
+                    >
+                      <Bookmark className={`h-3.5 w-3.5 ${isBookmarked(ayah.numberInSurah) ? 'fill-amber-400' : ''}`} />
+                    </button>
+                    <button
+                      onClick={() => shareOrCopy({
+                        title: `${surah?.englishName} ${ayah.numberInSurah}`,
+                        text: `${ayah.text}\n\n"${ayah.translation}"\n\n- ${surah?.englishName} (${surah?.englishNameTranslation}), Ayah ${ayah.numberInSurah}\n\nvia MasjidConnect GY`
+                      })}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors active:text-emerald-400"
+                      aria-label={`Share ayah ${ayah.numberInSurah}`}
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* Arabic text — tajweed or plain */}
+                {tajweedColors && tajweedData[ayah.numberInSurah] ? (
+                  <p
+                    className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
+                    dir="rtl"
+                    style={{ fontSize: `${fontSize}px` }}
+                    dangerouslySetInnerHTML={{ __html: tajweedData[ayah.numberInSurah] }}
+                  />
+                ) : (
+                  <p
+                    className={`mb-3 text-right leading-[2.2] text-foreground ${scriptClass}`}
+                    dir="rtl"
+                    style={{ fontSize: `${fontSize}px` }}
+                  >
+                    {tajweedColors && tajweedLoading
+                      ? <span className="text-muted-foreground/80 text-sm">Loading tajweed...</span>
+                      : ayah.text
+                    }
+                  </p>
+                )}
+
+                {showTransliteration && ayah.transliteration && (
+                  <p className="mb-3 text-sm italic leading-relaxed text-amber-300/90">
+                    {ayah.transliteration}
+                  </p>
+                )}
+
+                {/* Translation */}
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {ayah.translation}
+                </p>
+
+                {/* Tafsir button */}
+                <button
+                  onClick={() => fetchTafsir(ayah.numberInSurah)}
+                  className={`mt-2 text-[10px] font-semibold transition-colors ${
+                    tafsirVerse === ayah.numberInSurah ? 'text-amber-400' : 'text-emerald-500'
+                  }`}
+                >
+                  {tafsirVerse === ayah.numberInSurah ? 'Hide Tafsir' : 'Tafsir'}
+                </button>
+
+                {/* Tafsir panel */}
+                {tafsirVerse === ayah.numberInSurah && (
+                  <div className="mt-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
+                    <p className="mb-1 text-[9px] font-bold uppercase tracking-wider text-amber-500">Tafsir Ibn Kathir</p>
+                    {tafsirLoading
+                      ? <p className="text-xs text-muted-foreground/80">Loading...</p>
+                      : <p className="max-h-60 overflow-y-auto text-xs leading-relaxed text-muted-foreground">{tafsirText}</p>
+                    }
+                  </div>
+                )}
+              </div>
+            )
+          })}
 
           {/* Reading progress */}
           {ayahs.length > 0 && (
