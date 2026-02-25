@@ -9,7 +9,7 @@ import { getItem, setItem, KEYS } from '@/lib/storage'
 import {
   BookOpen, Play, Pause, SkipForward, Repeat, Bookmark, Loader2, Brain,
   ChevronUp, Type, Minus, Plus, Share2, Mic, X, ListMusic, Languages,
-  SlidersHorizontal, Palette, ToggleLeft, ToggleRight
+  Palette, ToggleLeft, ToggleRight
 } from 'lucide-react'
 import { shareOrCopy } from '@/lib/share'
 import { QURAN_TRANSLATIONS } from '@/lib/quran-settings'
@@ -26,6 +26,9 @@ interface Ayah {
 const FONT_SIZES = [20, 24, 28, 32, 36]
 
 const REPEAT_CYCLE = [1, 2, 3, 5, 0] // 0 = infinite loop
+const TRACK_END_GUARD_THRESHOLD_SECONDS = 0.35
+const TRACK_END_GUARD_INTERVAL_MS = 750
+const TRACK_END_GUARD_GRACE_MS = 300
 
 const RECITERS = [
   { id: 'ar.alafasy', name: 'Mishary Alafasy' },
@@ -61,6 +64,10 @@ function parseTajweedText(text: string): string {
   })
 }
 
+type WindowWithWebkitAudioContext = Window & {
+  webkitAudioContext?: typeof AudioContext
+}
+
 export default function SurahReaderPage() {
   const params = useParams()
   const surahNum = Number(params.surah)
@@ -94,9 +101,25 @@ export default function SurahReaderPage() {
   const verseRefs = useRef<Record<number, HTMLDivElement | null>>({})
   const repeatPlayCountRef = useRef(0)
   const tafsirCacheRef = useRef<Map<string, string>>(new Map())
+  const ayahsRef = useRef<Ayah[]>([])
+  const repeatCountRef = useRef(repeatCount)
+  const continuousPlayRef = useRef(continuousPlay)
+  const speedRef = useRef(speed)
+  const currentAyahIndexRef = useRef(-1)
+  const preloadAudioRef = useRef<HTMLAudioElement | null>(null)
+  const manualPauseRef = useRef(false)
+  const switchingTrackRef = useRef(false)
+  const handlingTrackEndRef = useRef(false)
+  const trackEndTimeoutRef = useRef<number | null>(null)
+  const trackEndIntervalRef = useRef<number | null>(null)
+  const keepAliveAudioContextRef = useRef<AudioContext | null>(null)
   // Always holds latest reciter so onended closures never go stale
   const reciterRef = useRef(reciter)
   useEffect(() => { reciterRef.current = reciter }, [reciter])
+  useEffect(() => { ayahsRef.current = ayahs }, [ayahs])
+  useEffect(() => { repeatCountRef.current = repeatCount }, [repeatCount])
+  useEffect(() => { continuousPlayRef.current = continuousPlay }, [continuousPlay])
+  useEffect(() => { speedRef.current = speed }, [speed])
 
   useEffect(() => {
     setBookmarks(getItem(KEYS.BOOKMARKS, []))
@@ -230,70 +253,307 @@ export default function SurahReaderPage() {
     }
   }, [])
 
-  const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
-    const previousAudio = audioRef.current
-    if (previousAudio) {
-      previousAudio.onplay = null
-      previousAudio.onpause = null
-      previousAudio.onended = null
-      previousAudio.ontimeupdate = null
-      previousAudio.ondurationchange = null
-      previousAudio.pause()
-    }
-    if (resetRepeat) repeatPlayCountRef.current = 0
+  const getAyahAudioSrc = useCallback((ayahGlobalNumber: number, reciterId = reciterRef.current) => {
+    return `https://cdn.islamic.network/quran/audio/128/${reciterId}/${ayahGlobalNumber}.mp3`
+  }, [])
 
-    const audio = new Audio(
-      `https://cdn.islamic.network/quran/audio/128/${reciterRef.current}/${ayahGlobalNumber}.mp3`
-    )
-    audio.playbackRate = speed
+  const clearTrackEndGuards = useCallback(() => {
+    if (trackEndTimeoutRef.current !== null) {
+      window.clearTimeout(trackEndTimeoutRef.current)
+      trackEndTimeoutRef.current = null
+    }
+    if (trackEndIntervalRef.current !== null) {
+      window.clearInterval(trackEndIntervalRef.current)
+      trackEndIntervalRef.current = null
+    }
+  }, [])
+
+  const isTrackNearEnd = useCallback((audio: HTMLAudioElement | null) => {
+    if (!audio || !audio.src) return false
+    if (audio.ended) return true
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return false
+    return (audio.duration - audio.currentTime) <= TRACK_END_GUARD_THRESHOLD_SECONDS
+  }, [])
+
+  const preloadNextAyah = useCallback((ayahIndex: number) => {
+    const preloadAudio = preloadAudioRef.current
+    const ayahList = ayahsRef.current
+    if (!preloadAudio) return
+
+    const nextIndex = ayahIndex + 1
+    if (nextIndex < 0 || nextIndex >= ayahList.length) {
+      preloadAudio.pause()
+      preloadAudio.src = ''
+      return
+    }
+
+    const nextSrc = getAyahAudioSrc(ayahList[nextIndex].number)
+    if (preloadAudio.src !== nextSrc) {
+      preloadAudio.src = nextSrc
+      preloadAudio.load()
+    }
+  }, [getAyahAudioSrc])
+
+  const startKeepAliveContext = useCallback(() => {
+    if (typeof window === 'undefined') return
+
+    const windowWithWebkit = window as WindowWithWebkitAudioContext
+    const AudioContextCtor = window.AudioContext || windowWithWebkit.webkitAudioContext
+    if (!AudioContextCtor) return
+
+    let context = keepAliveAudioContextRef.current
+    if (!context) {
+      context = new AudioContextCtor()
+      const oscillator = context.createOscillator()
+      const gain = context.createGain()
+      oscillator.type = 'sine'
+      oscillator.frequency.value = 20
+      gain.gain.value = 0.00001
+      oscillator.connect(gain)
+      gain.connect(context.destination)
+      oscillator.start()
+      keepAliveAudioContextRef.current = context
+    }
+
+    if (context.state === 'suspended') {
+      void context.resume().catch(() => {})
+    }
+  }, [])
+
+  const suspendKeepAliveContext = useCallback(() => {
+    const context = keepAliveAudioContextRef.current
+    if (!context || context.state !== 'running') return
+    void context.suspend().catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const audio = new Audio()
     audio.preload = 'auto'
     audioRef.current = audio
-    setCurrentAyah(ayahIndex)
-    setPlaying(true)
 
-    audio.onplay = () => setPlaying(true)
-    audio.onpause = () => setPlaying(false)
-    audio.ontimeupdate = () => updateMediaPositionState(audio)
-    audio.ondurationchange = () => updateMediaPositionState(audio)
+    const preloadAudio = new Audio()
+    preloadAudio.preload = 'auto'
+    preloadAudioRef.current = preloadAudio
 
-    audio.play().catch(() => {
-      setPlaying(false)
-    })
+    return () => {
+      clearTrackEndGuards()
+      audio.pause()
+      audio.src = ''
+      audio.onended = null
+      audio.onplay = null
+      audio.onpause = null
+      audio.onloadedmetadata = null
+      audio.ontimeupdate = null
+      audio.ondurationchange = null
+      preloadAudio.pause()
+      preloadAudio.src = ''
+      if (preloadAudioRef.current === preloadAudio) {
+        preloadAudioRef.current = null
+      }
+      if (audioRef.current === audio) {
+        audioRef.current = null
+      }
 
-    audio.onended = () => {
-      repeatPlayCountRef.current++
-
-      // Check if we should repeat this ayah
-      const shouldRepeat =
-        repeatCount === 0 || // infinite loop
-        repeatPlayCountRef.current < repeatCount
-
-      if (shouldRepeat) {
-        // Repeat same ayah
-        playAyah(ayahGlobalNumber, ayahIndex, false)
-      } else if (continuousPlay && ayahIndex < ayahs.length - 1) {
-        // Advance to next ayah
-        const nextAyah = ayahs[ayahIndex + 1]
-        playAyah(nextAyah.number, ayahIndex + 1, true)
-      } else {
-        setPlaying(false)
-        setCurrentAyah(-1)
+      const keepAliveContext = keepAliveAudioContextRef.current
+      keepAliveAudioContextRef.current = null
+      if (keepAliveContext) {
+        void keepAliveContext.close().catch(() => {})
       }
     }
-  }, [ayahs, repeatCount, continuousPlay, speed, updateMediaPositionState])
+  }, [clearTrackEndGuards])
+
+  const playAyah = useCallback((ayahGlobalNumber: number, ayahIndex: number, resetRepeat = true) => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (resetRepeat) repeatPlayCountRef.current = 0
+    currentAyahIndexRef.current = ayahIndex
+    switchingTrackRef.current = true
+    manualPauseRef.current = false
+    clearTrackEndGuards()
+
+    audio.pause()
+    audio.src = getAyahAudioSrc(ayahGlobalNumber)
+    audio.playbackRate = speedRef.current
+    audio.currentTime = 0
+    audio.load()
+    setCurrentAyah(ayahIndex)
+    setPlaying(true)
+    preloadNextAyah(ayahIndex)
+    startKeepAliveContext()
+
+    audio.play()
+      .then(() => {
+        switchingTrackRef.current = false
+      })
+      .catch(() => {
+        switchingTrackRef.current = false
+        setPlaying(false)
+        suspendKeepAliveContext()
+      })
+  }, [clearTrackEndGuards, getAyahAudioSrc, preloadNextAyah, startKeepAliveContext, suspendKeepAliveContext])
+
+  const handleAyahEnded = useCallback(() => {
+    if (switchingTrackRef.current || handlingTrackEndRef.current) return
+    handlingTrackEndRef.current = true
+    clearTrackEndGuards()
+
+    try {
+      const ayahIndex = currentAyahIndexRef.current
+      const ayahList = ayahsRef.current
+      if (ayahIndex < 0 || ayahIndex >= ayahList.length) {
+        setPlaying(false)
+        setCurrentAyah(-1)
+        currentAyahIndexRef.current = -1
+        suspendKeepAliveContext()
+        return
+      }
+
+      repeatPlayCountRef.current++
+
+      const shouldRepeat =
+        repeatCountRef.current === 0 ||
+        repeatPlayCountRef.current < repeatCountRef.current
+
+      if (shouldRepeat) {
+        playAyah(ayahList[ayahIndex].number, ayahIndex, false)
+        return
+      }
+
+      if (continuousPlayRef.current && ayahIndex < ayahList.length - 1) {
+        const nextIndex = ayahIndex + 1
+        playAyah(ayahList[nextIndex].number, nextIndex, true)
+        return
+      }
+
+      setPlaying(false)
+      setCurrentAyah(-1)
+      currentAyahIndexRef.current = -1
+      suspendKeepAliveContext()
+    } finally {
+      handlingTrackEndRef.current = false
+    }
+  }, [clearTrackEndGuards, playAyah, suspendKeepAliveContext])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    const maybeAdvanceTrack = () => {
+      if (switchingTrackRef.current || currentAyahIndexRef.current < 0) return
+      if (isTrackNearEnd(audio)) {
+        handleAyahEnded()
+      }
+    }
+
+    const scheduleTrackGuards = () => {
+      if (currentAyahIndexRef.current < 0) return
+      clearTrackEndGuards()
+      trackEndIntervalRef.current = window.setInterval(maybeAdvanceTrack, TRACK_END_GUARD_INTERVAL_MS)
+
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        const remainingMs = Math.max(
+          TRACK_END_GUARD_INTERVAL_MS,
+          (audio.duration - audio.currentTime) * 1000 + TRACK_END_GUARD_GRACE_MS,
+        )
+        trackEndTimeoutRef.current = window.setTimeout(maybeAdvanceTrack, remainingMs)
+      }
+    }
+
+    audio.onplay = () => {
+      manualPauseRef.current = false
+      setPlaying(true)
+      startKeepAliveContext()
+      scheduleTrackGuards()
+    }
+
+    audio.onpause = () => {
+      if (switchingTrackRef.current) return
+      if (!manualPauseRef.current && currentAyahIndexRef.current >= 0 && isTrackNearEnd(audio)) {
+        handleAyahEnded()
+        return
+      }
+      clearTrackEndGuards()
+      setPlaying(false)
+      suspendKeepAliveContext()
+      manualPauseRef.current = false
+    }
+
+    audio.onended = () => {
+      handleAyahEnded()
+    }
+
+    audio.ontimeupdate = () => {
+      updateMediaPositionState(audio)
+      maybeAdvanceTrack()
+    }
+
+    audio.onloadedmetadata = () => {
+      updateMediaPositionState(audio)
+      scheduleTrackGuards()
+    }
+
+    audio.ondurationchange = () => {
+      updateMediaPositionState(audio)
+      scheduleTrackGuards()
+    }
+
+    return () => {
+      audio.onplay = null
+      audio.onpause = null
+      audio.onended = null
+      audio.ontimeupdate = null
+      audio.onloadedmetadata = null
+      audio.ondurationchange = null
+    }
+  }, [
+    clearTrackEndGuards,
+    handleAyahEnded,
+    isTrackNearEnd,
+    startKeepAliveContext,
+    suspendKeepAliveContext,
+    updateMediaPositionState,
+  ])
+
+  useEffect(() => {
+    if (currentAyahIndexRef.current >= 0) {
+      preloadNextAyah(currentAyahIndexRef.current)
+    }
+  }, [preloadNextAyah, reciter])
+
+  useEffect(() => {
+    const checkTrackBoundary = () => {
+      if (document.hidden) return
+      const audio = audioRef.current
+      if (!audio || switchingTrackRef.current || currentAyahIndexRef.current < 0) return
+      if (isTrackNearEnd(audio)) {
+        handleAyahEnded()
+      }
+    }
+
+    document.addEventListener('visibilitychange', checkTrackBoundary)
+    window.addEventListener('pageshow', checkTrackBoundary)
+    return () => {
+      document.removeEventListener('visibilitychange', checkTrackBoundary)
+      window.removeEventListener('pageshow', checkTrackBoundary)
+    }
+  }, [handleAyahEnded, isTrackNearEnd])
 
   const togglePlay = useCallback(() => {
     if (playing && audioRef.current) {
+      manualPauseRef.current = true
+      clearTrackEndGuards()
       audioRef.current.pause()
     } else if (audioRef.current && currentAyah >= 0) {
+      manualPauseRef.current = false
       audioRef.current.play().catch(() => {
         setPlaying(false)
+        suspendKeepAliveContext()
       })
     } else if (ayahs.length > 0) {
       const idx = currentAyah >= 0 ? currentAyah : 0
       playAyah(ayahs[idx].number, idx)
     }
-  }, [playing, currentAyah, ayahs, playAyah])
+  }, [ayahs, clearTrackEndGuards, currentAyah, playAyah, playing, suspendKeepAliveContext])
 
   const skipNext = useCallback(() => {
     if (currentAyah < ayahs.length - 1 && ayahs.length > 0) {
@@ -359,9 +619,11 @@ export default function SurahReaderPage() {
     }
 
     setHandler('play', () => {
-      if (audioRef.current) {
+      if (audioRef.current?.src) {
+        manualPauseRef.current = false
         audioRef.current.play().catch(() => {
           setPlaying(false)
+          suspendKeepAliveContext()
         })
         return
       }
@@ -370,7 +632,12 @@ export default function SurahReaderPage() {
         playAyah(ayahs[idx].number, idx)
       }
     })
-    setHandler('pause', () => audioRef.current?.pause())
+    setHandler('pause', () => {
+      if (!audioRef.current) return
+      manualPauseRef.current = true
+      clearTrackEndGuards()
+      audioRef.current.pause()
+    })
     setHandler('previoustrack', () => skipPrevious())
     setHandler('nexttrack', () => skipNext())
     setHandler('seekbackward', () => {
@@ -391,9 +658,12 @@ export default function SurahReaderPage() {
     })
     setHandler('stop', () => {
       if (!audioRef.current) return
+      manualPauseRef.current = true
+      clearTrackEndGuards()
       audioRef.current.pause()
       audioRef.current.currentTime = 0
       setPlaying(false)
+      suspendKeepAliveContext()
     })
 
     return () => {
@@ -406,7 +676,16 @@ export default function SurahReaderPage() {
       setHandler('seekto', null)
       setHandler('stop', null)
     }
-  }, [ayahs, currentAyah, playAyah, skipNext, skipPrevious, updateMediaPositionState])
+  }, [
+    ayahs,
+    clearTrackEndGuards,
+    currentAyah,
+    playAyah,
+    skipNext,
+    skipPrevious,
+    suspendKeepAliveContext,
+    updateMediaPositionState,
+  ])
 
   const toggleBookmark = (ayahNum: number) => {
     const exists = bookmarks.some((b) => b.surah === surahNum && b.ayah === ayahNum)

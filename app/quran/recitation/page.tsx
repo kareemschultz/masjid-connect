@@ -147,9 +147,10 @@ export default function RecitationPage() {
       // Move to next ayah or stop
       setCurrentAyah(prevAyah => {
         if (continuousPlay && prevAyah < surah.numberOfAyahs) {
-          setTimeout(() => playAyahRef.current(prevAyah + 1), 300)
+          playAyahRef.current(prevAyah + 1)
           return prevAyah + 1
         }
+        setIsPlaying(false)
         return prevAyah
       })
       return 0
