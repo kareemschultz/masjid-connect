@@ -88,7 +88,7 @@ export function getRecommendedMethod(lat: number, lng: number, countryCode?: str
 }
 
 // Reverse geocode using OpenStreetMap Nominatim (client-side only)
-export async function reverseGeocode(lat: number, lng: number): Promise<{ city: string; country: string; countryCode: string }> {
+export async function reverseGeocode(lat: number, lng: number): Promise<{ city: string; state: string; country: string; countryCode: string }> {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`,
@@ -97,11 +97,12 @@ export async function reverseGeocode(lat: number, lng: number): Promise<{ city: 
     const data = await res.json()
     const addr = data.address || {}
     const city = addr.city || addr.town || addr.village || addr.county || addr.state || 'Unknown City'
+    const state = addr.state || addr.region || addr.county || ''
     const country = addr.country || 'Unknown Country'
     const countryCode = addr.country_code?.toUpperCase() || ''
-    return { city, country, countryCode }
+    return { city, state, country, countryCode }
   } catch {
-    return { city: 'Unknown', country: 'Unknown', countryCode: '' }
+    return { city: 'Unknown', state: '', country: 'Unknown', countryCode: '' }
   }
 }
 
