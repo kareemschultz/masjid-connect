@@ -70,6 +70,7 @@ export const KEYS = {
   NAWAFIL_LOG: 'nawafil_log',
   HOME_MASJID: 'home_masjid_id',
   QURAN_TRANSLATION: 'quran_translation',
+  QURAN_TRANSLITERATION: 'quran_transliteration',
   TOUR_PENDING: 'app_tour_pending',
   QAIDA_LOG: 'qaida_log',
   QURAN_SCRIPT: 'quran_script',

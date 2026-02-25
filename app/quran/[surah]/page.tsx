@@ -20,6 +20,7 @@ interface Ayah {
   numberInSurah: number
   text: string
   translation: string
+  transliteration: string
 }
 
 const FONT_SIZES = [20, 24, 28, 32, 36]
@@ -84,6 +85,7 @@ export default function SurahReaderPage() {
   const [tajweedLoading, setTajweedLoading] = useState(false)
   const [showTranslationSheet, setShowTranslationSheet] = useState(false)
   const [showDisplaySheet, setShowDisplaySheet] = useState(false)
+  const [showTransliteration, setShowTransliteration] = useState(false)
   const [tafsirVerse, setTafsirVerse] = useState<number | null>(null)
   const [tafsirText, setTafsirText] = useState('')
   const [tafsirLoading, setTafsirLoading] = useState(false)
@@ -102,6 +104,7 @@ export default function SurahReaderPage() {
     setTranslation(getItem(KEYS.QURAN_TRANSLATION, 'en.sahih'))
     setDisplayScript(getItem(KEYS.QURAN_SCRIPT, 'uthmani'))
     setTajweedColors(getItem(KEYS.QURAN_TAJWEED, false))
+    setShowTransliteration(getItem(KEYS.QURAN_TRANSLITERATION, false))
   }, [])
 
   // Save last read position
@@ -125,12 +128,14 @@ export default function SurahReaderPage() {
       try {
         const savedReciter = getItem(KEYS.RECITER, 'ar.alafasy')
         const savedTranslation = getItem(KEYS.QURAN_TRANSLATION, 'en.sahih')
-        const [arRes, enRes] = await Promise.all([
+        const [arRes, enRes, translitRes] = await Promise.allSettled([
           fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${savedReciter}`),
           fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${savedTranslation}`),
+          fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/en.transliteration`),
         ])
-        const arData = await arRes.json()
-        const enData = await enRes.json()
+        const arData = arRes.status === 'fulfilled' ? await arRes.value.json() : null
+        const enData = enRes.status === 'fulfilled' ? await enRes.value.json() : null
+        const translitData = translitRes.status === 'fulfilled' ? await translitRes.value.json() : null
 
         if (arData.data?.ayahs && enData.data?.ayahs) {
           const merged: Ayah[] = arData.data.ayahs.map((ar: { number: number; numberInSurah: number; text: string }, i: number) => ({
@@ -138,6 +143,7 @@ export default function SurahReaderPage() {
             numberInSurah: ar.numberInSurah,
             text: ar.text,
             translation: enData.data.ayahs[i]?.text || '',
+            transliteration: translitData?.data?.ayahs?.[i]?.text || '',
           }))
           setAyahs(merged)
         }
@@ -293,6 +299,12 @@ export default function SurahReaderPage() {
     setShowTranslationSheet(false)
   }
 
+  const toggleTransliteration = () => {
+    const nextValue = !showTransliteration
+    setShowTransliteration(nextValue)
+    setItem(KEYS.QURAN_TRANSLITERATION, nextValue)
+  }
+
   const fetchTafsir = async (ayahNumberInSurah: number) => {
     if (tafsirVerse === ayahNumberInSurah) {
       setTafsirVerse(null)
@@ -405,6 +417,18 @@ export default function SurahReaderPage() {
             <Palette className="h-3 w-3" />
             Display
           </button>
+          <button
+            onClick={toggleTransliteration}
+            className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors ${
+              showTransliteration
+                ? 'bg-amber-500/15 text-amber-400'
+                : 'bg-secondary text-muted-foreground'
+            }`}
+            aria-label="Toggle transliteration"
+          >
+            {showTransliteration ? <ToggleRight className="h-3.5 w-3.5" /> : <ToggleLeft className="h-3.5 w-3.5" />}
+            Transliteration
+          </button>
           <Link
             href="/quran/hifz"
             className="flex items-center gap-1 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-[10px] font-medium text-indigo-400"
@@ -497,6 +521,12 @@ export default function SurahReaderPage() {
                     ? <span className="text-muted-foreground/80 text-sm">Loading tajweed...</span>
                     : ayah.text
                   }
+                </p>
+              )}
+
+              {showTransliteration && ayah.transliteration && (
+                <p className="mb-3 text-sm italic leading-relaxed text-amber-300/90">
+                  {ayah.transliteration}
                 </p>
               )}
 
@@ -714,6 +744,24 @@ export default function SurahReaderPage() {
               </div>
               {tajweedColors
                 ? <ToggleRight className="h-5 w-5 text-violet-400" />
+                : <ToggleLeft className="h-5 w-5 text-muted-foreground/60" />}
+            </button>
+
+            {/* Transliteration section */}
+            <p className="mb-2 mt-5 shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Reading Aid</p>
+            <button
+              onClick={toggleTransliteration}
+              className={`flex shrink-0 items-center gap-3 rounded-xl p-3 transition-colors ${showTransliteration ? 'bg-amber-500/15' : 'bg-secondary'}`}
+            >
+              <Languages className={`h-5 w-5 ${showTransliteration ? 'text-amber-400' : 'text-muted-foreground/80'}`} />
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-medium ${showTransliteration ? 'text-amber-300' : 'text-muted-foreground'}`}>
+                  Show Transliteration
+                </p>
+                <p className="text-[10px] text-muted-foreground/80">Display romanized Arabic under each ayah</p>
+              </div>
+              {showTransliteration
+                ? <ToggleRight className="h-5 w-5 text-amber-400" />
                 : <ToggleLeft className="h-5 w-5 text-muted-foreground/60" />}
             </button>
 
